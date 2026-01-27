@@ -1,6 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { createBookmark, deleteBookmark, isBookmarked } from "@/database/mutations/bookmark-mutations";
+import {
+  createBookmark,
+  deleteBookmark,
+  isBookmarked,
+} from "@/database/mutations/bookmark-mutations";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,11 +17,9 @@ export async function POST(request: NextRequest) {
     const bookmark = await createBookmark(session.user.id, comicId);
 
     return NextResponse.json(bookmark, { status: 201 });
-  } catch (_error) {
-    return NextResponse.json(
-      { error: "Failed to create bookmark" },
-      { status: 500 }
-    );
+  } catch (error) {
+    console.error("Bookmarks POST error:", error);
+    return NextResponse.json({ error: "Failed to create bookmark" }, { status: 500 });
   }
 }
 
@@ -32,11 +34,9 @@ export async function DELETE(request: NextRequest) {
     await deleteBookmark(session.user.id, comicId);
 
     return NextResponse.json({ success: true });
-  } catch (_error) {
-    return NextResponse.json(
-      { error: "Failed to delete bookmark" },
-      { status: 500 }
-    );
+  } catch (error) {
+    console.error("Bookmarks DELETE error:", error);
+    return NextResponse.json({ error: "Failed to delete bookmark" }, { status: 500 });
   }
 }
 
@@ -53,10 +53,8 @@ export async function GET(request: NextRequest) {
     const bookmarked = await isBookmarked(session.user.id, comicId);
 
     return NextResponse.json({ bookmarked });
-  } catch (_error) {
-    return NextResponse.json(
-      { error: "Failed to check bookmark" },
-      { status: 500 }
-    );
+  } catch (error) {
+    console.error("Bookmarks GET error:", error);
+    return NextResponse.json({ error: "Failed to check bookmark" }, { status: 500 });
   }
 }

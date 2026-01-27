@@ -72,8 +72,8 @@ export const config: NextAuthConfig = {
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        token.role = (user as any).role || "user";
+         
+        token.role = (user as { role?: "admin" | "moderator" | "user" }).role || "user";
       }
       if (account) {
         token.provider = account.provider;

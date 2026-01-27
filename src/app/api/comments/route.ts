@@ -18,7 +18,8 @@ export async function POST(request: NextRequest) {
     const comment = await createComment(session.user.id, comicId, content);
 
     return NextResponse.json(comment, { status: 201 });
-  } catch (_error) {
+  } catch (error) {
+    console.error("Comments POST error:", error);
     return NextResponse.json({ error: "Failed to create comment" }, { status: 500 });
   }
 }
@@ -34,7 +35,8 @@ export async function PATCH(request: NextRequest) {
     const comment = await updateComment(commentId, content);
 
     return NextResponse.json(comment);
-  } catch (_error) {
+  } catch (error) {
+    console.error("Comments PATCH error:", error);
     return NextResponse.json({ error: "Failed to update comment" }, { status: 500 });
   }
 }
@@ -50,7 +52,8 @@ export async function DELETE(request: NextRequest) {
     await deleteComment(commentId);
 
     return NextResponse.json({ success: true });
-  } catch (_error) {
+  } catch (error) {
+    console.error("Comments DELETE error:", error);
     return NextResponse.json({ error: "Failed to delete comment" }, { status: 500 });
   }
 }
@@ -63,7 +66,8 @@ export async function GET(request: NextRequest) {
     const comments = await getComments(comicId);
 
     return NextResponse.json(comments);
-  } catch (_error) {
+  } catch (error) {
+    console.error("Comments GET error:", error);
     return NextResponse.json({ error: "Failed to fetch comments" }, { status: 500 });
   }
 }
