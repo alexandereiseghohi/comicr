@@ -19,7 +19,7 @@
     "db:backup:upload": "tsx --env-file=.env scripts/backup-database.ts --upload",
     "db:check": "drizzle-kit check --config drizzle.config.ts",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx  ./src/database/seed/seed.ts"
+    "db:seed": "tsx --env-file=.env.local ./src/database/seed/seed.ts"
   },
   "dependencies": {
     "@auth/core": "^0.34.3",
