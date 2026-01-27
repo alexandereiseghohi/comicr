@@ -3,21 +3,21 @@
  * @description Complete authentication setup with OAuth providers
  */
 
-import { DrizzleAdapter } from '@auth/drizzle-adapter';
-import NextAuth from 'next-auth';
-import GitHub from 'next-auth/providers/github';
-import Google from 'next-auth/providers/google';
-import Credentials from 'next-auth/providers/credentials';
-import { db } from '@/database/db';
+import { db } from "@/database/db";
 import {
+  AUTH_SECRET,
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
-  AUTH_SECRET,
-} from '@/lib/env';
-import type { NextAuthConfig } from 'next-auth';
-import type { Session } from '@/types/auth';
+} from "@/lib/env";
+import type { Session } from "@/types/auth";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import type { NextAuthConfig } from "next-auth";
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 
 /**
  * NextAuth configuration
@@ -44,8 +44,8 @@ export const config: NextAuthConfig = {
     // Credentials provider for email/password login
     Credentials({
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         // Implementation for credentials authentication
@@ -61,9 +61,9 @@ export const config: NextAuthConfig = {
     }),
   ],
   pages: {
-    signIn: '/auth/sign-in',
-    error: '/auth/error',
-    verifyRequest: '/auth/verify-request',
+    signIn: "/auth/sign-in",
+    error: "/auth/error",
+    verifyRequest: "/auth/verify-request",
   },
   callbacks: {
     /**
@@ -72,7 +72,8 @@ export const config: NextAuthConfig = {
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role || 'user';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        token.role = (user as any).role || "user";
       }
       if (account) {
         token.provider = account.provider;
@@ -87,7 +88,7 @@ export const config: NextAuthConfig = {
       const typedSession = session as Session;
       if (typedSession.user) {
         typedSession.user.id = token.id as string;
-        typedSession.user.role = (token.role as 'admin' | 'moderator' | 'user') || 'user';
+        typedSession.user.role = (token.role as "admin" | "moderator" | "user") || "user";
       }
       return typedSession;
     },
@@ -95,6 +96,7 @@ export const config: NextAuthConfig = {
     /**
      * Called on successful signin
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async signIn({ user, account, profile }) {
       // You can implement additional checks here
       // Return false to reject sign-in
@@ -106,7 +108,7 @@ export const config: NextAuthConfig = {
      */
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs
-      if (url.startsWith('/')) {
+      if (url.startsWith("/")) {
         return `${baseUrl}${url}`;
       }
       // Allows callback URLs on the same origin
@@ -120,6 +122,7 @@ export const config: NextAuthConfig = {
     /**
      * Called when a user is successfully signed in
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async signIn({ user, account, profile }) {
       console.log(`User signed in: ${user.email}`);
     },
@@ -128,7 +131,7 @@ export const config: NextAuthConfig = {
      * Called when a user is successfully signed out
      */
     async signOut() {
-      console.log('User signed out');
+      console.log("User signed out");
     },
   },
 };

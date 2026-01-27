@@ -1,7 +1,8 @@
-import { Suspense } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComicFilters } from "@/components/comics/comic-filters";
 import { ComicList } from "@/components/comics/comic-list";
 import * as comicQueries from "@/database/queries/comic-queries";
+import { Suspense } from "react";
 
 interface SearchParams {
   search?: string;
@@ -80,7 +81,9 @@ export default async function ComicsPage({ searchParams }: { searchParams: Searc
 
         {/* Filters */}
         <div className="mb-8">
-          <ComicFilters />
+          <Suspense fallback={<div className="h-16 bg-slate-100 rounded-lg animate-pulse" />}>
+            <ComicFilters />
+          </Suspense>
         </div>
 
         {/* Content */}

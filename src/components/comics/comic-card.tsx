@@ -1,7 +1,7 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import Link from "next/link";
 
 interface ComicCardProps {
   id: number;
@@ -16,6 +16,7 @@ interface ComicCardProps {
 }
 
 export function ComicCard({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   id,
   title,
   slug,
@@ -44,13 +45,11 @@ export function ComicCard({
               <CardTitle className="line-clamp-2">{title}</CardTitle>
               {authorName && <CardDescription>{authorName}</CardDescription>}
             </div>
-            <Badge variant={
-              status === 'Ongoing'
-                ? 'default'
-                : status === 'Completed'
-                  ? 'secondary'
-                  : 'outline'
-            }>
+            <Badge
+              variant={
+                status === "Ongoing" ? "default" : status === "Completed" ? "secondary" : "outline"
+              }
+            >
               {status}
             </Badge>
           </div>

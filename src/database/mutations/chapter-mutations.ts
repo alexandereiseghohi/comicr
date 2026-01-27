@@ -1,20 +1,19 @@
-import { eq } from 'drizzle-orm';
-import { db } from '@/database/db';
-import { chapter as chapterTable } from '@/database/schema';
-import type { CreateChapterInput, UpdateChapterInput } from '@/lib/schemas/chapter-schema';
-import type { DbMutationResult } from '@/types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { db } from "@/database/db";
+import { chapter as chapterTable } from "@/database/schema";
+import type { CreateChapterInput, UpdateChapterInput } from "@/lib/schemas/chapter-schema";
+import type { DbMutationResult } from "@/types";
+import { eq } from "drizzle-orm";
 
 /**
  * Create a single chapter
  */
-export async function createChapter(
-  data: CreateChapterInput
-): Promise<DbMutationResult<any>> {
+export async function createChapter(data: CreateChapterInput): Promise<DbMutationResult<any>> {
   try {
     const result = await db.insert(chapterTable).values(data).returning();
 
     if (!result || result.length === 0) {
-      return { success: false, error: 'Failed to create chapter' };
+      return { success: false, error: "Failed to create chapter" };
     }
 
     return { success: true, data: result[0] };
@@ -38,7 +37,7 @@ export async function updateChapter(
       .returning();
 
     if (!result || result.length === 0) {
-      return { success: false, error: 'Chapter not found' };
+      return { success: false, error: "Chapter not found" };
     }
 
     return { success: true, data: result[0] };
@@ -52,13 +51,10 @@ export async function updateChapter(
  */
 export async function deleteChapter(id: number): Promise<DbMutationResult<null>> {
   try {
-    const result = await db
-      .delete(chapterTable)
-      .where(eq(chapterTable.id, id))
-      .returning();
+    const result = await db.delete(chapterTable).where(eq(chapterTable.id, id)).returning();
 
     if (!result || result.length === 0) {
-      return { success: false, error: 'Chapter not found' };
+      return { success: false, error: "Chapter not found" };
     }
 
     return { success: true, data: null };
@@ -75,11 +71,11 @@ export async function bulkCreateChapters(
 ): Promise<DbMutationResult<any[]>> {
   try {
     if (data.length === 0) {
-      return { success: false, error: 'No chapters provided' };
+      return { success: false, error: "No chapters provided" };
     }
 
     if (data.length > 100) {
-      return { success: false, error: 'Batch size cannot exceed 100' };
+      return { success: false, error: "Batch size cannot exceed 100" };
     }
 
     const result = await db.insert(chapterTable).values(data).returning();
@@ -95,13 +91,10 @@ export async function bulkCreateChapters(
  */
 export async function incrementChapterViews(id: number) {
   try {
-    const chapter = await db
-      .select()
-      .from(chapterTable)
-      .where(eq(chapterTable.id, id));
+    const chapter = await db.select().from(chapterTable).where(eq(chapterTable.id, id));
 
     if (chapter.length === 0) {
-      return { success: false, error: 'Chapter not found' };
+      return { success: false, error: "Chapter not found" };
     }
 
     const updatedViews = (chapter[0].views || 0) + 1;

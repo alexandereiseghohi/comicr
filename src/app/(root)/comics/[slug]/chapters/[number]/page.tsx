@@ -1,9 +1,10 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import * as comicQueries from '@/database/queries/comic-queries';
-import * as chapterQueries from '@/database/queries/chapter-queries';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import * as chapterQueries from "@/database/queries/chapter-queries";
+import * as comicQueries from "@/database/queries/comic-queries";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export const revalidate = 3600;
 
@@ -140,12 +141,9 @@ export default async function ChapterReaderPage({
             <h2 className="text-lg font-semibold text-white mb-4">Jump to Chapter</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-64 overflow-y-auto">
               {allChapters.map((ch: any) => (
-                <Link
-                  key={ch.id}
-                  href={`/comics/${slug}/chapters/${ch.chapterNumber}`}
-                >
+                <Link key={ch.id} href={`/comics/${slug}/chapters/${ch.chapterNumber}`}>
                   <Button
-                    variant={ch.chapterNumber === chapterNumber ? 'default' : 'outline'}
+                    variant={ch.chapterNumber === chapterNumber ? "default" : "outline"}
                     className="w-full text-sm"
                   >
                     Ch. {ch.chapterNumber}

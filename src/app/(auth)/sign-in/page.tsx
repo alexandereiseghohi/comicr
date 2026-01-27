@@ -3,13 +3,13 @@
  * @description User login page with email/password and OAuth options
  */
 
-import { redirect } from 'next/navigation';
-import { auth } from '@/lib/auth-config';
-import { SignInForm } from '@/components/auth/sign-in-form';
+import { SignInForm } from "@/components/auth/sign-in-form";
+import { auth } from "@/lib/auth-config";
+import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: 'Sign In | ComicWise',
-  description: 'Sign in to your ComicWise account',
+  title: "Sign In | ComicWise",
+  description: "Sign in to your ComicWise account",
 };
 
 /**
@@ -19,7 +19,7 @@ export default async function SignInPage() {
   // Redirect already authenticated users
   const session = await auth();
   if (session?.user) {
-    redirect('/');
+    redirect("/");
   }
 
   return (
@@ -33,7 +33,7 @@ export default async function SignInPage() {
         <SignInForm />
 
         <p className="text-center text-slate-400 text-sm mt-6">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{" "}
           <a href="/auth/sign-up" className="text-blue-500 hover:text-blue-400">
             Sign up
           </a>

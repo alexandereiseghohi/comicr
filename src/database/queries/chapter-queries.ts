@@ -1,6 +1,7 @@
-import { eq, ilike, desc, asc } from 'drizzle-orm';
-import { db } from '@/database/db';
-import { chapter as chapterTable } from '@/database/schema';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { db } from "@/database/db";
+import { chapter as chapterTable } from "@/database/schema";
+import { asc, desc, eq, ilike } from "drizzle-orm";
 
 /**
  * Get all chapters with pagination
@@ -8,16 +9,16 @@ import { chapter as chapterTable } from '@/database/schema';
 export async function getAllChapters({
   page = 1,
   limit = 20,
-  sort = 'createdAt',
-  order = 'desc',
+  sort = "createdAt",
+  order = "desc",
 }: {
   page?: number;
   limit?: number;
   sort?: string;
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
 } = {}) {
   const offset = (page - 1) * limit;
-  const orderDirection = order === 'asc' ? asc : desc;
+  const orderDirection = order === "asc" ? asc : desc;
 
   try {
     const chapters = await db
@@ -27,14 +28,12 @@ export async function getAllChapters({
       .offset(offset)
       .orderBy(orderDirection(chapterTable.createdAt));
 
-    const totalResult = await db
-      .select({ count: chapterTable.id })
-      .from(chapterTable);
+    const totalResult = await db.select({ count: chapterTable.id }).from(chapterTable);
     const total = totalResult.length;
 
     return { success: true, data: chapters, total };
   } catch {
-    return { success: false, error: 'Failed to fetch chapters' };
+    return { success: false, error: "Failed to fetch chapters" };
   }
 }
 
@@ -43,13 +42,10 @@ export async function getAllChapters({
  */
 export async function getChapterById(id: number) {
   try {
-    const result = await db
-      .select()
-      .from(chapterTable)
-      .where(eq(chapterTable.id, id));
+    const result = await db.select().from(chapterTable).where(eq(chapterTable.id, id));
 
     if (result.length === 0) {
-      return { success: false, error: 'Chapter not found', data: null };
+      return { success: false, error: "Chapter not found", data: null };
     }
 
     return { success: true, data: result[0] };
@@ -63,13 +59,10 @@ export async function getChapterById(id: number) {
  */
 export async function getChapterBySlug(slug: string) {
   try {
-    const result = await db
-      .select()
-      .from(chapterTable)
-      .where(eq(chapterTable.slug, slug));
+    const result = await db.select().from(chapterTable).where(eq(chapterTable.slug, slug));
 
     if (result.length === 0) {
-      return { success: false, error: 'Chapter not found', data: null };
+      return { success: false, error: "Chapter not found", data: null };
     }
 
     return { success: true, data: result[0] };
@@ -86,17 +79,17 @@ export async function getChaptersByComicId(
   {
     page = 1,
     limit = 20,
-    sort = 'chapterNumber',
-    order = 'asc',
+    sort = "chapterNumber",
+    order = "asc",
   }: {
     page?: number;
     limit?: number;
     sort?: string;
-    order?: 'asc' | 'desc';
+    order?: "asc" | "desc";
   } = {}
 ) {
   const offset = (page - 1) * limit;
-  const orderDirection = order === 'asc' ? asc : desc;
+  const orderDirection = order === "asc" ? asc : desc;
 
   try {
     const chapters = await db
@@ -115,7 +108,7 @@ export async function getChaptersByComicId(
 
     return { success: true, data: chapters, total };
   } catch {
-    return { success: false, error: 'Failed to fetch chapters' };
+    return { success: false, error: "Failed to fetch chapters" };
   }
 }
 
@@ -145,7 +138,7 @@ export async function searchChapters(
 
     return { success: true, data: chapters, total };
   } catch {
-    return { success: false, error: 'Failed to search chapters' };
+    return { success: false, error: "Failed to search chapters" };
   }
 }
 
@@ -169,7 +162,7 @@ export async function getChaptersByDateRange(
 
     return { success: true, data: chapters, total: chapters.length };
   } catch {
-    return { success: false, error: 'Failed to fetch chapters by date range' };
+    return { success: false, error: "Failed to fetch chapters by date range" };
   }
 }
 

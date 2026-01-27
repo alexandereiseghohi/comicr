@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import * as chapterQueries from "@/database/queries/chapter-queries";
+import * as comicQueries from "@/database/queries/comic-queries";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import * as comicQueries from "@/database/queries/comic-queries";
-import * as chapterQueries from "@/database/queries/chapter-queries";
 
 export const revalidate = 3600; // Revalidate every hour
 

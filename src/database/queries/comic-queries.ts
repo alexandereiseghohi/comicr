@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Comic Queries
  * @description Read operations for comics
  */
 
-import { db } from '@/database/db';
-import { comic, author, artist } from '@/database/schema';
-import { eq, ilike, desc, asc } from 'drizzle-orm';
+import { db } from "@/database/db";
+import { artist, author, comic } from "@/database/schema";
+import { asc, desc, eq, ilike } from "drizzle-orm";
 
 /**
  * Get all comics with pagination
@@ -13,13 +14,13 @@ import { eq, ilike, desc, asc } from 'drizzle-orm';
 export async function getAllComics({
   page = 1,
   limit = 20,
-  sort = 'createdAt',
-  order = 'desc',
+  sort = "createdAt",
+  order = "desc",
 }: {
   page?: number;
   limit?: number;
   sort?: string;
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
 } = {}) {
   const offset = (page - 1) * limit;
 
@@ -33,7 +34,7 @@ export async function getAllComics({
 
     return { success: true, data: comics, total: comics.length };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Query failed' };
+    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
   }
 }
 
@@ -56,7 +57,7 @@ export async function getComicById(id: number) {
 
     return { success: true, data: result[0] || null };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Query failed' };
+    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
   }
 }
 
@@ -69,7 +70,7 @@ export async function getComicBySlug(slug: string) {
 
     return { success: true, data: result[0] || null };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Query failed' };
+    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
   }
 }
 
@@ -78,11 +79,11 @@ export async function getComicBySlug(slug: string) {
  */
 export async function searchComics(
   query: string,
-  { page = 1, limit = 20, sort = 'createdAt', order = 'desc' } = {},
+  { page = 1, limit = 20, sort = "createdAt", order = "desc" } = {}
 ) {
   try {
     const offset = (page - 1) * limit;
-    const orderDirection = order === 'asc' ? asc(comic.createdAt) : desc(comic.createdAt);
+    const orderDirection = order === "asc" ? asc(comic.createdAt) : desc(comic.createdAt);
 
     const results = await db
       .select()
@@ -94,7 +95,7 @@ export async function searchComics(
 
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Query failed' };
+    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
   }
 }
 
@@ -102,12 +103,12 @@ export async function searchComics(
  * Get comics by status
  */
 export async function getComicsByStatus(
-  status: 'Ongoing' | 'Completed' | 'Hiatus' | 'Dropped' | 'Season End' | 'Coming Soon',
-  { page = 1, limit = 20, sort = 'createdAt', order = 'desc' } = {},
+  status: "Ongoing" | "Completed" | "Hiatus" | "Dropped" | "Season End" | "Coming Soon",
+  { page = 1, limit = 20, sort = "createdAt", order = "desc" } = {}
 ) {
   try {
     const offset = (page - 1) * limit;
-    const orderDirection = order === 'asc' ? asc(comic.createdAt) : desc(comic.createdAt);
+    const orderDirection = order === "asc" ? asc(comic.createdAt) : desc(comic.createdAt);
 
     const results = await db
       .select()
@@ -119,7 +120,7 @@ export async function getComicsByStatus(
 
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Query failed' };
+    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
   }
 }
 
@@ -132,6 +133,6 @@ export async function getComicsByAuthor(authorId: number) {
 
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Query failed' };
+    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
   }
 }
