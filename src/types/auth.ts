@@ -3,17 +3,17 @@
  * @description Types for NextAuth and auth-related operations
  */
 
-import type { User as NextAuthUser, Session as NextAuthSession } from 'next-auth';
+import type { User as NextAuthUser, Session as NextAuthSession } from "next-auth";
 
 /**
  * Extended NextAuth User
  */
-export interface User extends NextAuthUser {
+export interface AuthUser extends NextAuthUser {
   id: string;
   email: string;
   name?: string | null;
   image?: string | null;
-  role?: 'admin' | 'moderator' | 'user';
+  role?: "admin" | "moderator" | "user";
   emailVerified?: Date | null;
   isActive?: boolean;
 }
@@ -22,7 +22,7 @@ export interface User extends NextAuthUser {
  * Extended NextAuth Session
  */
 export interface Session extends NextAuthSession {
-  user: User;
+  user: AuthUser;
   accessToken?: string;
   refreshToken?: string;
   expiresAt?: number;
@@ -34,7 +34,7 @@ export interface Session extends NextAuthSession {
 export interface JWTPayload {
   sub: string; // user ID
   email: string;
-  role: 'admin' | 'moderator' | 'user';
+  role: "admin" | "moderator" | "user";
   iat: number; // issued at
   exp: number; // expiration
 }
@@ -77,7 +77,7 @@ export interface PasswordResetForm {
  * OAuth account info
  */
 export interface OAuthAccount {
-  provider: 'google' | 'github';
+  provider: "google" | "github";
   providerAccountId: string;
   email?: string;
   name?: string;
@@ -90,7 +90,7 @@ export interface OAuthAccount {
 export interface AuthCallbackResult {
   success: boolean;
   error?: string;
-  user?: User;
+  user?: AuthUser;
 }
 
 /**
@@ -105,13 +105,13 @@ export interface EmailVerificationToken {
 /**
  * Permission level
  */
-export type PermissionLevel = 'public' | 'authenticated' | 'moderator' | 'admin';
+export type PermissionLevel = "public" | "authenticated" | "moderator" | "admin";
 
 /**
  * Auth check result
  */
 export interface AuthCheckResult {
   authenticated: boolean;
-  user?: User;
+  user?: AuthUser;
   session?: Session;
 }

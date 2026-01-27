@@ -1,28 +1,46 @@
-import { Suspense } from 'react';
-import { ComicFilters } from '@/components/comics/comic-filters';
-import { ComicList } from '@/components/comics/comic-list';
-import * as comicQueries from '@/database/queries/comic-queries';
+import { Suspense } from "react";
+import { ComicFilters } from "@/components/comics/comic-filters";
+import { ComicList } from "@/components/comics/comic-list";
+import * as comicQueries from "@/database/queries/comic-queries";
 
 interface SearchParams {
   search?: string;
   status?: string;
   sort?: string;
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
   page?: string;
 }
 
 async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
-  const page = parseInt(searchParams.page || '1');
+  const page = parseInt(searchParams.page || "1");
   const limit = 20;
-  const sort = searchParams.sort || 'createdAt';
-  const order = searchParams.order === 'asc' ? 'asc' : 'desc';
+  const sort = searchParams.sort || "createdAt";
+  const order = searchParams.order === "asc" ? "asc" : "desc";
+
+  const validStatuses = [
+    "Ongoing",
+    "Hiatus",
+    "Completed",
+    "Dropped",
+    "Season End",
+    "Coming Soon",
+  ] as const;
 
   let result;
 
   if (searchParams.search) {
     result = await comicQueries.searchComics(searchParams.search, { page, limit });
-  } else if (searchParams.status && searchParams.status !== 'All') {
-    result = await comicQueries.getComicsByStatus(searchParams.status, { page, limit, sort, order });
+  } else if (
+    searchParams.status &&
+    searchParams.status !== "All" &&
+    validStatuses.includes(searchParams.status as any)
+  ) {
+    result = await comicQueries.getComicsByStatus(searchParams.status as any, {
+      page,
+      limit,
+      sort,
+      order,
+    });
   } else {
     result = await comicQueries.getAllComics({ page, limit, sort, order });
   }
@@ -40,19 +58,17 @@ async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
 
   return (
     <div>
-      <ComicList comics={(result.data || []).map(c => ({
-        ...c,
-        rating: c.rating ? Number(c.rating) : 0
-      }))} />
+      <ComicList
+        comics={(result.data || []).map((c) => ({
+          ...c,
+          rating: c.rating ? Number(c.rating) : 0,
+        }))}
+      />
     </div>
   );
 }
 
-export default async function ComicsPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function ComicsPage({ searchParams }: { searchParams: SearchParams }) {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
@@ -68,11 +84,15 @@ export default async function ComicsPage({
         </div>
 
         {/* Content */}
-        <Suspense fallback={<div className="grid grid-cols-4 gap-6">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className="bg-slate-200 rounded-lg h-72 animate-pulse" />
-          ))}
-        </div>}>
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-4 gap-6">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="bg-slate-200 rounded-lg h-72 animate-pulse" />
+              ))}
+            </div>
+          }
+        >
           <ComicsContent searchParams={searchParams} />
         </Suspense>
       </div>
@@ -81,6 +101,6 @@ export default async function ComicsPage({
 }
 
 export const metadata = {
-  title: 'Comics | ComicWise',
-  description: 'Browse and read amazing comics',
+  title: "Comics | ComicWise",
+  description: "Browse and read amazing comics",
 };

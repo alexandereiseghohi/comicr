@@ -4,12 +4,12 @@
  * DELETE /api/comics/[id] - Delete comic
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth-config';
-import * as comicQueries from '@/database/queries/comic-queries';
-import * as comicMutations from '@/database/mutations/comic-mutations';
-import { updateComicSchema } from '@/lib/schemas/comic-schema';
-import type { User } from '@/types/auth';
+import * as comicMutations from "@/database/mutations/comic-mutations";
+import * as comicQueries from "@/database/queries/comic-queries";
+import { auth } from "@/lib/auth-config";
+import { updateComicSchema } from "@/lib/schemas/comic-schema";
+import type { AuthUser } from "@/types/auth";
+import { NextRequest, NextResponse } from "next/server";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -25,26 +25,23 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const comicId = parseInt(id);
 
     if (isNaN(comicId)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid comic ID' },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, error: "Invalid comic ID" }, { status: 400 });
     }
 
     const result = await comicQueries.getComicById(comicId);
 
     if (!result.success || !result.data) {
-      return NextResponse.json(
-        { success: false, error: 'Comic not found' },
-        { status: 404 },
-      );
+      return NextResponse.json({ success: false, error: "Comic not found" }, { status: 404 });
     }
 
     return NextResponse.json({ success: true, data: result.data });
-  } catch (error) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 },
+      {
+        success: false,
+        error: "Internal server error" + (error instanceof Error ? error.message : ""),
+      },
+      { status: 500 }
     );
   }
 }
@@ -57,22 +54,16 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
     // Auth check
     const session = await auth();
-    const user = session?.user as User | undefined;
-    if (!user?.id || user.role !== 'admin') {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 },
-      );
+    const user = session?.user as AuthUser | undefined;
+    if (!user?.id || user.role !== "admin") {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
     const { id } = await params;
     const comicId = parseInt(id);
 
     if (isNaN(comicId)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid comic ID' },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, error: "Invalid comic ID" }, { status: 400 });
     }
 
     // Validate
@@ -82,24 +73,24 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (!validation.success) {
       return NextResponse.json(
         { success: false, error: validation.error.issues[0]?.message },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     const result = await comicMutations.updateComic(comicId, validation.data);
 
     if (!result.success) {
-      return NextResponse.json(
-        { success: false, error: result.error },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, error: result.error }, { status: 400 });
     }
 
     return NextResponse.json({ success: true, data: result.data });
-  } catch (error) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 },
+      {
+        success: false,
+        error: "Internal server error" + (error instanceof Error ? error.message : ""),
+      },
+      { status: 500 }
     );
   }
 }
@@ -112,38 +103,26 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     // Auth check
     const session = await auth();
-    const user = session?.user as User | undefined;
-    if (!user?.id || user.role !== 'admin') {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 },
-      );
+    const user = session?.user as AuthUser | undefined;
+    if (!user?.id || user.role !== "admin") {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
     const { id } = await params;
     const comicId = parseInt(id);
 
     if (isNaN(comicId)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid comic ID' },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, error: "Invalid comic ID" }, { status: 400 });
     }
 
     const result = await comicMutations.deleteComic(comicId);
 
     if (!result.success) {
-      return NextResponse.json(
-        { success: false, error: result.error },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, error: result.error }, { status: 400 });
     }
 
     return NextResponse.json({ success: true });
   } catch {
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }
 }

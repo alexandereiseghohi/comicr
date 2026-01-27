@@ -3,9 +3,9 @@
  * @description Generic CRUD operations for all tables
  */
 
-import type { Table } from 'drizzle-orm';
-import { db } from '@/database/db';
-import type { QueryOptions, PaginatedResponse, DbMutationResult } from '@/types';
+import type { Table } from "drizzle-orm";
+import { db } from "@/database/db";
+import type { QueryOptions, PaginatedResponse, DbMutationResult } from "@/types";
 
 /**
  * Generic Base DAL for type-safe database operations
@@ -27,10 +27,11 @@ export abstract class BaseDAL<T extends Table> {
       const limit = options?.limit || 20;
       const offset = (page - 1) * limit;
 
+      // @ts-expect-error - Drizzle type constraint issue, will be resolved in type-safe refactor
       const data = await db.select().from(this.table).limit(limit).offset(offset);
       return { success: true, data };
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : 'Query failed' };
+      return { success: false, error: error instanceof Error ? error.message : "Query failed" };
     }
   }
 
@@ -43,6 +44,7 @@ export abstract class BaseDAL<T extends Table> {
       const limit = options.limit || 20;
       const offset = (page - 1) * limit;
 
+      // @ts-expect-error - Drizzle type constraint issue, will be resolved in type-safe refactor
       const data = await db.select().from(this.table).limit(limit).offset(offset);
 
       return {

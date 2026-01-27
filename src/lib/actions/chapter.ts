@@ -1,12 +1,12 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { auth } from '@/lib/auth-config';
-import { createChapterSchema, updateChapterSchema } from '@/lib/schemas/chapter-schema';
-import type { CreateChapterInput, UpdateChapterInput } from '@/lib/schemas/chapter-schema';
-import * as chapterMutations from '@/database/mutations/chapter-mutations';
-import type { User } from '@/types/auth';
-import type { ActionResult } from '@/types';
+import * as chapterMutations from "@/database/mutations/chapter-mutations";
+import { auth } from "@/lib/auth-config";
+import type { CreateChapterInput, UpdateChapterInput } from "@/lib/schemas/chapter-schema";
+import { createChapterSchema, updateChapterSchema } from "@/lib/schemas/chapter-schema";
+import type { ActionResult } from "@/types";
+import type { AuthUser } from "@/types/auth";
+import { revalidatePath } from "next/cache";
 
 /**
  * Create a new chapter (admin only)
@@ -16,10 +16,10 @@ export async function createChapterAction(
 ): Promise<ActionResult<{ id: number }>> {
   try {
     const session = await auth();
-    const user = session?.user as User | undefined;
+    const user = session?.user as AuthUser | undefined;
 
-    if (!user?.id || user.role !== 'admin') {
-      return { success: false, error: 'Unauthorized' };
+    if (!user?.id || user.role !== "admin") {
+      return { success: false, error: "Unauthorized" };
     }
 
     const validation = createChapterSchema.safeParse(input);
@@ -33,8 +33,8 @@ export async function createChapterAction(
       return { success: false, error: result.error };
     }
 
-    revalidatePath('/chapters');
-    revalidatePath('/admin/chapters');
+    revalidatePath("/chapters");
+    revalidatePath("/admin/chapters");
 
     return { success: true, data: { id: result.data?.id || 0 } };
   } catch (error) {
@@ -51,10 +51,10 @@ export async function updateChapterAction(
 ): Promise<ActionResult<{ id: number }>> {
   try {
     const session = await auth();
-    const user = session?.user as User | undefined;
+    const user = session?.user as AuthUser | undefined;
 
-    if (!user?.id || user.role !== 'admin') {
-      return { success: false, error: 'Unauthorized' };
+    if (!user?.id || user.role !== "admin") {
+      return { success: false, error: "Unauthorized" };
     }
 
     const validation = updateChapterSchema.safeParse(input);
@@ -68,9 +68,9 @@ export async function updateChapterAction(
       return { success: false, error: result.error };
     }
 
-    revalidatePath('/chapters');
+    revalidatePath("/chapters");
     revalidatePath(`/chapters/${id}`);
-    revalidatePath('/admin/chapters');
+    revalidatePath("/admin/chapters");
 
     return { success: true, data: { id: result.data?.id || 0 } };
   } catch (error) {
@@ -84,10 +84,10 @@ export async function updateChapterAction(
 export async function deleteChapterAction(id: number): Promise<ActionResult<null>> {
   try {
     const session = await auth();
-    const user = session?.user as User | undefined;
+    const user = session?.user as AuthUser | undefined;
 
-    if (!user?.id || user.role !== 'admin') {
-      return { success: false, error: 'Unauthorized' };
+    if (!user?.id || user.role !== "admin") {
+      return { success: false, error: "Unauthorized" };
     }
 
     const result = await chapterMutations.deleteChapter(id);
@@ -96,8 +96,8 @@ export async function deleteChapterAction(id: number): Promise<ActionResult<null
       return { success: false, error: result.error };
     }
 
-    revalidatePath('/chapters');
-    revalidatePath('/admin/chapters');
+    revalidatePath("/chapters");
+    revalidatePath("/admin/chapters");
 
     return { success: true, data: null };
   } catch (error) {

@@ -3,12 +3,12 @@
  * POST /api/comics - Create new comic
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth-config';
-import * as comicQueries from '@/database/queries/comic-queries';
-import * as comicMutations from '@/database/mutations/comic-mutations';
-import { createComicSchema } from '@/lib/schemas/comic-schema';
-import type { User } from '@/types/auth';
+import * as comicMutations from "@/database/mutations/comic-mutations";
+import * as comicQueries from "@/database/queries/comic-queries";
+import { auth } from "@/lib/auth-config";
+import { createComicSchema } from "@/lib/schemas/comic-schema";
+import type { AuthUser } from "@/types/auth";
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * GET /api/comics
@@ -17,10 +17,10 @@ import type { User } from '@/types/auth';
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '20');
-    const sort = searchParams.get('sort') || 'createdAt';
-    const order = (searchParams.get('order') || 'desc') as 'asc' | 'desc';
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "20");
+    const sort = searchParams.get("sort") || "createdAt";
+    const order = (searchParams.get("order") || "desc") as "asc" | "desc";
 
     const result = await comicQueries.getAllComics({
       page,
@@ -30,10 +30,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!result.success) {
-      return NextResponse.json(
-        { success: false, error: result.error },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, error: result.error }, { status: 400 });
     }
 
     return NextResponse.json({
@@ -41,10 +38,10 @@ export async function GET(request: NextRequest) {
       data: result.data,
       pagination: { page, limit, total: result.total },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 },
+      { success: false, error: "Internal server error" + error },
+      { status: 500 }
     );
   }
 }
@@ -57,12 +54,9 @@ export async function POST(request: NextRequest) {
   try {
     // Auth check
     const session = await auth();
-    const user = session?.user as User | undefined;
-    if (!user?.id || user.role !== 'admin') {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 },
-      );
+    const user = session?.user as AuthUser | undefined;
+    if (!user?.id || user.role !== "admin") {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
     // Parse and validate
@@ -72,27 +66,21 @@ export async function POST(request: NextRequest) {
     if (!validation.success) {
       return NextResponse.json(
         { success: false, error: validation.error.issues[0]?.message },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     const result = await comicMutations.createComic(validation.data);
 
     if (!result.success) {
-      return NextResponse.json(
-        { success: false, error: result.error },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, error: result.error }, { status: 400 });
     }
 
+    return NextResponse.json({ success: true, data: result.data }, { status: 201 });
+  } catch (error: unknown) {
     return NextResponse.json(
-      { success: true, data: result.data },
-      { status: 201 },
-    );
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 },
+      { success: false, error: "Internal server error" + error },
+      { status: 500 }
     );
   }
 }
