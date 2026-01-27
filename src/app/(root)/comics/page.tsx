@@ -2,6 +2,7 @@
 import { ComicFilters } from "@/components/comics/comic-filters";
 import { ComicList } from "@/components/comics/comic-list";
 import * as comicQueries from "@/database/queries/comic-queries";
+import { Metadata } from "next";
 import { Suspense } from "react";
 
 interface SearchParams {
@@ -13,7 +14,8 @@ interface SearchParams {
 }
 
 async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
-  const page = parseInt(searchParams.page || "1");
+  const pageValue = await searchParams.page;
+  const page = parseInt(pageValue ?? "1");
   const limit = 20;
   const sort = searchParams.sort || "createdAt";
   const order = searchParams.order === "asc" ? "asc" : "desc";
@@ -103,7 +105,7 @@ export default async function ComicsPage({ searchParams }: { searchParams: Searc
   );
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Comics | ComicWise",
   description: "Browse and read amazing comics",
 };
