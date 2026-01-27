@@ -1,18 +1,6 @@
-// auth.ts
-import NextAuth from "next-auth";
-import GitHubProvider from "next-auth/providers/github"; // Example provider
+/**
+ * NextAuth Export
+ * @description Main auth export for use in app
+ */
 
-export const {
-    handlers: { GET, POST },
-    auth,
-    signIn,
-    signOut,
-} = NextAuth({
-    providers: [
-        GitHubProvider({
-            clientId: process.env.GITHUB_ID,
-            clientSecret: process.env.GITHUB_SECRET,
-        }),
-        // ... add more providers here
-    ],
-});
+export { auth, signIn, signOut } from '@/lib/auth-config';

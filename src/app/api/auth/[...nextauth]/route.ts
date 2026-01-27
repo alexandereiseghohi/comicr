@@ -1,2 +1,8 @@
-// app/api/auth/[...nextauth]/route.ts
-export { GET, POST } from "@/auth"; // Adjust path if necessary
+/**
+ * NextAuth Route Handler
+ * @description API routes for authentication endpoints
+ */
+
+import { handlers } from '@/lib/auth-config';
+
+export const { GET, POST } = handlers;
