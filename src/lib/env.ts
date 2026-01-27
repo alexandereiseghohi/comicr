@@ -96,7 +96,7 @@ const envSchema = z.object({
   RATE_LIMIT_MAX_REQUESTS: z.coerce.number().default(100),
 
   // ========== JWT ==========
-  JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
+  JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters').optional(),
   JWT_EXPIRY: z.string().default('7d'),
   REFRESH_TOKEN_EXPIRY: z.string().default('30d'),
 
