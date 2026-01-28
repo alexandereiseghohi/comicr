@@ -66,8 +66,15 @@ export async function getComicById(id: number) {
  */
 export async function getComicBySlug(slug: string) {
   try {
-    const result = await db.select().from(comic).where(eq(comic.slug, slug)).limit(1);
+    const result = await db
+      .select({ comic: comic, author: author, artist: artist })
+      .from(comic)
+      .leftJoin(author, eq(comic.authorId, author.id))
+      .leftJoin(artist, eq(comic.artistId, artist.id))
+      .where(eq(comic.slug, slug))
+      .limit(1);
 
+    // Return a composed object: { comic, author?, artist? } or null
     return { success: true, data: result[0] || null };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };

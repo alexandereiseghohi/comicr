@@ -40,7 +40,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ComicPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const comic = await getComicData(slug);
+  const comicResult = await getComicData(slug);
+  // Support both legacy row shape and joined shape { comic, author, artist }
+  const comic =
+    comicResult && (comicResult as any).comic ? (comicResult as any).comic : (comicResult as any);
+  const author = comicResult && (comicResult as any).author ? (comicResult as any).author : null;
   const chapters = await getChapters(comic.id);
 
   return (
@@ -74,8 +78,12 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
           <div className="md:col-span-2 space-y-6">
             <div>
               <h1 className="text-4xl font-bold text-slate-950 mb-2">{comic.title}</h1>
-              {comic.authorId && (
+              {author?.name ? (
+                <p className="text-lg text-slate-600">by {author.name}</p>
+              ) : comic.authorId ? (
                 <p className="text-lg text-slate-600">by Author #{comic.authorId}</p>
+              ) : (
+                <p className="text-lg text-slate-600">by Unknown Author</p>
               )}
             </div>
 

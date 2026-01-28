@@ -29,12 +29,13 @@ export async function generateMetadata({
   params: Promise<{ slug: string; number: string }>;
 }) {
   const { slug, number } = await params;
-  const comic = await comicQueries.getComicBySlug(slug);
-
-  if (!comic.success || !comic.data) return {};
+  const comicResult = await comicQueries.getComicBySlug(slug);
+  if (!comicResult.success || !comicResult.data) return {};
+  const comicRow =
+    comicResult && (comicResult as any).comic ? (comicResult as any).comic : (comicResult as any);
 
   return {
-    title: `${comic.data.title} - Chapter ${number} | ComicWise`,
+    title: `${comicRow.title} - Chapter ${number} | ComicWise`,
   };
 }
 
@@ -46,10 +47,12 @@ export default async function ChapterReaderPage({
   const { slug, number } = await params;
   const chapterNumber = parseInt(number);
 
-  // Get comic
+  // Get comic (support both legacy row shape and joined shape { comic, author, artist })
   const comicResult = await comicQueries.getComicBySlug(slug);
   if (!comicResult.success || !comicResult.data) notFound();
-  const comic = comicResult.data;
+  const comic =
+    comicResult && (comicResult as any).comic ? (comicResult as any).comic : (comicResult as any);
+  const author = comicResult && (comicResult as any).author ? (comicResult as any).author : null;
 
   // Get chapter
   const chapter = await getChapterData(comic.id, chapterNumber);
@@ -74,6 +77,7 @@ export default async function ChapterReaderPage({
                 ← Back to {comic.title}
               </Button>
             </Link>
+            {author?.name && <p className="text-sm text-slate-400">by {author.name}</p>}
             <h1 className="text-3xl font-bold text-white">
               Ch. {chapter.chapterNumber}: {chapter.title}
             </h1>
