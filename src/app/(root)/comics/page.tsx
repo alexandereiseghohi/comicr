@@ -14,12 +14,17 @@ interface SearchParams {
 }
 
 async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
-  const pageValue = await searchParams.page;
+  const {
+    page: pageValue,
+    sort: sortValue,
+    search: searchValue,
+    order: orderValue,
+    status: statusValue,
+  } = await searchParams;
   const page = parseInt(pageValue ?? "1");
   const limit = 20;
-  const sort = searchParams.sort || "createdAt";
-  const order = searchParams.order === "asc" ? "asc" : "desc";
-
+  const sort = sortValue || "createdAt";
+  const order = orderValue === "asc" ? "asc" : "desc";
   const validStatuses = [
     "Ongoing",
     "Hiatus",
@@ -31,14 +36,10 @@ async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
 
   let result;
 
-  if (searchParams.search) {
-    result = await comicQueries.searchComics(searchParams.search, { page, limit });
-  } else if (
-    searchParams.status &&
-    searchParams.status !== "All" &&
-    validStatuses.includes(searchParams.status as any)
-  ) {
-    result = await comicQueries.getComicsByStatus(searchParams.status as any, {
+  if (searchValue) {
+    result = await comicQueries.searchComics(searchValue, { page, limit });
+  } else if (statusValue && statusValue !== "All" && validStatuses.includes(statusValue as any)) {
+    result = await comicQueries.getComicsByStatus(statusValue as any, {
       page,
       limit,
       sort,

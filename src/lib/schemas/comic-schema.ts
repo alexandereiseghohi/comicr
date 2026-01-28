@@ -3,18 +3,18 @@
  * @description Type-safe validation for comic operations
  */
 
-import { z } from 'zod';
-import { slugValidator } from '@/types/validation';
+import { slugValidator } from "@/types/validation";
+import { z } from "zod";
 
 /**
  * Create Comic Schema
  */
 export const createComicSchema = z.object({
-  title: z.string().min(1, 'Title required').max(255, 'Title too long'),
-  description: z.string().min(10, 'Description too short').max(2000),
-  coverImage: z.string().url('Invalid URL'),
+  title: z.string().min(1, "Title required").max(255, "Title too long"),
+  description: z.string().min(10, "Description too short").max(2000),
+  coverImage: z.string().url("Invalid URL"),
   slug: slugValidator,
-  status: z.enum(['Ongoing', 'Hiatus', 'Completed', 'Dropped', 'Season End', 'Coming Soon']),
+  status: z.enum(["Ongoing", "Hiatus", "Completed", "Dropped", "Season End", "Coming Soon"]),
   publicationDate: z.coerce.date(),
   authorId: z.number().int().positive(),
   artistId: z.number().int().positive().optional(),

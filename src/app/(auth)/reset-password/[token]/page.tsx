@@ -3,12 +3,14 @@
  * @description Password reset confirmation page
  */
 
-import { redirect } from 'next/navigation';
-import { ResetPasswordForm } from '@/components/auth/reset-password-form';
+import { ResetPasswordForm } from "@/components/auth/reset-password-form";
+import { Metadata } from "next";
+import Link from "next/dist/client/link";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: 'Reset Password | ComicWise',
-  description: 'Set your new password',
+export const metadata: Metadata = {
+  title: "Reset Password | ComicWise",
+  description: "Set your new password",
 };
 
 interface ResetPasswordPageProps {
@@ -18,13 +20,11 @@ interface ResetPasswordPageProps {
 /**
  * Reset Password Page Component
  */
-export default async function ResetPasswordPage({
-  params,
-}: ResetPasswordPageProps) {
+export default async function ResetPasswordPage({ params }: ResetPasswordPageProps) {
   const { token } = await params;
 
   if (!token) {
-    redirect('/auth/forgot-password');
+    redirect("/forgot-password");
   }
 
   return (
@@ -38,9 +38,9 @@ export default async function ResetPasswordPage({
         <ResetPasswordForm token={token} />
 
         <p className="text-center text-slate-400 text-sm mt-6">
-          <a href="/auth/sign-in" className="text-blue-500 hover:text-blue-400">
+          <Link href="/sign-in" className="text-blue-500 hover:text-blue-400">
             Back to sign in
-          </a>
+          </Link>
         </p>
       </div>
     </div>

@@ -3,13 +3,14 @@
  * @description Password reset request page
  */
 
-import { redirect } from 'next/navigation';
-import { auth } from '@/lib/auth-config';
-import { ForgotPasswordForm } from '@/components/auth/forgot-password-form';
+import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
+import { auth } from "@/lib/auth-config";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: 'Forgot Password | ComicWise',
-  description: 'Reset your ComicWise password',
+export const metadata: Metadata = {
+  title: "Forgot Password | ComicWise",
+  description: "Reset your ComicWise password",
 };
 
 /**
@@ -19,7 +20,7 @@ export default async function ForgotPasswordPage() {
   // Redirect already authenticated users
   const session = await auth();
   if (session?.user) {
-    redirect('/');
+    redirect("/");
   }
 
   return (
@@ -35,7 +36,7 @@ export default async function ForgotPasswordPage() {
         <ForgotPasswordForm />
 
         <p className="text-center text-slate-400 text-sm mt-6">
-          Remember your password?{' '}
+          Remember your password?{" "}
           <a href="/auth/sign-in" className="text-blue-500 hover:text-blue-400">
             Sign in
           </a>

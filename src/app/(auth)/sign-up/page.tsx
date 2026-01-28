@@ -3,13 +3,15 @@
  * @description User registration page
  */
 
-import { redirect } from 'next/navigation';
-import { auth } from '@/lib/auth-config';
-import { SignUpForm } from '@/components/auth/sign-up-form';
+import { SignUpForm } from "@/components/auth/sign-up-form";
+import { auth } from "@/lib/auth-config";
+import { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: 'Sign Up | ComicWise',
-  description: 'Create a new ComicWise account',
+export const metadata: Metadata = {
+  title: "Sign Up | ComicWise",
+  description: "Create a new ComicWise account",
 };
 
 /**
@@ -19,7 +21,7 @@ export default async function SignUpPage() {
   // Redirect already authenticated users
   const session = await auth();
   if (session?.user) {
-    redirect('/');
+    redirect("/");
   }
 
   return (
@@ -33,10 +35,10 @@ export default async function SignUpPage() {
         <SignUpForm />
 
         <p className="text-center text-slate-400 text-sm mt-6">
-          Already have an account?{' '}
-          <a href="/auth/sign-in" className="text-blue-500 hover:text-blue-400">
+          Already have an account?{" "}
+          <Link href="/sign-in" className="text-blue-500 hover:text-blue-400">
             Sign in
-          </a>
+          </Link>
         </p>
       </div>
     </div>
