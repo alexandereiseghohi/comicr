@@ -5,16 +5,11 @@ import { eq } from "drizzle-orm";
 export async function getChaptersByComicId(comicId: number, { limit = 20, offset = 0 } = {}) {
   try {
     // Some test mocks may not implement offset chaining; call limit and optionally offset
-    const base = db
-      .select()
-      .from(chapter)
-      .where(eq(chapter.comicId, comicId))
-      .limit(limit as any);
+    const base = db.select().from(chapter).where(eq(chapter.comicId, comicId)).limit(limit);
     // Attempt to apply offset if the query builder supports it (mock-safe)
-    // @ts-ignore
-    if (typeof base.offset === "function" && offset) {
-      // @ts-ignore
-      const results = await base.offset(offset);
+    const maybeOffset = (base as unknown as { offset?: (n: number) => Promise<unknown> }).offset;
+    if (typeof maybeOffset === "function" && offset) {
+      const results = await maybeOffset.call(base, offset);
       return { success: true, data: results };
     }
 

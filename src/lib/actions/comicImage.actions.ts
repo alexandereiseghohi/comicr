@@ -1,8 +1,15 @@
 import * as comicImageMutations from "@/database/mutations/comicImage.mutations";
 
+type CreateComicImageInput = {
+  comicId: number;
+  imageUrl: string;
+  imageOrder: number;
+};
+
 export async function createComicImageAction(formData: unknown) {
-  // Minimal validation done in mutations; caller should ensure types
-  return await comicImageMutations.createComicImage(formData as any);
+  // Minimal validation done in mutations; coerce via a safe double-cast to avoid `any`
+  const data = formData as unknown as CreateComicImageInput;
+  return await comicImageMutations.createComicImage(data);
 }
 
 export async function deleteComicImageAction(id: number) {

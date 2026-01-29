@@ -1,5 +1,6 @@
 import { db } from "@/database/db";
 import { comicToGenre } from "@/database/schema";
+import { and, eq } from "drizzle-orm";
 
 export async function addGenreToComic(comicId: number, genreId: number) {
   try {
@@ -12,7 +13,9 @@ export async function addGenreToComic(comicId: number, genreId: number) {
 
 export async function removeGenreFromComic(comicId: number, genreId: number) {
   try {
-    await db.delete(comicToGenre).where({ comicId, genreId } as any);
+    await db
+      .delete(comicToGenre)
+      .where(and(eq(comicToGenre.comicId, comicId), eq(comicToGenre.genreId, genreId)));
     return { success: true };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Deletion failed" };
