@@ -1,6 +1,9 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "typescript.preferences.importModuleSpecifier": "relative",
+
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit",
@@ -22,13 +25,16 @@
     "**/.next": true,
     "**/dist": true,
     "**/.out": true,
-    "**/coverage": true
+    "**/coverage": true,
+    "**/.git": true
   },
   "files.exclude": {
     "**/node_modules": true,
     "**/.next": true,
     "**/dist": true,
-    "tsconfig.tsbuildinfo": true
+    "tsconfig.tsbuildinfo": true,
+    "**/.cache": true,
+    "**/.turbo": true
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -55,14 +61,14 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
-  "eslint.validate": ["javascript", "typescript", "typescriptreact"],
+  "eslint.validate": ["javascript", "typescript", "typescriptreact", "json"],
   "eslint.format.enable": true,
   "prettier.semi": true,
   "prettier.singleQuote": false,
   "prettier.trailingComma": "es5",
   "prettier.arrowParens": "always",
   "prettier.bracketSpacing": true,
-  "prettier.jsxBracketSameLine": false,
+  "prettier.bracketSameLine": false,
   "prettier.jsxSingleQuote": false,
   "prettier.printWidth": 100,
   "prettier.tabWidth": 2,
@@ -84,7 +90,9 @@
   },
   "git.ignoreLimitWarning": true,
   "gitlens.defaultDateFormat": "yyyy-MM-dd HH:mm:ss",
-  "notebook.cellToolbarLocation": "right",
+  "notebook.cellToolbarLocation": {
+    "default": "right"
+  },
   "redhat.telemetry.enabled": false,
   "telemetry.telemetryLevel": "off"
 }

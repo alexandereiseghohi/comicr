@@ -3,9 +3,12 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    environment: "jsdom",
     globals: true,
-    include: ["tests/unit/**/*.spec.*"],
+    environment: "jsdom",
+    include: ["tests/unit/**/*.spec.*", "tests/**/*.spec.*"],
+    coverage: {
+      reporter: ["text", "lcov"],
+    },
   },
   resolve: {
     alias: {

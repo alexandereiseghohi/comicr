@@ -1,3 +1,55 @@
+# ComicWise (comicr) — local developer guide
+
+Short overview, setup and run commands for local development.
+
+## Quick start
+
+1. Install dependencies:
+
+```bash
+pnpm install
+```
+
+2. Create `.env.local` from `.env.local.example` and fill values.
+3. Seed the database (local dev):
+
+```bash
+pnpm db:push
+pnpm db:seed
+```
+
+4. Run validation and start dev server:
+
+```bash
+pnpm validate
+pnpm dev
+```
+
+## Key scripts (add to `package.json` scripts)
+
+- dev: start dev server
+- build: production build
+- type-check: tsc --noEmit
+- lint:eslint
+- test: unit & e2e
+- validate: runs type-check, lint, tests
+
+## Project layout
+
+- `src/app/` — Next.js app router pages and layouts
+- `src/components/` — reusable React components
+- `src/schemas/` — Zod validation schemas
+- `scripts/` — automation helpers (db seed etc.)
+- `.github/workflows/` — CI/CD pipelines
+
+## Testing
+
+- Unit tests: Vitest
+- End-to-end: Playwright
+
+## Contributing
+
+See `CONTRIBUTING.md` (create if missing)
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

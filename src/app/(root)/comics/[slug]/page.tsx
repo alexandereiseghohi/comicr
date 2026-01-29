@@ -19,13 +19,17 @@ async function getComicData(slug: string) {
 }
 
 async function getChapters(comicId: number) {
-  const result = await chapterQueries.getChaptersByComicId(comicId, { limit: 100 });
+  const result = await chapterQueries.getChaptersByComicId(comicId, {
+    limit: 100,
+  });
   return result.success ? result.data || [] : [];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const comic = await getComicData(slug);
+  const comicResult = await getComicData(slug);
+  const comic =
+    comicResult && (comicResult as any).comic ? (comicResult as any).comic : (comicResult as any);
 
   return {
     title: `${comic.title} | ComicWise`,

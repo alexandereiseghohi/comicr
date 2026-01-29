@@ -1,6 +1,6 @@
 import { db } from "@/database/db";
 import { bookmark } from "@/database/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 export async function addBookmark(data: {
   userId: string;
@@ -19,8 +19,7 @@ export async function removeBookmark(userId: string, comicId: number) {
   try {
     await db
       .delete(bookmark)
-      .where(eq(bookmark.userId, userId))
-      .where(eq(bookmark.comicId, comicId));
+      .where(and(eq(bookmark.userId, userId), eq(bookmark.comicId, comicId)));
     return { success: true };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Deletion failed" };
