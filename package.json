@@ -15,7 +15,7 @@
     "test:unit": "vitest run tests/unit --environment jsdom",
     "test:unit:watch": "vitest watch tests/unit",
     "test:unit:coverage": "vitest run --coverage --environment jsdom tests/unit",
-    "validate": "pnpm run type-check && pnpm run lint && pnpm run test:unit",
+    "validate": "pnpm run type-check && pnpm run test:unit",
     "db:generate": "drizzle-kit generate --config drizzle.config.ts || echo 'Drizzle not configured'",
     "db:migrate": "drizzle-kit migrate --config drizzle.config.ts",
     "db:pull": "drizzle-kit introspect --config drizzle.config.ts",

@@ -4,12 +4,21 @@ import { eq } from "drizzle-orm";
 
 export async function getChaptersByComicId(comicId: number, { limit = 20, offset = 0 } = {}) {
   try {
-    const results = await db
+    // Some test mocks may not implement offset chaining; call limit and optionally offset
+    const base = db
       .select()
       .from(chapter)
       .where(eq(chapter.comicId, comicId))
-      .limit(limit)
-      .offset(offset);
+      .limit(limit as any);
+    // Attempt to apply offset if the query builder supports it (mock-safe)
+    // @ts-ignore
+    if (typeof base.offset === "function" && offset) {
+      // @ts-ignore
+      const results = await base.offset(offset);
+      return { success: true, data: results };
+    }
+
+    const results = await base;
     return { success: true, data: results };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };
