@@ -7,7 +7,7 @@
 import * as comicMutations from "@/database/mutations/comic-mutations";
 import * as comicQueries from "@/database/queries/comic-queries";
 import { auth } from "@/lib/auth-config";
-import { updateComicSchema } from "@/lib/schemas/comic-schema";
+import { updateComicSchema } from "@/schemas/comic-schema";
 import type { AuthUser } from "@/types/auth";
 import { NextRequest, NextResponse } from "next/server";
 

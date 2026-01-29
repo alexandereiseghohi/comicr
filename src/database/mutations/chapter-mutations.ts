@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { db } from "@/database/db";
 import { chapter as chapterTable } from "@/database/schema";
-import type { CreateChapterInput, UpdateChapterInput } from "@/lib/schemas/chapter-schema";
+import type { CreateChapterInput, UpdateChapterInput } from "@/schemas/chapter-schema";
 import type { DbMutationResult } from "@/types";
 import { eq } from "drizzle-orm";
 

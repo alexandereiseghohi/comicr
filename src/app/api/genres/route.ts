@@ -1,7 +1,7 @@
 import * as genreMutations from "@/database/mutations/genre.mutations";
 import * as genreQueries from "@/database/queries/genre.queries";
 import { auth } from "@/lib/auth-config";
-import { createGenreSchema } from "@/lib/schemas/genre-schema";
+import { createGenreSchema } from "@/schemas/genre-schema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -31,7 +31,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: result.data }, { status: 201 });
   } catch (error) {
-     
     console.error(error);
     return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }

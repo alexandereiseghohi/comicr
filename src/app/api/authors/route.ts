@@ -1,7 +1,7 @@
 import * as authorMutations from "@/database/mutations/author.mutations";
 import * as authorQueries from "@/database/queries/author.queries";
 import { auth } from "@/lib/auth-config";
-import { createAuthorSchema } from "@/lib/schemas/author-schema";
+import { createAuthorSchema } from "@/schemas/author-schema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -31,7 +31,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: result.data }, { status: 201 });
   } catch (error) {
-     
     console.error(error);
     return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }

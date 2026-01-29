@@ -1,7 +1,7 @@
 import * as authorMutations from "@/database/mutations/author.mutations";
 import * as authorQueries from "@/database/queries/author.queries";
 import { auth } from "@/lib/auth-config";
-import { updateAuthorSchema } from "@/lib/schemas/author-schema";
+import { updateAuthorSchema } from "@/schemas/author-schema";
 import { NextRequest, NextResponse } from "next/server";
 
 interface RouteParams {

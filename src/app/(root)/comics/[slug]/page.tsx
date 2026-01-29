@@ -1,7 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { auth } from "@/auth";
+import BookmarkButton from "@/components/bookmarks/BookmarkButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { isBookmarked } from "@/database/mutations/bookmark-mutations";
 import * as chapterQueries from "@/database/queries/chapter-queries";
 import * as comicQueries from "@/database/queries/comic-queries";
 import Image from "next/image";
@@ -28,8 +30,11 @@ async function getChapters(comicId: number) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const comicResult = await getComicData(slug);
-  const comic =
-    comicResult && (comicResult as any).comic ? (comicResult as any).comic : (comicResult as any);
+  function hasComicField(obj: unknown): obj is { comic: Record<string, unknown> } {
+    return typeof obj === "object" && obj !== null && "comic" in obj;
+  }
+
+  const comic = hasComicField(comicResult) ? comicResult.comic : comicResult;
 
   return {
     title: `${comic.title} | ComicWise`,
@@ -46,10 +51,26 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
   const { slug } = await params;
   const comicResult = await getComicData(slug);
   // Support both legacy row shape and joined shape { comic, author, artist }
-  const comic =
-    comicResult && (comicResult as any).comic ? (comicResult as any).comic : (comicResult as any);
-  const author = comicResult && (comicResult as any).author ? (comicResult as any).author : null;
+  function hasComicField(obj: unknown): obj is { comic: Record<string, unknown> } {
+    return typeof obj === "object" && obj !== null && "comic" in obj;
+  }
+
+  const comic = hasComicField(comicResult) ? comicResult.comic : comicResult;
+  const author = hasComicField(comicResult) && comicResult.author ? comicResult.author : null;
   const chapters = await getChapters(comic.id);
+
+  // Determine bookmark state for current user (server-side)
+  let initialBookmarked = false;
+  let session = null as null | { user?: { id?: string } };
+  try {
+    session = await auth();
+    if (session?.user?.id) {
+      initialBookmarked = await isBookmarked(session.user.id, comic.id);
+    }
+  } catch {
+    // ignore auth errors and treat as not bookmarked
+    initialBookmarked = false;
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -110,12 +131,27 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
             </div>
 
             <div>
+              {/* Bookmark button (client) - shown for authenticated users; initial state set server-side */}
+              {session?.user?.id ? (
+                <BookmarkButton
+                  userId={String(session.user?.id)}
+                  comicId={Number(comic.id)}
+                  initialBookmarked={initialBookmarked}
+                />
+              ) : null}
+            </div>
+
+            <div>
               <p className="text-sm text-slate-600 mb-2">Description</p>
               <p className="text-slate-700 leading-relaxed">{comic.description}</p>
             </div>
 
             {chapters.length > 0 && (
-              <Link href={`/comics/${slug}/chapters/${(chapters[0] as any).chapterNumber}`}>
+              <Link
+                href={`/comics/${slug}/chapters/${
+                  (chapters[0] as { chapterNumber?: number })?.chapterNumber ?? 1
+                }`}
+              >
                 <Button size="lg" className="w-full">
                   Start Reading
                 </Button>
@@ -134,26 +170,34 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
                   {chapters
                     .slice()
                     .reverse()
-                    .map((chapter: any) => (
-                      <Link
-                        key={chapter.id}
-                        href={`/comics/${slug}/chapters/${chapter.chapterNumber}`}
-                      >
-                        <div className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between">
-                          <div>
-                            <h3 className="font-medium text-slate-950">
-                              Ch. {chapter.chapterNumber}: {chapter.title}
-                            </h3>
-                            <p className="text-sm text-slate-600">
-                              {new Date(chapter.releaseDate).toLocaleDateString()}
-                            </p>
+                    .map(
+                      (chapter: {
+                        id: number;
+                        chapterNumber: number;
+                        title: string;
+                        releaseDate: string | Date;
+                        views: number;
+                      }) => (
+                        <Link
+                          key={chapter.id}
+                          href={`/comics/${slug}/chapters/${chapter.chapterNumber}`}
+                        >
+                          <div className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between">
+                            <div>
+                              <h3 className="font-medium text-slate-950">
+                                Ch. {chapter.chapterNumber}: {chapter.title}
+                              </h3>
+                              <p className="text-sm text-slate-600">
+                                {new Date(chapter.releaseDate).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <div className="text-sm text-slate-500">
+                              👁️ {chapter.views.toLocaleString()}
+                            </div>
                           </div>
-                          <div className="text-sm text-slate-500">
-                            👁️ {chapter.views.toLocaleString()}
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
+                        </Link>
+                      )
+                    )}
                 </div>
               </CardContent>
             </Card>

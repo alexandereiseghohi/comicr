@@ -1,6 +1,6 @@
 import { db } from "@/database/db";
 import { chapter } from "@/database/schema";
-import type { CreateChapterInput, UpdateChapterInput } from "@/lib/schemas/chapter-schema";
+import type { CreateChapterInput, UpdateChapterInput } from "@/schemas/chapter-schema";
 import { eq, sql } from "drizzle-orm";
 
 export async function createChapter(data: CreateChapterInput) {

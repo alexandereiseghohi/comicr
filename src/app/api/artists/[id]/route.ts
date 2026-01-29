@@ -1,7 +1,7 @@
 import * as artistMutations from "@/database/mutations/artist.mutations";
 import * as artistQueries from "@/database/queries/artist.queries";
 import { auth } from "@/lib/auth-config";
-import { updateArtistSchema } from "@/lib/schemas/artist-schema";
+import { updateArtistSchema } from "@/schemas/artist-schema";
 import { NextRequest, NextResponse } from "next/server";
 
 interface RouteParams {

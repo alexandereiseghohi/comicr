@@ -1,6 +1,6 @@
 import { db } from "@/database/db";
 import { author } from "@/database/schema";
-import type { CreateAuthorInput, UpdateAuthorInput } from "@/lib/schemas/author-schema";
+import type { CreateAuthorInput, UpdateAuthorInput } from "@/schemas/author-schema";
 import { eq } from "drizzle-orm";
 
 export async function createAuthor(data: CreateAuthorInput) {

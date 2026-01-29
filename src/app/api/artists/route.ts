@@ -1,7 +1,7 @@
 import * as artistMutations from "@/database/mutations/artist.mutations";
 import * as artistQueries from "@/database/queries/artist.queries";
 import { auth } from "@/lib/auth-config";
-import { createArtistSchema } from "@/lib/schemas/artist-schema";
+import { createArtistSchema } from "@/schemas/artist-schema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -31,7 +31,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: result.data }, { status: 201 });
   } catch (error) {
-     
     console.error(error);
     return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }

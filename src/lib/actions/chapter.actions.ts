@@ -1,5 +1,5 @@
 import * as chapterMutations from "@/database/mutations/chapter.mutations";
-import { createChapterSchema } from "@/lib/schemas/chapter-schema";
+import { createChapterSchema } from "@/schemas/chapter-schema";
 
 export async function createChapterAction(formData: unknown) {
   const validation = createChapterSchema.safeParse(formData);

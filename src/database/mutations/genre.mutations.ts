@@ -1,6 +1,6 @@
 import { db } from "@/database/db";
 import { genre } from "@/database/schema";
-import type { CreateGenreInput, UpdateGenreInput } from "@/lib/schemas/genre-schema";
+import type { CreateGenreInput, UpdateGenreInput } from "@/schemas/genre-schema";
 import { eq } from "drizzle-orm";
 
 export async function createGenre(data: CreateGenreInput) {

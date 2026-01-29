@@ -1,7 +1,7 @@
 import * as typeMutations from "@/database/mutations/type.mutations";
 import * as typeQueries from "@/database/queries/type.queries";
 import { auth } from "@/lib/auth-config";
-import { updateTypeSchema } from "@/lib/schemas/type-schema";
+import { updateTypeSchema } from "@/schemas/type-schema";
 import { NextRequest, NextResponse } from "next/server";
 
 interface RouteParams {

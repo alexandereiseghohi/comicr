@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
     const { comicId } = await request.json();
     const bookmark = await createBookmark(session.user.id, comicId);
 

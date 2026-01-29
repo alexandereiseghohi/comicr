@@ -12,7 +12,7 @@ import {
   updateComicSchema,
   type CreateComicInput,
   type UpdateComicInput,
-} from "@/lib/schemas/comic-schema";
+} from "@/schemas/comic-schema";
 import type { ActionResult } from "@/types";
 import type { AuthUser } from "@/types/auth";
 import { revalidatePath } from "next/cache";

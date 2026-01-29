@@ -1,5 +1,5 @@
 import * as authorMutations from "@/database/mutations/author.mutations";
-import { createAuthorSchema } from "@/lib/schemas/author-schema";
+import { createAuthorSchema } from "@/schemas/author-schema";
 
 export async function createAuthorAction(formData: unknown) {
   const validation = createAuthorSchema.safeParse(formData);

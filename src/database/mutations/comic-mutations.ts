@@ -3,10 +3,10 @@
  * @description Create, update, delete operations for comics
  */
 
-import { db } from '@/database/db';
-import { comic } from '@/database/schema';
-import { eq, sql } from 'drizzle-orm';
-import type { CreateComicInput, UpdateComicInput } from '@/lib/schemas/comic-schema';
+import { db } from "@/database/db";
+import { comic } from "@/database/schema";
+import type { CreateComicInput, UpdateComicInput } from "@/schemas/comic-schema";
+import { eq, sql } from "drizzle-orm";
 
 /**
  * Create a new comic
@@ -17,7 +17,7 @@ export async function createComic(data: CreateComicInput) {
 
     return { success: true, data: result[0] };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Creation failed' };
+    return { success: false, error: error instanceof Error ? error.message : "Creation failed" };
   }
 }
 
@@ -34,12 +34,12 @@ export async function updateComic(id: number, data: UpdateComicInput) {
 
     return { success: true, data: result[0] };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Update failed' };
+    return { success: false, error: error instanceof Error ? error.message : "Update failed" };
   }
 }
 
 /**
- * Delete a comic  
+ * Delete a comic
  */
 export async function deleteComic(id: number) {
   try {
@@ -47,7 +47,7 @@ export async function deleteComic(id: number) {
 
     return { success: true, data: null };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Deletion failed' };
+    return { success: false, error: error instanceof Error ? error.message : "Deletion failed" };
   }
 }
 
@@ -62,7 +62,7 @@ export async function bulkCreateComics(data: CreateComicInput[]) {
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Bulk creation failed',
+      error: error instanceof Error ? error.message : "Bulk creation failed",
     };
   }
 }
@@ -80,6 +80,6 @@ export async function incrementComicViews(id: number) {
 
     return { success: true, data: result[0] };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Update failed' };
+    return { success: false, error: error instanceof Error ? error.message : "Update failed" };
   }
 }

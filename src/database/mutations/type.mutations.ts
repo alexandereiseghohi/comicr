@@ -1,6 +1,6 @@
 import { db } from "@/database/db";
 import { type as typeTable } from "@/database/schema";
-import type { CreateTypeInput, UpdateTypeInput } from "@/lib/schemas/type-schema";
+import type { CreateTypeInput, UpdateTypeInput } from "@/schemas/type-schema";
 import { eq } from "drizzle-orm";
 
 export async function createType(data: CreateTypeInput) {

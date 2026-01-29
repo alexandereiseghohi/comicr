@@ -1,6 +1,6 @@
 import { db } from "@/database/db";
 import { artist } from "@/database/schema";
-import type { CreateArtistInput, UpdateArtistInput } from "@/lib/schemas/artist-schema";
+import type { CreateArtistInput, UpdateArtistInput } from "@/schemas/artist-schema";
 import { eq } from "drizzle-orm";
 
 export async function createArtist(data: CreateArtistInput) {

@@ -1,7 +1,7 @@
 import * as chapterMutations from "@/database/mutations/chapter.mutations";
 import * as chapterQueries from "@/database/queries/chapter.queries";
 import { auth } from "@/lib/auth-config";
-import { updateChapterSchema } from "@/lib/schemas/chapter-schema";
+import { updateChapterSchema } from "@/schemas/chapter-schema";
 import { NextRequest, NextResponse } from "next/server";
 
 import type { AuthUser } from "@/types/auth";

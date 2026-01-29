@@ -1,5 +1,5 @@
 import * as artistMutations from "@/database/mutations/artist.mutations";
-import { createArtistSchema } from "@/lib/schemas/artist-schema";
+import { createArtistSchema } from "@/schemas/artist-schema";
 
 export async function createArtistAction(formData: unknown) {
   const validation = createArtistSchema.safeParse(formData);
