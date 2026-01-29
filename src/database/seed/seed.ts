@@ -77,7 +77,11 @@ function generateComics(
       .toLowerCase()
       .replace(/\s+/g, "-"),
     description: `An exciting comic series with action, adventure, and intense moments.`,
-    coverImage: `https://picsum.photos/400/600?random=${i}`,
+    coverImage: `/images/comics/${(
+      titles[i % titles.length] + `-${Math.floor(i / titles.length) + 1}`
+    )
+      .toLowerCase()
+      .replace(/\s+/g, "-")}.jpg`,
     status: statuses[i % statuses.length],
     publicationDate: new Date(2024, Math.floor(i / 2), (i % 28) + 1),
     views: Math.floor(Math.random() * 100000),

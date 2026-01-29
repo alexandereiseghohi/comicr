@@ -1,0 +1,51 @@
+name: "Verify: env/providers/links"
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: ["main", "master"]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        run: npm install -g pnpm@8
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate env (non-blocking)
+        id: validate_env
+        run: pnpm run validate:env -- --report=validate-env-report.json || true
+
+      - name: Verify providers (non-blocking)
+        id: verify_providers
+        run: pnpm run verify:providers -- --report=providers-report.json || true
+
+      - name: Verify links (non-blocking)
+        id: verify_links
+        run: pnpm run verify:links -- --report=link-report.csv || true
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-reports
+          path: |
+            providers-report.json
+            link-report.csv
+            validate-env-report.json
+
+      - name: Annotate job result
+        if: always()
+        run: |
+          echo "Verification step finished. Reports uploaded as artifacts: providers-report.json, link-report.csv, validate-env-report.json"

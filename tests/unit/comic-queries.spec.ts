@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 // Mock the database module to provide a predictable response chain
-vi.mock("@/database/db", () => {
+vi.mock("@/database/db", async () => {
   const mockResult = [
     {
       comic: {

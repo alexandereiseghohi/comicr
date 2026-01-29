@@ -1,9 +1,3 @@
-/**
- * Environment Variable Validation & Type Safety
- * @description Validates all env vars at runtime using Zod
- * Ensures type safety across the application
- */
-
 import { z } from "zod";
 
 /**

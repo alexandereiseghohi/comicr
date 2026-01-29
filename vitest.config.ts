@@ -6,6 +6,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     include: ["tests/unit/**/*.spec.*", "tests/**/*.spec.*"],
+    setupFiles: ["./tests/setup-env.ts"],
     coverage: {
       reporter: ["text", "lcov"],
     },

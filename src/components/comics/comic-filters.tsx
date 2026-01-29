@@ -1,51 +1,51 @@
-'use client';
+"use client";
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Search } from 'lucide-react';
-import { useState } from 'react';
+} from "@/components/ui/select";
+import { Search } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
-const STATUSES = ['All', 'Ongoing', 'Completed', 'Hiatus', 'Dropped', 'Season End', 'Coming Soon'];
+const STATUSES = ["All", "Ongoing", "Completed", "Hiatus", "Dropped", "Season End", "Coming Soon"];
 const SORT_OPTIONS = [
-  { label: 'Latest', value: 'createdAt-desc' },
-  { label: 'Oldest', value: 'createdAt-asc' },
-  { label: 'Most Viewed', value: 'views-desc' },
-  { label: 'Highest Rated', value: 'rating-desc' },
+  { label: "Latest", value: "createdAt-desc" },
+  { label: "Oldest", value: "createdAt-asc" },
+  { label: "Most Viewed", value: "views-desc" },
+  { label: "Highest Rated", value: "rating-desc" },
 ];
 
 export function ComicFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [search, setSearch] = useState(searchParams.get('search') || '');
-  const [status, setStatus] = useState(searchParams.get('status') || 'All');
-  const [sort, setSort] = useState(searchParams.get('sort') || 'createdAt-desc');
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [status, setStatus] = useState(searchParams.get("status") || "All");
+  const [sort, setSort] = useState(searchParams.get("sort") || "createdAt-desc");
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
     const params = new URLSearchParams();
-    if (search) params.set('search', search);
-    if (status !== 'All') params.set('status', status);
-    if (sort) params.set('sort', sort);
-    params.set('page', '1');
+    if (search) params.set("search", search);
+    if (status !== "All") params.set("status", status);
+    if (sort) params.set("sort", sort);
+    params.set("page", "1");
 
     router.push(`/comics?${params.toString()}`);
   };
 
   const handleClear = () => {
-    setSearch('');
-    setStatus('All');
-    setSort('createdAt-desc');
-    router.push('/comics');
+    setSearch("");
+    setStatus("All");
+    setSort("createdAt-desc");
+    router.push("/comics");
   };
 
   return (

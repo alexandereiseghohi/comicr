@@ -50,7 +50,8 @@ async function main() {
   for (const p of providers) {
     const report: ProviderReport = { provider: p.name, env: {}, checks: [] };
     for (const k of p.envKeys) {
-      report.env[k] = process.env[k];
+      // redact actual env values to avoid leaking secrets in CI logs/reports
+      report.env[k] = process.env[k] ? "REDACTED" : undefined;
       report.checks.push({ name: `env:${k}`, ok: Boolean(process.env[k]) });
     }
 

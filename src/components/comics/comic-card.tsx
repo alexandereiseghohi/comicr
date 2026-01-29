@@ -27,16 +27,22 @@ export function ComicCard({
   rating,
   authorName,
 }: ComicCardProps) {
+  const fallback = "/images/placeholder-comic.jpg";
+  const imgSrc = coverImage && coverImage.trim() ? coverImage : fallback;
+  const altText = title ? `Cover of ${title}` : "Comic cover";
   return (
     <Link href={`/comics/${slug}`}>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
         <div className="relative h-48 w-full">
           <Image
-            src={coverImage}
-            alt={title}
+            src={imgSrc}
+            alt={altText}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = fallback;
+            }}
           />
         </div>
         <CardHeader>

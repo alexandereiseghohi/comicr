@@ -1,0 +1,385 @@
+import { downloadAndSaveImage } from "@/lib/imageHelper";
+import { loadJsonData, seedTableBatched } from "@/lib/seedHelpers";
+import { ChapterSeedSchema, ComicSeedSchema, UserSeedSchema } from "@/lib/validations/seed";
+import bcrypt from "bcryptjs";
+import fs from "fs/promises";
+import path from "path";
+import { chapter, comic, user } from "../schema";
+import * as config from "./seed-config";
+
+async function main() {
+  const log = (event: string, data?: any) => {
+    const entry = { event, timestamp: new Date().toISOString(), ...(data && { data }) };
+    if (event === "error") {
+      console.error("[SEED]", JSON.stringify(entry));
+    } else {
+      console.info("[SEED]", JSON.stringify(entry));
+    }
+  };
+
+  log("start", { phase: "seeding" });
+  try {
+    // --- USERS ---
+    log("start", { phase: "users" });
+    const usersPath = path.resolve("users.json");
+    const users = await loadJsonData(usersPath, UserSeedSchema.array());
+    const passwordHash = await bcrypt.hash(config.CUSTOM_PASSWORD, 10);
+    const usersWithHash = users.map((u) => ({ ...u, password: passwordHash }));
+    log("progress", { phase: "users", count: usersWithHash.length });
+    await seedTableBatched({
+      table: user,
+      items: usersWithHash,
+      conflictKeys: [user.id],
+      updateFields: [user.name, user.email, user.image, user.password],
+    });
+    log("complete", { phase: "users" });
+
+    // --- COMICS ---
+    log("start", { phase: "comics" });
+    const comicFiles = ["comics.json", "comicsdata1.json", "comicsdata2.json"];
+    let allRawComics: any[] = [];
+    for (const file of comicFiles) {
+      const filePath = path.resolve(file);
+      try {
+        if (
+          await fs.stat(filePath).then(
+            () => true,
+            () => false
+          )
+        ) {
+          const data = JSON.parse(await fs.readFile(filePath, "utf8"));
+          if (Array.isArray(data)) allRawComics.push(...data);
+        }
+      } catch (err) {
+        log("error", { phase: "comics", file, error: err instanceof Error ? err.message : err });
+      }
+    }
+    const todayISO = new Date().toISOString();
+    // Track comics with invalid genres for logging
+    const comicsWithInvalidGenres: Array<{
+      idx: number;
+      id: any;
+      slug?: string;
+      title?: string;
+      genres: any;
+    }> = [];
+    allRawComics = allRawComics.map((comic, idx) => {
+      let coverImage = comic.coverImage;
+      if (!coverImage || typeof coverImage !== "string" || coverImage.trim() === "") {
+        coverImage = config.PLACEHOLDER_COMIC;
+      }
+      // Normalize genres: ensure all are strings, extract .name or .id if needed
+      let genres: string[] = [];
+      if (Array.isArray(comic.genres)) {
+        genres = comic.genres.map((g) => {
+          if (typeof g === "string") return g;
+          if (g && typeof g === "object") {
+            if (typeof g.name === "string" && g.name.trim() !== "") return g.name;
+            if (typeof g.id === "string" && g.id.trim() !== "") return g.id;
+          }
+          return "";
+        });
+        // If any genre is not a string or is an object, log for reporting
+        if (comic.genres.some((g) => typeof g !== "string")) {
+          comicsWithInvalidGenres.push({
+            idx,
+            id: comic.id,
+            slug: comic.slug,
+            title: comic.title,
+            genres: comic.genres,
+          });
+        }
+      }
+      // Build the comic object
+      const result = {
+        ...comic,
+        id: typeof comic.id === "number" ? comic.id : idx + 1,
+        authorId: typeof comic.authorId === "number" ? comic.authorId : 1,
+        genres,
+        coverImage,
+      };
+      // Guarantee publicationDate is a valid ISO string after all assignments
+      const publicationDate = result.publicationDate;
+      if (
+        !publicationDate ||
+        typeof publicationDate !== "string" ||
+        publicationDate.trim() === "" ||
+        publicationDate === "null" ||
+        publicationDate === null
+      ) {
+        result.publicationDate = todayISO;
+      } else {
+        // Try to parse and reformat if not ISO
+        const d = new Date(publicationDate);
+        if (isNaN(d.getTime())) {
+          result.publicationDate = todayISO;
+        } else {
+          result.publicationDate = d.toISOString();
+        }
+      }
+      // Final hardening: never allow null/undefined publicationDate
+      if (
+        !result.publicationDate ||
+        typeof result.publicationDate !== "string" ||
+        result.publicationDate.trim() === "" ||
+        result.publicationDate === "null" ||
+        result.publicationDate === null
+      ) {
+        result.publicationDate = todayISO;
+      }
+      return result;
+    });
+    if (comicsWithInvalidGenres.length > 0) {
+      log("error", {
+        phase: "comics-transform",
+        invalidGenres: comicsWithInvalidGenres.map((c) => ({
+          idx: c.idx,
+          id: c.id,
+          slug: c.slug,
+          title: c.title,
+          genres: c.genres,
+        })),
+        message:
+          "Some comics had non-string genres. Genres were normalized, but please review the data for correctness.",
+      });
+    }
+    // Log and SKIP any comics still missing or have invalid publicationDate (should be none)
+    const missingPubDate = allRawComics.filter(
+      (c) =>
+        !c.publicationDate ||
+        typeof c.publicationDate !== "string" ||
+        c.publicationDate.trim() === "" ||
+        c.publicationDate === "null" ||
+        c.publicationDate === null
+    );
+    if (missingPubDate.length > 0) {
+      log("error", {
+        phase: "comics-transform",
+        missingPublicationDate: missingPubDate.map((c) => ({
+          id: c.id,
+          slug: c.slug,
+          title: c.title,
+          publicationDate: c.publicationDate,
+        })),
+        message:
+          "Some comics are missing or have invalid publicationDate after normalization. These will be skipped.",
+      });
+    }
+    // Only keep comics with valid publicationDate
+    allRawComics = allRawComics.filter(
+      (c) =>
+        c.publicationDate &&
+        typeof c.publicationDate === "string" &&
+        c.publicationDate.trim() !== "" &&
+        c.publicationDate !== "null" &&
+        c.publicationDate !== null
+    );
+    let comics: any[] = [];
+    try {
+      comics = ComicSeedSchema.array().parse(allRawComics);
+    } catch (err) {
+      log("error", { phase: "comics-validate", error: err instanceof Error ? err.message : err });
+      throw err;
+    }
+    // Log the final comics array before DB insert to verify publicationDate
+    log("pre-insert", {
+      phase: "comics",
+      count: comics.length,
+      sample: comics.slice(0, 10).map((c: any) => ({
+        id: c.id,
+        slug: c.slug,
+        title: c.title,
+        publicationDate: c.publicationDate,
+      })),
+      allPublicationDatesValid: comics.every(
+        (c: any) =>
+          typeof c.publicationDate === "string" &&
+          c.publicationDate.trim() !== "" &&
+          c.publicationDate !== "null" &&
+          c.publicationDate !== null
+      ),
+    });
+    // Deduplicate comics by title (keep first occurrence)
+    const seenTitles = new Set<string>();
+    const dedupedComics: typeof comics = [];
+    const skippedComics: typeof comics = [];
+    for (const c of comics) {
+      if (typeof c.title === "string" && !seenTitles.has(c.title)) {
+        seenTitles.add(c.title);
+        dedupedComics.push(c);
+      } else {
+        skippedComics.push(c);
+      }
+    }
+    if (skippedComics.length > 0) {
+      log("warning", {
+        phase: "comics-deduplication",
+        skippedCount: skippedComics.length,
+        skippedTitles: skippedComics.map((c) => c.title),
+        message:
+          "Duplicate comic titles found and skipped. Only the first occurrence of each title is inserted.",
+      });
+    }
+    // Convert publicationDate from string to Date object for DB insert, keep id for validation and logic
+    const comicsForInsertFull = dedupedComics.map((c) => ({
+      ...c,
+      publicationDate: new Date(c.publicationDate),
+    }));
+    // Only strip id in the final array passed to seedTableBatched
+    const comicsForInsert = comicsForInsertFull.map(({ id, ...rest }) => rest);
+    log("progress", { phase: "comics", count: comicsForInsert.length });
+    // Download cover images in parallel
+    await Promise.all(
+      comicsForInsert.map(async (comic) => {
+        if (comic.coverImage) {
+          try {
+            comic.coverImage = await downloadAndSaveImage({
+              url: comic.coverImage,
+              destDir: config.COMICS_COVER_DIR + "/" + comic.slug,
+              filename: path.basename(comic.coverImage),
+              fallback: config.PLACEHOLDER_COMIC,
+            });
+          } catch (err) {
+            log("error", {
+              phase: "comic-image",
+              slug: comic.slug,
+              error: err instanceof Error ? err.message : err,
+            });
+            comic.coverImage = config.PLACEHOLDER_COMIC;
+          }
+        }
+      })
+    );
+    await seedTableBatched({
+      table: comic,
+      items: comicsForInsert,
+      // Use title as the conflict target for upsert
+      conflictKeys: [comic.title],
+      updateFields: [
+        comic.slug,
+        comic.authorId,
+        comic.artistId,
+        comic.coverImage,
+        comic.description,
+        comic.publicationDate,
+      ],
+    });
+    log("complete", { phase: "comics" });
+
+    // --- CHAPTERS ---
+    log("start", { phase: "chapters" });
+    const chapterFiles = ["chapters.json", "chaptersdata1.json", "chaptersdata2.json"];
+    const allRawChapters: any[] = [];
+    for (const file of chapterFiles) {
+      const filePath = path.resolve(file);
+      try {
+        if (
+          await fs.stat(filePath).then(
+            () => true,
+            () => false
+          )
+        ) {
+          const data = JSON.parse(await fs.readFile(filePath, "utf8"));
+          if (Array.isArray(data)) allRawChapters.push(...data);
+        }
+      } catch (err) {
+        log("error", { phase: "chapters", file, error: err instanceof Error ? err.message : err });
+      }
+    }
+    // Filter out chapters missing required fields before validation
+    const requiredFields = ["id", "comicId", "title", "slug", "images"];
+    const validChapters = allRawChapters.filter((c) =>
+      requiredFields.every((f) =>
+        f === "images"
+          ? Array.isArray(c.images) && c.images.length > 0
+          : c[f] !== undefined && c[f] !== null && c[f] !== ""
+      )
+    );
+    const skippedChapters = allRawChapters.filter((c) => !validChapters.includes(c));
+    if (skippedChapters.length > 0) {
+      log("warning", {
+        phase: "chapters-filter",
+        skippedCount: skippedChapters.length,
+        sample: skippedChapters.slice(0, 10).map((c: any) => ({
+          id: c.id,
+          comicId: c.comicId,
+          title: c.title,
+          slug: c.slug,
+          images: c.images,
+        })),
+        message: "Some chapters were missing required fields and were skipped.",
+      });
+    }
+    // Debug: print a sample of chapters before validation
+    log("pre-validate", {
+      phase: "chapters",
+      count: validChapters.length,
+      sample: validChapters.slice(0, 10).map((c: any) => ({
+        id: c.id,
+        comicId: c.comicId,
+        title: c.title,
+        slug: c.slug,
+        images: Array.isArray(c.images) ? c.images.length : c.images,
+      })),
+    });
+    let chapters: any[] = [];
+    try {
+      chapters = ChapterSeedSchema.array().parse(validChapters);
+    } catch (err) {
+      log("error", { phase: "chapters-validate", error: err instanceof Error ? err.message : err });
+      throw err;
+    }
+    // Debug: print a sample of chapters after validation
+    log("pre-insert", {
+      phase: "chapters",
+      count: chapters.length,
+      sample: chapters.slice(0, 10).map((c: any) => ({
+        id: c.id,
+        comicId: c.comicId,
+        title: c.title,
+        slug: c.slug,
+        images: Array.isArray(c.images) ? c.images.length : c.images,
+      })),
+    });
+    log("progress", { phase: "chapters", count: chapters.length });
+    // Download chapter images in parallel
+    await Promise.all(
+      chapters.map(async (chapter) => {
+        if (Array.isArray(chapter.images)) {
+          try {
+            chapter.images = await Promise.all(
+              chapter.images.map((imgUrl) =>
+                downloadAndSaveImage({
+                  url: imgUrl,
+                  destDir: config.CHAPTERS_IMAGE_DIR + "/" + chapter.comicId + "/" + chapter.slug,
+                  filename: path.basename(imgUrl),
+                  fallback: config.PLACEHOLDER_COMIC,
+                })
+              )
+            );
+          } catch (err) {
+            log("error", {
+              phase: "chapter-image",
+              slug: chapter.slug,
+              error: err instanceof Error ? err.message : err,
+            });
+          }
+        }
+      })
+    );
+    await seedTableBatched({
+      table: chapter,
+      items: chapters,
+      conflictKeys: [chapter.id],
+      updateFields: [chapter.title, chapter.slug, chapter.images, chapter.releaseDate],
+    });
+    log("complete", { phase: "chapters" });
+
+    log("complete", { phase: "seeding" });
+  } catch (err) {
+    log("error", { phase: "seeding", error: err instanceof Error ? err.message : err });
+    throw err;
+  }
+}
+
+export default main;

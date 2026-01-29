@@ -113,12 +113,28 @@ export default function ProfileForm({ defaultName, defaultImage, defaultEmail }:
         </div>
 
         <div>
-          <label className="block text-sm">Image URL</label>
+          <label htmlFor="profile-image-url" className="block text-sm">
+            Image URL
+          </label>
           <input
+            id="profile-image-url"
             value={image}
             onChange={(e) => setImage(e.target.value)}
             className="mt-1 block w-full border rounded px-3 py-2"
+            aria-describedby="profile-image-preview"
           />
+          <div className="mt-2 flex items-center gap-4">
+            <img
+              id="profile-image-preview"
+              src={image && image.trim() ? image : "/images/shadcn.jpg"}
+              alt={name ? `Profile image for ${name}` : "Profile image"}
+              className="w-16 h-16 rounded-full border object-cover"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = "/images/shadcn.jpg";
+              }}
+            />
+            <span className="text-xs text-muted-foreground">Preview</span>
+          </div>
         </div>
 
         <div className="flex items-center space-x-2">

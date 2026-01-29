@@ -1,6 +1,6 @@
 [
   {
-    "image": "/avatars/desk.jpg",
+    "image": "images/avatars/desk.jpg",
     "email": "kurtweller505@gmail.com",
     "name": "kurt",
     "id": "5379c193-173a-4130-9fd0-525b80059394",
@@ -12,7 +12,7 @@
     "emailVerified": "2025-11-14T17:52:22.232Z"
   },
   {
-    "image": "/shadcn.jpg?updatedAt=1760990176881",
+    "image": "images/shadcn.jpg",
     "email": "john@example.com",
     "name": "john",
     "id": "d0521f18-1702-4aae-903c-400a32feaf28",
@@ -24,7 +24,7 @@
     "emailVerified": "2025-11-14T17:52:22.491Z"
   },
   {
-    "image": "/shadcn.jpg?updatedAt=1760990176881",
+    "image": "images/shadcn.jpg",
     "email": "alexanderrhixe30@gmail.com",
     "name": "alexander",
     "id": "df92409f-2c43-47c9-aad9-fcd025c64de5",
@@ -36,7 +36,7 @@
     "emailVerified": "2025-11-14T17:52:22.485Z"
   },
   {
-    "image": "/shadcn.jpg?updatedAt=1760990176881",
+    "image": "images/shadcn.jpg",
     "email": "rhixecompany@gmail.com",
     "name": "rhixecompany",
     "id": "693bd0bc-b61f-4ad2-bb1d-072bd610f722",
