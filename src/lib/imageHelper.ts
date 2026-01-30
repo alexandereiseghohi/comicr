@@ -1,13 +1,10 @@
-import crypto from "crypto";
 import { createWriteStream } from "fs";
 import fs from "fs/promises";
 import path from "path";
 import { pipeline } from "stream/promises";
 const allowedFormats = ["jpeg", "jpg", "png", "webp", "avif"];
 const maxSize = parseInt(process.env.SEED_MAX_IMAGE_SIZE_BYTES || "5242880", 10);
-const concurrency = parseInt(process.env.SEED_DOWNLOAD_CONCURRENCY || "5", 10);
 const placeholderComic = path.resolve("public/placeholder-comic.jpg");
-const placeholderUser = path.resolve("public/shadcn.jpg");
 
 function getExt(url: string) {
   const ext = path.extname(url).replace(".", "").toLowerCase();
@@ -25,13 +22,6 @@ async function fileExists(filePath: string) {
   } catch {
     return false;
   }
-}
-
-function hashUrl(url: string, filename: string) {
-  return crypto
-    .createHash("sha256")
-    .update(url + filename)
-    .digest("hex");
 }
 
 /**
@@ -62,7 +52,6 @@ export async function downloadAndSaveImage({
   // Dedupe: check if file exists
   if (await fileExists(absPath)) return relPath;
   // Download with retries
-  let lastErr;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       const res = await fetch(url);
@@ -71,13 +60,22 @@ export async function downloadAndSaveImage({
       if (size > maxSize) throw new Error("Image too large");
       await fs.mkdir(path.dirname(absPath), { recursive: true });
       const fileStream = createWriteStream(absPath);
-      await pipeline(res.body, fileStream);
+      if (!res.body) throw new Error("No response body");
+      // Convert web ReadableStream to Node.js stream if needed
+      let nodeStream: NodeJS.ReadableStream;
+      if ((res.body as unknown as NodeJS.ReadableStream & { pipe?: unknown }).pipe) {
+        nodeStream = res.body as unknown as NodeJS.ReadableStream;
+      } else {
+        const streamModule = await import("stream");
+        nodeStream = streamModule.Readable.fromWeb(
+          res.body as unknown as import("stream/web").ReadableStream<Uint8Array>
+        );
+      }
+      await pipeline(nodeStream, fileStream);
       return relPath;
-    } catch (err) {
-      lastErr = err;
+    } catch {
       await new Promise((r) => setTimeout(r, 2 ** attempt * 100));
     }
   }
-  // Fallback
   return fallback;
 }

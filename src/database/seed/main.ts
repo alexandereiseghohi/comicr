@@ -4,12 +4,20 @@ import { ChapterSeedSchema, ComicSeedSchema, UserSeedSchema } from "@/lib/valida
 import bcrypt from "bcryptjs";
 import fs from "fs/promises";
 import path from "path";
+import type { z } from "zod";
 import { chapter, comic, user } from "../schema";
 import * as config from "./seed-config";
 
-async function main() {
-  const log = (event: string, data?: any) => {
-    const entry = { event, timestamp: new Date().toISOString(), ...(data && { data }) };
+async function main(): Promise<void> {
+  // Type for DB insert (publicationDate as Date)
+  type ComicSeed = z.infer<typeof ComicSeedSchema>;
+  type ComicInsert = Omit<ComicSeed, "id" | "publicationDate"> & { publicationDate: Date };
+  const log = (event: string, data?: Record<string, unknown>) => {
+    const entry: { event: string; timestamp: string; data?: Record<string, unknown> } = {
+      event,
+      timestamp: new Date().toISOString(),
+      ...(data ? { data } : {}),
+    };
     if (event === "error") {
       console.error("[SEED]", JSON.stringify(entry));
     } else {
@@ -22,22 +30,38 @@ async function main() {
     // --- USERS ---
     log("start", { phase: "users" });
     const usersPath = path.resolve("users.json");
-    const users = await loadJsonData(usersPath, UserSeedSchema.array());
+    const users = await loadJsonData<z.infer<typeof UserSeedSchema>[]>(
+      usersPath,
+      UserSeedSchema.array()
+    );
     const passwordHash = await bcrypt.hash(config.CUSTOM_PASSWORD, 10);
-    const usersWithHash = users.map((u) => ({ ...u, password: passwordHash }));
+    const usersWithHash = users.map(
+      (
+        u: z.infer<typeof UserSeedSchema>
+      ): z.infer<typeof UserSeedSchema> & { password: string } => ({
+        ...u,
+        password: passwordHash,
+      })
+    );
     log("progress", { phase: "users", count: usersWithHash.length });
     await seedTableBatched({
       table: user,
       items: usersWithHash,
       conflictKeys: [user.id],
-      updateFields: [user.name, user.email, user.image, user.password],
+      updateFields: [
+        { name: "name", value: undefined },
+        { name: "email", value: undefined },
+        { name: "image", value: undefined },
+        { name: "password", value: undefined },
+      ],
     });
     log("complete", { phase: "users" });
 
     // --- COMICS ---
     log("start", { phase: "comics" });
     const comicFiles = ["comics.json", "comicsdata1.json", "comicsdata2.json"];
-    let allRawComics: any[] = [];
+    type ComicSeed = z.infer<typeof ComicSeedSchema>;
+    let allRawComics: ComicSeed[] = [];
     for (const file of comicFiles) {
       const filePath = path.resolve(file);
       try {
@@ -47,23 +71,27 @@ async function main() {
             () => false
           )
         ) {
-          const data = JSON.parse(await fs.readFile(filePath, "utf8"));
-          if (Array.isArray(data)) allRawComics.push(...data);
+          const data: unknown = JSON.parse(await fs.readFile(filePath, "utf8"));
+          if (Array.isArray(data)) allRawComics.push(...(data as ComicSeed[]));
         }
-      } catch (err) {
-        log("error", { phase: "comics", file, error: err instanceof Error ? err.message : err });
+      } catch (err: unknown) {
+        log("error", {
+          phase: "comics",
+          file,
+          error: err instanceof Error ? err.message : String(err),
+        });
       }
     }
     const todayISO = new Date().toISOString();
     // Track comics with invalid genres for logging
     const comicsWithInvalidGenres: Array<{
       idx: number;
-      id: any;
+      id: string | number | undefined;
       slug?: string;
       title?: string;
-      genres: any;
+      genres: unknown;
     }> = [];
-    allRawComics = allRawComics.map((comic, idx) => {
+    allRawComics = allRawComics.map((comic: ComicSeed, idx: number): ComicSeed => {
       let coverImage = comic.coverImage;
       if (!coverImage || typeof coverImage !== "string" || coverImage.trim() === "") {
         coverImage = config.PLACEHOLDER_COMIC;
@@ -71,16 +99,16 @@ async function main() {
       // Normalize genres: ensure all are strings, extract .name or .id if needed
       let genres: string[] = [];
       if (Array.isArray(comic.genres)) {
-        genres = comic.genres.map((g) => {
+        genres = comic.genres.map((g: string | { name?: string; id?: string }) => {
           if (typeof g === "string") return g;
-          if (g && typeof g === "object") {
-            if (typeof g.name === "string" && g.name.trim() !== "") return g.name;
-            if (typeof g.id === "string" && g.id.trim() !== "") return g.id;
-          }
+          if (g && typeof g === "object" && typeof g.name === "string" && g.name.trim() !== "")
+            return g.name;
+          if (g && typeof g === "object" && typeof g.id === "string" && g.id.trim() !== "")
+            return g.id;
           return "";
         });
         // If any genre is not a string or is an object, log for reporting
-        if (comic.genres.some((g) => typeof g !== "string")) {
+        if (comic.genres.some((g: unknown) => typeof g !== "string")) {
           comicsWithInvalidGenres.push({
             idx,
             id: comic.id,
@@ -132,20 +160,28 @@ async function main() {
     if (comicsWithInvalidGenres.length > 0) {
       log("error", {
         phase: "comics-transform",
-        invalidGenres: comicsWithInvalidGenres.map((c) => ({
-          idx: c.idx,
-          id: c.id,
-          slug: c.slug,
-          title: c.title,
-          genres: c.genres,
-        })),
+        invalidGenres: comicsWithInvalidGenres.map(
+          (c: {
+            idx: number;
+            id: string | number | undefined;
+            slug?: string;
+            title?: string;
+            genres: unknown;
+          }) => ({
+            idx: c.idx,
+            id: c.id,
+            slug: c.slug,
+            title: c.title,
+            genres: c.genres,
+          })
+        ),
         message:
           "Some comics had non-string genres. Genres were normalized, but please review the data for correctness.",
       });
     }
     // Log and SKIP any comics still missing or have invalid publicationDate (should be none)
     const missingPubDate = allRawComics.filter(
-      (c) =>
+      (c: ComicSeed): boolean =>
         !c.publicationDate ||
         typeof c.publicationDate !== "string" ||
         c.publicationDate.trim() === "" ||
@@ -155,7 +191,7 @@ async function main() {
     if (missingPubDate.length > 0) {
       log("error", {
         phase: "comics-transform",
-        missingPublicationDate: missingPubDate.map((c) => ({
+        missingPublicationDate: missingPubDate.map((c: ComicSeed) => ({
           id: c.id,
           slug: c.slug,
           title: c.title,
@@ -166,33 +202,36 @@ async function main() {
       });
     }
     // Only keep comics with valid publicationDate
-    allRawComics = allRawComics.filter(
-      (c) =>
-        c.publicationDate &&
+    allRawComics = allRawComics.filter((c: ComicSeed): boolean => {
+      return (
         typeof c.publicationDate === "string" &&
         c.publicationDate.trim() !== "" &&
         c.publicationDate !== "null" &&
         c.publicationDate !== null
-    );
-    let comics: any[] = [];
+      );
+    });
+    let comics: ComicSeed[] = [];
     try {
       comics = ComicSeedSchema.array().parse(allRawComics);
-    } catch (err) {
-      log("error", { phase: "comics-validate", error: err instanceof Error ? err.message : err });
+    } catch (err: unknown) {
+      log("error", {
+        phase: "comics-validate",
+        error: err instanceof Error ? (err as Error).message : err,
+      });
       throw err;
     }
     // Log the final comics array before DB insert to verify publicationDate
     log("pre-insert", {
       phase: "comics",
       count: comics.length,
-      sample: comics.slice(0, 10).map((c: any) => ({
+      sample: comics.slice(0, 10).map((c: ComicSeed) => ({
         id: c.id,
         slug: c.slug,
         title: c.title,
         publicationDate: c.publicationDate,
       })),
       allPublicationDatesValid: comics.every(
-        (c: any) =>
+        (c: ComicSeed) =>
           typeof c.publicationDate === "string" &&
           c.publicationDate.trim() !== "" &&
           c.publicationDate !== "null" &&
@@ -215,22 +254,27 @@ async function main() {
       log("warning", {
         phase: "comics-deduplication",
         skippedCount: skippedComics.length,
-        skippedTitles: skippedComics.map((c) => c.title),
+        skippedTitles: skippedComics.map((c: ComicSeed) => c.title),
         message:
           "Duplicate comic titles found and skipped. Only the first occurrence of each title is inserted.",
       });
     }
     // Convert publicationDate from string to Date object for DB insert, keep id for validation and logic
-    const comicsForInsertFull = dedupedComics.map((c) => ({
+    const comicsForInsertFull = dedupedComics.map((c: ComicSeed) => ({
       ...c,
-      publicationDate: new Date(c.publicationDate),
+      publicationDate:
+        typeof c.publicationDate === "string" ? new Date(c.publicationDate) : c.publicationDate,
     }));
     // Only strip id in the final array passed to seedTableBatched
-    const comicsForInsert = comicsForInsertFull.map(({ id, ...rest }) => rest);
+    const comicsForInsert = comicsForInsertFull.map((comic) => {
+      const rest = { ...comic };
+      delete rest.id;
+      return rest as ComicInsert;
+    });
     log("progress", { phase: "comics", count: comicsForInsert.length });
     // Download cover images in parallel
     await Promise.all(
-      comicsForInsert.map(async (comic) => {
+      comicsForInsert.map(async (comic: ComicInsert) => {
         if (comic.coverImage) {
           try {
             comic.coverImage = await downloadAndSaveImage({
@@ -239,11 +283,11 @@ async function main() {
               filename: path.basename(comic.coverImage),
               fallback: config.PLACEHOLDER_COMIC,
             });
-          } catch (err) {
+          } catch (err: unknown) {
             log("error", {
               phase: "comic-image",
               slug: comic.slug,
-              error: err instanceof Error ? err.message : err,
+              error: err instanceof Error ? (err as Error).message : err,
             });
             comic.coverImage = config.PLACEHOLDER_COMIC;
           }
@@ -256,12 +300,12 @@ async function main() {
       // Use title as the conflict target for upsert
       conflictKeys: [comic.title],
       updateFields: [
-        comic.slug,
-        comic.authorId,
-        comic.artistId,
-        comic.coverImage,
-        comic.description,
-        comic.publicationDate,
+        { name: "slug", value: undefined },
+        { name: "authorId", value: undefined },
+        { name: "artistId", value: undefined },
+        { name: "coverImage", value: undefined },
+        { name: "description", value: undefined },
+        { name: "publicationDate", value: undefined },
       ],
     });
     log("complete", { phase: "comics" });
@@ -269,7 +313,8 @@ async function main() {
     // --- CHAPTERS ---
     log("start", { phase: "chapters" });
     const chapterFiles = ["chapters.json", "chaptersdata1.json", "chaptersdata2.json"];
-    const allRawChapters: any[] = [];
+    type ChapterSeed = z.infer<typeof ChapterSeedSchema>;
+    const allRawChapters: ChapterSeed[] = [];
     for (const file of chapterFiles) {
       const filePath = path.resolve(file);
       try {
@@ -280,27 +325,33 @@ async function main() {
           )
         ) {
           const data = JSON.parse(await fs.readFile(filePath, "utf8"));
-          if (Array.isArray(data)) allRawChapters.push(...data);
+          if (Array.isArray(data)) allRawChapters.push(...(data as ChapterSeed[]));
         }
-      } catch (err) {
-        log("error", { phase: "chapters", file, error: err instanceof Error ? err.message : err });
+      } catch (err: unknown) {
+        log("error", {
+          phase: "chapters",
+          file,
+          error: err instanceof Error ? (err as Error).message : err,
+        });
       }
     }
     // Filter out chapters missing required fields before validation
     const requiredFields = ["id", "comicId", "title", "slug", "images"];
-    const validChapters = allRawChapters.filter((c) =>
-      requiredFields.every((f) =>
+    const validChapters = allRawChapters.filter((c: ChapterSeed) =>
+      requiredFields.every((f: string) =>
         f === "images"
           ? Array.isArray(c.images) && c.images.length > 0
-          : c[f] !== undefined && c[f] !== null && c[f] !== ""
+          : (c as Record<string, unknown>)[f] !== undefined &&
+            (c as Record<string, unknown>)[f] !== null &&
+            (c as Record<string, unknown>)[f] !== ""
       )
     );
-    const skippedChapters = allRawChapters.filter((c) => !validChapters.includes(c));
+    const skippedChapters = allRawChapters.filter((c: ChapterSeed) => !validChapters.includes(c));
     if (skippedChapters.length > 0) {
       log("warning", {
         phase: "chapters-filter",
         skippedCount: skippedChapters.length,
-        sample: skippedChapters.slice(0, 10).map((c: any) => ({
+        sample: skippedChapters.slice(0, 10).map((c: ChapterSeed) => ({
           id: c.id,
           comicId: c.comicId,
           title: c.title,
@@ -314,7 +365,7 @@ async function main() {
     log("pre-validate", {
       phase: "chapters",
       count: validChapters.length,
-      sample: validChapters.slice(0, 10).map((c: any) => ({
+      sample: validChapters.slice(0, 10).map((c: ChapterSeed) => ({
         id: c.id,
         comicId: c.comicId,
         title: c.title,
@@ -322,18 +373,21 @@ async function main() {
         images: Array.isArray(c.images) ? c.images.length : c.images,
       })),
     });
-    let chapters: any[] = [];
+    let chapters: ChapterSeed[] = [];
     try {
       chapters = ChapterSeedSchema.array().parse(validChapters);
-    } catch (err) {
-      log("error", { phase: "chapters-validate", error: err instanceof Error ? err.message : err });
+    } catch (err: unknown) {
+      log("error", {
+        phase: "chapters-validate",
+        error: err instanceof Error ? (err as Error).message : err,
+      });
       throw err;
     }
     // Debug: print a sample of chapters after validation
     log("pre-insert", {
       phase: "chapters",
       count: chapters.length,
-      sample: chapters.slice(0, 10).map((c: any) => ({
+      sample: chapters.slice(0, 10).map((c: ChapterSeed) => ({
         id: c.id,
         comicId: c.comicId,
         title: c.title,
@@ -344,11 +398,11 @@ async function main() {
     log("progress", { phase: "chapters", count: chapters.length });
     // Download chapter images in parallel
     await Promise.all(
-      chapters.map(async (chapter) => {
+      chapters.map(async (chapter: ChapterSeed) => {
         if (Array.isArray(chapter.images)) {
           try {
             chapter.images = await Promise.all(
-              chapter.images.map((imgUrl) =>
+              chapter.images.map((imgUrl: string) =>
                 downloadAndSaveImage({
                   url: imgUrl,
                   destDir: config.CHAPTERS_IMAGE_DIR + "/" + chapter.comicId + "/" + chapter.slug,
@@ -357,11 +411,11 @@ async function main() {
                 })
               )
             );
-          } catch (err) {
+          } catch (err: unknown) {
             log("error", {
               phase: "chapter-image",
               slug: chapter.slug,
-              error: err instanceof Error ? err.message : err,
+              error: err instanceof Error ? (err as Error).message : err,
             });
           }
         }
@@ -371,13 +425,18 @@ async function main() {
       table: chapter,
       items: chapters,
       conflictKeys: [chapter.id],
-      updateFields: [chapter.title, chapter.slug, chapter.images, chapter.releaseDate],
+      updateFields: [
+        { name: "title", value: undefined },
+        { name: "slug", value: undefined },
+        { name: "images", value: undefined },
+        { name: "releaseDate", value: undefined },
+      ],
     });
     log("complete", { phase: "chapters" });
 
     log("complete", { phase: "seeding" });
-  } catch (err) {
-    log("error", { phase: "seeding", error: err instanceof Error ? err.message : err });
+  } catch (err: unknown) {
+    log("error", { phase: "seeding", error: err instanceof Error ? (err as Error).message : err });
     throw err;
   }
 }

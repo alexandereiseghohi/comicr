@@ -2,13 +2,13 @@
 import { db } from "@/database/db";
 import { chapter as chapterTable } from "@/database/schema";
 import type { CreateChapterInput, UpdateChapterInput } from "@/schemas/chapter-schema";
-import type { DbMutationResult } from "@/types";
+import type { Chapter, DbMutationResult } from "@/types";
 import { eq } from "drizzle-orm";
 
 /**
  * Create a single chapter
  */
-export async function createChapter(data: CreateChapterInput): Promise<DbMutationResult<any>> {
+export async function createChapter(data: CreateChapterInput): Promise<DbMutationResult<Chapter>> {
   try {
     const result = await db.insert(chapterTable).values(data).returning();
 
@@ -16,7 +16,7 @@ export async function createChapter(data: CreateChapterInput): Promise<DbMutatio
       return { success: false, error: "Failed to create chapter" };
     }
 
-    return { success: true, data: result[0] };
+    return { success: true, data: result[0] as unknown as Chapter };
   } catch (error) {
     return { success: false, error: String(error) };
   }
@@ -28,7 +28,7 @@ export async function createChapter(data: CreateChapterInput): Promise<DbMutatio
 export async function updateChapter(
   id: number,
   data: UpdateChapterInput
-): Promise<DbMutationResult<any>> {
+): Promise<DbMutationResult<Chapter>> {
   try {
     const result = await db
       .update(chapterTable)
@@ -40,7 +40,7 @@ export async function updateChapter(
       return { success: false, error: "Chapter not found" };
     }
 
-    return { success: true, data: result[0] };
+    return { success: true, data: result[0] as unknown as Chapter };
   } catch (error) {
     return { success: false, error: String(error) };
   }

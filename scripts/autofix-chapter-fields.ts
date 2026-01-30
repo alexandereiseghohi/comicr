@@ -2,7 +2,6 @@ import fs from "fs/promises";
 import path from "path";
 
 const chapterFiles = ["chapters.json", "chaptersdata1.json", "chaptersdata2.json"];
-const requiredFields = ["id", "comicId", "title", "slug", "images"];
 
 function slugify(str: string): string {
   return str
@@ -16,7 +15,15 @@ async function main() {
   let globalId = 1;
   for (const file of chapterFiles) {
     const filePath = path.resolve(file);
-    let data: any[] = [];
+    type Chapter = {
+      id: string;
+      comicId: string;
+      title: string;
+      slug: string;
+      images: string[];
+      [key: string]: unknown;
+    };
+    let data: Chapter[] = [];
     try {
       if (
         await fs.stat(filePath).then(
@@ -37,14 +44,14 @@ async function main() {
       console.error(`[ERROR] Failed to read ${file}:`, err);
       continue;
     }
-    const cleaned: any[] = [];
-    const log: any[] = [];
+    const cleaned: Chapter[] = [];
+    const log: Record<string, unknown>[] = [];
     for (let i = 0; i < data.length; i++) {
       const rec = { ...data[i] };
       const changes: string[] = [];
       // id
       if (rec.id === undefined || rec.id === null || rec.id === "") {
-        rec.id = globalId++;
+        rec.id = String(globalId++);
         changes.push("id (auto-assigned)");
       }
       // comicId (cannot infer, leave as is)

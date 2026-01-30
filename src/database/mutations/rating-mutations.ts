@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { db } from "@/database/db";
 import { rating } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
@@ -27,22 +26,22 @@ export async function createOrUpdateRating(
       .set({ rating: String(value) })
       .where(and(eq(rating.userId, userId), eq(rating.comicId, comicId)))
       .returning();
-    const row = result[0];
+    const row = result[0] as { userId: string; comicId: number; rating: string | number };
     return {
       userId: row.userId,
       comicId: row.comicId,
-      value: Number((row as any).rating ?? row.rating),
+      value: typeof row.rating === "number" ? row.rating : Number(row.rating),
     };
   } else {
     const result = await db
       .insert(rating)
       .values({ userId, comicId, rating: String(value) })
       .returning();
-    const row = result[0];
+    const row = result[0] as { userId: string; comicId: number; rating: string | number };
     return {
       userId: row.userId,
       comicId: row.comicId,
-      value: Number((row as any).rating ?? row.rating),
+      value: typeof row.rating === "number" ? row.rating : Number(row.rating),
     };
   }
 }
@@ -59,6 +58,6 @@ export async function getUserRating(userId: string, comicId: number): Promise<nu
     .limit(1);
   if (result.length === 0) return null;
   const row = result[0];
-  const ratingValue = (row as any).rating ?? row.rating;
+  const ratingValue = typeof row.rating === "number" ? row.rating : Number(row.rating);
   return ratingValue !== null && ratingValue !== undefined ? Number(ratingValue) : null;
 }

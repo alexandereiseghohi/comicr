@@ -3,7 +3,8 @@ import { exec } from "child_process";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const key = req.headers.get("x-seed-api-key") || req.nextUrl.searchParams.get("key");
+  const url = new URL(req.url);
+  const key = req.headers.get("x-seed-api-key") || url.searchParams.get("key");
   if (!key || key !== SEED_API_KEY) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

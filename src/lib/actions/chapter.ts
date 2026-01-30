@@ -36,7 +36,7 @@ export async function createChapterAction(
     revalidatePath("/chapters");
     revalidatePath("/admin/chapters");
 
-    return { success: true, data: { id: result.data?.id || 0 } };
+    return { success: true, data: { id: Number(result.data?.id) || 0 } };
   } catch (error) {
     return { success: false, error: String(error) };
   }
@@ -72,7 +72,7 @@ export async function updateChapterAction(
     revalidatePath(`/chapters/${id}`);
     revalidatePath("/admin/chapters");
 
-    return { success: true, data: { id: result.data?.id || 0 } };
+    return { success: true, data: { id: Number(result.data?.id) || 0 } };
   } catch (error) {
     return { success: false, error: String(error) };
   }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComicFilters } from "@/components/comics/comic-filters";
 import { ComicList } from "@/components/comics/comic-list";
 import * as comicQueries from "@/database/queries/comic-queries";
@@ -38,8 +37,16 @@ async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
 
   if (searchValue) {
     result = await comicQueries.searchComics(searchValue, { page, limit });
-  } else if (statusValue && statusValue !== "All" && validStatuses.includes(statusValue as any)) {
-    result = await comicQueries.getComicsByStatus(statusValue as any, {
+  } else if (
+    statusValue &&
+    statusValue !== "All" &&
+    (validStatuses as readonly string[]).includes(statusValue)
+  ) {
+    // Narrow statusValue to the correct union type
+    const narrowedStatus = validStatuses.find(
+      (s) => s === statusValue
+    ) as (typeof validStatuses)[number];
+    result = await comicQueries.getComicsByStatus(narrowedStatus, {
       page,
       limit,
       sort,

@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-01-29T16:54:09.311Z",
+  "reports": [
+    {
+      "provider": "google",
+      "env": {},
+      "checks": [
+        {
+          "name": "env:GOOGLE_CLIENT_ID",
+          "ok": false
+        },
+        {
+          "name": "env:GOOGLE_CLIENT_SECRET",
+          "ok": false
+        },
+        {
+          "name": "discovery",
+          "ok": true,
+          "info": "issuer=https://accounts.google.com"
+        }
+      ]
+    },
+    {
+      "provider": "github",
+      "env": {},
+      "checks": [
+        {
+          "name": "env:GITHUB_CLIENT_ID",
+          "ok": false
+        },
+        {
+          "name": "env:GITHUB_CLIENT_SECRET",
+          "ok": false
+        },
+        {
+          "name": "api-root",
+          "ok": true,
+          "info": "status=200"
+        }
+      ]
+    },
+    {
+      "provider": "apple",
+      "env": {},
+      "checks": [
+        {
+          "name": "env:APPLE_CLIENT_ID",
+          "ok": false
+        },
+        {
+          "name": "env:APPLE_CLIENT_SECRET",
+          "ok": false
+        }
+      ]
+    }
+  ]
+}

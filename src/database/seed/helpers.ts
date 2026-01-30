@@ -1,5 +1,5 @@
-import { db } from '@/database/db';
-import type { Table } from 'drizzle-orm';
+import { db } from "@/database/db";
+import type { Table } from "drizzle-orm";
 
 export interface SeedDataItem {
   [key: string]: unknown;
@@ -37,8 +37,7 @@ export async function batchInsert(
     for (let i = 0; i < records.length; i += batchSize) {
       const batch = records.slice(i, i + batchSize);
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await (db.insert(table) as any).values(batch).onConflictDoNothing();
+        await db.insert(table).values(batch).onConflictDoNothing();
         inserted += batch.length;
       } catch (error) {
         console.error(`Batch ${i / batchSize} insert failed:`, error);
@@ -76,23 +75,23 @@ export async function clearTable(table: Table): Promise<{ success: boolean; erro
 export interface SeedReport {
   table: string;
   records: number;
-  status: 'success' | 'failed';
+  status: "success" | "failed";
   error?: string;
 }
 
 export function generateSeedReport(reports: SeedReport[]): string {
   const lines = [
-    '╔════════════════════════════════════════════════════════════╗',
-    '║              DATABASE SEED COMPLETE                        ║',
-    '╚════════════════════════════════════════════════════════════╝',
-    '',
+    "╔════════════════════════════════════════════════════════════╗",
+    "║              DATABASE SEED COMPLETE                        ║",
+    "╚════════════════════════════════════════════════════════════╝",
+    "",
   ];
 
   const totalRecords = reports.reduce((sum, r) => sum + r.records, 0);
-  const successCount = reports.filter((r) => r.status === 'success').length;
+  const successCount = reports.filter((r) => r.status === "success").length;
 
   reports.forEach((report) => {
-    const icon = report.status === 'success' ? '✓' : '✗';
+    const icon = report.status === "success" ? "✓" : "✗";
     lines.push(
       `${icon} ${report.table.padEnd(20)} ${report.records.toString().padStart(6)} records`
     );
@@ -101,9 +100,9 @@ export function generateSeedReport(reports: SeedReport[]): string {
     }
   });
 
-  lines.push('');
+  lines.push("");
   lines.push(`Total Records: ${totalRecords}`);
   lines.push(`Success: ${successCount}/${reports.length}`);
 
-  return lines.join('\n');
+  return lines.join("\n");
 }

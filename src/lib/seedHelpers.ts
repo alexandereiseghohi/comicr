@@ -1,7 +1,8 @@
+import type { Table } from "drizzle-orm";
 import fs from "fs/promises";
 import { chunk } from "lodash-es";
 import { z } from "zod";
-import { db as drizzleDb } from "../database/db";
+import { Database, db as drizzleDb } from "../database/db";
 
 /**
  * Loads and parses a JSON file, returning the parsed data or throws on error.
@@ -32,21 +33,21 @@ export async function seedTableBatched({
   updateFields,
   db = drizzleDb,
 }: {
-  table: any;
-  items: any[];
+  table: Table;
+  items: Record<string, unknown>[];
   batchSize?: number;
-  conflictKeys: string[];
-  updateFields: string[];
-  db?: any;
+  conflictKeys: import("drizzle-orm/pg-core/indexes").IndexColumn[]; // Accept column objects (IndexColumn[])
+  updateFields: { name: string; value: unknown }[];
+  db?: Database;
 }) {
   // Use column references directly for upsert updates, as per Drizzle docs
   for (const batch of chunk(items, batchSize)) {
     await db
-      .insert(table)
+      .insert(table as Table)
       .values(batch)
       .onConflictDoUpdate({
         target: conflictKeys,
-        set: Object.fromEntries(updateFields.map((col) => [col.name, col])),
+        set: Object.fromEntries(updateFields.map((col) => [col.name, col.value])),
       });
   }
 }

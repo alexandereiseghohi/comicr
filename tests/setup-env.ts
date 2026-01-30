@@ -1,5 +1,4 @@
 // Ensure NODE_ENV is set before anything else
-process.env.NODE_ENV = "development";
 
 import dotenv from "dotenv";
 import path from "path";

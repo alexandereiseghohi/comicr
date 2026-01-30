@@ -7,11 +7,20 @@ const requiredFields = ["id", "comicId", "title", "slug", "images"];
 async function main() {
   let totalRecords = 0;
   let totalMissing = 0;
-  const missingByFile: Record<string, any[]> = {};
+  type Chapter = {
+    id: string;
+    comicId: string;
+    title: string;
+    slug: string;
+    images: string[];
+    [key: string]: unknown;
+  };
+  type MissingEntry = { index: number; missingFields: string[]; record: Chapter };
+  const missingByFile: Record<string, MissingEntry[]> = {};
 
   for (const file of chapterFiles) {
     const filePath = path.resolve(file);
-    let data: any[] = [];
+    let data: Chapter[] = [];
     try {
       if (
         await fs.stat(filePath).then(
@@ -44,8 +53,9 @@ async function main() {
       })
       .filter(Boolean);
     if (missing.length > 0) {
-      totalMissing += missing.length;
-      missingByFile[file] = missing;
+      const filtered: MissingEntry[] = missing.filter((x): x is MissingEntry => x !== null);
+      totalMissing += filtered.length;
+      missingByFile[file] = filtered;
     }
   }
 
@@ -57,13 +67,20 @@ async function main() {
     console.log(`\nFile: ${file}`);
     console.log(`  Records missing fields: ${missing.length}`);
     for (const entry of missing.slice(0, 10)) {
-      console.log(`    [Index ${entry.index}] Missing: ${entry.missingFields.join(", ")}`);
-      // Optionally, print a summary of the record
-      console.log(
-        `      Title: ${entry.record.title || "(no title)"}, Slug: ${
-          entry.record.slug || "(no slug)"
-        }`
-      );
+      if (
+        entry &&
+        Array.isArray(entry.missingFields) &&
+        entry.record &&
+        typeof entry.record === "object"
+      ) {
+        console.log(`    [Index ${entry.index}] Missing: ${entry.missingFields.join(", ")}`);
+        // Optionally, print a summary of the record
+        console.log(
+          `      Title: ${entry.record.title || "(no title)"}, Slug: ${
+            entry.record.slug || "(no slug)"
+          }`
+        );
+      }
     }
     if (missing.length > 10) {
       console.log(`    ...and ${missing.length - 10} more in this file.`);

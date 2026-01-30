@@ -1,4 +1,5 @@
 // Load dotenv before any other import
+export {};
 const dotenv = await import("dotenv");
 dotenv.config();
 

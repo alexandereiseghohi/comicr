@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import * as React from "react";
@@ -55,9 +56,11 @@ function AvatarFallback({
       {...props}
     >
       {/* Show fallback image if available, else initials/children */}
-      <img
+      <Image
         src="/images/shadcn.jpg"
         alt="Default avatar"
+        width={32}
+        height={32}
         className="w-full h-full object-cover rounded-full"
         style={{ display: children ? "none" : "block" }}
         onError={(e) => {

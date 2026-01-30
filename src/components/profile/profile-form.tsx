@@ -1,6 +1,7 @@
-"use client";
+import Image from "next/image";
 import React, { useState } from "react";
 import { toast } from "sonner";
+"use client"("use client");
 
 type Props = {
   defaultName?: string | null;
@@ -124,14 +125,14 @@ export default function ProfileForm({ defaultName, defaultImage, defaultEmail }:
             aria-describedby="profile-image-preview"
           />
           <div className="mt-2 flex items-center gap-4">
-            <img
+            <Image
               id="profile-image-preview"
               src={image && image.trim() ? image : "/images/shadcn.jpg"}
               alt={name ? `Profile image for ${name}` : "Profile image"}
               className="w-16 h-16 rounded-full border object-cover"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src = "/images/shadcn.jpg";
-              }}
+              width={64}
+              height={64}
+              onError={undefined}
             />
             <span className="text-xs text-muted-foreground">Preview</span>
           </div>

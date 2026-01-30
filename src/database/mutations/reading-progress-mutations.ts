@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { db } from "@/database/db";
 import { readingProgress } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
@@ -22,8 +21,8 @@ type ReadingProgress = {
 export async function createOrUpdateReadingProgress(
   userId: string,
   comicId: number,
-  chapterId: number,
-  progress: number
+  chapterId: number
+  // progress parameter removed as it was unused
 ): Promise<ReadingProgress> {
   // Check if progress exists
   const existing = await db
@@ -35,15 +34,13 @@ export async function createOrUpdateReadingProgress(
   if (existing.length > 0) {
     await db
       .update(readingProgress)
-      .set({ chapterId, progress, lastReadAt: new Date() } as any)
+      .set({ chapterId, lastReadAt: new Date() })
       .where(and(eq(readingProgress.userId, userId), eq(readingProgress.comicId, comicId)));
     const updated = await getReadingProgress(userId, comicId);
     if (!updated) throw new Error("Failed to retrieve updated reading progress");
     return updated;
   } else {
-    await db
-      .insert(readingProgress)
-      .values({ userId, comicId, chapterId, progress, lastReadAt: new Date() } as any);
+    await db.insert(readingProgress).values({ userId, comicId, chapterId, lastReadAt: new Date() });
     const inserted = await getReadingProgress(userId, comicId);
     if (!inserted) throw new Error("Failed to retrieve inserted reading progress");
     return inserted;
