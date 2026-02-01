@@ -1,11 +1,11 @@
 import { db } from "@/database/db";
 import { readingProgress } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
+
 type ReadingProgress = {
   userId: string;
   comicId: number;
   chapterId: number;
-  // progress may be stored as progressPercent in the DB; keep both optional to match DB rows
   progress?: number;
   progressPercent?: number;
   pageNumber?: number;
@@ -17,6 +17,55 @@ type ReadingProgress = {
   updatedAt?: Date;
   id?: number;
 };
+
+interface UpsertProgressData {
+  userId: number;
+  comicId: number;
+  chapterId: number;
+  currentImageIndex?: number;
+  scrollPercentage?: number;
+  progressPercent?: number;
+}
+
+/**
+ * Create or update reading progress with full details
+ */
+export async function upsertReadingProgress(data: UpsertProgressData) {
+  try {
+    const result = await db
+      .insert(readingProgress)
+      .values({
+        userId: data.userId,
+        comicId: data.comicId,
+        chapterId: data.chapterId,
+        currentImageIndex: data.currentImageIndex || 0,
+        scrollPercentage: data.scrollPercentage || 0,
+        progressPercent: data.progressPercent || 0,
+        lastReadAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .onConflictDoUpdate({
+        target: [readingProgress.userId, readingProgress.comicId],
+        set: {
+          chapterId: data.chapterId,
+          currentImageIndex: data.currentImageIndex || 0,
+          scrollPercentage: data.scrollPercentage || 0,
+          progressPercent: data.progressPercent || 0,
+          lastReadAt: new Date(),
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+
+    return { success: true, data: result[0] };
+  } catch (error) {
+    console.error("Upsert reading progress error:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to save reading progress",
+    };
+  }
+}
 
 export async function createOrUpdateReadingProgress(
   userId: string,

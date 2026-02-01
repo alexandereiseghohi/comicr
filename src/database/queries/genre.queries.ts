@@ -1,6 +1,6 @@
 import { db } from "@/database/db";
-import { genre } from "@/database/schema";
-import { and, eq } from "drizzle-orm";
+import { comicToGenre, genre } from "@/database/schema";
+import { and, eq, sql } from "drizzle-orm";
 
 export async function getGenres() {
   try {
@@ -9,6 +9,28 @@ export async function getGenres() {
       .from(genre)
       .where(eq(genre.isActive, true))
       .orderBy(genre.name);
+    return { success: true, data: results };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+  }
+}
+
+export async function getGenresWithComicCount(limit = 8) {
+  try {
+    const results = await db
+      .select({
+        id: genre.id,
+        name: genre.name,
+        slug: genre.slug,
+        description: genre.description,
+        comicCount: sql<number>`CAST(COUNT(DISTINCT ${comicToGenre.comicId}) AS INTEGER)`,
+      })
+      .from(genre)
+      .leftJoin(comicToGenre, eq(genre.id, comicToGenre.genreId))
+      .where(eq(genre.isActive, true))
+      .groupBy(genre.id, genre.name, genre.slug, genre.description)
+      .orderBy(sql`COUNT(DISTINCT ${comicToGenre.comicId}) DESC`)
+      .limit(limit);
     return { success: true, data: results };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };

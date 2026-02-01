@@ -239,3 +239,109 @@ Consistent error response format:
 ---
 
 _See also: [API Reference](api-reference.md), [Deployment Guide](deployment.md)_
+
+---
+
+## Implementation Details - Phase 5 Updates
+
+### 3-Layer Architecture Pattern
+
+ComicWise enforces strict separation across three layers:
+
+#### Layer 1: Schema (Validation)
+**Location:** `src/schemas/`
+
+Zod schemas define validation rules for all inputs.
+
+```typescript
+// Example: src/schemas/rating.schema.ts
+import { z } from "zod";
+
+export const ratingSchema = z.object({
+  comicId: z.number().int().positive(),
+  rating: z.number().int().min(1).max(5),
+  review: z.string().max(1000).optional(),
+});
+```
+
+#### Layer 2: Database (Queries & Mutations)
+**Location:** `src/database/queries/`, `src/database/mutations/`
+
+All database operations with proper error handling.
+
+```typescript
+export async function upsertRating(data: UpsertRatingData) {
+  const result = await db
+    .insert(rating)
+    .values(data)
+    .onConflictDoUpdate({
+      target: [rating.userId, rating.comicId],
+      set: { rating: data.rating, review: data.review, updatedAt: new Date() },
+    })
+    .returning();
+
+  return { success: true, data: result[0] };
+}
+```
+
+#### Layer 3: Actions (Public API)
+**Location:** `src/lib/actions/`
+
+Server actions with authentication and validation.
+
+```typescript
+"use server";
+
+export async function upsertRatingAction(input: unknown): Promise<ActionResult<T>> {
+  const session = await auth();
+  if (!session?.user?.id) return { success: false, error: "Unauthorized" };
+
+  const validation = ratingSchema.safeParse(input);
+  if (!validation.success) return { success: false, error: validation.error.issues[0]?.message };
+
+  return await mutations.upsertRating({ userId: Number(session.user.id), ...validation.data });
+}
+```
+
+### Key Design Decisions
+
+**Hybrid Sync Strategy:**
+- localStorage: Zoom level, pan (device-specific, instant)
+- Database: Reading mode, quality (cross-device sync)
+
+**Soft Delete Pattern:**
+- Set deletedAt timestamp instead of hard delete
+- Anonymize PII (name, email)
+- Preserve structure, show [deleted] placeholder
+
+**Comment Threading:**
+- Self-referencing parentId allows infinite nesting
+- buildCommentTree converts flat list to tree O(n)
+- Orphaned comments become root level
+
+**Rating Upsert:**
+- Composite unique constraint [userId, comicId]
+- onConflictDoUpdate for insert or update
+- rating=0 triggers deletion
+
+**Reading Progress Auto-Save:**
+- Save every 30s, on page change, on beforeunload
+- Upsert with composite key [userId, comicId]
+
+### New API Endpoints
+
+**Rating:** `POST /api/comics/rate` (1-5 stars, optional review max 1000 chars)  
+**Comments:** `POST /api/comments`, `GET /api/comments?chapterId={id}`, `DELETE /api/comments/{id}`  
+**Profile:** `PUT /api/profile/settings`, `POST /api/profile/delete-account`
+
+### Schema Migrations
+
+Recent additions:
+- readerSettings table
+- comment.parentId, comment.deletedAt
+- user.settings (JSONB), user.deletedAt
+- rating integer type (1-5)
+- readingProgress fields (currentImageIndex, scrollPercentage, progressPercent)
+
+Run `pnpm db:push` to apply schema changes.
+

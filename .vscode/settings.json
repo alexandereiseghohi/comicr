@@ -103,4 +103,13 @@
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
+  "chat.mcp.serverSampling": {
+    "comicr/.vscode/mcp.json: typescript-enhanced": {
+      "allowedModels": [
+        "copilot/gpt-5.2-codex",
+        "ollama/Ollama/1",
+        "ollama/Ollama/0"
+      ]
+    }
+  },
 }

@@ -2,62 +2,67 @@ import { db } from "@/database/db";
 import { rating } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
 
-type Rating = {
-  userId: string;
+interface UpsertRatingData {
+  userId: number;
   comicId: number;
-  value: number;
-};
+  rating: number;
+  review?: string;
+}
 
-export async function createOrUpdateRating(
-  userId: string,
-  comicId: number,
-  value: number
-): Promise<Rating> {
-  // Check if rating exists
-  const existing = await db
-    .select()
-    .from(rating)
-    .where(and(eq(rating.userId, userId), eq(rating.comicId, comicId)))
-    .limit(1);
-
-  if (existing.length > 0) {
-    const result = await db
-      .update(rating)
-      .set({ rating: String(value) })
-      .where(and(eq(rating.userId, userId), eq(rating.comicId, comicId)))
-      .returning();
-    const row = result[0] as { userId: string; comicId: number; rating: string | number };
-    return {
-      userId: row.userId,
-      comicId: row.comicId,
-      value: typeof row.rating === "number" ? row.rating : Number(row.rating),
-    };
-  } else {
+/**
+ * Create or update a user's rating for a comic
+ */
+export async function upsertRating(data: UpsertRatingData) {
+  try {
     const result = await db
       .insert(rating)
-      .values({ userId, comicId, rating: String(value) })
+      .values({
+        userId: data.userId,
+        comicId: data.comicId,
+        rating: data.rating,
+        review: data.review || null,
+        updatedAt: new Date(),
+      })
+      .onConflictDoUpdate({
+        target: [rating.userId, rating.comicId],
+        set: {
+          rating: data.rating,
+          review: data.review || null,
+          updatedAt: new Date(),
+        },
+      })
       .returning();
-    const row = result[0] as { userId: string; comicId: number; rating: string | number };
+
+    return { success: true, data: result[0] };
+  } catch (error) {
+    console.error("Upsert rating mutation error:", error);
     return {
-      userId: row.userId,
-      comicId: row.comicId,
-      value: typeof row.rating === "number" ? row.rating : Number(row.rating),
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to save rating",
     };
   }
 }
 
-export async function deleteRating(userId: string, comicId: number): Promise<void> {
-  await db.delete(rating).where(and(eq(rating.userId, userId), eq(rating.comicId, comicId)));
-}
+/**
+ * Delete a user's rating for a comic
+ */
+export async function deleteRating(userId: number, comicId: number) {
+  try {
+    const result = await db
+      .delete(rating)
+      .where(and(eq(rating.userId, userId), eq(rating.comicId, comicId)))
+      .returning();
 
-export async function getUserRating(userId: string, comicId: number): Promise<number | null> {
-  const result = await db
-    .select()
-    .from(rating)
-    .where(and(eq(rating.userId, userId), eq(rating.comicId, comicId)))
-    .limit(1);
-  if (result.length === 0) return null;
-  const row = result[0];
-  const ratingValue = typeof row.rating === "number" ? row.rating : Number(row.rating);
-  return ratingValue !== null && ratingValue !== undefined ? Number(ratingValue) : null;
+    if (result.length === 0) {
+      return { success: false, error: "Rating not found" };
+    }
+
+    return { success: true, data: result[0] };
+  } catch (error) {
+    console.error("Delete rating mutation error:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to delete rating",
+    };
+  }
 }

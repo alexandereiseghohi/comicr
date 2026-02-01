@@ -5,8 +5,8 @@
  */
 
 import { db } from "@/database/db";
-import { artist, author, comic } from "@/database/schema";
-import { asc, desc, eq, ilike } from "drizzle-orm";
+import { artist, author, comic, comicToGenre, genre } from "@/database/schema";
+import { asc, desc, eq, ilike, inArray } from "drizzle-orm";
 
 /**
  * Get all comics with pagination
@@ -25,6 +25,11 @@ export async function getAllComics({
   const offset = (page - 1) * limit;
 
   try {
+    // Get total count
+    const [totalResult] = await db.select({ count: count() }).from(comic);
+    const totalCount = totalResult?.count || 0;
+
+    // Get paginated comics
     const comics = await db
       .select()
       .from(comic)
@@ -32,7 +37,7 @@ export async function getAllComics({
       .limit(limit)
       .offset(offset);
 
-    return { success: true, data: comics, total: comics.length };
+    return { success: true, data: comics, total: totalCount };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };
   }
@@ -91,16 +96,22 @@ export async function searchComics(
   try {
     const offset = (page - 1) * limit;
     const orderDirection = order === "asc" ? asc(comic.createdAt) : desc(comic.createdAt);
+    const whereClause = ilike(comic.title, `%${query}%`);
 
+    // Get total count
+    const [totalResult] = await db.select({ count: count() }).from(comic).where(whereClause);
+    const totalCount = totalResult?.count || 0;
+
+    // Get paginated results
     const results = await db
       .select()
       .from(comic)
-      .where(ilike(comic.title, `%${query}%`))
+      .where(whereClause)
       .orderBy(orderDirection)
       .limit(limit)
       .offset(offset);
 
-    return { success: true, data: results };
+    return { success: true, data: results, total: totalCount };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };
   }
@@ -116,16 +127,22 @@ export async function getComicsByStatus(
   try {
     const offset = (page - 1) * limit;
     const orderDirection = order === "asc" ? asc(comic.createdAt) : desc(comic.createdAt);
+    const whereClause = eq(comic.status, status);
 
+    // Get total count
+    const [totalResult] = await db.select({ count: count() }).from(comic).where(whereClause);
+    const totalCount = totalResult?.count || 0;
+
+    // Get paginated results
     const results = await db
       .select()
       .from(comic)
-      .where(eq(comic.status, status))
+      .where(whereClause)
       .orderBy(orderDirection)
       .limit(limit)
       .offset(offset);
 
-    return { success: true, data: results };
+    return { success: true, data: results, total: totalCount };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };
   }
@@ -139,6 +156,61 @@ export async function getComicsByAuthor(authorId: number) {
     const results = await db.select().from(comic).where(eq(comic.authorId, authorId));
 
     return { success: true, data: results };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+  }
+}
+
+/**
+ * Get comics by genre slugs
+ */
+export async function getComicsByGenres(
+  genreSlugs: string[],
+  { page = 1, limit = 20, sort = "createdAt", order = "desc" } = {}
+) {
+  try {
+    if (genreSlugs.length === 0) {
+      return getAllComics({ page, limit, sort, order });
+    }
+
+    const offset = (page - 1) * limit;
+    const orderDirection = order === "asc" ? asc(comic.createdAt) : desc(comic.createdAt);
+
+    // First get genre IDs from slugs
+    const genreResults = await db
+      .select({ id: genre.id })
+      .from(genre)
+      .where(inArray(genre.slug, genreSlugs));
+
+    const genreIds = genreResults.map((g) => g.id);
+
+    if (genreIds.length === 0) {
+      return { success: true, data: [], total: 0 };
+    }
+
+    // Then get all comic IDs that have those genres
+    const allComicIds = await db
+      .selectDistinct({ comicId: comicToGenre.comicId })
+      .from(comicToGenre)
+      .where(inArray(comicToGenre.genreId, genreIds));
+
+    if (allComicIds.length === 0) {
+      return { success: true, data: [], total: 0 };
+    }
+
+    const comicIdList = allComicIds.map((c) => c.comicId);
+    const totalCount = allComicIds.length;
+
+    // Get paginated results
+    const results = await db
+      .select()
+      .from(comic)
+      .where(inArray(comic.id, comicIdList))
+      .orderBy(orderDirection)
+      .limit(limit)
+      .offset(offset);
+
+    return { success: true, data: results, total: totalCount };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };
   }

@@ -72,7 +72,86 @@ Primary tables in `src/database/schema.ts`:
 
 - **Auth**: `user`, `account`, `session`, `verificationToken`, `passwordResetToken`
 - **Content**: `comic`, `chapter`, `author`, `artist`, `genre`, `type`
-- **User data**: `bookmark`, `comment`, `rating`, `readingProgress`, `notification`
+- **User data**: `bookmark`, `comment`, `rating`, `readingProgress`, `readerSettings`, `notification`
+
+## Critical Design Patterns
+
+### 1. Soft Delete Pattern
+
+- **Never hard delete** users or comments with children
+- Set `deletedAt` timestamp, anonymize PII for users
+- **User**: `name='Deleted User'`, `email='deleted_{id}@example.com'`, `image=NULL`
+- **Comment**: Show `[deleted]` if `deletedAt !== null`, preserve nested replies
+
+```typescript
+// Example: User soft delete with PII anonymization
+await db
+  .update(user)
+  .set({
+    deletedAt: new Date(),
+    name: "Deleted User",
+    email: `deleted_${userId}@example.com`,
+    image: null,
+  })
+  .where(eq(user.id, userId));
+```
+
+### 2. Rating Upsert Pattern
+
+- **Composite unique constraint**: `[userId, comicId]`
+- Use `onConflictDoUpdate` for insert or update
+- **Special case**: `rating=0` triggers deletion (handled in API route, not mutation)
+
+```typescript
+// In API route: POST /api/comics/rate
+if (body.rating === 0) {
+  return await deleteRating(userId, body.comicId);
+}
+// Otherwise, upsert with onConflictDoUpdate
+```
+
+### 3. Comment Threading
+
+- **Self-referencing**: `comment.parentId` references `comment.id`
+- Use `buildCommentTree` utility (O(n) two-pass algorithm) to convert flat list to tree
+- **Orphaned comments** (deleted parent) become root-level entries
+
+```typescript
+// Usage: Get threaded comments
+const flatComments = await getComments(chapterId);
+const tree = buildCommentTree(flatComments);
+```
+
+### 4. Hybrid Sync Strategy
+
+- **localStorage**: Device-specific instant state (zoom level, pan position)
+- **Database**: Cross-device persistent state (reading mode, quality, settings)
+- **Pattern**: Update localStorage immediately, debounce DB saves
+
+```typescript
+// Instant local update
+localStorage.setItem("readerZoom", String(zoom));
+// Delayed DB sync (on form submit, not per keystroke)
+await updateReaderSettingsAction({ readingMode, imageQuality });
+```
+
+### 5. Reading Progress Auto-Save
+
+- **Upsert pattern**: Composite key `[userId, comicId]`
+- **Triggers**: 30s interval + page change + `beforeunload` event
+- Store: `currentImageIndex`, `scrollPercentage`, `progressPercent`
+
+```typescript
+// Auto-save implementation
+useEffect(() => {
+  const interval = setInterval(() => saveProgress(), 30000);
+  window.addEventListener("beforeunload", saveProgress);
+  return () => {
+    clearInterval(interval);
+    window.removeEventListener("beforeunload", saveProgress);
+  };
+}, [pageIndex, scrollPercentage]);
+```
 
 ## Developer Commands
 
@@ -87,9 +166,40 @@ pnpm test:e2e         # Run Playwright E2E tests
 
 ## Testing
 
-- **Unit tests**: Vitest in `tests/unit/` — test actions, mutations, queries
-- **E2E tests**: Playwright in `tests/e2e/` — test user flows
-- Run `pnpm validate` before committing
+- **Unit tests**: Vitest in `tests/unit/` — test schemas, utilities, actions
+- **E2E tests**: Playwright in `tests/e2e/` — test user flows (reader, profile, ratings, comments)
+- Run `pnpm validate` before committing (runs type-check + lint + unit tests)
+- Run `pnpm test:e2e` for full Playwright suite
+
+**Test patterns:**
+
+- Schema tests: Validate all edge cases (min/max, required fields, type coercion)
+- Utility tests: Cover tree building, data transformations (e.g., `buildCommentTree`)
+- E2E tests: Test critical user flows with authentication, navigation, form submission
+
+## API Routes
+
+### New Endpoints (Phase 5)
+
+**Rating:**
+
+- `POST /api/comics/rate` — Upsert rating (1-5) or delete (rating=0)
+- Validation: `ratingSchema` (1-5 integer, optional review max 1000 chars)
+
+**Comments:**
+
+- `POST /api/comments` — Create comment/reply (parentId optional for threading)
+- `GET /api/comments?chapterId={id}` — Get threaded comment tree
+- `DELETE /api/comments/{id}` — Soft delete with ownership check
+- Validation: `commentSchema` (1-2000 chars trimmed, parentId optional)
+
+**Profile:**
+
+- `PUT /api/profile/settings` — Update user preferences (JSONB storage)
+- `POST /api/profile/delete-account` — Soft delete with PII anonymization
+- Validation: `settingsSchema`, `changePasswordSchema` (min 8 chars, uppercase, lowercase, number)
+
+**All routes return:** `{ success: boolean, data?: T, error?: string, message?: string }`
 
 ## Conventions
 
@@ -105,6 +215,31 @@ pnpm test:e2e         # Run Playwright E2E tests
 ## Seeding
 
 See `src/database/seed/README.md` — supports CLI (`pnpm seed`), API (`/api/dev/seed`), and admin UI (`/dev/seed`)
+
+## Common Pitfalls & Solutions
+
+1. **String replacement failures**: Always include 3-5 lines of context before/after when using file edits
+2. **Client/Server boundaries**: Event handlers require `"use client"`, image `onError` requires client directive
+3. **Auth in actions**: ALWAYS start server actions with `const session = await auth();` check
+4. **Rating deletion**: Use `rating=0` in API route, not in mutation directly
+5. **Comment threading**: Always use `buildCommentTree` utility, never manual recursion in queries
+6. **Progress saving**: Use composite key upsert `[userId, comicId]`, not separate insert logic
+7. **Soft deletes**: Check `deletedAt IS NULL` in WHERE clauses for active records
+8. **Password validation**: Schema requires min 8 chars + uppercase + lowercase + number
+
+## Schema Migration Checklist
+
+Recent schema updates require these fields:
+
+- `readerSettings` table for user reading preferences
+- `comment.parentId` (nullable int) for threading
+- `comment.deletedAt` (timestamp) for soft delete
+- `user.settings` (JSONB) for preferences
+- `user.deletedAt` (timestamp) for soft delete
+- `rating` type integer (1-5 scale)
+- `readingProgress.currentImageIndex`, `scrollPercentage`, `progressPercent`
+
+Run `pnpm db:push` after schema changes.
 
 ## Zustand Stores
 
@@ -184,3 +319,31 @@ Required GitHub Secrets for CI/CD:
 - `DATABASE_URL` — for migration workflows
 - `VERCEL_TOKEN` — for deployments
 - `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` — Vercel project config
+
+## Quick Reference: Common Tasks
+
+**Add new feature with database:**
+
+1. Create Zod schema in `src/schemas/{feature}.schema.ts`
+2. Update `src/database/schema.ts` with Drizzle table
+3. Run `pnpm db:push` to apply schema
+4. Create mutations in `src/database/mutations/{feature}-mutations.ts`
+5. Create queries in `src/database/queries/{feature}-queries.ts`
+6. Create server action in `src/lib/actions/{feature}.actions.ts`
+7. Write tests in `tests/unit/schemas/{feature}.schema.test.ts`
+
+**Add API endpoint:**
+
+1. Create route in `src/app/api/{endpoint}/route.ts`
+2. Import Zod schema for validation
+3. Use `auth()` for protected routes
+4. Return `{ success, data?, error?, message? }` format
+5. Call mutation/query from database layer
+
+**Debug issues:**
+
+- Type errors: Run `pnpm type-check`
+- Lint errors: Run `pnpm lint` or `pnpm lint:fix`
+- Test failures: Run `pnpm test` or `pnpm test:e2e`
+- Database issues: Check `pnpm db:studio` for data inspection
+- All at once: Run `pnpm validate` (type-check + lint + tests)

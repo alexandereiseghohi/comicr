@@ -1,27 +1,29 @@
 {
   "recommendations": [
-    "esbenp.prettier-vscode",
+    // Code Quality
     "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    // TypeScript & JavaScript
     "ms-vscode.vscode-typescript-next",
-    "ms-azuretools.vscode-docker",
-    "eamodio.gitlens",
+    "ms-vscode.vscode-js-profile-flame",
+    // Testing
     "ms-playwright.playwright",
     "orta.vscode-jest",
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "ms-vscode.vscode-typescript-next",
-    "bradlc.vscode-tailwindcss",
-    "unifiedjs.vscode-mdx",
-    "ms-dotnettools.csharp",
-    "ms-python.python",
-    "ms-vscode.makefile-tools",
+    // Git & Version Control
     "eamodio.gitlens",
+    "mhutchie.git-graph",
+    // AI & Copilot
     "GitHub.copilot",
     "GitHub.copilot-chat",
-    "ms-playwright.playwright",
+    // Docker & Remote
+    "ms-azuretools.vscode-docker",
     "ms-vscode-remote.remote-containers",
     "ms-vscode.remote-explorer",
-    "mhutchie.git-graph",
-    "ms-vscode.vscode-js-profile-flame"
+    // Languages
+    "ms-dotnettools.csharp",
+    "ms-python.python",
+    "unifiedjs.vscode-mdx",
+    "ms-vscode.makefile-tools"
   ]
 }

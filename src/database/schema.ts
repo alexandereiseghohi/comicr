@@ -5,6 +5,7 @@ import {
   decimal,
   index,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   primaryKey,
@@ -56,6 +57,12 @@ export const user = pgTable(
     password: text("password"),
     role: userRole("role").default("user").notNull(),
     status: boolean("status").notNull().default(false),
+    settings: jsonb("settings").$type<{
+      emailNotifications?: boolean;
+      profileVisibility?: "public" | "private";
+      readingHistoryVisibility?: boolean;
+    }>(),
+    deletedAt: timestamp("deletedAt", { mode: "date" }),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
   },
@@ -314,12 +321,15 @@ export const comment = pgTable(
     chapterId: integer("chapterId")
       .references(() => chapter.id, { onDelete: "cascade" })
       .notNull(),
+    parentId: integer("parentId"),
+    deletedAt: timestamp("deletedAt", { mode: "date" }),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
   },
   (table) => [
     index("commentUserIdIdx").on(table.userId),
     index("commentChapterIdIdx").on(table.chapterId),
+    index("commentParentIdIdx").on(table.parentId),
     index("commentCreatedAtIdx").on(table.createdAt),
   ]
 );
@@ -339,6 +349,8 @@ export const readingProgress = pgTable(
       .notNull(),
     pageNumber: integer("pageNumber").default(0).notNull(),
     scrollPosition: integer("scrollPosition").default(0).notNull(),
+    currentImageIndex: integer("currentImageIndex").default(0).notNull(),
+    scrollPercentage: integer("scrollPercentage").default(0).notNull(),
     totalPages: integer("totalPages").default(0).notNull(),
     progressPercent: integer("progressPercent").default(0).notNull(),
     completedAt: timestamp("completedAt", { mode: "date" }),
@@ -355,6 +367,23 @@ export const readingProgress = pgTable(
   ]
 );
 
+export const readerSettings = pgTable(
+  "readerSettings",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("userId")
+      .references(() => user.id, { onDelete: "cascade" })
+      .unique()
+      .notNull(),
+    backgroundMode: varchar("backgroundMode", { length: 16 }).default("white").notNull(),
+    readingMode: varchar("readingMode", { length: 16 }).default("vertical").notNull(),
+    defaultQuality: varchar("defaultQuality", { length: 16 }).default("medium").notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (table) => [index("readerSettingsUserIdIdx").on(table.userId)]
+);
+
 export const rating = pgTable(
   "rating",
   {
@@ -365,7 +394,7 @@ export const rating = pgTable(
     comicId: integer("comicId")
       .references(() => comic.id, { onDelete: "cascade" })
       .notNull(),
-    rating: decimal("rating", { precision: 2, scale: 1 }).notNull(), // 0.0 to 10.0
+    rating: integer("rating").notNull(), // 1 to 5 stars
     review: text("review"),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
