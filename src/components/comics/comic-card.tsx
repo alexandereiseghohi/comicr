@@ -18,8 +18,7 @@ interface ComicCardProps {
 }
 
 export function ComicCard({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  id,
+  id: _,
   title,
   slug,
   coverImage,

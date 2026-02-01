@@ -8,12 +8,32 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    include: ["tests/unit/**/*.spec.*"],
-    exclude: ["tests/e2e/**/*"],
+    include: ["tests/unit/**/*.spec.*", "tests/unit/**/*.test.*"],
+    exclude: ["tests/e2e/**/*", "node_modules/**/*"],
     setupFiles: ["./tests/setup-env.ts"],
     coverage: {
-      reporter: ["text", "lcov"],
+      provider: "v8",
+      reporter: ["text", "lcov", "html", "json"],
+      exclude: [
+        "**/*.config.*",
+        "**/*.d.ts",
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/.next/**",
+        "**/tests/**",
+        "**/scripts/**",
+        "**/coverage/**",
+      ],
+      reportsDirectory: "./coverage",
+      thresholds: {
+        lines: 60,
+        functions: 60,
+        branches: 60,
+        statements: 60,
+      },
     },
+    testTimeout: 10000,
+    hookTimeout: 10000,
   },
   resolve: {
     alias: {

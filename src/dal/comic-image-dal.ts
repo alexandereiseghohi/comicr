@@ -31,7 +31,7 @@ export class ComicImageDAL extends BaseDAL<typeof comicImage> {
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(_id: number, _data: any): Promise<DbMutationResult<any>> {
     return { success: false, error: "Comic images are immutable" };
   }
 

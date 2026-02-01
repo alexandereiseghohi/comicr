@@ -120,10 +120,8 @@ export async function getPopularComics(limit = 10) {
 export async function getComicsForAdmin({
   page = 1,
   limit = 20,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  search,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  status,
+  search: _search,
+  status: _status,
 }: {
   page?: number;
   limit?: number;
@@ -175,8 +173,7 @@ export async function getComicsForAdmin({
 export async function getUsersForAdmin({
   page = 1,
   limit = 20,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  role,
+  role: _role,
 }: {
   page?: number;
   limit?: number;

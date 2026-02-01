@@ -17,7 +17,7 @@ export class BookmarkDAL extends BaseDAL<typeof bookmark> {
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(_id: number, _data: any): Promise<DbMutationResult<any>> {
     return { success: false, error: "Bookmarks are immutable" };
   }
 

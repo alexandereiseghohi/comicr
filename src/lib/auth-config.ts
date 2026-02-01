@@ -113,8 +113,7 @@ export const config: NextAuthConfig = {
     /**
      * Called on successful signin
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async signIn({ user, account, profile }) {
+    async signIn({ user: _user, account: _account, profile: _profile }) {
       // You can implement additional checks here
       // Return false to reject sign-in
       return true;
@@ -139,8 +138,7 @@ export const config: NextAuthConfig = {
     /**
      * Called when a user is successfully signed in
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account: _account, profile: _profile }) {
       console.log(`User signed in: ${user.email}`);
     },
 

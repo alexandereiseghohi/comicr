@@ -23,6 +23,9 @@ const eslintConfig = defineConfig([
           varsIgnorePattern: "^_",
         },
       ],
+
+      // Ensure server actions have 'use server' directive (check manually)
+      // Note: Automated check would require AST parsing - enforced via code review
     },
   },
 ]);

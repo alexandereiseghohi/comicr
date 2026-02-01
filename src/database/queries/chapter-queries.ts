@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { db } from "@/database/db";
 import { chapter as chapterTable } from "@/database/schema";
 import { asc, desc, eq, ilike } from "drizzle-orm";
@@ -9,7 +8,7 @@ import { asc, desc, eq, ilike } from "drizzle-orm";
 export async function getAllChapters({
   page = 1,
   limit = 20,
-  sort = "createdAt",
+  sort: _sort = "createdAt",
   order = "desc",
 }: {
   page?: number;
@@ -79,7 +78,7 @@ export async function getChaptersByComicId(
   {
     page = 1,
     limit = 20,
-    sort = "chapterNumber",
+    sort: _sort = "chapterNumber",
     order = "asc",
   }: {
     page?: number;
@@ -146,8 +145,8 @@ export async function searchChapters(
  * Get chapters by release date range
  */
 export async function getChaptersByDateRange(
-  startDate: Date,
-  endDate: Date,
+  _startDate: Date,
+  _endDate: Date,
   { page = 1, limit = 20 }: { page?: number; limit?: number } = {}
 ) {
   const offset = (page - 1) * limit;

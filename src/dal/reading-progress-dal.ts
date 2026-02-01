@@ -38,11 +38,11 @@ export class ReadingProgressDAL extends BaseDAL<typeof readingProgress> {
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(_id: number, _data: any): Promise<DbMutationResult<any>> {
     return { success: false, error: "Use create method instead (createOrUpdate)" };
   }
 
-  async delete(id: number): Promise<DbMutationResult<null>> {
+  async delete(_id: number): Promise<DbMutationResult<null>> {
     return {
       success: false,
       error: "Use mutations.deleteReadingProgress(userId, comicId) directly",

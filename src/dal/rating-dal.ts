@@ -36,11 +36,11 @@ export class RatingDAL extends BaseDAL<typeof rating> {
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(_id: number, _data: any): Promise<DbMutationResult<any>> {
     return { success: false, error: "Use create with userId/comicId" };
   }
 
-  async delete(id: number): Promise<DbMutationResult<null>> {
+  async delete(_id: number): Promise<DbMutationResult<null>> {
     return { success: false, error: "Use mutations directly with userId/comicId" };
   }
 }

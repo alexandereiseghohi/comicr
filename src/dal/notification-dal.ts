@@ -39,7 +39,7 @@ export class NotificationDAL extends BaseDAL<typeof notification> {
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(id: number, _data: any): Promise<DbMutationResult<any>> {
     try {
       const result = await mutations.markAsRead(id);
       return { success: true, data: result };

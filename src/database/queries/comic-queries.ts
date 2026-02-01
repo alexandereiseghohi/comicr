@@ -1,9 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/**
- * Comic Queries
- * @description Read operations for comics
- */
-
 import { db } from "@/database/db";
 import { artist, author, comic, comicToGenre, genre } from "@/database/schema";
 import { asc, count, desc, eq, ilike, inArray } from "drizzle-orm";
@@ -14,8 +8,8 @@ import { asc, count, desc, eq, ilike, inArray } from "drizzle-orm";
 export async function getAllComics({
   page = 1,
   limit = 20,
-  sort = "createdAt",
-  order = "desc",
+  sort: _sort = "createdAt",
+  order: _order = "desc",
 }: {
   page?: number;
   limit?: number;
@@ -91,7 +85,7 @@ export async function getComicBySlug(slug: string) {
  */
 export async function searchComics(
   query: string,
-  { page = 1, limit = 20, sort = "createdAt", order = "desc" } = {}
+  { page = 1, limit = 20, sort: _sort = "createdAt", order = "desc" } = {}
 ) {
   try {
     const offset = (page - 1) * limit;
@@ -122,7 +116,7 @@ export async function searchComics(
  */
 export async function getComicsByStatus(
   status: "Ongoing" | "Completed" | "Hiatus" | "Dropped" | "Season End" | "Coming Soon",
-  { page = 1, limit = 20, sort = "createdAt", order = "desc" } = {}
+  { page = 1, limit = 20, sort: _sort = "createdAt", order = "desc" } = {}
 ) {
   try {
     const offset = (page - 1) * limit;

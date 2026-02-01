@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { deleteComment } from "@/database/mutations/comment-mutations";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {

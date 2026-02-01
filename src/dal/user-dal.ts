@@ -19,7 +19,7 @@ export class UserDAL extends BaseDAL<typeof user> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(_data: any): Promise<DbMutationResult<any>> {
     return { success: false, error: "Use createUser action instead" };
   }
 
@@ -32,7 +32,7 @@ export class UserDAL extends BaseDAL<typeof user> {
     }
   }
 
-  async delete(id: string): Promise<DbMutationResult<null>> {
+  async delete(_id: string): Promise<DbMutationResult<null>> {
     return { success: false, error: "Use deleteUser action instead" };
   }
 }
