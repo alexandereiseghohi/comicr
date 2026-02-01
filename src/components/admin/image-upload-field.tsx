@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, Upload } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 
 interface ImageUploadFieldProps {
@@ -65,7 +66,7 @@ export function ImageUploadField({ value, onChange, label = "Image" }: ImageUplo
         </TabsContent>
       </Tabs>
       {value && (
-        <img
+        <Image
           src={value}
           alt="Preview"
           className="mt-2 h-20 w-20 object-cover rounded"

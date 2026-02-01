@@ -22,18 +22,25 @@ export class TypeDAL extends BaseDAL<typeof typeTable> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(
+    data: typeof typeTable.$inferInsert
+  ): Promise<DbMutationResult<typeof typeTable.$inferSelect>> {
     try {
-      const result = await mutations.createType(data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await mutations.createType(data as any);
       return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(
+    id: number,
+    data: Partial<typeof typeTable.$inferInsert>
+  ): Promise<DbMutationResult<typeof typeTable.$inferSelect>> {
     try {
-      const result = await mutations.updateType(id, data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await mutations.updateType(id, data as any);
       return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };

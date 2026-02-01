@@ -29,7 +29,7 @@ export class ReadingProgressDAL extends BaseDAL<typeof readingProgress> {
     currentImageIndex?: number;
     scrollPercentage?: number;
     progressPercent?: number;
-  }): Promise<DbMutationResult<any>> {
+  }): Promise<DbMutationResult<typeof readingProgress.$inferSelect>> {
     try {
       const result = await mutations.upsertReadingProgress(data);
       return result;
@@ -38,7 +38,10 @@ export class ReadingProgressDAL extends BaseDAL<typeof readingProgress> {
     }
   }
 
-  async update(_id: number, _data: any): Promise<DbMutationResult<any>> {
+  async update(
+    _id: number,
+    _data: Partial<typeof readingProgress.$inferInsert>
+  ): Promise<DbMutationResult<typeof readingProgress.$inferSelect>> {
     return { success: false, error: "Use create method instead (createOrUpdate)" };
   }
 

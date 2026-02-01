@@ -116,6 +116,13 @@ const envSchema = z.object({
   MAX_FILE_SIZE: z.coerce.number().default(52428800),
   ALLOWED_FILE_TYPES: z.string().default(".jpg,.jpeg,.png,.gif,.webp,.pdf"),
 
+  // ========== SEEDING ==========
+  SEED_API_KEY: z.string().optional(),
+  SEED_DOWNLOAD_CONCURRENCY: z.coerce.number().min(1).max(20).default(5),
+  SEED_MAX_IMAGE_SIZE_BYTES: z.coerce.number().min(1048576).max(104857600).default(5242880), // 1MB - 100MB, default 5MB
+  SEED_BATCH_SIZE: z.coerce.number().min(10).max(1000).default(100),
+  SEED_TIMEOUT_MS: z.coerce.number().min(1000).max(300000).default(30000), // 1s - 5min, default 30s
+
   // ========== CACHE ==========
   CACHE_TTL: z.coerce.number().default(3600),
   CACHE_REDIS_TTL: z.coerce.number().default(86400),
@@ -177,4 +184,9 @@ export const {
   CUSTOM_PASSWORD,
   ENABLE_SEEDING,
   ENABLE_ANALYTICS,
+  SEED_API_KEY,
+  SEED_DOWNLOAD_CONCURRENCY,
+  SEED_MAX_IMAGE_SIZE_BYTES,
+  SEED_BATCH_SIZE,
+  SEED_TIMEOUT_MS,
 } = getEnv();

@@ -22,27 +22,34 @@ export class NotificationDAL extends BaseDAL<typeof notification> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(
+    data: typeof notification.$inferInsert
+  ): Promise<DbMutationResult<typeof notification.$inferSelect>> {
     try {
       const result = await mutations.createNotification(
         data.userId,
         data.type,
         data.title,
         data.message,
-        data.link,
-        data.comicId,
-        data.chapterId
+        data.link ?? undefined,
+        data.comicId ?? undefined,
+        data.chapterId ?? undefined
       );
-      return { success: true, data: result };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return { success: true, data: result as any };
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
   }
 
-  async update(id: number, _data: any): Promise<DbMutationResult<any>> {
+  async update(
+    id: number,
+    _data: Partial<typeof notification.$inferInsert>
+  ): Promise<DbMutationResult<typeof notification.$inferSelect>> {
     try {
       const result = await mutations.markAsRead(id);
-      return { success: true, data: result };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return { success: true, data: result as any };
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };
     }

@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp, Loader2, MessageSquare, Reply, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -90,9 +91,15 @@ function CommentItem({
       {/* Comment Header */}
       <div className="flex items-start gap-3">
         {/* User Avatar */}
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           {comment.userImage ? (
-            <img src={comment.userImage} alt={comment.userName} className="h-8 w-8 rounded-full" />
+            <Image
+              src={comment.userImage}
+              alt={comment.userName}
+              className="h-8 w-8 rounded-full"
+              width={32}
+              height={32}
+            />
           ) : (
             <div className="h-8 w-8 rounded-full bg-slate-300 flex items-center justify-center text-slate-700 font-semibold text-sm">
               {comment.userName.charAt(0).toUpperCase()}
@@ -117,7 +124,7 @@ function CommentItem({
           {isDeleted ? (
             <p className="text-slate-400 italic">[deleted]</p>
           ) : (
-            <p className="text-slate-700 whitespace-pre-wrap break-words">{comment.content}</p>
+            <p className="text-slate-700 whitespace-pre-wrap wrap-break-word">{comment.content}</p>
           )}
 
           {/* Actions */}

@@ -5,14 +5,28 @@ import { z } from "zod";
  * Validates comments with threading support (parentId for replies)
  */
 export const commentSchema = z.object({
-  content: z.string().min(1).max(2000),
+  content: z
+    .string()
+    .trim()
+    .min(1, "Comment cannot be empty")
+    .max(2000, "Comment cannot exceed 2000 characters")
+    .refine((val) => val.trim().length > 0, {
+      message: "Comment cannot be whitespace only",
+    }),
   chapterId: z.number().int().positive(),
   parentId: z.number().int().positive().optional().nullable(),
 });
 
 export const editCommentSchema = z.object({
   id: z.number().int().positive(),
-  content: z.string().min(1).max(2000),
+  content: z
+    .string()
+    .trim()
+    .min(1, "Comment cannot be empty")
+    .max(2000, "Comment cannot exceed 2000 characters")
+    .refine((val) => val.trim().length > 0, {
+      message: "Comment cannot be whitespace only",
+    }),
 });
 
 export const deleteCommentSchema = z.object({

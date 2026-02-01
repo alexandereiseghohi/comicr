@@ -22,19 +22,28 @@ export class ChapterDAL extends BaseDAL<typeof chapter> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(
+    data: typeof chapter.$inferInsert
+  ): Promise<DbMutationResult<typeof chapter.$inferSelect>> {
     try {
-      const result = await mutations.createChapter(data);
-      return result;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await mutations.createChapter(data as any);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return result as any;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(
+    id: number,
+    data: Partial<typeof chapter.$inferInsert>
+  ): Promise<DbMutationResult<typeof chapter.$inferSelect>> {
     try {
-      const result = await mutations.updateChapter(id, data);
-      return result;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await mutations.updateChapter(id, data as any);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return result as any;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };
     }

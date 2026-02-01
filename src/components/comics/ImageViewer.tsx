@@ -44,6 +44,8 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
     if (storedZoom) {
       const zoomValue = parseInt(storedZoom, 10);
       if (zoomValue >= ZOOM_MIN && zoomValue <= ZOOM_MAX) {
+        // Initialize zoom from localStorage (one-time on mount)
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setZoom(zoomValue);
       }
     }
@@ -265,7 +267,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
       <div
         ref={imageRef}
         className={cn(
-          "w-full h-full flex items-center justify-center cursor-grab min-h-[400px]",
+          "w-full h-full flex items-center justify-center cursor-grab min-h-100",
           isPanning && "cursor-grabbing",
           zoom > 100 && "cursor-move"
         )}

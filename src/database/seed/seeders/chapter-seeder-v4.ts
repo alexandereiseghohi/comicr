@@ -5,8 +5,8 @@
  * @date 2026-01-30
  */
 
+import chapters from "../../../../data/seed-source/chapters.json";
 import { ChapterSeedSchema } from "../helpers/validation-schemas";
-import chapters from "../../../../chapters.json";
 
 export async function seedChapters() {
   const results = [];

@@ -22,18 +22,25 @@ export class GenreDAL extends BaseDAL<typeof genre> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(
+    data: typeof genre.$inferInsert
+  ): Promise<DbMutationResult<typeof genre.$inferSelect>> {
     try {
-      const result = await mutations.createGenre(data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await mutations.createGenre(data as any);
       return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(
+    id: number,
+    data: Partial<typeof genre.$inferInsert>
+  ): Promise<DbMutationResult<typeof genre.$inferSelect>> {
     try {
-      const result = await mutations.updateGenre(id, data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await mutations.updateGenre(id, data as any);
       return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };

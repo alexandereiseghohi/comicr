@@ -22,7 +22,9 @@ export class ChapterImageDAL extends BaseDAL<typeof chapterImage> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(
+    data: typeof chapterImage.$inferInsert
+  ): Promise<DbMutationResult<typeof chapterImage.$inferSelect>> {
     try {
       const result = await mutations.createChapterImage(data);
       return result;
@@ -31,7 +33,11 @@ export class ChapterImageDAL extends BaseDAL<typeof chapterImage> {
     }
   }
 
-  async update(_id: number, _data: any): Promise<DbMutationResult<any>> {
+  // Chapter image updates not supported - use create/delete instead
+  async update(
+    _id: number,
+    _data: Partial<typeof chapterImage.$inferInsert>
+  ): Promise<DbMutationResult<typeof chapterImage.$inferSelect>> {
     return { success: false, error: "Chapter images are immutable" };
   }
 

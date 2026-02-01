@@ -1,0 +1,21 @@
+[
+  {
+    "id": "test-user-1",
+    "name": "Test User One",
+    "email": "test1@example.com",
+    "image": null
+  },
+  {
+    "id": "test-user-2",
+    "name": "Test User Two",
+    "email": "test2@example.com",
+    "image": "https://example.com/avatar.jpg"
+  },
+  {
+    "id": "admin-user",
+    "name": "Admin User",
+    "email": "admin@example.com",
+    "image": null,
+    "role": "admin"
+  }
+]

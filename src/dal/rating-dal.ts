@@ -27,7 +27,7 @@ export class RatingDAL extends BaseDAL<typeof rating> {
     comicId: number;
     rating: number;
     review?: string;
-  }): Promise<DbMutationResult<any>> {
+  }): Promise<DbMutationResult<typeof rating.$inferSelect>> {
     try {
       const result = await mutations.upsertRating(data);
       return result;
@@ -36,7 +36,10 @@ export class RatingDAL extends BaseDAL<typeof rating> {
     }
   }
 
-  async update(_id: number, _data: any): Promise<DbMutationResult<any>> {
+  async update(
+    _id: number,
+    _data: Partial<typeof rating.$inferInsert>
+  ): Promise<DbMutationResult<typeof rating.$inferSelect>> {
     return { success: false, error: "Use create with userId/comicId" };
   }
 

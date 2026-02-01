@@ -22,7 +22,9 @@ export class ComicImageDAL extends BaseDAL<typeof comicImage> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(
+    data: typeof comicImage.$inferInsert
+  ): Promise<DbMutationResult<typeof comicImage.$inferSelect>> {
     try {
       const result = await mutations.createComicImage(data);
       return result;
@@ -31,7 +33,11 @@ export class ComicImageDAL extends BaseDAL<typeof comicImage> {
     }
   }
 
-  async update(_id: number, _data: any): Promise<DbMutationResult<any>> {
+  // Comic image updates not supported - use create/delete instead
+  async update(
+    _id: number,
+    _data: Partial<typeof comicImage.$inferInsert>
+  ): Promise<DbMutationResult<typeof comicImage.$inferSelect>> {
     return { success: false, error: "Comic images are immutable" };
   }
 

@@ -76,6 +76,8 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 
   useEffect(() => {
     if (isFullScreen) {
+      // Reset auto-hide timer when entering fullscreen
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       resetAutoHideTimer();
     }
     return () => {
@@ -124,8 +126,9 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
       // Request landscape lock on mobile
       if (screen.orientation && "lock" in screen.orientation) {
         try {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           await (screen.orientation as any).lock("landscape").catch(() => {});
-        } catch (error) {
+        } catch {
           // Ignore errors
         }
       }
@@ -236,6 +239,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
     jumpToPercentage,
     showSettings,
     isFullScreen,
+    pages.length,
   ]);
 
   // Background colors

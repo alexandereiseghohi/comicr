@@ -22,18 +22,25 @@ export class ComicDAL extends BaseDAL<typeof comic> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(
+    data: typeof comic.$inferInsert
+  ): Promise<DbMutationResult<typeof comic.$inferSelect>> {
     try {
-      const result = await mutations.createComic(data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await mutations.createComic(data as any);
       return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(
+    id: number,
+    data: Partial<typeof comic.$inferInsert>
+  ): Promise<DbMutationResult<typeof comic.$inferSelect>> {
     try {
-      const result = await mutations.updateComic(id, data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await mutations.updateComic(id, data as any);
       return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };

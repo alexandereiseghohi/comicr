@@ -5,9 +5,9 @@
  * @date 2026-01-30
  */
 
-import { UserSeedSchema } from "../helpers/validation-schemas";
+import users from "../../../../data/seed-source/users.json";
 import { hashPassword } from "../helpers/password-hasher";
-import users from "../../../../users.json";
+import { UserSeedSchema } from "../helpers/validation-schemas";
 
 export async function seedUsers() {
   const results = [];

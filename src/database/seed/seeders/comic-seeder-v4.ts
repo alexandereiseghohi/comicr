@@ -5,8 +5,8 @@
  * @date 2026-01-30
  */
 
+import comics from "../../../../data/seed-source/comics.json";
 import { ComicSeedSchema } from "../helpers/validation-schemas";
-import comics from "../../../../comics.json";
 
 export async function seedComics() {
   const results = [];

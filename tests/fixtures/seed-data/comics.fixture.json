@@ -1,0 +1,43 @@
+[
+  {
+    "id": 1,
+    "title": "Test Comic One",
+    "slug": "test-comic-one",
+    "description": "A test comic for unit testing",
+    "coverImage": "https://placehold.co/400x600/png",
+    "authorId": 1,
+    "artistId": null,
+    "genres": ["Action", "Adventure"],
+    "publicationDate": "2024-01-01T00:00:00.000Z",
+    "status": "ongoing",
+    "rating": 4.5,
+    "viewCount": 1000,
+    "bookmarkCount": 50
+  },
+  {
+    "id": 2,
+    "title": "Test Comic Two",
+    "slug": "test-comic-two",
+    "description": "Another test comic",
+    "coverImage": "https://placehold.co/400x600/png",
+    "authorId": 1,
+    "artistId": 1,
+    "genres": ["Romance", "Drama"],
+    "publicationDate": "2024-02-01T00:00:00.000Z",
+    "status": "completed",
+    "rating": 3.8,
+    "viewCount": 500,
+    "bookmarkCount": 25
+  },
+  {
+    "id": 3,
+    "title": "Test Comic Three",
+    "slug": "test-comic-three",
+    "description": "Third test comic with minimal data",
+    "coverImage": null,
+    "authorId": 1,
+    "genres": [],
+    "publicationDate": "2024-03-01T00:00:00.000Z",
+    "status": "hiatus"
+  }
+]

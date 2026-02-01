@@ -8,16 +8,23 @@ export class BookmarkDAL extends BaseDAL<typeof bookmark> {
     super(bookmark);
   }
 
-  async create(data: { userId: string; comicId: number }): Promise<DbMutationResult<any>> {
+  async create(data: {
+    userId: string;
+    comicId: number;
+  }): Promise<DbMutationResult<typeof bookmark.$inferSelect>> {
     try {
       const result = await mutations.createBookmark(data.userId, data.comicId);
-      return { success: true, data: result };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return { success: true, data: result as any };
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
   }
 
-  async update(_id: number, _data: any): Promise<DbMutationResult<any>> {
+  async update(
+    _id: number,
+    _data: Partial<typeof bookmark.$inferInsert>
+  ): Promise<DbMutationResult<typeof bookmark.$inferSelect>> {
     return { success: false, error: "Bookmarks are immutable" };
   }
 

@@ -42,12 +42,7 @@ export function ReadingProgressTracker({
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastSaveRef = useRef<{ page: number; scroll: number }>({ page: 0, scroll: 0 });
 
-  // Load existing progress on mount
-  useEffect(() => {
-    loadProgress();
-  }, [comicId, chapterId]);
-
-  const loadProgress = async () => {
+  const loadProgress = useCallback(async () => {
     try {
       // TODO: Fetch reading progress from API
       // For now, check localStorage as fallback
@@ -64,7 +59,12 @@ export function ReadingProgressTracker({
     } catch (error) {
       console.error("Failed to load progress:", error);
     }
-  };
+  }, [comicId, chapterId]);
+
+  // Load existing progress on mount
+  useEffect(() => {
+    void loadProgress();
+  }, [loadProgress]);
 
   const saveProgress = useCallback(
     async (pageIndex: number, percentage: number, immediate = false) => {
@@ -95,7 +95,7 @@ export function ReadingProgressTracker({
         console.error("Failed to save progress:", error);
       }
     },
-    [comicId, chapterId, totalPages]
+    [comicId, chapterId]
   );
 
   // Debounced save - triggers 30s after last interaction
@@ -117,6 +117,7 @@ export function ReadingProgressTracker({
     const progress =
       mode === "horizontal" ? Math.round((currentPage / totalPages) * 100) : scrollPercentage;
 
+    // Update UI progress state
     setCurrentProgress(progress);
 
     // Debounced save
@@ -132,7 +133,8 @@ export function ReadingProgressTracker({
         clearTimeout(saveTimerRef.current);
       }
     };
-  }, [currentPage, scrollPercentage, mode, totalPages, debouncedSave, saveProgress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, scrollPercentage, mode, debouncedSave, saveProgress]);
 
   // Save on unmount or tab close
   useEffect(() => {

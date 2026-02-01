@@ -27,7 +27,7 @@ export class CommentDAL extends BaseDAL<typeof comment> {
     userId: string;
     chapterId: number;
     parentId?: number | null;
-  }): Promise<DbMutationResult<any>> {
+  }): Promise<DbMutationResult<typeof comment.$inferSelect>> {
     try {
       const result = await mutations.createComment(data);
       return result;
@@ -36,7 +36,10 @@ export class CommentDAL extends BaseDAL<typeof comment> {
     }
   }
 
-  async update(id: number, content: string): Promise<DbMutationResult<any>> {
+  async update(
+    id: number,
+    content: string
+  ): Promise<DbMutationResult<typeof comment.$inferSelect>> {
     try {
       const result = await mutations.updateComment(id, content);
       return result;

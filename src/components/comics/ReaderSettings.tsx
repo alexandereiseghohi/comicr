@@ -56,12 +56,22 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
     try {
       const result = await getReaderSettingsAction();
       if (result.success && result.data) {
-        setBackgroundMode(result.data.backgroundMode as any);
-        setReadingMode(result.data.readingMode as any);
-        setDefaultQuality(result.data.defaultQuality as any);
+        // Map API values to component state types
+        const bgMode = result.data.backgroundMode;
+        if (bgMode === "dark" || bgMode === "white" || bgMode === "sepia") {
+          setBackgroundMode(bgMode);
+        }
+        const rdMode = result.data.readingMode;
+        if (rdMode === "vertical" || rdMode === "horizontal") {
+          setReadingMode(rdMode);
+        }
+        const quality = result.data.defaultQuality;
+        if (quality === "low" || quality === "medium" || quality === "high") {
+          setDefaultQuality(quality);
+        }
       }
-    } catch (error) {
-      console.error("Failed to load settings:", error);
+    } catch {
+      console.error("Failed to load settings");
     } finally {
       setLoading(false);
     }
@@ -87,7 +97,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
       } else {
         toast.error(result.error || "Failed to save settings");
       }
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setSaving(false);
@@ -115,7 +125,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
               <Label>Background Color</Label>
               <RadioGroup
                 value={backgroundMode}
-                onValueChange={(value) => setBackgroundMode(value as any)}
+                onValueChange={(value) => setBackgroundMode(value as typeof backgroundMode)}
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="white" id="bg-white" />
@@ -146,7 +156,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
               <Label>Reading Mode</Label>
               <RadioGroup
                 value={readingMode}
-                onValueChange={(value) => setReadingMode(value as any)}
+                onValueChange={(value) => setReadingMode(value as typeof readingMode)}
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="vertical" id="mode-vertical" />
@@ -173,7 +183,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
               <Label htmlFor="quality">Default Image Quality</Label>
               <Select
                 value={defaultQuality}
-                onValueChange={(value) => setDefaultQuality(value as any)}
+                onValueChange={(value) => setDefaultQuality(value as typeof defaultQuality)}
               >
                 <SelectTrigger id="quality">
                   <SelectValue />

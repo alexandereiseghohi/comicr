@@ -19,11 +19,17 @@ export class UserDAL extends BaseDAL<typeof user> {
     }
   }
 
-  async create(_data: any): Promise<DbMutationResult<any>> {
+  // User creation is handled by NextAuth - this method is not used
+  async create(
+    _data: typeof user.$inferInsert
+  ): Promise<DbMutationResult<typeof user.$inferSelect>> {
     return { success: false, error: "Use createUser action instead" };
   }
 
-  async update(id: string, data: any): Promise<DbMutationResult<any>> {
+  async update(
+    id: string,
+    data: Partial<typeof user.$inferInsert>
+  ): Promise<DbMutationResult<typeof user.$inferSelect>> {
     try {
       const result = await mutations.updateUserById(id, data);
       return result;

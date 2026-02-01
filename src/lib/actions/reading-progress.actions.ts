@@ -25,9 +25,10 @@ export async function getReaderSettingsAction(): Promise<
   }
 
   const result = await mutations.getUserReaderSettings(session.user.id);
-  return result.success
-    ? { success: true, data: result.data as any }
-    : { success: false, error: result.error || "Failed to get reader settings" };
+  if (!result.success) {
+    return { success: false, error: result.error || "Failed to get reader settings" };
+  }
+  return { success: true, data: result.data };
 }
 
 /**

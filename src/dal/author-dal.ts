@@ -22,18 +22,25 @@ export class AuthorDAL extends BaseDAL<typeof author> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(
+    data: typeof author.$inferInsert
+  ): Promise<DbMutationResult<typeof author.$inferSelect>> {
     try {
-      const result = await mutations.createAuthor(data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await mutations.createAuthor(data as any);
       return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(
+    id: number,
+    data: Partial<typeof author.$inferInsert>
+  ): Promise<DbMutationResult<typeof author.$inferSelect>> {
     try {
-      const result = await mutations.updateAuthor(id, data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await mutations.updateAuthor(id, data as any);
       return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };
