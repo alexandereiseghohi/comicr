@@ -29,11 +29,19 @@ tags:
   - name: Comics
     description: Comic browsing and search
   - name: Chapters
-    description: Chapter content
+    description: Chapter content and reading
   - name: Auth
     description: Authentication endpoints
   - name: Bookmarks
-    description: User bookmarks
+    description: User bookmarks management
+  - name: Comments
+    description: Chapter comments and replies
+  - name: Ratings
+    description: Comic ratings and reviews
+  - name: Profile
+    description: User profile and settings
+  - name: Reading Progress
+    description: Track reading progress
   - name: Admin
     description: Admin management (requires admin role)
 
@@ -224,6 +232,892 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
+  /api/comments:
+    get:
+      tags:
+        - Comments
+      summary: Get comments for a chapter
+      description: Retrieve threaded comment tree for a specific chapter
+      operationId: getComments
+      parameters:
+        - name: chapterId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of comments in threaded format
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+        "400":
+          description: Missing chapterId parameter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - Comments
+      summary: Create a comment
+      description: Create a new comment or reply (requires authentication)
+      operationId: createComment
+      security:
+        - sessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - chapterId
+                - content
+              properties:
+                chapterId:
+                  type: integer
+                  description: ID of the chapter to comment on
+                parentId:
+                  type: integer
+                  nullable: true
+                  description: ID of parent comment (for replies)
+                content:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+      responses:
+        "201":
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: "#/components/schemas/Comment"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/comments/{id}:
+    delete:
+      tags:
+        - Comments
+      summary: Delete a comment
+      description: Soft delete a comment (requires authentication and ownership or admin role)
+      operationId: deleteComment
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Comment deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Forbidden - user does not own this comment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Comment not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/comics/rate:
+    post:
+      tags:
+        - Ratings
+      summary: Rate a comic
+      description: Create or update a rating for a comic (requires authentication)
+      operationId: rateComic
+      security:
+        - sessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - comicId
+                - rating
+              properties:
+                comicId:
+                  type: integer
+                rating:
+                  type: integer
+                  minimum: 0
+                  maximum: 5
+                  description: Rating from 1-5 (0 to delete rating)
+                review:
+                  type: string
+                  maxLength: 1000
+                  description: Optional review text
+      responses:
+        "200":
+          description: Rating created/updated/deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      rating:
+                        type: integer
+                      review:
+                        type: string
+                        nullable: true
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/ratings/{comicId}:
+    get:
+      tags:
+        - Ratings
+      summary: Get ratings for a comic
+      description: Get all ratings and reviews for a specific comic
+      operationId: getRatings
+      parameters:
+        - name: comicId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        "200":
+          description: List of ratings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      ratings:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Rating"
+                      average:
+                        type: number
+                        format: float
+                      total:
+                        type: integer
+                      pagination:
+                        $ref: "#/components/schemas/Pagination"
+
+  /api/profile:
+    get:
+      tags:
+        - Profile
+      summary: Get user profile
+      description: Get the authenticated user's profile (requires authentication)
+      operationId: getProfile
+      security:
+        - sessionAuth: []
+      responses:
+        "200":
+          description: User profile data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/profile/settings:
+    put:
+      tags:
+        - Profile
+      summary: Update user settings
+      description: Update user preferences and settings (requires authentication)
+      operationId: updateSettings
+      security:
+        - sessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                theme:
+                  type: string
+                  enum: [light, dark, system]
+                emailNotifications:
+                  type: boolean
+                readingMode:
+                  type: string
+                  enum: [single, double, longStrip]
+                imageQuality:
+                  type: string
+                  enum: [low, medium, high, original]
+                autoBookmark:
+                  type: boolean
+                language:
+                  type: string
+      responses:
+        "200":
+          description: Settings updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/profile/delete-account:
+    post:
+      tags:
+        - Profile
+      summary: Delete user account
+      description: Soft delete user account with PII anonymization (requires authentication)
+      operationId: deleteAccount
+      security:
+        - sessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - confirmPassword
+              properties:
+                confirmPassword:
+                  type: string
+                  description: User's password to confirm account deletion
+      responses:
+        "200":
+          description: Account deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "400":
+          description: Invalid password or validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/bookmarks:
+    get:
+      tags:
+        - Bookmarks
+      summary: Get user bookmarks
+      description: Get all bookmarks for the authenticated user (requires authentication)
+      operationId: getBookmarks
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        "200":
+          description: List of bookmarked comics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      bookmarks:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Bookmark"
+                      pagination:
+                        $ref: "#/components/schemas/Pagination"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - Bookmarks
+      summary: Create a bookmark
+      description: Bookmark a comic (requires authentication)
+      operationId: createBookmark
+      security:
+        - sessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - comicId
+              properties:
+                comicId:
+                  type: integer
+      responses:
+        "201":
+          description: Bookmark created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: "#/components/schemas/Bookmark"
+        "400":
+          description: Validation error or bookmark already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/bookmarks/{comicId}:
+    delete:
+      tags:
+        - Bookmarks
+      summary: Remove a bookmark
+      description: Remove a comic from bookmarks (requires authentication)
+      operationId: deleteBookmark
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: comicId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Bookmark removed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Bookmark not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/reading-progress:
+    get:
+      tags:
+        - Reading Progress
+      summary: Get reading progress
+      description: Get reading progress for all comics for the authenticated user
+      operationId: getReadingProgress
+      security:
+        - sessionAuth: []
+      responses:
+        "200":
+          description: Reading progress data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ReadingProgress"
+    post:
+      tags:
+        - Reading Progress
+      summary: Update reading progress
+      description: Update reading progress for a comic (requires authentication)
+      operationId: updateReadingProgress
+      security:
+        - sessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - comicId
+                - chapterId
+              properties:
+                comicId:
+                  type: integer
+                chapterId:
+                  type: integer
+                currentImageIndex:
+                  type: integer
+                  minimum: 0
+                scrollPercentage:
+                  type: number
+                  format: float
+                  minimum: 0
+                  maximum: 100
+                progressPercent:
+                  type: number
+                  format: float
+                  minimum: 0
+                  maximum: 100
+      responses:
+        "200":
+          description: Progress updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: "#/components/schemas/ReadingProgress"
+
+  /api/admin/comics:
+    post:
+      tags:
+        - Admin
+      summary: Create a new comic
+      description: Create a new comic (requires admin role)
+      operationId: createComic
+      security:
+        - sessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateComicInput"
+      responses:
+        "201":
+          description: Comic created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Forbidden - requires admin role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/admin/comics/{id}:
+    put:
+      tags:
+        - Admin
+      summary: Update a comic
+      description: Update an existing comic (requires admin role)
+      operationId: updateComic
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateComicInput"
+      responses:
+        "200":
+          description: Comic updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Forbidden - requires admin role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Comic not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - Admin
+      summary: Delete a comic
+      description: Delete a comic (requires admin role)
+      operationId: deleteComic
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Comic deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - requires admin role
+        "404":
+          description: Comic not found
+
+  /api/admin/chapters:
+    post:
+      tags:
+        - Admin
+      summary: Create a new chapter
+      description: Create a new chapter for a comic (requires admin role)
+      operationId: createChapter
+      security:
+        - sessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateChapterInput"
+      responses:
+        "201":
+          description: Chapter created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+
+  /api/admin/chapters/{id}:
+    put:
+      tags:
+        - Admin
+      summary: Update a chapter
+      description: Update an existing chapter (requires admin role)
+      operationId: updateChapter
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateChapterInput"
+      responses:
+        "200":
+          description: Chapter updated successfully
+    delete:
+      tags:
+        - Admin
+      summary: Delete a chapter
+      description: Delete a chapter (requires admin role)
+      operationId: deleteChapter
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Chapter deleted successfully
+
+  /api/admin/users:
+    get:
+      tags:
+        - Admin
+      summary: List all users
+      description: Get a paginated list of all users (requires admin role)
+      operationId: getUsers
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: role
+          in: query
+          schema:
+            type: string
+            enum: [user, admin, moderator]
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      users:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/UserAdmin"
+                      pagination:
+                        $ref: "#/components/schemas/Pagination"
+
+  /api/admin/users/{id}:
+    put:
+      tags:
+        - Admin
+      summary: Update user
+      description: Update user role or status (requires admin role)
+      operationId: updateUser
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum: [user, admin, moderator]
+                bannedUntil:
+                  type: string
+                  format: date-time
+                  nullable: true
+      responses:
+        "200":
+          description: User updated successfully
+    delete:
+      tags:
+        - Admin
+      summary: Delete user
+      description: Soft delete a user account (requires admin role)
+      operationId: deleteUser
+      security:
+        - sessionAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User deleted successfully
 
 components:
   securitySchemes:
@@ -454,3 +1348,431 @@ components:
               type: string
             message:
               type: string
+
+    Comment:
+      type: object
+      required:
+        - id
+        - content
+        - userId
+        - chapterId
+        - createdAt
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        userId:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+        chapterId:
+          type: integer
+        parentId:
+          type: integer
+          nullable: true
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        replies:
+          type: array
+          items:
+            $ref: "#/components/schemas/Comment"
+          description: Nested replies (only in threaded responses)
+
+    Rating:
+      type: object
+      required:
+        - id
+        - rating
+        - userId
+        - comicId
+      properties:
+        id:
+          type: integer
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        review:
+          type: string
+          nullable: true
+        userId:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+        comicId:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Bookmark:
+      type: object
+      required:
+        - id
+        - userId
+        - comicId
+        - createdAt
+      properties:
+        id:
+          type: integer
+        userId:
+          type: string
+        comicId:
+          type: integer
+        comic:
+          $ref: "#/components/schemas/Comic"
+        createdAt:
+          type: string
+          format: date-time
+
+    ReadingProgress:
+      type: object
+      required:
+        - id
+        - userId
+        - comicId
+        - chapterId
+      properties:
+        id:
+          type: integer
+        userId:
+          type: string
+        comicId:
+          type: integer
+        chapterId:
+          type: integer
+        currentImageIndex:
+          type: integer
+          default: 0
+        scrollPercentage:
+          type: number
+          format: float
+          default: 0
+        progressPercent:
+          type: number
+          format: float
+          default: 0
+        lastReadAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UserProfile:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+        image:
+          type: string
+          format: uri
+          nullable: true
+        role:
+          type: string
+          enum: [user, admin, moderator]
+        createdAt:
+          type: string
+          format: date-time
+        emailVerified:
+          type: string
+          format: date-time
+          nullable: true
+        settings:
+          type: object
+          properties:
+            theme:
+              type: string
+              enum: [light, dark, system]
+            emailNotifications:
+              type: boolean
+            readingMode:
+              type: string
+              enum: [single, double, longStrip]
+            imageQuality:
+              type: string
+              enum: [low, medium, high, original]
+            autoBookmark:
+              type: boolean
+            language:
+              type: string
+        statistics:
+          type: object
+          properties:
+            chaptersRead:
+              type: integer
+            commentsPosted:
+              type: integer
+            ratingsGiven:
+              type: integer
+            bookmarksCount:
+              type: integer
+
+    UserAdmin:
+      allOf:
+        - $ref: "#/components/schemas/UserProfile"
+        - type: object
+          properties:
+            bannedUntil:
+              type: string
+              format: date-time
+              nullable: true
+            deletedAt:
+              type: string
+              format: date-time
+              nullable: true
+            lastSignInAt:
+              type: string
+              format: date-time
+              nullable: true
+
+    CreateComicInput:
+      type: object
+      required:
+        - title
+        - slug
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        slug:
+          type: string
+          pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        description:
+          type: string
+          maxLength: 5000
+        coverImage:
+          type: string
+          format: uri
+        status:
+          type: string
+          enum: [Ongoing, Hiatus, Completed, Dropped, "Season End", "Coming Soon"]
+          default: "Coming Soon"
+        authorIds:
+          type: array
+          items:
+            type: integer
+        artistIds:
+          type: array
+          items:
+            type: integer
+        genreIds:
+          type: array
+          items:
+            type: integer
+        typeId:
+          type: integer
+        releaseYear:
+          type: integer
+          minimum: 1900
+          maximum: 2100
+        nsfw:
+          type: boolean
+          default: false
+
+    UpdateComicInput:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 5000
+        coverImage:
+          type: string
+          format: uri
+        status:
+          type: string
+          enum: [Ongoing, Hiatus, Completed, Dropped, "Season End", "Coming Soon"]
+        authorIds:
+          type: array
+          items:
+            type: integer
+        artistIds:
+          type: array
+          items:
+            type: integer
+        genreIds:
+          type: array
+          items:
+            type: integer
+        typeId:
+          type: integer
+        releaseYear:
+          type: integer
+        nsfw:
+          type: boolean
+
+    CreateChapterInput:
+      type: object
+      required:
+        - comicId
+        - number
+        - title
+      properties:
+        comicId:
+          type: integer
+        number:
+          type: number
+          minimum: 0
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        images:
+          type: array
+          items:
+            type: object
+            required:
+              - url
+              - order
+            properties:
+              url:
+                type: string
+                format: uri
+              alt:
+                type: string
+                nullable: true
+              order:
+                type: integer
+              width:
+                type: integer
+                nullable: true
+              height:
+                type: integer
+                nullable: true
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    UpdateChapterInput:
+      type: object
+      properties:
+        number:
+          type: number
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        images:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                format: uri
+              alt:
+                type: string
+              order:
+                type: integer
+              width:
+                type: integer
+              height:
+                type: integer
+        publishedAt:
+          type: string
+          format: date-time
+
+    Chapter:
+      type: object
+      required:
+        - id
+        - comicId
+        - number
+        - title
+      properties:
+        id:
+          type: integer
+        comicId:
+          type: integer
+        number:
+          type: number
+        title:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChapterImage"
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ChapterImage:
+      type: object
+      required:
+        - id
+        - chapterId
+        - url
+        - order
+      properties:
+        id:
+          type: integer
+        chapterId:
+          type: integer
+        url:
+          type: string
+          format: uri
+        alt:
+          type: string
+          nullable: true
+        order:
+          type: integer
+        width:
+          type: integer
+          nullable: true
+        height:
+          type: integer
+          nullable: true
+
+    Type:
+      type: object
+      required:
+        - id
+        - name
+        - slug
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+          nullable: true

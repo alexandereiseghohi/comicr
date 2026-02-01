@@ -3,8 +3,8 @@
  * @description Seeds artists from JSON files with validation and image handling
  */
 
-import { downloadAndSaveImage } from "@/lib/imageHelper";
-import { seedTableBatched } from "@/lib/seedHelpers";
+import { downloadAndSaveImage } from "@/lib/image-helper";
+import { seedTableBatched } from "@/lib/seed-helpers";
 import { ArtistSeedSchema, type ArtistSeed } from "@/lib/validations/seed";
 import path from "path";
 import { artist } from "../../schema";

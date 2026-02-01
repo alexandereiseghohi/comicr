@@ -21,7 +21,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ImageViewer } from "./ImageViewer";
+import { ImageViewer } from "./image-viewer";
 
 interface ChapterReaderProps {
   title: string;

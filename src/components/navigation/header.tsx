@@ -13,15 +13,24 @@ export default async function Header() {
           <Link href="/" className="text-xl font-semibold">
             Comicr
           </Link>
-          <nav className="hidden sm:flex space-x-3">
-            <Link href="/comics" className="text-sm text-muted-foreground">
+          <nav className="hidden md:flex space-x-3">
+            <Link href="/comics" className="text-sm text-muted-foreground hover:text-foreground">
               Browse
             </Link>
-            <Link href="/comics" className="text-sm text-muted-foreground">
+            <Link href="/comics" className="text-sm text-muted-foreground hover:text-foreground">
               New
             </Link>
-            <Link href="/comics" className="text-sm text-muted-foreground">
+            <Link href="/comics" className="text-sm text-muted-foreground hover:text-foreground">
               Top
+            </Link>
+            <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground">
+              About
+            </Link>
+            <Link href="/help" className="text-sm text-muted-foreground hover:text-foreground">
+              Help
+            </Link>
+            <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground">
+              Contact
             </Link>
           </nav>
         </div>

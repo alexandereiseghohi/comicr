@@ -14,7 +14,7 @@ const getDatabaseUrl = (): string => {
     try {
       // Try to read validated env from the project's env helper (if present)
       // Prefer dynamic import for compatibility and type safety
-      const environmentModule = import("./appConfig") as {
+      const environmentModule = import("./app-config") as {
         env?: { DATABASE_URL?: string };
       };
       if (environmentModule?.env?.DATABASE_URL) {

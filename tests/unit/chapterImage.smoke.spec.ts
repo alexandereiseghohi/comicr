@@ -7,7 +7,7 @@ vi.mock("@/database/db", () => {
   return { db: chain };
 });
 
-import { getImagesByChapterId } from "@/database/queries/chapterImage.queries";
+import { getImagesByChapterId } from "@/database/queries/chapter-image.queries";
 
 type ChapterImage = { id: number; chapterId: number; imageUrl: string; pageNumber: number };
 

@@ -1,5 +1,5 @@
 import { db } from "@/database/db";
-import * as mutations from "@/database/mutations/comicImage.mutations";
+import * as mutations from "@/database/mutations/comic-image.mutations";
 import { comicImage } from "@/database/schema";
 import type { DbMutationResult } from "@/types";
 import { eq } from "drizzle-orm";

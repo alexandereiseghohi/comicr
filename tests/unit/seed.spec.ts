@@ -6,7 +6,7 @@
  * in integration tests. This file focuses on schema validation and
  * imageHelper which don't require database connections.
  */
-import { clearDownloadCache, downloadAndSaveImage } from "@/lib/imageHelper";
+import { clearDownloadCache, downloadAndSaveImage } from "@/lib/image-helper";
 import {
   ArtistSeedSchema,
   AuthorSeedSchema,

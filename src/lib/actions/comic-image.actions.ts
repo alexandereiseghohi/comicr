@@ -1,4 +1,4 @@
-import * as comicImageMutations from "@/database/mutations/comicImage.mutations";
+import * as comicImageMutations from "@/database/mutations/comic-image.mutations";
 
 type CreateComicImageInput = {
   comicId: number;

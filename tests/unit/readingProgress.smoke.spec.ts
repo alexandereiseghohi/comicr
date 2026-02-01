@@ -12,7 +12,7 @@ vi.mock("@/database/db", () => {
   return { db: chain };
 });
 
-import { getProgressByUser } from "@/database/queries/readingProgress.queries";
+import { getProgressByUser } from "@/database/queries/reading-progress.queries";
 
 describe("readingProgress queries", () => {
   it("getProgressByUser returns progress rows", async () => {

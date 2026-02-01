@@ -12,7 +12,7 @@ vi.mock("@/database/db", () => {
   return { db: chain };
 });
 
-import { getImagesByComicId } from "@/database/queries/comicImage.queries";
+import { getImagesByComicId } from "@/database/queries/comic-image.queries";
 
 describe("comicImage queries", () => {
   it("getImagesByComicId returns images", async () => {

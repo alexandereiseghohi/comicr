@@ -1,5 +1,5 @@
 "use client";
-import { useOptimisticAction } from "@/hooks/useOptimisticAction";
+import { useOptimisticAction } from "@/hooks/use-optimistic-action";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

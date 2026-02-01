@@ -3,7 +3,7 @@
  * @description Seeds comic types from JSON files with validation
  */
 
-import { seedTableBatched } from "@/lib/seedHelpers";
+import { seedTableBatched } from "@/lib/seed-helpers";
 import { TypeSeedSchema, type TypeSeed } from "@/lib/validations/seed";
 import { type } from "../../schema";
 

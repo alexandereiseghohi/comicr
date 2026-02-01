@@ -12,7 +12,7 @@ vi.mock("@/database/db", () => {
   return { db: chain };
 });
 
-import { getGenresByComicId } from "@/database/queries/comicToGenre.queries";
+import { getGenresByComicId } from "@/database/queries/comic-to-genre.queries";
 
 describe("comicToGenre queries", () => {
   it("getGenresByComicId returns relations", async () => {

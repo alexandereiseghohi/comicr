@@ -2,14 +2,18 @@ import { auth } from "@/auth";
 import { deleteComment } from "@/database/mutations/comment-mutations";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    const commentId = parseInt(params.id);
+    const { id } = await params;
+    const commentId = parseInt(id);
     if (isNaN(commentId)) {
       return NextResponse.json({ success: false, error: "Invalid comment ID" }, { status: 400 });
     }

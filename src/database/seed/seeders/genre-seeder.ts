@@ -3,7 +3,7 @@
  * @description Seeds genres from JSON files with validation
  */
 
-import { seedTableBatched } from "@/lib/seedHelpers";
+import { seedTableBatched } from "@/lib/seed-helpers";
 import { GenreSeedSchema, type GenreSeed } from "@/lib/validations/seed";
 import { genre } from "../../schema";
 

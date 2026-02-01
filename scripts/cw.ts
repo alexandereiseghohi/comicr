@@ -322,20 +322,26 @@ async function scaffoldCommand(args: string[]) {
 // ============================================================================
 
 async function dbCommand(args: string[]) {
-  const [subcommand] = args;
+  const [subcommand, ...rest] = args;
 
   if (!subcommand) {
     log.title("Database Commands");
     console.log(`
-  Usage: pnpm cw db <command>
+  Usage: pnpm cw db <command> [options]
 
   Commands:
     push       Push schema changes to database
     seed       Seed database with test data
+               Options: --users, --comics, --chapters (seed only specific entities)
     reset      Reset database (drop all tables, push schema, seed)
     studio     Open Drizzle Studio GUI
     generate   Generate database migrations
     migrate    Run pending migrations
+
+  Examples:
+    pnpm cw db seed              # Seed all entities
+    pnpm cw db seed --users      # Seed only users
+    pnpm cw db seed --comics --chapters  # Seed comics and chapters only
 `);
     return;
   }
@@ -346,11 +352,32 @@ async function dbCommand(args: string[]) {
       run("pnpm db:push");
       log.success("Schema pushed successfully");
       break;
-    case "seed":
-      log.info("Seeding database...");
-      run("pnpm db:seed");
-      log.success("Database seeded successfully");
+    case "seed": {
+      const hasUsers = rest.includes("--users");
+      const hasComics = rest.includes("--comics");
+      const hasChapters = rest.includes("--chapters");
+
+      if (hasUsers || hasComics || hasChapters) {
+        log.info("Seeding database with selected entities...");
+        const envVars = [];
+        if (hasUsers) envVars.push("SEED_USERS=true");
+        if (hasComics) envVars.push("SEED_COMICS=true");
+        if (hasChapters) envVars.push("SEED_CHAPTERS=true");
+
+        const fullCommand = `${envVars.join(" ")} npx tsx scripts/db-seed.ts`;
+        run(fullCommand);
+        log.success(
+          `Seeded: ${[hasUsers && "users", hasComics && "comics", hasChapters && "chapters"]
+            .filter(Boolean)
+            .join(", ")}`
+        );
+      } else {
+        log.info("Seeding database with all entities...");
+        run("pnpm db:seed");
+        log.success("Database seeded successfully");
+      }
       break;
+    }
     case "reset": {
       const confirm = await prompt("This will DELETE ALL DATA. Continue? (yes/no)");
       if (confirm.toLowerCase() !== "yes") {
@@ -396,31 +423,78 @@ async function testCommand(args: string[]) {
 
   Commands:
     unit [pattern]     Run unit tests (Vitest)
+                       Options: -w, --watch (run in watch mode)
     e2e [pattern]      Run E2E tests (Playwright)
+                       Options: --ui (run with Playwright UI), --debug (debug mode)
     all                Run all tests
     coverage           Run unit tests with coverage
     watch              Run unit tests in watch mode
+
+  Examples:
+    pnpm cw test unit -w                    # Unit tests in watch mode
+    pnpm cw test e2e --ui                   # E2E tests with Playwright UI
+    pnpm cw test e2e --debug               # E2E tests in debug mode
+    pnpm cw test e2e tests/e2e/reader.spec.ts  # Run specific test file
 `);
     return;
   }
 
   switch (subcommand) {
-    case "unit":
-      log.info("Running unit tests...");
-      if (rest.length > 0) {
-        run(`pnpm test ${rest.join(" ")}`);
+    case "unit": {
+      const hasWatch = rest.includes("-w") || rest.includes("--watch");
+      const patterns = rest.filter((arg) => !arg.startsWith("-"));
+
+      if (hasWatch) {
+        log.info("Running unit tests in watch mode...");
+        const command =
+          patterns.length > 0 ? `pnpm test ${patterns.join(" ")} --watch` : "pnpm test --watch";
+        spawn("pnpm", command.split(" ").slice(1), {
+          stdio: "inherit",
+          shell: true,
+          cwd: ROOT_DIR,
+        });
       } else {
-        run("pnpm test");
+        log.info("Running unit tests...");
+        if (patterns.length > 0) {
+          run(`pnpm test ${patterns.join(" ")}`);
+        } else {
+          run("pnpm test");
+        }
       }
       break;
-    case "e2e":
-      log.info("Running E2E tests...");
-      if (rest.length > 0) {
-        run(`pnpm test:e2e ${rest.join(" ")}`);
+    }
+    case "e2e": {
+      const hasUi = rest.includes("--ui");
+      const hasDebug = rest.includes("--debug");
+      const patterns = rest.filter((arg) => !arg.startsWith("--"));
+
+      let command = "pnpm test:e2e";
+
+      if (hasUi) {
+        log.info("Running E2E tests with Playwright UI...");
+        command += " --ui";
+      } else if (hasDebug) {
+        log.info("Running E2E tests in debug mode...");
+        command += " --debug";
       } else {
-        run("pnpm test:e2e");
+        log.info("Running E2E tests...");
+      }
+
+      if (patterns.length > 0) {
+        command += ` ${patterns.join(" ")}`;
+      }
+
+      if (hasUi || hasDebug) {
+        spawn("pnpm", command.split(" ").slice(1), {
+          stdio: "inherit",
+          shell: true,
+          cwd: ROOT_DIR,
+        });
+      } else {
+        run(command);
       }
       break;
+    }
     case "all":
       log.info("Running all tests...");
       run("pnpm test");
@@ -445,18 +519,26 @@ async function testCommand(args: string[]) {
 // ============================================================================
 
 async function deployCommand(args: string[]) {
-  const [subcommand] = args;
+  const [subcommand, ..._rest] = args;
 
   if (!subcommand) {
     log.title("Deploy Commands");
     console.log(`
-  Usage: pnpm cw deploy <command>
+  Usage: pnpm cw deploy <command> [options]
 
   Commands:
-    build      Build production bundle
-    preview    Build and preview locally
-    vercel     Deploy to Vercel
-    check      Pre-deployment checks (types, lint, tests)
+    build             Build production bundle
+    preview           Build and preview locally
+    staging           Deploy to Vercel staging environment
+    production        Deploy to Vercel production environment
+    check             Pre-deployment checks (types, lint, tests)
+
+  Examples:
+    pnpm cw deploy build          # Build for production
+    pnpm cw deploy preview        # Build and preview locally
+    pnpm cw deploy staging        # Deploy to staging
+    pnpm cw deploy production     # Deploy to production
+    pnpm cw deploy check          # Run all pre-deployment checks
 `);
     return;
   }
@@ -473,14 +555,51 @@ async function deployCommand(args: string[]) {
       log.info("Starting preview server...");
       spawn("pnpm", ["start"], { stdio: "inherit", shell: true, cwd: ROOT_DIR });
       break;
-    case "vercel": {
-      log.info("Deploying to Vercel...");
+    case "staging": {
+      log.info("Deploying to Vercel staging environment...");
       const hasVercelCli = run("vercel --version", { silent: true });
       if (!hasVercelCli) {
         log.error("Vercel CLI not installed. Run: npm i -g vercel");
         return;
       }
+      log.info("Running pre-deployment checks...");
+      run("pnpm type-check");
+      run("pnpm lint");
+      log.info("Deploying to staging...");
+      run("vercel"); // Without --prod flag = staging/preview
+      log.success("Staging deployment initiated");
+      break;
+    }
+    case "production": {
+      log.info("Deploying to Vercel production environment...");
+      const hasVercelCli = run("vercel --version", { silent: true });
+      if (!hasVercelCli) {
+        log.error("Vercel CLI not installed. Run: npm i -g vercel");
+        return;
+      }
+      const confirm = await prompt("Deploy to PRODUCTION? (yes/no)");
+      if (confirm.toLowerCase() !== "yes") {
+        log.warn("Deployment aborted");
+        return;
+      }
+      log.info("Running pre-deployment checks...");
+      run("pnpm type-check");
+      run("pnpm lint");
+      run("pnpm test");
+      log.info("Deploying to production...");
       run("vercel --prod");
+      log.success("Production deployment initiated");
+      break;
+    }
+    case "vercel": {
+      // Backward compatibility - default to staging
+      log.info("Deploying to Vercel (staging)...");
+      const hasVercelCli = run("vercel --version", { silent: true });
+      if (!hasVercelCli) {
+        log.error("Vercel CLI not installed. Run: npm i -g vercel");
+        return;
+      }
+      run("vercel");
       log.success("Deployment initiated");
       break;
     }

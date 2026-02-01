@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import BookmarkButton from "@/components/bookmarks/BookmarkButton";
+import BookmarkButton from "@/components/bookmarks/bookmark-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

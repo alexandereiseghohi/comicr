@@ -1,6 +1,6 @@
 import { ComicList } from "@/components/comics/comic-list";
-import { ComicPagination } from "@/components/comics/ComicPagination";
-import { GenreGrid } from "@/components/comics/GenreGrid";
+import { ComicPagination } from "@/components/comics/comic-pagination";
+import { GenreGrid } from "@/components/comics/genre-grid";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import * as comicQueries from "@/database/queries/comic-queries";

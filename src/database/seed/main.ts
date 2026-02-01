@@ -1,5 +1,5 @@
-import { clearDownloadCache, downloadAndSaveImage } from "@/lib/imageHelper";
-import { loadJsonData, seedTableBatched } from "@/lib/seedHelpers";
+import { clearDownloadCache, downloadAndSaveImage } from "@/lib/image-helper";
+import { loadJsonData, seedTableBatched } from "@/lib/seed-helpers";
 import { ChapterSeedSchema, ComicSeedSchema, UserSeedSchema } from "@/lib/validations/seed";
 import bcrypt from "bcryptjs";
 import fs from "fs/promises";

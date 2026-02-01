@@ -6,9 +6,21 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-6 text-sm text-muted-foreground flex items-center justify-between">
         <div>© {new Date().getFullYear()} Comicr</div>
         <div className="space-x-4">
-          <Link href="/about">About</Link>
-          <Link href="/docs">Docs</Link>
-          <Link href="/privacy">Privacy</Link>
+          <Link href="/about" className="hover:text-foreground">
+            About
+          </Link>
+          <Link href="/help" className="hover:text-foreground">
+            Help
+          </Link>
+          <Link href="/contact" className="hover:text-foreground">
+            Contact
+          </Link>
+          <Link href="/privacy" className="hover:text-foreground">
+            Privacy
+          </Link>
+          <Link href="/terms" className="hover:text-foreground">
+            Terms
+          </Link>
         </div>
       </div>
     </footer>

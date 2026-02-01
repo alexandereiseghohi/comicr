@@ -3,8 +3,8 @@
  * @description Seeds authors from JSON files with validation and image handling
  */
 
-import { downloadAndSaveImage } from "@/lib/imageHelper";
-import { seedTableBatched } from "@/lib/seedHelpers";
+import { downloadAndSaveImage } from "@/lib/image-helper";
+import { seedTableBatched } from "@/lib/seed-helpers";
 import { AuthorSeedSchema, type AuthorSeed } from "@/lib/validations/seed";
 import path from "path";
 import { author } from "../../schema";
