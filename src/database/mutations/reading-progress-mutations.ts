@@ -22,7 +22,6 @@ export async function createOrUpdateReadingProgress(
   userId: string,
   comicId: number,
   chapterId: number
-  // progress parameter removed as it was unused
 ): Promise<ReadingProgress> {
   // Check if progress exists
   const existing = await db

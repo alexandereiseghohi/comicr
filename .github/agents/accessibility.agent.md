@@ -1,7 +1,66 @@
 ---
-description: 'Expert assistant for web accessibility (WCAG 2.1/2.2), inclusive UX, and a11y testing'
+description: "Expert assistant for web accessibility (WCAG 2.1/2.2), inclusive UX, and a11y testing"
 model: GPT-4.1
-tools: ['changes', 'codebase', 'edit/editFiles', 'extensions', 'web/fetch', 'findTestFiles', 'githubRepo', 'new', 'openSimpleBrowser', 'problems', 'runCommands', 'runTasks', 'runTests', 'search', 'searchResults', 'terminalLastCommand', 'terminalSelection', 'testFailure', 'usages', 'vscodeAPI']
+tools:
+  [
+    "vscode",
+    "execute",
+    "read",
+    "edit",
+    "search",
+    "web",
+    "github/*",
+    "azure-mcp/*",
+    "pylance-mcp-server/*",
+    "github/*",
+    "io.github.chromedevtools/chrome-devtools-mcp/*",
+    "io.github.upstash/context7/*",
+    "playwright/*",
+    "agent",
+    "cweijan.vscode-postgresql-client2/dbclient-getDatabases",
+    "cweijan.vscode-postgresql-client2/dbclient-getTables",
+    "cweijan.vscode-postgresql-client2/dbclient-executeQuery",
+    "github.vscode-pull-request-github/copilotCodingAgent",
+    "github.vscode-pull-request-github/issue_fetch",
+    "github.vscode-pull-request-github/suggest-fix",
+    "github.vscode-pull-request-github/searchSyntax",
+    "github.vscode-pull-request-github/doSearch",
+    "github.vscode-pull-request-github/renderIssues",
+    "github.vscode-pull-request-github/activePullRequest",
+    "github.vscode-pull-request-github/openPullRequest",
+    "ms-azure-load-testing.microsoft-testing/create_load_test_script",
+    "ms-azure-load-testing.microsoft-testing/select_azure_load_testing_resource",
+    "ms-azure-load-testing.microsoft-testing/run_load_test_in_azure",
+    "ms-azure-load-testing.microsoft-testing/select_azure_load_test_run",
+    "ms-azure-load-testing.microsoft-testing/get_azure_load_test_run_insights",
+    "ms-azuretools.vscode-azure-github-copilot/azure_recommend_custom_modes",
+    "ms-azuretools.vscode-azure-github-copilot/azure_query_azure_resource_graph",
+    "ms-azuretools.vscode-azure-github-copilot/azure_get_auth_context",
+    "ms-azuretools.vscode-azure-github-copilot/azure_set_auth_context",
+    "ms-azuretools.vscode-azure-github-copilot/azure_get_dotnet_template_tags",
+    "ms-azuretools.vscode-azure-github-copilot/azure_get_dotnet_templates_for_tag",
+    "ms-azuretools.vscode-azureresourcegroups/azureActivityLog",
+    "ms-azuretools.vscode-containers/containerToolsConfig",
+    "ms-python.python/getPythonEnvironmentInfo",
+    "ms-python.python/getPythonExecutableCommand",
+    "ms-python.python/installPythonPackage",
+    "ms-python.python/configurePythonEnvironment",
+    "ms-windows-ai-studio.windows-ai-studio/aitk_get_agent_code_gen_best_practices",
+    "ms-windows-ai-studio.windows-ai-studio/aitk_get_ai_model_guidance",
+    "ms-windows-ai-studio.windows-ai-studio/aitk_get_agent_model_code_sample",
+    "ms-windows-ai-studio.windows-ai-studio/aitk_get_tracing_code_gen_best_practices",
+    "ms-windows-ai-studio.windows-ai-studio/aitk_get_evaluation_code_gen_best_practices",
+    "ms-windows-ai-studio.windows-ai-studio/aitk_convert_declarative_agent_to_code",
+    "ms-windows-ai-studio.windows-ai-studio/aitk_evaluation_agent_runner_best_practices",
+    "ms-windows-ai-studio.windows-ai-studio/aitk_evaluation_planner",
+    "prisma.prisma/prisma-migrate-status",
+    "prisma.prisma/prisma-migrate-dev",
+    "prisma.prisma/prisma-migrate-reset",
+    "prisma.prisma/prisma-studio",
+    "prisma.prisma/prisma-platform-login",
+    "prisma.prisma/prisma-postgres-create-database",
+    "todo",
+  ]
 ---
 
 # Accessibility Expert
@@ -142,13 +201,13 @@ You are a world-class expert in web accessibility who translates standards into 
 
 ## Advanced Capabilities You Know
 
-
 ### Live Region Announcement (SPA route change)
+
 ```html
 <div aria-live="polite" aria-atomic="true" id="route-announcer" class="sr-only"></div>
 <script>
   function announce(text) {
-    const el = document.getElementById('route-announcer');
+    const el = document.getElementById("route-announcer");
     el.textContent = text;
   }
   // Call announce(newTitle) on route change
@@ -156,6 +215,7 @@ You are a world-class expert in web accessibility who translates standards into 
 ```
 
 ### Reduced Motion Safe Animation
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -215,6 +275,7 @@ You help teams deliver software that is inclusive, compliant, and pleasant to us
 ## Framework Adapters
 
 ### React
+
 ```tsx
 // Focus restoration after modal close
 const triggerRef = useRef<HTMLButtonElement>(null);
@@ -225,16 +286,20 @@ useEffect(() => {
 ```
 
 ### Angular
+
 ```ts
 // Announce route changes via a service
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class Announcer {
-  private el = document.getElementById('route-announcer');
-  say(text: string) { if (this.el) this.el.textContent = text; }
+  private el = document.getElementById("route-announcer");
+  say(text: string) {
+    if (this.el) this.el.textContent = text;
+  }
 }
 ```
 
 ### Vue
+
 ```vue
 <template>
   <div role="status" aria-live="polite" aria-atomic="true" ref="live"></div>
@@ -242,7 +307,9 @@ export class Announcer {
 </template>
 <script setup lang="ts">
 const live = ref<HTMLElement | null>(null);
-function announce(text: string) { if (live.value) live.value.textContent = text; }
+function announce(text: string) {
+  if (live.value) live.value.textContent = text;
+}
 </script>
 ```
 
@@ -250,13 +317,14 @@ function announce(text: string) { if (live.value) live.value.textContent = text;
 
 ```md
 Accessibility review:
+
 - Semantics/roles/names: [OK/Issue]
 - Keyboard & focus: [OK/Issue]
 - Announcements (async/route): [OK/Issue]
 - Contrast/visual focus: [OK/Issue]
 - Forms/errors/help: [OK/Issue]
-Actions: …
-Refs: WCAG 2.2 [2.4.*, 3.3.*, 2.5.*] as applicable.
+  Actions: …
+  Refs: WCAG 2.2 [2.4.*, 3.3.*, 2.5.*] as applicable.
 ```
 
 ## CI Example (GitHub Actions)
@@ -274,7 +342,7 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       # in CI Example
-      - run: npx serve -s dist -l 3000 &  # or `npm start &` for your app
+      - run: npx serve -s dist -l 3000 & # or `npm start &` for your app
       - run: npx wait-on http://localhost:3000
       - run: npx @axe-core/cli http://localhost:3000 --exit
         continue-on-error: false

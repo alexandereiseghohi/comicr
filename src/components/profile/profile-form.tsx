@@ -1,7 +1,7 @@
+"use client";
 import Image from "next/image";
 import React, { useState } from "react";
 import { toast } from "sonner";
-"use client"("use client");
 
 type Props = {
   defaultName?: string | null;

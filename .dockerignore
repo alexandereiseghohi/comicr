@@ -1,0 +1,15 @@
+# .dockerignore for ComicWise
+node_modules
+.next
+out
+build
+coverage
+.DS_Store
+.env*
+.vscode
+.idea
+*.tsbuildinfo
+*.log
+*.pem
+*.sentryclirc
+.prettierignore

@@ -13,12 +13,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { comicId, lastChapterId, progress } = await request.json();
+    const { comicId, lastChapterId } = await request.json();
     const readingProgress = await createOrUpdateReadingProgress(
       session.user.id,
       comicId,
-      lastChapterId,
-      progress
+      lastChapterId
     );
 
     return NextResponse.json(readingProgress, { status: 201 });

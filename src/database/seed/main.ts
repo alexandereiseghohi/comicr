@@ -267,8 +267,8 @@ async function main(): Promise<void> {
     }));
     // Only strip id in the final array passed to seedTableBatched
     const comicsForInsert = comicsForInsertFull.map((comic) => {
-      const rest = { ...comic };
-      delete rest.id;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, ...rest } = comic;
       return rest as ComicInsert;
     });
     log("progress", { phase: "comics", count: comicsForInsert.length });
@@ -325,7 +325,28 @@ async function main(): Promise<void> {
           )
         ) {
           const data = JSON.parse(await fs.readFile(filePath, "utf8"));
-          if (Array.isArray(data)) allRawChapters.push(...(data as ChapterSeed[]));
+          if (Array.isArray(data)) {
+            // Transform chapter data to match ChapterSeedSchema
+            let idCounter = allRawChapters.length + 1;
+            for (const raw of data) {
+              // Try to infer comicId by matching comicslug to comics table
+              let comicId: number | undefined = undefined;
+              if (raw.comicslug && Array.isArray(allRawComics)) {
+                const found = allRawComics.find((c) => c.slug === raw.comicslug);
+                if (found && found.id) comicId = found.id;
+              }
+              // Map fields
+              const chapter: ChapterSeed = {
+                id: idCounter++,
+                comicId: comicId ?? 0, // fallback to 0 if not found
+                title: raw.chaptername || raw.title || "",
+                slug: raw.chapterslug || raw.slug || "",
+                images: Array.isArray(raw.image_urls) ? raw.image_urls : [],
+                releaseDate: raw.updated_at || raw.releaseDate || undefined,
+              };
+              allRawChapters.push(chapter);
+            }
+          }
         }
       } catch (err: unknown) {
         log("error", {

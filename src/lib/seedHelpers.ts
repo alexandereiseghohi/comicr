@@ -40,14 +40,20 @@ export async function seedTableBatched({
   updateFields: { name: string; value: unknown }[];
   db?: Database;
 }) {
-  // Use column references directly for upsert updates, as per Drizzle docs
+  if (!items || items.length === 0) return; // Skip if no items
+  // Always update 'updatedAt' to current timestamp for idempotent upsert
+  const upsertFields = [
+    ...updateFields.filter((col) => col.value !== undefined),
+    { name: "updatedAt", value: new Date() },
+  ];
   for (const batch of chunk(items, batchSize)) {
+    if (!batch.length) continue;
     await db
       .insert(table as Table)
       .values(batch)
       .onConflictDoUpdate({
         target: conflictKeys,
-        set: Object.fromEntries(updateFields.map((col) => [col.name, col.value])),
+        set: Object.fromEntries(upsertFields.map((col) => [col.name, col.value])),
       });
   }
 }
