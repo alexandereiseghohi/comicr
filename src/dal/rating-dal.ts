@@ -22,10 +22,15 @@ export class RatingDAL extends BaseDAL<typeof rating> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(data: {
+    userId: string;
+    comicId: number;
+    rating: number;
+    review?: string;
+  }): Promise<DbMutationResult<any>> {
     try {
-      const result = await mutations.createOrUpdateRating(data.userId, data.comicId, data.value);
-      return { success: true, data: result };
+      const result = await mutations.upsertRating(data);
+      return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }

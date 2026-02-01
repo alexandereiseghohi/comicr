@@ -39,7 +39,7 @@ export function ReadingProgressTracker({
     percentage: number;
   } | null>(null);
   const [currentProgress, setCurrentProgress] = useState(0);
-  const saveTimerRef = useRef<NodeJS.Timeout>();
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastSaveRef = useRef<{ page: number; scroll: number }>({ page: 0, scroll: 0 });
 
   // Load existing progress on mount
@@ -151,10 +151,7 @@ export function ReadingProgressTracker({
   const handleResume = () => {
     if (savedProgress && onRestore) {
       onRestore(savedProgress.pageIndex);
-      toast({
-        title: "Progress restored",
-        description: `Resumed from page ${savedProgress.pageIndex + 1}`,
-      });
+      toast.success(`Resumed from page ${savedProgress.pageIndex + 1}`);
     }
     setShowResumeDialog(false);
   };

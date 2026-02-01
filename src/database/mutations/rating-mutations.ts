@@ -3,7 +3,7 @@ import { rating } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
 
 interface UpsertRatingData {
-  userId: number;
+  userId: string;
   comicId: number;
   rating: number;
   review?: string;
@@ -46,7 +46,7 @@ export async function upsertRating(data: UpsertRatingData) {
 /**
  * Delete a user's rating for a comic
  */
-export async function deleteRating(userId: number, comicId: number) {
+export async function deleteRating(userId: string, comicId: number) {
   try {
     const result = await db
       .delete(rating)

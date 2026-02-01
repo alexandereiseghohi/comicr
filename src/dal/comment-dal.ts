@@ -1,5 +1,5 @@
 import { db } from "@/database/db";
-import * as mutations from "@/database/mutations/comment.mutations";
+import * as mutations from "@/database/mutations/comment-mutations";
 import { comment } from "@/database/schema";
 import type { DbMutationResult } from "@/types";
 import { eq } from "drizzle-orm";
@@ -22,7 +22,12 @@ export class CommentDAL extends BaseDAL<typeof comment> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(data: {
+    content: string;
+    userId: string;
+    chapterId: number;
+    parentId?: number | null;
+  }): Promise<DbMutationResult<any>> {
     try {
       const result = await mutations.createComment(data);
       return result;
@@ -31,18 +36,26 @@ export class CommentDAL extends BaseDAL<typeof comment> {
     }
   }
 
-  async update(id: number, data: any): Promise<DbMutationResult<any>> {
+  async update(id: number, content: string): Promise<DbMutationResult<any>> {
     try {
-      const result = await mutations.updateComment(id, data);
+      const result = await mutations.updateComment(id, content);
       return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };
     }
   }
 
-  async delete(id: number): Promise<DbMutationResult<null>> {
+  async delete(id: number | { id: number; userId: string }): Promise<DbMutationResult<null>> {
     try {
-      await mutations.deleteComment(id);
+      const commentId = typeof id === "number" ? id : id.id;
+      const userId = typeof id === "number" ? "" : id.userId;
+
+      if (typeof id !== "number") {
+        await mutations.deleteComment(commentId, userId);
+      } else {
+        // If only id provided, we can't delete (need userId for authorization)
+        return { success: false, error: "userId required for comment deletion" };
+      }
       return { success: true, data: null };
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Delete failed" };

@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     // Handle rating deletion (rating = 0 means remove rating)
     if (body.rating === 0) {
-      const result = await deleteRating(Number(session.user.id), body.comicId);
+      const result = await deleteRating(session.user.id, body.comicId);
 
       if (!result.success) {
         return NextResponse.json({ success: false, error: result.error }, { status: 400 });
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     // Upsert rating
     const result = await upsertRating({
-      userId: Number(session.user.id),
+      userId: session.user.id,
       comicId: validation.data.comicId,
       rating: validation.data.rating,
       review: validation.data.review,

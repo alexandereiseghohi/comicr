@@ -1,5 +1,5 @@
 {
-  "id": "662a564c-a17d-48b3-9711-7979a9f438a1",
+  "id": "5f1afbf5-73d7-461b-9935-014f8b179aad",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -133,6 +133,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -149,6 +156,225 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.auditLog": {
+      "name": "auditLog",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "action": {
+          "name": "action",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resource": {
+          "name": "resource",
+          "type": "resource_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resourceId": {
+          "name": "resourceId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "details": {
+          "name": "details",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "oldValues": {
+          "name": "oldValues",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "newValues": {
+          "name": "newValues",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ipAddress": {
+          "name": "ipAddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userAgent": {
+          "name": "userAgent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sessionId": {
+          "name": "sessionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "auditLogUserIdIdx": {
+          "name": "auditLogUserIdIdx",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "auditLogActionIdx": {
+          "name": "auditLogActionIdx",
+          "columns": [
+            {
+              "expression": "action",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "auditLogResourceIdx": {
+          "name": "auditLogResourceIdx",
+          "columns": [
+            {
+              "expression": "resource",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "auditLogResourceIdIdx": {
+          "name": "auditLogResourceIdIdx",
+          "columns": [
+            {
+              "expression": "resourceId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "auditLogCreatedAtIdx": {
+          "name": "auditLogCreatedAtIdx",
+          "columns": [
+            {
+              "expression": "createdAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "auditLogUserActionIdx": {
+          "name": "auditLogUserActionIdx",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "action",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "auditLogResourceActionIdx": {
+          "name": "auditLogResourceActionIdx",
+          "columns": [
+            {
+              "expression": "resource",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "action",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "auditLog_userId_user_id_fk": {
+          "name": "auditLog_userId_user_id_fk",
+          "tableFrom": "auditLog",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -273,6 +499,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -1167,6 +1400,18 @@
           "primaryKey": false,
           "notNull": true
         },
+        "parentId": {
+          "name": "parentId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -1203,6 +1448,21 @@
           "columns": [
             {
               "expression": "chapterId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "commentParentIdIdx": {
+          "name": "commentParentIdIdx",
+          "columns": [
+            {
+              "expression": "parentId",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1290,6 +1550,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -1564,6 +1831,120 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.permission": {
+      "name": "permission",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "resource": {
+          "name": "resource",
+          "type": "resource_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "action": {
+          "name": "action",
+          "type": "action_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "permissionNameIdx": {
+          "name": "permissionNameIdx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "permissionResourceIdx": {
+          "name": "permissionResourceIdx",
+          "columns": [
+            {
+              "expression": "resource",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "permissionActionIdx": {
+          "name": "permissionActionIdx",
+          "columns": [
+            {
+              "expression": "action",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "permission_name_unique": {
+          "name": "permission_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
+        "permissionResourceActionUnique": {
+          "name": "permissionResourceActionUnique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "resource",
+            "action"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.rating": {
       "name": "rating",
       "schema": "",
@@ -1588,7 +1969,7 @@
         },
         "rating": {
           "name": "rating",
-          "type": "numeric(2, 1)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -1718,6 +2099,104 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.readerSettings": {
+      "name": "readerSettings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "backgroundMode": {
+          "name": "backgroundMode",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'white'"
+        },
+        "readingMode": {
+          "name": "readingMode",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'vertical'"
+        },
+        "defaultQuality": {
+          "name": "defaultQuality",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'medium'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "readerSettingsUserIdIdx": {
+          "name": "readerSettingsUserIdIdx",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "readerSettings_userId_user_id_fk": {
+          "name": "readerSettings_userId_user_id_fk",
+          "tableFrom": "readerSettings",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "readerSettings_userId_unique": {
+          "name": "readerSettings_userId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "userId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.readingProgress": {
       "name": "readingProgress",
       "schema": "",
@@ -1755,6 +2234,20 @@
         },
         "scrollPosition": {
           "name": "scrollPosition",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "currentImageIndex": {
+          "name": "currentImageIndex",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "scrollPercentage": {
+          "name": "scrollPercentage",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -1932,6 +2425,195 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.role": {
+      "name": "role",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isSystem": {
+          "name": "isSystem",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "roleNameIdx": {
+          "name": "roleNameIdx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "roleIsSystemIdx": {
+          "name": "roleIsSystemIdx",
+          "columns": [
+            {
+              "expression": "isSystem",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "role_name_unique": {
+          "name": "role_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.rolePermission": {
+      "name": "rolePermission",
+      "schema": "",
+      "columns": {
+        "roleId": {
+          "name": "roleId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permissionId": {
+          "name": "permissionId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "rolePermissionRoleIdIdx": {
+          "name": "rolePermissionRoleIdIdx",
+          "columns": [
+            {
+              "expression": "roleId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "rolePermissionPermissionIdIdx": {
+          "name": "rolePermissionPermissionIdIdx",
+          "columns": [
+            {
+              "expression": "permissionId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "rolePermission_roleId_role_id_fk": {
+          "name": "rolePermission_roleId_role_id_fk",
+          "tableFrom": "rolePermission",
+          "tableTo": "role",
+          "columnsFrom": [
+            "roleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "rolePermission_permissionId_permission_id_fk": {
+          "name": "rolePermission_permissionId_permission_id_fk",
+          "tableFrom": "rolePermission",
+          "tableTo": "permission",
+          "columnsFrom": [
+            "permissionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "rolePermission_roleId_permissionId_pk": {
+          "name": "rolePermission_roleId_permissionId_pk",
+          "columns": [
+            "roleId",
+            "permissionId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.session": {
       "name": "session",
       "schema": "",
@@ -1998,6 +2680,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -2078,6 +2767,18 @@
           "notNull": true,
           "default": false
         },
+        "settings": {
+          "name": "settings",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -2140,6 +2841,123 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.userRole": {
+      "name": "userRole",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "roleId": {
+          "name": "roleId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assignedAt": {
+          "name": "assignedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "assignedBy": {
+          "name": "assignedBy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "userRoleUserIdIdx": {
+          "name": "userRoleUserIdIdx",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "userRoleRoleIdIdx": {
+          "name": "userRoleRoleIdIdx",
+          "columns": [
+            {
+              "expression": "roleId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "userRole_userId_user_id_fk": {
+          "name": "userRole_userId_user_id_fk",
+          "tableFrom": "userRole",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "userRole_roleId_role_id_fk": {
+          "name": "userRole_roleId_role_id_fk",
+          "tableFrom": "userRole",
+          "tableTo": "role",
+          "columnsFrom": [
+            "roleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "userRole_assignedBy_user_id_fk": {
+          "name": "userRole_assignedBy_user_id_fk",
+          "tableFrom": "userRole",
+          "tableTo": "user",
+          "columnsFrom": [
+            "assignedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "userRole_userId_roleId_pk": {
+          "name": "userRole_userId_roleId_pk",
+          "columns": [
+            "userId",
+            "roleId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.verificationToken": {
       "name": "verificationToken",
       "schema": "",
@@ -2181,6 +2999,17 @@
     }
   },
   "enums": {
+    "public.action_type": {
+      "name": "action_type",
+      "schema": "public",
+      "values": [
+        "create",
+        "read",
+        "update",
+        "delete",
+        "manage"
+      ]
+    },
     "public.comic_status": {
       "name": "comic_status",
       "schema": "public",
@@ -2191,6 +3020,24 @@
         "Dropped",
         "Season End",
         "Coming Soon"
+      ]
+    },
+    "public.resource_type": {
+      "name": "resource_type",
+      "schema": "public",
+      "values": [
+        "comic",
+        "chapter",
+        "user",
+        "comment",
+        "rating",
+        "bookmark",
+        "notification",
+        "author",
+        "artist",
+        "genre",
+        "type",
+        "system"
       ]
     },
     "public.user_role": {

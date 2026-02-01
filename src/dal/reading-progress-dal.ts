@@ -22,14 +22,17 @@ export class ReadingProgressDAL extends BaseDAL<typeof readingProgress> {
     }
   }
 
-  async create(data: any): Promise<DbMutationResult<any>> {
+  async create(data: {
+    userId: string;
+    comicId: number;
+    chapterId: number;
+    currentImageIndex?: number;
+    scrollPercentage?: number;
+    progressPercent?: number;
+  }): Promise<DbMutationResult<any>> {
     try {
-      const result = await mutations.createOrUpdateReadingProgress(
-        data.userId,
-        data.comicId,
-        data.chapterId
-      );
-      return { success: true, data: result };
+      const result = await mutations.upsertReadingProgress(data);
+      return result;
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }

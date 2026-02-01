@@ -77,10 +77,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
       });
 
       if (result.success) {
-        toast({
-          title: "Settings saved",
-          description: "Your reader preferences have been updated.",
-        });
+        toast.success("Your reader preferences have been updated");
         onSettingsChange?.({
           backgroundMode,
           readingMode,
@@ -88,18 +85,10 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
         });
         onOpenChange(false);
       } else {
-        toast({
-          title: "Error",
-          description: result.error || "Failed to save settings",
-          variant: "destructive",
-        });
+        toast.error(result.error || "Failed to save settings");
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+      toast.error("An unexpected error occurred");
     } finally {
       setSaving(false);
     }

@@ -18,7 +18,7 @@ export async function getUserRatingAction(
       return { success: false, error: "Unauthorized - please sign in to rate comics" };
     }
 
-    const result = await queries.getUserRating(Number(session.user.id), comicId);
+    const result = await queries.getUserRating(session.user.id, comicId);
 
     if (!result.success || !result.data) {
       return { success: true, data: null };
@@ -85,7 +85,7 @@ export async function upsertRatingAction(
     }
 
     const result = await mutations.upsertRating({
-      userId: Number(session.user.id),
+      userId: session.user.id,
       comicId: validation.data.comicId,
       rating: validation.data.rating,
       review: validation.data.review,
@@ -117,7 +117,7 @@ export async function deleteRatingAction(
       return { success: false, error: "Unauthorized" };
     }
 
-    const result = await mutations.deleteRating(Number(session.user.id), comicId);
+    const result = await mutations.deleteRating(session.user.id, comicId);
 
     if (!result.success) {
       return { success: false, error: result.error || "Failed to delete rating" };

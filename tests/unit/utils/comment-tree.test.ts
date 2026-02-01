@@ -1,5 +1,4 @@
-import { buildCommentTree } from "@/database/queries/comment-queries";
-import type { CommentWithUser } from "@/types";
+import { buildCommentTree, type CommentWithUser } from "@/database/queries/comment-queries";
 import { describe, expect, it } from "vitest";
 
 describe("buildCommentTree", () => {
@@ -8,7 +7,7 @@ describe("buildCommentTree", () => {
       {
         id: 1,
         content: "Root comment",
-        userId: 1,
+        userId: "1",
         userName: "User1",
         userImage: null,
         chapterId: 1,
@@ -20,7 +19,7 @@ describe("buildCommentTree", () => {
       {
         id: 2,
         content: "Reply to root",
-        userId: 2,
+        userId: "2",
         userName: "User2",
         userImage: null,
         chapterId: 1,
@@ -32,7 +31,7 @@ describe("buildCommentTree", () => {
       {
         id: 3,
         content: "Another root",
-        userId: 3,
+        userId: "3",
         userName: "User3",
         userImage: null,
         chapterId: 1,
@@ -56,7 +55,7 @@ describe("buildCommentTree", () => {
       {
         id: 1,
         content: "Level 1",
-        userId: 1,
+        userId: "1",
         userName: "User1",
         userImage: null,
         chapterId: 1,
@@ -68,7 +67,7 @@ describe("buildCommentTree", () => {
       {
         id: 2,
         content: "Level 2",
-        userId: 2,
+        userId: "2",
         userName: "User2",
         userImage: null,
         chapterId: 1,
@@ -80,7 +79,7 @@ describe("buildCommentTree", () => {
       {
         id: 3,
         content: "Level 3",
-        userId: 3,
+        userId: "3",
         userName: "User3",
         userImage: null,
         chapterId: 1,
@@ -104,7 +103,7 @@ describe("buildCommentTree", () => {
       {
         id: 1,
         content: "Root",
-        userId: 1,
+        userId: "1",
         userName: "User1",
         userImage: null,
         chapterId: 1,
@@ -116,7 +115,7 @@ describe("buildCommentTree", () => {
       {
         id: 2,
         content: "Reply to deleted parent",
-        userId: 2,
+        userId: "2",
         userName: "User2",
         userImage: null,
         chapterId: 1,
@@ -144,7 +143,7 @@ describe("buildCommentTree", () => {
       {
         id: 1,
         content: "Test comment",
-        userId: 1,
+        userId: "1",
         userName: "TestUser",
         userImage: "https://example.com/avatar.jpg",
         chapterId: 1,
@@ -160,7 +159,7 @@ describe("buildCommentTree", () => {
     expect(tree[0]).toMatchObject({
       id: 1,
       content: "Test comment",
-      userId: 1,
+      userId: "1",
       userName: "TestUser",
       userImage: "https://example.com/avatar.jpg",
       chapterId: 1,
@@ -175,7 +174,7 @@ describe("buildCommentTree", () => {
       {
         id: 1,
         content: "[deleted]",
-        userId: 1,
+        userId: "1",
         userName: "User1",
         userImage: null,
         chapterId: 1,
@@ -187,7 +186,7 @@ describe("buildCommentTree", () => {
       {
         id: 2,
         content: "Reply to deleted comment",
-        userId: 2,
+        userId: "2",
         userName: "User2",
         userImage: null,
         chapterId: 1,

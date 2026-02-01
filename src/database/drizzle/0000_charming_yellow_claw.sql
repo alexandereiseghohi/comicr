@@ -1,4 +1,6 @@
+CREATE TYPE "public"."action_type" AS ENUM('create', 'read', 'update', 'delete', 'manage');--> statement-breakpoint
 CREATE TYPE "public"."comic_status" AS ENUM('Ongoing', 'Hiatus', 'Completed', 'Dropped', 'Season End', 'Coming Soon');--> statement-breakpoint
+CREATE TYPE "public"."resource_type" AS ENUM('comic', 'chapter', 'user', 'comment', 'rating', 'bookmark', 'notification', 'author', 'artist', 'genre', 'type', 'system');--> statement-breakpoint
 CREATE TYPE "public"."user_role" AS ENUM('user', 'admin', 'moderator');--> statement-breakpoint
 CREATE TABLE "account" (
 	"userId" text NOT NULL,
@@ -20,8 +22,24 @@ CREATE TABLE "artist" (
 	"name" text NOT NULL,
 	"bio" text,
 	"image" text,
+	"is_active" boolean DEFAULT true NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"searchVector" text
+);
+--> statement-breakpoint
+CREATE TABLE "auditLog" (
+	"id" text PRIMARY KEY NOT NULL,
+	"userId" text,
+	"action" text NOT NULL,
+	"resource" "resource_type" NOT NULL,
+	"resourceId" text,
+	"details" text,
+	"oldValues" text,
+	"newValues" text,
+	"ipAddress" text,
+	"userAgent" text,
+	"sessionId" text,
+	"createdAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "authenticator" (
@@ -42,6 +60,7 @@ CREATE TABLE "author" (
 	"name" text NOT NULL,
 	"bio" text,
 	"image" text,
+	"is_active" boolean DEFAULT true NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"searchVector" text
 );
@@ -121,6 +140,8 @@ CREATE TABLE "comment" (
 	"content" text NOT NULL,
 	"userId" text NOT NULL,
 	"chapterId" integer NOT NULL,
+	"parentId" integer,
+	"deletedAt" timestamp,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL
 );
@@ -130,6 +151,7 @@ CREATE TABLE "genre" (
 	"name" text NOT NULL,
 	"slug" text NOT NULL,
 	"description" text,
+	"is_active" boolean DEFAULT true NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "genre_name_unique" UNIQUE("name"),
 	CONSTRAINT "genre_slug_unique" UNIQUE("slug")
@@ -156,15 +178,37 @@ CREATE TABLE "passwordResetToken" (
 	CONSTRAINT "passwordResetToken_token_unique" UNIQUE("token")
 );
 --> statement-breakpoint
+CREATE TABLE "permission" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"description" text,
+	"resource" "resource_type" NOT NULL,
+	"action" "action_type" NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "permission_name_unique" UNIQUE("name"),
+	CONSTRAINT "permissionResourceActionUnique" UNIQUE("resource","action")
+);
+--> statement-breakpoint
 CREATE TABLE "rating" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"userId" text NOT NULL,
 	"comicId" integer NOT NULL,
-	"rating" numeric(2, 1) NOT NULL,
+	"rating" integer NOT NULL,
 	"review" text,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "userComicRatingUnique" UNIQUE("userId","comicId")
+);
+--> statement-breakpoint
+CREATE TABLE "readerSettings" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"userId" text NOT NULL,
+	"backgroundMode" varchar(16) DEFAULT 'white' NOT NULL,
+	"readingMode" varchar(16) DEFAULT 'vertical' NOT NULL,
+	"defaultQuality" varchar(16) DEFAULT 'medium' NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "readerSettings_userId_unique" UNIQUE("userId")
 );
 --> statement-breakpoint
 CREATE TABLE "readingProgress" (
@@ -174,12 +218,31 @@ CREATE TABLE "readingProgress" (
 	"chapterId" integer NOT NULL,
 	"pageNumber" integer DEFAULT 0 NOT NULL,
 	"scrollPosition" integer DEFAULT 0 NOT NULL,
+	"currentImageIndex" integer DEFAULT 0 NOT NULL,
+	"scrollPercentage" integer DEFAULT 0 NOT NULL,
 	"totalPages" integer DEFAULT 0 NOT NULL,
 	"progressPercent" integer DEFAULT 0 NOT NULL,
 	"completedAt" timestamp,
 	"lastReadAt" timestamp DEFAULT now() NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "role" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"description" text,
+	"isSystem" boolean DEFAULT false NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "role_name_unique" UNIQUE("name")
+);
+--> statement-breakpoint
+CREATE TABLE "rolePermission" (
+	"roleId" integer NOT NULL,
+	"permissionId" integer NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "rolePermission_roleId_permissionId_pk" PRIMARY KEY("roleId","permissionId")
 );
 --> statement-breakpoint
 CREATE TABLE "session" (
@@ -192,6 +255,7 @@ CREATE TABLE "type" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"description" text,
+	"is_active" boolean DEFAULT true NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "type_name_unique" UNIQUE("name")
 );
@@ -205,9 +269,19 @@ CREATE TABLE "user" (
 	"password" text,
 	"role" "user_role" DEFAULT 'user' NOT NULL,
 	"status" boolean DEFAULT false NOT NULL,
+	"settings" jsonb,
+	"deletedAt" timestamp,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "user_email_unique" UNIQUE("email")
+);
+--> statement-breakpoint
+CREATE TABLE "userRole" (
+	"userId" text NOT NULL,
+	"roleId" integer NOT NULL,
+	"assignedAt" timestamp DEFAULT now() NOT NULL,
+	"assignedBy" text,
+	CONSTRAINT "userRole_userId_roleId_pk" PRIMARY KEY("userId","roleId")
 );
 --> statement-breakpoint
 CREATE TABLE "verificationToken" (
@@ -218,6 +292,7 @@ CREATE TABLE "verificationToken" (
 );
 --> statement-breakpoint
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "auditLog" ADD CONSTRAINT "auditLog_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "authenticator" ADD CONSTRAINT "authenticator_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "bookmark" ADD CONSTRAINT "bookmark_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "bookmark" ADD CONSTRAINT "bookmark_comicId_comic_id_fk" FOREIGN KEY ("comicId") REFERENCES "public"."comic"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -237,10 +312,23 @@ ALTER TABLE "notification" ADD CONSTRAINT "notification_comicId_comic_id_fk" FOR
 ALTER TABLE "notification" ADD CONSTRAINT "notification_chapterId_chapter_id_fk" FOREIGN KEY ("chapterId") REFERENCES "public"."chapter"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "rating" ADD CONSTRAINT "rating_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "rating" ADD CONSTRAINT "rating_comicId_comic_id_fk" FOREIGN KEY ("comicId") REFERENCES "public"."comic"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "readerSettings" ADD CONSTRAINT "readerSettings_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "readingProgress" ADD CONSTRAINT "readingProgress_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "readingProgress" ADD CONSTRAINT "readingProgress_comicId_comic_id_fk" FOREIGN KEY ("comicId") REFERENCES "public"."comic"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "readingProgress" ADD CONSTRAINT "readingProgress_chapterId_chapter_id_fk" FOREIGN KEY ("chapterId") REFERENCES "public"."chapter"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "rolePermission" ADD CONSTRAINT "rolePermission_roleId_role_id_fk" FOREIGN KEY ("roleId") REFERENCES "public"."role"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "rolePermission" ADD CONSTRAINT "rolePermission_permissionId_permission_id_fk" FOREIGN KEY ("permissionId") REFERENCES "public"."permission"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "userRole" ADD CONSTRAINT "userRole_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "userRole" ADD CONSTRAINT "userRole_roleId_role_id_fk" FOREIGN KEY ("roleId") REFERENCES "public"."role"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "userRole" ADD CONSTRAINT "userRole_assignedBy_user_id_fk" FOREIGN KEY ("assignedBy") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "auditLogUserIdIdx" ON "auditLog" USING btree ("userId");--> statement-breakpoint
+CREATE INDEX "auditLogActionIdx" ON "auditLog" USING btree ("action");--> statement-breakpoint
+CREATE INDEX "auditLogResourceIdx" ON "auditLog" USING btree ("resource");--> statement-breakpoint
+CREATE INDEX "auditLogResourceIdIdx" ON "auditLog" USING btree ("resourceId");--> statement-breakpoint
+CREATE INDEX "auditLogCreatedAtIdx" ON "auditLog" USING btree ("createdAt");--> statement-breakpoint
+CREATE INDEX "auditLogUserActionIdx" ON "auditLog" USING btree ("userId","action");--> statement-breakpoint
+CREATE INDEX "auditLogResourceActionIdx" ON "auditLog" USING btree ("resource","action");--> statement-breakpoint
 CREATE INDEX "bookmarkUserIdIdx" ON "bookmark" USING btree ("userId");--> statement-breakpoint
 CREATE INDEX "bookmarkComicIdIdx" ON "bookmark" USING btree ("comicId");--> statement-breakpoint
 CREATE INDEX "chapterSlugIdx" ON "chapter" USING btree ("slug");--> statement-breakpoint
@@ -261,20 +349,31 @@ CREATE INDEX "comicTypeIdx" ON "comic" USING btree ("typeId");--> statement-brea
 CREATE INDEX "comicCreatedAtIdx" ON "comic" USING btree ("createdAt");--> statement-breakpoint
 CREATE INDEX "commentUserIdIdx" ON "comment" USING btree ("userId");--> statement-breakpoint
 CREATE INDEX "commentChapterIdIdx" ON "comment" USING btree ("chapterId");--> statement-breakpoint
+CREATE INDEX "commentParentIdIdx" ON "comment" USING btree ("parentId");--> statement-breakpoint
 CREATE INDEX "commentCreatedAtIdx" ON "comment" USING btree ("createdAt");--> statement-breakpoint
 CREATE INDEX "notificationUserIdIdx" ON "notification" USING btree ("userId");--> statement-breakpoint
 CREATE INDEX "notificationReadIdx" ON "notification" USING btree ("read");--> statement-breakpoint
 CREATE INDEX "notificationTypeIdx" ON "notification" USING btree ("type");--> statement-breakpoint
 CREATE INDEX "notificationCreatedAtIdx" ON "notification" USING btree ("createdAt");--> statement-breakpoint
 CREATE INDEX "notificationUserReadIdx" ON "notification" USING btree ("userId","read");--> statement-breakpoint
+CREATE INDEX "permissionNameIdx" ON "permission" USING btree ("name");--> statement-breakpoint
+CREATE INDEX "permissionResourceIdx" ON "permission" USING btree ("resource");--> statement-breakpoint
+CREATE INDEX "permissionActionIdx" ON "permission" USING btree ("action");--> statement-breakpoint
 CREATE INDEX "ratingUserIdIdx" ON "rating" USING btree ("userId");--> statement-breakpoint
 CREATE INDEX "ratingComicIdIdx" ON "rating" USING btree ("comicId");--> statement-breakpoint
 CREATE INDEX "ratingValueIdx" ON "rating" USING btree ("rating");--> statement-breakpoint
 CREATE INDEX "ratingCreatedAtIdx" ON "rating" USING btree ("createdAt");--> statement-breakpoint
+CREATE INDEX "readerSettingsUserIdIdx" ON "readerSettings" USING btree ("userId");--> statement-breakpoint
 CREATE INDEX "readingProgressUserIdIdx" ON "readingProgress" USING btree ("userId");--> statement-breakpoint
 CREATE INDEX "readingProgressComicIdIdx" ON "readingProgress" USING btree ("comicId");--> statement-breakpoint
 CREATE INDEX "readingProgressChapterIdIdx" ON "readingProgress" USING btree ("chapterId");--> statement-breakpoint
 CREATE INDEX "readingProgressLastReadIdx" ON "readingProgress" USING btree ("lastReadAt");--> statement-breakpoint
 CREATE INDEX "readingProgressUserComicIdx" ON "readingProgress" USING btree ("userId","comicId");--> statement-breakpoint
+CREATE INDEX "roleNameIdx" ON "role" USING btree ("name");--> statement-breakpoint
+CREATE INDEX "roleIsSystemIdx" ON "role" USING btree ("isSystem");--> statement-breakpoint
+CREATE INDEX "rolePermissionRoleIdIdx" ON "rolePermission" USING btree ("roleId");--> statement-breakpoint
+CREATE INDEX "rolePermissionPermissionIdIdx" ON "rolePermission" USING btree ("permissionId");--> statement-breakpoint
 CREATE INDEX "userEmailIdx" ON "user" USING btree ("email");--> statement-breakpoint
-CREATE INDEX "userRoleIdx" ON "user" USING btree ("role");
+CREATE INDEX "userRoleIdx" ON "user" USING btree ("role");--> statement-breakpoint
+CREATE INDEX "userRoleUserIdIdx" ON "userRole" USING btree ("userId");--> statement-breakpoint
+CREATE INDEX "userRoleRoleIdIdx" ON "userRole" USING btree ("roleId");

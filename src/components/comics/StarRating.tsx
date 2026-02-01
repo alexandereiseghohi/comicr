@@ -83,33 +83,21 @@ export function StarRating({
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        toast({
-          title: "Error",
-          description: result.error || "Failed to save rating",
-          variant: "destructive",
-        });
+        toast.error(result.error || "Failed to save rating");
         setRating(initialRating);
         return;
       }
 
-      toast({
-        title: newRating === 0 ? "Rating Removed" : "Rating Saved",
-        description:
-          newRating === 0
-            ? "Your rating has been removed"
-            : `You rated this comic ${newRating} stars`,
-      });
+      toast.success(
+        newRating === 0 ? "Your rating has been removed" : `You rated this comic ${newRating} stars`
+      );
 
       setReview(newReview);
       onRatingChange?.(newRating, newReview);
       setShowDialog(false);
     } catch (error) {
       console.error("Rating save error:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+      toast.error("An unexpected error occurred");
       setRating(initialRating);
     } finally {
       setLoading(false);

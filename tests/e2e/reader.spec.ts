@@ -117,8 +117,6 @@ test.describe("Reading Progress", () => {
     await page.reload();
     await page.waitForLoadState("networkidle");
 
-    // Should show resume dialog
-    const resumeDialog = page.locator('text="Resume Reading"');
     // Dialog may or may not appear based on progress threshold
     // Just check page loads correctly
     await expect(page.locator('[data-testid="chapter-reader"]')).toBeVisible();

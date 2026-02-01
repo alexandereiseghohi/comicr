@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     const { comicId, value, review } = await request.json();
     const rating = await upsertRating({
-      userId: Number(session.user.id),
+      userId: session.user.id,
       comicId,
       rating: value,
       review,
@@ -31,7 +31,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { comicId } = await request.json();
-    await deleteRating(Number(session.user.id), comicId);
+    await deleteRating(session.user.id, comicId);
 
     return NextResponse.json({ success: true });
   } catch {

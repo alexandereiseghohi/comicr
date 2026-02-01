@@ -71,7 +71,7 @@ export async function saveReadingProgressAction(input: {
   }
 
   const result = await progressMutations.upsertReadingProgress({
-    userId: Number(session.user.id),
+    userId: session.user.id,
     comicId: input.comicId,
     chapterId: input.chapterId,
     currentImageIndex: input.currentImageIndex,

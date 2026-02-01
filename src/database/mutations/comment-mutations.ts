@@ -3,10 +3,10 @@ import { comment, user } from "@/database/schema";
 import { and, eq, isNull } from "drizzle-orm";
 
 interface CreateCommentData {
-  userId: number;
+  userId: string;
   chapterId: number;
   content: string;
-  parentId?: number;
+  parentId?: number | null;
 }
 
 /**
@@ -88,7 +88,7 @@ export async function updateComment(commentId: number, content: string) {
  * Soft delete a comment (sets deletedAt timestamp)
  * Preserves comment if it has children, otherwise can be hard deleted
  */
-export async function deleteComment(commentId: number, userId: number) {
+export async function deleteComment(commentId: number, userId: string) {
   try {
     // Check if comment exists and belongs to user
     const existing = await db

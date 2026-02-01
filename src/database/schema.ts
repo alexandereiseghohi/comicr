@@ -13,6 +13,7 @@ import {
   text,
   timestamp,
   unique,
+  varchar,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 

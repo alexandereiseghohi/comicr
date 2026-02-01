@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,7 +9,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -283,28 +283,17 @@ export function CommentSection({ chapterId, initialComments }: CommentSectionPro
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        toast({
-          title: "Error",
-          description: result.error || "Failed to post comment",
-          variant: "destructive",
-        });
+        toast.error(result.error || "Failed to post comment");
         return;
       }
 
-      toast({
-        title: "Comment Posted",
-        description: "Your comment has been added",
-      });
+      toast.success("Your comment has been added");
 
       setComments([result.data, ...comments]);
       setNewComment("");
     } catch (error) {
       console.error("Comment submission error:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+      toast.error("An unexpected error occurred");
     } finally {
       setSubmitting(false);
     }
@@ -325,29 +314,18 @@ export function CommentSection({ chapterId, initialComments }: CommentSectionPro
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        toast({
-          title: "Error",
-          description: result.error || "Failed to post reply",
-          variant: "destructive",
-        });
+        toast.error(result.error || "Failed to post reply");
         return;
       }
 
-      toast({
-        title: "Reply Posted",
-        description: "Your reply has been added",
-      });
+      toast.success("Your reply has been added");
 
       // Refresh comments to show new reply in tree
       // In a real app, you'd update the state more efficiently
       window.location.reload();
     } catch (error) {
       console.error("Reply submission error:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+      toast.error("An unexpected error occurred");
     } finally {
       setReplyingTo(null);
     }
@@ -362,28 +340,17 @@ export function CommentSection({ chapterId, initialComments }: CommentSectionPro
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        toast({
-          title: "Error",
-          description: result.error || "Failed to delete comment",
-          variant: "destructive",
-        });
+        toast.error(result.error || "Failed to delete comment");
         return;
       }
 
-      toast({
-        title: "Comment Deleted",
-        description: "Your comment has been deleted",
-      });
+      toast.success("Your comment has been deleted");
 
       // Refresh to show updated state
       window.location.reload();
     } catch (error) {
       console.error("Delete comment error:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+      toast.error("An unexpected error occurred");
     }
   };
 

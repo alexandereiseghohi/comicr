@@ -46,10 +46,12 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 }) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  // State  const [currentPage, setCurrentPage] = useState(initialPage);
+  // State
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const [mode, setMode] = useState<"vertical" | "horizontal">(
     propReadingMode || (isMobile ? "vertical" : "vertical")
   );
+  const [background] = useState<"white" | "dark" | "sepia">(propBackgroundMode || "white");
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -120,9 +122,9 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
       await containerRef.current?.requestFullscreen();
       setIsFullScreen(true);
       // Request landscape lock on mobile
-      if (screen.orientation && screen.orientation.lock) {
+      if (screen.orientation && "lock" in screen.orientation) {
         try {
-          await screen.orientation.lock("landscape").catch(() => {});
+          await (screen.orientation as any).lock("landscape").catch(() => {});
         } catch (error) {
           // Ignore errors
         }

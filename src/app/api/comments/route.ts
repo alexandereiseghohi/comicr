@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     // Create comment
     const result = await createComment({
-      userId: Number(session.user.id),
+      userId: session.user.id,
       chapterId: validation.data.chapterId,
       content: validation.data.content,
       parentId: validation.data.parentId || undefined,
@@ -96,7 +96,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { commentId } = await request.json();
-    const result = await deleteComment(commentId);
+    const result = await deleteComment(commentId, session.user.id);
 
     if (!result.success) {
       return NextResponse.json({ success: false, error: result.error }, { status: 500 });

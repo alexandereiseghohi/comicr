@@ -6,7 +6,7 @@
 
 import { db } from "@/database/db";
 import { artist, author, comic, comicToGenre, genre } from "@/database/schema";
-import { asc, desc, eq, ilike, inArray } from "drizzle-orm";
+import { asc, count, desc, eq, ilike, inArray } from "drizzle-orm";
 
 /**
  * Get all comics with pagination
@@ -166,7 +166,17 @@ export async function getComicsByAuthor(authorId: number) {
  */
 export async function getComicsByGenres(
   genreSlugs: string[],
-  { page = 1, limit = 20, sort = "createdAt", order = "desc" } = {}
+  {
+    page = 1,
+    limit = 20,
+    sort = "createdAt",
+    order = "desc",
+  }: {
+    page?: number;
+    limit?: number;
+    sort?: string;
+    order?: "asc" | "desc";
+  } = {}
 ) {
   try {
     if (genreSlugs.length === 0) {

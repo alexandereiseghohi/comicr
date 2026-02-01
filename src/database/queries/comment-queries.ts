@@ -2,10 +2,10 @@ import { db } from "@/database/db";
 import { comment, user } from "@/database/schema";
 import { eq } from "drizzle-orm";
 
-interface CommentWithUser {
+export interface CommentWithUser {
   id: number;
   content: string;
-  userId: number;
+  userId: string;
   userName: string;
   userImage: string | null;
   createdAt: Date;
@@ -15,14 +15,14 @@ interface CommentWithUser {
   chapterId: number;
 }
 
-interface CommentTree extends CommentWithUser {
+export interface CommentTree extends CommentWithUser {
   children: CommentTree[];
 }
 
 /**
  * Build a threaded comment structure from flat list
  */
-function buildCommentTree(comments: CommentWithUser[]): CommentTree[] {
+export function buildCommentTree(comments: CommentWithUser[]): CommentTree[] {
   const commentMap = new Map<number, CommentTree>();
   const rootComments: CommentTree[] = [];
 

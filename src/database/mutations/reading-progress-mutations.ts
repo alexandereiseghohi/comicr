@@ -19,7 +19,7 @@ type ReadingProgress = {
 };
 
 interface UpsertProgressData {
-  userId: number;
+  userId: string;
   comicId: number;
   chapterId: number;
   currentImageIndex?: number;

@@ -20,7 +20,7 @@ export async function getRatingsByComic(comicId: number) {
   }
 }
 
-export async function getRatingsByUser(userId: number) {
+export async function getRatingsByUser(userId: string) {
   try {
     const result = await db.select().from(rating).where(eq(rating.userId, userId));
     return { success: true, data: result };
@@ -32,7 +32,7 @@ export async function getRatingsByUser(userId: number) {
 /**
  * Get a specific user's rating for a comic
  */
-export async function getUserRating(userId: number, comicId: number) {
+export async function getUserRating(userId: string, comicId: number) {
   try {
     const result = await db
       .select()

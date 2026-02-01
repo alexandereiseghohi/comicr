@@ -95,26 +95,15 @@ export default function SettingsPage() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        toast({
-          title: "Error",
-          description: result.error || "Failed to save settings",
-          variant: "destructive",
-        });
+        toast.error(result.error || "Failed to save settings");
         return;
       }
 
-      toast({
-        title: "Success",
-        description: "Your settings have been saved",
-      });
+      toast.success("Your settings have been saved");
       setHasChanges(false);
     } catch (error) {
       console.error("Save settings error:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+      toast.error("An unexpected error occurred");
     } finally {
       setSaving(false);
     }
@@ -130,18 +119,11 @@ export default function SettingsPage() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        toast({
-          title: "Error",
-          description: result.error || "Failed to delete account",
-          variant: "destructive",
-        });
+        toast.error(result.error || "Failed to delete account");
         return;
       }
 
-      toast({
-        title: "Account Deleted",
-        description: "Your account has been successfully deleted",
-      });
+      toast.success("Your account has been successfully deleted");
 
       // Redirect to home after a short delay
       setTimeout(() => {
@@ -149,11 +131,7 @@ export default function SettingsPage() {
       }, 2000);
     } catch (error) {
       console.error("Delete account error:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+      toast.error("An unexpected error occurred");
     } finally {
       setDeleting(false);
       setShowDeleteDialog(false);
