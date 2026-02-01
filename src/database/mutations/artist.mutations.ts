@@ -1,7 +1,7 @@
 import { db } from "@/database/db";
 import { artist } from "@/database/schema";
 import type { CreateArtistInput, UpdateArtistInput } from "@/schemas/artist-schema";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 export async function createArtist(data: CreateArtistInput) {
   try {
@@ -27,5 +27,23 @@ export async function deleteArtist(id: number) {
     return { success: true };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Deletion failed" };
+  }
+}
+
+export async function setArtistActive(id: number, isActive: boolean) {
+  try {
+    const result = await db.update(artist).set({ isActive }).where(eq(artist.id, id)).returning();
+    return { success: true, data: result[0] };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+  }
+}
+
+export async function bulkSetArtistsActive(ids: number[], isActive: boolean) {
+  try {
+    await db.update(artist).set({ isActive }).where(inArray(artist.id, ids));
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : "Bulk update failed" };
   }
 }

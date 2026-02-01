@@ -8,6 +8,20 @@
       "when": 1769538876890,
       "tag": "0000_whole_ultimatum",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1769946809852,
+      "tag": "0001_yellow_callisto",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769952666302,
+      "tag": "0002_previous_molly_hayes",
+      "breakpoints": true
     }
   ]
 }

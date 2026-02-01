@@ -5,7 +5,9 @@ export const createTypeSchema = z.object({
   description: z.string().optional(),
 });
 
-export const updateTypeSchema = createTypeSchema.partial();
+export const updateTypeSchema = createTypeSchema.partial().extend({
+  isActive: z.boolean().optional(),
+});
 
 export type CreateTypeInput = z.infer<typeof createTypeSchema>;
 export type UpdateTypeInput = z.infer<typeof updateTypeSchema>;

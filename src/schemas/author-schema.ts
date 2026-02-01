@@ -6,7 +6,9 @@ export const createAuthorSchema = z.object({
   image: z.string().optional(),
 });
 
-export const updateAuthorSchema = createAuthorSchema.partial();
+export const updateAuthorSchema = createAuthorSchema.partial().extend({
+  isActive: z.boolean().optional(),
+});
 
 export type CreateAuthorInput = z.infer<typeof createAuthorSchema>;
 export type UpdateAuthorInput = z.infer<typeof updateAuthorSchema>;

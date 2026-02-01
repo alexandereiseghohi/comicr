@@ -4,6 +4,7 @@
  */
 
 import { db } from "@/database/db";
+import { getUserByEmail } from "@/database/queries/user-queries";
 import {
   AUTH_SECRET,
   GITHUB_CLIENT_ID,
@@ -11,6 +12,7 @@ import {
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
 } from "@/lib/env";
+import { verifyPassword } from "@/lib/password";
 import type { Session } from "@/types/auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import type { NextAuthConfig } from "next-auth";
@@ -48,22 +50,37 @@ export const config: NextAuthConfig = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Implementation for credentials authentication
-        // This is a placeholder - implement your own logic
         if (!credentials.email || !credentials.password) {
           return null;
         }
 
-        // TODO: Implement database lookup and password verification
-        // using bcrypt or similar
-        return null;
+        const email = credentials.email as string;
+        const password = credentials.password as string;
+
+        const result = await getUserByEmail(email);
+        if (!result.success || !result.data) {
+          return null;
+        }
+
+        const user = result.data;
+        if (!user.password || !verifyPassword(password, user.password)) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          image: user.image,
+          role: user.role,
+        };
       },
     }),
   ],
   pages: {
-    signIn: "/auth/sign-in",
-    error: "/auth/error",
-    verifyRequest: "/auth/verify-request",
+    signIn: "/sign-in",
+    error: "/error",
+    verifyRequest: "/verify-request",
   },
   callbacks: {
     /**
@@ -72,7 +89,7 @@ export const config: NextAuthConfig = {
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
-         
+
         token.role = (user as { role?: "admin" | "moderator" | "user" }).role || "user";
       }
       if (account) {

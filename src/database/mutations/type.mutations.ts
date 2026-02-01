@@ -1,7 +1,7 @@
 import { db } from "@/database/db";
 import { type as typeTable } from "@/database/schema";
 import type { CreateTypeInput, UpdateTypeInput } from "@/schemas/type-schema";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 export async function createType(data: CreateTypeInput) {
   try {
@@ -27,5 +27,27 @@ export async function deleteType(id: number) {
     return { success: true };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Deletion failed" };
+  }
+}
+
+export async function setTypeActive(id: number, isActive: boolean) {
+  try {
+    const result = await db
+      .update(typeTable)
+      .set({ isActive })
+      .where(eq(typeTable.id, id))
+      .returning();
+    return { success: true, data: result[0] };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+  }
+}
+
+export async function bulkSetTypesActive(ids: number[], isActive: boolean) {
+  try {
+    await db.update(typeTable).set({ isActive }).where(inArray(typeTable.id, ids));
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : "Bulk update failed" };
   }
 }

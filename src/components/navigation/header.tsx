@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth-config";
 import Link from "next/link";
+import { SearchTrigger } from "./search-trigger";
 
 export default async function Header() {
   const session = await auth();
@@ -26,8 +27,12 @@ export default async function Header() {
         </div>
 
         <div className="flex items-center space-x-3">
+          <SearchTrigger />
           {user ? (
             <>
+              <Link href="/bookmarks" className="text-sm text-muted-foreground">
+                Bookmarks
+              </Link>
               <Link href="/profile" className="text-sm">
                 {user.name ?? user.email}
               </Link>

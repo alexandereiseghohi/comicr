@@ -33,7 +33,9 @@
       "label": "npm: dev",
       "type": "shell",
       "command": "pnpm",
-      "args": ["dev"],
+      "args": [
+        "dev"
+      ],
       "isBackground": true,
       "problemMatcher": {
         "pattern": {
@@ -63,7 +65,9 @@
       "label": "npm: build",
       "type": "shell",
       "command": "pnpm",
-      "args": ["build"],
+      "args": [
+        "build"
+      ],
       "problemMatcher": "$tsc",
       "presentation": {
         "echo": true,
@@ -79,7 +83,9 @@
       "label": "npm: lint",
       "type": "shell",
       "command": "pnpm",
-      "args": ["lint"],
+      "args": [
+        "lint"
+      ],
       "problemMatcher": "$eslint-stylish",
       "presentation": {
         "echo": true,
@@ -92,7 +98,9 @@
       "label": "npm: lint:fix",
       "type": "shell",
       "command": "pnpm",
-      "args": ["lint:fix"],
+      "args": [
+        "lint:fix"
+      ],
       "problemMatcher": "$eslint-stylish",
       "presentation": {
         "echo": true,
@@ -105,7 +113,9 @@
       "label": "npm: type-check",
       "type": "shell",
       "command": "pnpm",
-      "args": ["type-check"],
+      "args": [
+        "type-check"
+      ],
       "problemMatcher": "$tsc",
       "presentation": {
         "echo": true,
@@ -118,7 +128,9 @@
       "label": "npm: test",
       "type": "shell",
       "command": "pnpm",
-      "args": ["test"],
+      "args": [
+        "test"
+      ],
       "problemMatcher": [],
       "presentation": {
         "echo": true,
@@ -131,7 +143,9 @@
       "label": "npm: db:seed",
       "type": "shell",
       "command": "pnpm",
-      "args": ["db:seed"],
+      "args": [
+        "db:seed"
+      ],
       "problemMatcher": [],
       "presentation": {
         "echo": true,
@@ -144,7 +158,9 @@
       "label": "npm: db:studio",
       "type": "shell",
       "command": "pnpm",
-      "args": ["db:studio"],
+      "args": [
+        "db:studio"
+      ],
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {

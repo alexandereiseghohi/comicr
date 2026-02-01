@@ -1,17 +1,20 @@
 {
-  "generatedAt": "2026-01-29T16:54:09.311Z",
+  "generatedAt": "2026-02-01T12:09:32.581Z",
   "reports": [
     {
       "provider": "google",
-      "env": {},
+      "env": {
+        "GOOGLE_CLIENT_ID": "REDACTED",
+        "GOOGLE_CLIENT_SECRET": "REDACTED"
+      },
       "checks": [
         {
           "name": "env:GOOGLE_CLIENT_ID",
-          "ok": false
+          "ok": true
         },
         {
           "name": "env:GOOGLE_CLIENT_SECRET",
-          "ok": false
+          "ok": true
         },
         {
           "name": "discovery",
@@ -22,15 +25,18 @@
     },
     {
       "provider": "github",
-      "env": {},
+      "env": {
+        "GITHUB_CLIENT_ID": "REDACTED",
+        "GITHUB_CLIENT_SECRET": "REDACTED"
+      },
       "checks": [
         {
           "name": "env:GITHUB_CLIENT_ID",
-          "ok": false
+          "ok": true
         },
         {
           "name": "env:GITHUB_CLIENT_SECRET",
-          "ok": false
+          "ok": true
         },
         {
           "name": "api-root",

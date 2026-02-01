@@ -6,7 +6,9 @@ export const createGenreSchema = z.object({
   description: z.string().optional(),
 });
 
-export const updateGenreSchema = createGenreSchema.partial();
+export const updateGenreSchema = createGenreSchema.partial().extend({
+  isActive: z.boolean().optional(),
+});
 
 export type CreateGenreInput = z.infer<typeof createGenreSchema>;
 export type UpdateGenreInput = z.infer<typeof updateGenreSchema>;

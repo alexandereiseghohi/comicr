@@ -1,9 +1,7 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-
   "typescript.preferences.importModuleSpecifier": "relative",
-
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit",
@@ -12,7 +10,10 @@
     "source.removeUnusedImports": "explicit",
     "source.sortImports": "explicit"
   },
-  "editor.rulers": [80, 120],
+  "editor.rulers": [
+    80,
+    120
+  ],
   "editor.wordWrap": "on",
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
@@ -61,7 +62,11 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
-  "eslint.validate": ["javascript", "typescript", "typescriptreact"],
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "typescriptreact"
+  ],
   "eslint.format.enable": true,
   "prettier.semi": true,
   "prettier.singleQuote": false,
@@ -98,6 +103,4 @@
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
-
-
 }

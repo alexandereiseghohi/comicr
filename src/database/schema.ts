@@ -140,6 +140,7 @@ export const type = pgTable("type", {
   id: serial("id").primaryKey(),
   name: text("name").notNull().unique(),
   description: text("description"),
+  isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
 });
 
@@ -148,6 +149,7 @@ export const author = pgTable("author", {
   name: text("name").notNull(),
   bio: text("bio"),
   image: text("image"),
+  isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
   searchVector: text("searchVector"),
 });
@@ -157,6 +159,7 @@ export const artist = pgTable("artist", {
   name: text("name").notNull(),
   bio: text("bio"),
   image: text("image"),
+  isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
   searchVector: text("searchVector"),
 });
@@ -166,6 +169,7 @@ export const genre = pgTable("genre", {
   name: text("name").notNull().unique(),
   slug: text("slug").notNull().unique(),
   description: text("description"),
+  isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
 });
 
@@ -397,5 +401,127 @@ export const notification = pgTable(
     index("notificationTypeIdx").on(table.type),
     index("notificationCreatedAtIdx").on(table.createdAt),
     index("notificationUserReadIdx").on(table.userId, table.read),
+  ]
+);
+
+// ═══════════════════════════════════════════════════
+// RBAC TABLES (ROLE-BASED ACCESS CONTROL)
+// ═══════════════════════════════════════════════════
+
+export const resourceEnum = pgEnum("resource_type", [
+  "comic",
+  "chapter",
+  "user",
+  "comment",
+  "rating",
+  "bookmark",
+  "notification",
+  "author",
+  "artist",
+  "genre",
+  "type",
+  "system",
+]);
+
+export const actionEnum = pgEnum("action_type", ["create", "read", "update", "delete", "manage"]);
+
+export const role = pgTable(
+  "role",
+  {
+    id: serial("id").primaryKey(),
+    name: text("name").notNull().unique(),
+    description: text("description"),
+    isSystem: boolean("isSystem").default(false).notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (table) => [index("roleNameIdx").on(table.name), index("roleIsSystemIdx").on(table.isSystem)]
+);
+
+export const permission = pgTable(
+  "permission",
+  {
+    id: serial("id").primaryKey(),
+    name: text("name").notNull().unique(),
+    description: text("description"),
+    resource: resourceEnum("resource").notNull(),
+    action: actionEnum("action").notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("permissionNameIdx").on(table.name),
+    index("permissionResourceIdx").on(table.resource),
+    index("permissionActionIdx").on(table.action),
+    unique("permissionResourceActionUnique").on(table.resource, table.action),
+  ]
+);
+
+export const rolePermission = pgTable(
+  "rolePermission",
+  {
+    roleId: integer("roleId")
+      .references(() => role.id, { onDelete: "cascade" })
+      .notNull(),
+    permissionId: integer("permissionId")
+      .references(() => permission.id, { onDelete: "cascade" })
+      .notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.roleId, table.permissionId] }),
+    index("rolePermissionRoleIdIdx").on(table.roleId),
+    index("rolePermissionPermissionIdIdx").on(table.permissionId),
+  ]
+);
+
+export const userRole2 = pgTable(
+  "userRole",
+  {
+    userId: text("userId")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    roleId: integer("roleId")
+      .references(() => role.id, { onDelete: "cascade" })
+      .notNull(),
+    assignedAt: timestamp("assignedAt", { mode: "date" }).defaultNow().notNull(),
+    assignedBy: text("assignedBy").references(() => user.id),
+  },
+  (table) => [
+    primaryKey({ columns: [table.userId, table.roleId] }),
+    index("userRoleUserIdIdx").on(table.userId),
+    index("userRoleRoleIdIdx").on(table.roleId),
+  ]
+);
+
+// ═══════════════════════════════════════════════════
+// AUDIT LOG TABLE
+// ═══════════════════════════════════════════════════
+
+export const auditLog = pgTable(
+  "auditLog",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").references(() => user.id, { onDelete: "set null" }),
+    action: text("action").notNull(), // login, logout, create, update, delete, view, etc.
+    resource: resourceEnum("resource").notNull(),
+    resourceId: text("resourceId"),
+    details: text("details"), // JSON string for flexibility
+    oldValues: text("oldValues"), // JSON string of previous values
+    newValues: text("newValues"), // JSON string of new values
+    ipAddress: text("ipAddress"),
+    userAgent: text("userAgent"),
+    sessionId: text("sessionId"),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("auditLogUserIdIdx").on(table.userId),
+    index("auditLogActionIdx").on(table.action),
+    index("auditLogResourceIdx").on(table.resource),
+    index("auditLogResourceIdIdx").on(table.resourceId),
+    index("auditLogCreatedAtIdx").on(table.createdAt),
+    index("auditLogUserActionIdx").on(table.userId, table.action),
+    index("auditLogResourceActionIdx").on(table.resource, table.action),
   ]
 );

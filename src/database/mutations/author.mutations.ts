@@ -1,7 +1,7 @@
 import { db } from "@/database/db";
 import { author } from "@/database/schema";
 import type { CreateAuthorInput, UpdateAuthorInput } from "@/schemas/author-schema";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 export async function createAuthor(data: CreateAuthorInput) {
   try {
@@ -27,5 +27,23 @@ export async function deleteAuthor(id: number) {
     return { success: true };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Deletion failed" };
+  }
+}
+
+export async function setAuthorActive(id: number, isActive: boolean) {
+  try {
+    const result = await db.update(author).set({ isActive }).where(eq(author.id, id)).returning();
+    return { success: true, data: result[0] };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+  }
+}
+
+export async function bulkSetAuthorsActive(ids: number[], isActive: boolean) {
+  try {
+    await db.update(author).set({ isActive }).where(inArray(author.id, ids));
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : "Bulk update failed" };
   }
 }

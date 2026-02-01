@@ -6,7 +6,9 @@ export const createArtistSchema = z.object({
   image: z.string().optional(),
 });
 
-export const updateArtistSchema = createArtistSchema.partial();
+export const updateArtistSchema = createArtistSchema.partial().extend({
+  isActive: z.boolean().optional(),
+});
 
 export type CreateArtistInput = z.infer<typeof createArtistSchema>;
 export type UpdateArtistInput = z.infer<typeof updateArtistSchema>;

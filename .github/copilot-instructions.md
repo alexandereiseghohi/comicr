@@ -1,106 +1,186 @@
-<!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
-- [ ] Verify that the copilot-instructions.md file in the .github directory is created.
+# ComicWise (comicr) - AI Agent Instructions
 
-- [ ] Clarify Project Requirements
-	<!-- Ask for project type, language, and frameworks if not specified. Skip if already provided. -->
+## Architecture Overview
 
-- [ ] Scaffold the Project
-	<!--
-	Ensure that the previous step has been marked as completed.
-	Call project setup tool with projectType parameter.
-	Run scaffolding command to create project files and folders.
-	Use '.' as the working directory.
-	If no appropriate projectType is available, search documentation using available tools.
-	Otherwise, create the project structure manually using available file creation tools.
-	-->
+**Stack**: Next.js 16 (App Router) + Drizzle ORM + PostgreSQL + NextAuth v5 + Zod + Zustand
 
-- [ ] Customize the Project
-	<!--
-	Verify that all previous steps have been completed successfully and you have marked the step as completed.
-	Develop a plan to modify codebase according to user requirements.
-	Apply modifications using appropriate tools and user-provided references.
-	Skip this step for "Hello World" projects.
-	-->
+**Data Flow**: `Component → Action → Mutation/Query → Drizzle → PostgreSQL`
 
-- [ ] Install Required Extensions
-	<!-- ONLY install extensions provided mentioned in the get_project_setup_info. Skip this step otherwise and mark as completed. -->
+### Key Directories
 
-- [ ] Compile the Project
-	<!--
-	Verify that all previous steps have been completed.
-	Install any missing dependencies.
-	Run diagnostics and resolve any issues.
-	Check for markdown files in project folder for relevant instructions on how to do this.
-	-->
+- `src/app/` — Next.js App Router pages (route groups: `(auth)`, `(root)`, `admin`, `dev`)
+- `src/components/` — React components organized by feature (`comics/`, `bookmarks/`, `auth/`, `ui/`)
+- `src/database/` — Schema, queries, mutations, and seed logic
+- `src/lib/actions/` — Server actions with Zod validation
+- `src/schemas/` — Zod validation schemas (separate from Drizzle schema)
+- `src/types/` — Centralized TypeScript types (import from `@/types`)
 
-- [ ] Create and Run Task
-	<!--
-	Verify that all previous steps have been completed.
-	Check https://code.visualstudio.com/docs/debugtest/tasks to determine if the project needs a task. If so, use the create_and_run_task to create and launch a task based on package.json, README.md, and project structure.
-	Skip this step otherwise.
-	 -->
+## Data Layer Pattern
 
-- [ ] Launch the Project
-	<!--
-	Verify that all previous steps have been completed.
-	Prompt user for debug mode, launch only if confirmed.
-	 -->
+**Always follow this 3-layer pattern:**
 
-- [ ] Ensure Documentation is Complete
-	<!--
-	Verify that all previous steps have been completed.
-	Verify that README.md and the copilot-instructions.md file in the .github directory exists and contains current project information.
-	Clean up the copilot-instructions.md file in the .github directory by removing all HTML comments.
-	 -->
+1. **Schema** (`src/schemas/{entity}.schema.ts`) — Zod validation
+2. **Mutation/Query** (`src/database/mutations/`, `src/database/queries/`) — Direct Drizzle operations
+3. **Action** (`src/lib/actions/{entity}.ts`) — Public API with `"use server"` directive
 
-<!--
-## Execution Guidelines
-PROGRESS TRACKING:
-- If any tools are available to manage the above todo list, use it to track progress through this checklist.
-- After completing each step, mark it complete and add a summary.
-- Read current todo list status before starting each new step.
+```typescript
+// Pattern: Server action with auth + validation + mutation
+"use server";
+import type { ActionResult } from "@/types";
+import * as mutations from "@/database/mutations/comic-mutations";
+import { createComicSchema, type CreateComicInput } from "@/schemas/comic-schema";
 
-COMMUNICATION RULES:
-- Avoid verbose explanations or printing full command outputs.
-- If a step is skipped, state that briefly (e.g. "No extensions needed").
-- Do not explain project structure unless asked.
-- Keep explanations concise and focused.
+export async function createComicAction(
+  input: CreateComicInput
+): Promise<ActionResult<{ id: number }>> {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "admin") {
+    return { success: false, error: "Unauthorized" };
+  }
+  const validation = createComicSchema.safeParse(input);
+  if (!validation.success) {
+    return { success: false, error: validation.error.issues[0]?.message || "Validation failed" };
+  }
+  const result = await mutations.createComic(validation.data);
+  return result.success
+    ? { success: true, data: { id: result.data?.id || 0 } }
+    : { success: false, error: result.error };
+}
+```
 
-DEVELOPMENT RULES:
-- Use '.' as the working directory unless user specifies otherwise.
-- Avoid adding media or external links unless explicitly requested.
-- Use placeholders only with a note that they should be replaced.
-- Use VS Code API tool only for VS Code extension projects.
-- Once the project is created, it is already opened in Visual Studio Code—do not suggest commands to open this project in Visual Studio again.
-- If the project setup information has additional rules, follow them strictly.
+**Return shapes:**
 
-FOLDER CREATION RULES:
-- Always use the current directory as the project root.
-- If you are running any terminal commands, use the '.' argument to ensure that the current working directory is used ALWAYS.
-- Do not create a new folder unless the user explicitly requests it besides a .vscode folder for a tasks.json file.
-- If any of the scaffolding commands mention that the folder name is not correct, let the user know to create a new folder with the correct name and then reopen it again in vscode.
+- **Actions**: `ActionResult<T>` = `{ success: true, data: T } | { success: false, error: string }`
+- **Mutations/Queries**: `{ success: true, data: T } | { success: false, error: string }`
 
-EXTENSION INSTALLATION RULES:
-- Only install extension specified by the get_project_setup_info tool. DO NOT INSTALL any other extensions.
+## Client vs Server Components
 
-PROJECT CONTENT RULES:
-- If the user has not specified project details, assume they want a "Hello World" project as a starting point.
-- Avoid adding links of any type (URLs, files, folders, etc.) or integrations that are not explicitly required.
-- Avoid generating images, videos, or any other media files unless explicitly requested.
-- If you need to use any media assets as placeholders, let the user know that these are placeholders and should be replaced with the actual assets later.
-- Ensure all generated components serve a clear purpose within the user's requested workflow.
-- If a feature is assumed but not confirmed, prompt the user for clarification before including it.
-- If you are working on a VS Code extension, use the VS Code API tool with a query to find relevant VS Code API references and samples related to that query.
+- Components using event handlers (`onClick`, `onError`, etc.) MUST have `"use client"` directive
+- Image components with `onError` fallbacks require client directive
+- Server Components: No async at component level for data fetching in RSC, use queries directly
 
-TASK COMPLETION RULES:
-- Your task is complete when:
-  - Project is successfully scaffolded and compiled without errors
-  - copilot-instructions.md file in the .github directory exists in the project
-  - README.md file exists and is up to date
-  - User is provided with clear instructions to debug/launch the project
+## Authentication
 
-Before starting a new task in the above plan, update progress in the plan.
--->
-- Work through each checklist item systematically.
-- Keep communication concise and focused.
-- Follow development best practices.
+- NextAuth v5 with Drizzle adapter in `src/lib/auth-config.ts`
+- Auth pages at `/sign-in`, `/sign-up`, `/error`, `/verify-request` (NOT `/auth/*`)
+- Password utilities: `src/lib/password.ts` (`hashPassword`, `verifyPassword`)
+- Session type extended in `src/types/auth.ts`
+
+## Database Schema
+
+Primary tables in `src/database/schema.ts`:
+
+- **Auth**: `user`, `account`, `session`, `verificationToken`, `passwordResetToken`
+- **Content**: `comic`, `chapter`, `author`, `artist`, `genre`, `type`
+- **User data**: `bookmark`, `comment`, `rating`, `readingProgress`, `notification`
+
+## Developer Commands
+
+```bash
+pnpm dev              # Start dev server
+pnpm validate         # Type-check + lint + unit tests (run before commits)
+pnpm db:push          # Push schema changes to database
+pnpm db:seed          # Seed database with test data
+pnpm db:studio        # Open Drizzle Studio GUI
+pnpm test:e2e         # Run Playwright E2E tests
+```
+
+## Testing
+
+- **Unit tests**: Vitest in `tests/unit/` — test actions, mutations, queries
+- **E2E tests**: Playwright in `tests/e2e/` — test user flows
+- Run `pnpm validate` before committing
+
+## Conventions
+
+- File naming: `kebab-case.ts` for utilities, `PascalCase.tsx` for components
+- Schema files: `{entity}.schema.ts` or `{entity}-schema.ts` in `src/schemas/`
+- Query files: `{entity}.queries.ts` or `{entity}-queries.ts` in `src/database/queries/`
+- Mutation files: `{entity}.mutations.ts` or `{entity}-mutations.ts` in `src/database/mutations/`
+- Action files: `{entity}.ts` or `{entity}.actions.ts` in `src/lib/actions/`
+- UI components from shadcn/ui in `src/components/ui/`
+
+**Note:** Some legacy files use inconsistent naming (e.g., `bookmark.action.ts` with `ok`/`error` vs `comic.ts` with `success`/`error`). Prefer the `ActionResult` type from `@/types` for new code.
+
+## Seeding
+
+See `src/database/seed/README.md` — supports CLI (`pnpm seed`), API (`/api/dev/seed`), and admin UI (`/dev/seed`)
+
+## Zustand Stores
+
+Global client state in `src/store/` and `src/hooks/`:
+
+- **`useAppStore`** (`src/store/useAppStore.ts`) — App-wide state (theme)
+- **`useUIStore`** (`src/hooks/useUIStore.ts`) — UI state with Sentry breadcrumbs (modals, theme)
+
+```typescript
+// Usage pattern - import the hook directly
+import { useUIStore } from "@/hooks/useUIStore";
+
+function Component() {
+  const { isModalOpen, setModalOpen } = useUIStore();
+  // ...
+}
+```
+
+## Environment Variables
+
+All env vars validated via Zod in `src/lib/env.ts`. Required variables:
+
+| Variable                  | Description                                     |
+| ------------------------- | ----------------------------------------------- |
+| `DATABASE_URL`            | PostgreSQL connection string                    |
+| `AUTH_SECRET`             | NextAuth secret (min 32 chars)                  |
+| `GOOGLE_CLIENT_ID/SECRET` | Google OAuth credentials                        |
+| `GITHUB_CLIENT_ID/SECRET` | GitHub OAuth credentials                        |
+| `EMAIL_FROM`              | Sender email for transactional emails           |
+| `NEXT_PUBLIC_API_URL`     | Public API base URL                             |
+| `CUSTOM_PASSWORD`         | Default password for seeded users (min 8 chars) |
+
+Optional services: `IMAGEKIT_*`, `CLOUDINARY_*`, `STRIPE_*`, `SENTRY_DSN`, `REDIS_*`
+
+```bash
+# Validate env setup
+pnpm validate:env
+```
+
+## ImageKit Integration
+
+Image CDN via `@imagekit/next` package. Configure in `.env`:
+
+```env
+IMAGEKIT_PUBLIC_KEY=your_public_key
+IMAGEKIT_PRIVATE_KEY=your_private_key
+IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_id
+```
+
+For seeding/downloads, use `src/lib/imageHelper.ts` which handles:
+
+- Format validation (jpeg, png, webp, avif)
+- Size limits (`SEED_MAX_IMAGE_SIZE_BYTES`, default 5MB)
+- Retry logic with exponential backoff
+- Fallback to placeholder on failure
+
+## CI/CD Workflows
+
+GitHub Actions in `.github/workflows/`:
+
+| Workflow         | Trigger           | Purpose                             |
+| ---------------- | ----------------- | ----------------------------------- |
+| `ci.yml`         | Push/PR to `main` | Type-check, lint, unit tests, build |
+| `cd.yml`         | Push to `main`    | Full validation + deploy to Vercel  |
+| `ci-verify.yml`  | PR                | Additional verification checks      |
+| `migrations.yml` | Manual/scheduled  | Database migrations                 |
+
+**Deployment**: Vercel auto-deploys on push to `main`. Set `VERCEL_TOKEN` secret for CLI deploys.
+
+```bash
+# Manual deploy
+pnpm deploy:vercel
+```
+
+Required GitHub Secrets for CI/CD:
+
+- `DATABASE_URL` — for migration workflows
+- `VERCEL_TOKEN` — for deployments
+- `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` — Vercel project config

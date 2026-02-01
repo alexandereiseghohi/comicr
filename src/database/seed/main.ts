@@ -1,4 +1,4 @@
-import { downloadAndSaveImage } from "@/lib/imageHelper";
+import { clearDownloadCache, downloadAndSaveImage } from "@/lib/imageHelper";
 import { loadJsonData, seedTableBatched } from "@/lib/seedHelpers";
 import { ChapterSeedSchema, ComicSeedSchema, UserSeedSchema } from "@/lib/validations/seed";
 import bcrypt from "bcryptjs";
@@ -8,14 +8,29 @@ import type { z } from "zod";
 import { chapter, comic, user } from "../schema";
 import * as config from "./seed-config";
 
-async function main(): Promise<void> {
+export interface SeedOptions {
+  dryRun?: boolean;
+}
+
+async function main(options: SeedOptions = {}): Promise<void> {
+  const { dryRun = false } = options;
+
+  // Clear the download cache at the start of each run
+  clearDownloadCache();
+
   // Type for DB insert (publicationDate as Date)
   type ComicSeed = z.infer<typeof ComicSeedSchema>;
   type ComicInsert = Omit<ComicSeed, "id" | "publicationDate"> & { publicationDate: Date };
   const log = (event: string, data?: Record<string, unknown>) => {
-    const entry: { event: string; timestamp: string; data?: Record<string, unknown> } = {
+    const entry: {
+      event: string;
+      timestamp: string;
+      dryRun: boolean;
+      data?: Record<string, unknown>;
+    } = {
       event,
       timestamp: new Date().toISOString(),
+      dryRun,
       ...(data ? { data } : {}),
     };
     if (event === "error") {
@@ -25,7 +40,7 @@ async function main(): Promise<void> {
     }
   };
 
-  log("start", { phase: "seeding" });
+  log("start", { phase: "seeding", mode: dryRun ? "dry-run" : "full" });
   try {
     // --- USERS ---
     log("start", { phase: "users" });
@@ -54,6 +69,7 @@ async function main(): Promise<void> {
         { name: "image", value: undefined },
         { name: "password", value: undefined },
       ],
+      dryRun,
     });
     log("complete", { phase: "users" });
 
@@ -272,28 +288,32 @@ async function main(): Promise<void> {
       return rest as ComicInsert;
     });
     log("progress", { phase: "comics", count: comicsForInsert.length });
-    // Download cover images in parallel
-    await Promise.all(
-      comicsForInsert.map(async (comic: ComicInsert) => {
-        if (comic.coverImage) {
-          try {
-            comic.coverImage = await downloadAndSaveImage({
-              url: comic.coverImage,
-              destDir: config.COMICS_COVER_DIR + "/" + comic.slug,
-              filename: path.basename(comic.coverImage),
-              fallback: config.PLACEHOLDER_COMIC,
-            });
-          } catch (err: unknown) {
-            log("error", {
-              phase: "comic-image",
-              slug: comic.slug,
-              error: err instanceof Error ? (err as Error).message : err,
-            });
-            comic.coverImage = config.PLACEHOLDER_COMIC;
+    // Download cover images in parallel (skip in dry-run mode)
+    if (!dryRun) {
+      await Promise.all(
+        comicsForInsert.map(async (comic: ComicInsert) => {
+          if (comic.coverImage) {
+            try {
+              comic.coverImage = await downloadAndSaveImage({
+                url: comic.coverImage,
+                destDir: config.COMICS_COVER_DIR + "/" + comic.slug,
+                filename: path.basename(comic.coverImage),
+                fallback: config.PLACEHOLDER_COMIC,
+              });
+            } catch (err: unknown) {
+              log("error", {
+                phase: "comic-image",
+                slug: comic.slug,
+                error: err instanceof Error ? (err as Error).message : err,
+              });
+              comic.coverImage = config.PLACEHOLDER_COMIC;
+            }
           }
-        }
-      })
-    );
+        })
+      );
+    } else {
+      log("progress", { phase: "comics", message: "Skipping image downloads (dry-run)" });
+    }
     await seedTableBatched({
       table: comic,
       items: comicsForInsert,
@@ -307,6 +327,7 @@ async function main(): Promise<void> {
         { name: "description", value: undefined },
         { name: "publicationDate", value: undefined },
       ],
+      dryRun,
     });
     log("complete", { phase: "comics" });
 
@@ -417,31 +438,35 @@ async function main(): Promise<void> {
       })),
     });
     log("progress", { phase: "chapters", count: chapters.length });
-    // Download chapter images in parallel
-    await Promise.all(
-      chapters.map(async (chapter: ChapterSeed) => {
-        if (Array.isArray(chapter.images)) {
-          try {
-            chapter.images = await Promise.all(
-              chapter.images.map((imgUrl: string) =>
-                downloadAndSaveImage({
-                  url: imgUrl,
-                  destDir: config.CHAPTERS_IMAGE_DIR + "/" + chapter.comicId + "/" + chapter.slug,
-                  filename: path.basename(imgUrl),
-                  fallback: config.PLACEHOLDER_COMIC,
-                })
-              )
-            );
-          } catch (err: unknown) {
-            log("error", {
-              phase: "chapter-image",
-              slug: chapter.slug,
-              error: err instanceof Error ? (err as Error).message : err,
-            });
+    // Download chapter images in parallel (skip in dry-run mode)
+    if (!dryRun) {
+      await Promise.all(
+        chapters.map(async (chapter: ChapterSeed) => {
+          if (Array.isArray(chapter.images)) {
+            try {
+              chapter.images = await Promise.all(
+                chapter.images.map((imgUrl: string) =>
+                  downloadAndSaveImage({
+                    url: imgUrl,
+                    destDir: config.CHAPTERS_IMAGE_DIR + "/" + chapter.comicId + "/" + chapter.slug,
+                    filename: path.basename(imgUrl),
+                    fallback: config.PLACEHOLDER_COMIC,
+                  })
+                )
+              );
+            } catch (err: unknown) {
+              log("error", {
+                phase: "chapter-image",
+                slug: chapter.slug,
+                error: err instanceof Error ? (err as Error).message : err,
+              });
+            }
           }
-        }
-      })
-    );
+        })
+      );
+    } else {
+      log("progress", { phase: "chapters", message: "Skipping image downloads (dry-run)" });
+    }
     await seedTableBatched({
       table: chapter,
       items: chapters,
@@ -452,6 +477,7 @@ async function main(): Promise<void> {
         { name: "images", value: undefined },
         { name: "releaseDate", value: undefined },
       ],
+      dryRun,
     });
     log("complete", { phase: "chapters" });
 

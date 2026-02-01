@@ -1,0 +1,519 @@
+
+> comicr@0.1.0 dev C:\Users\Alexa\Desktop\SandBox\comicr
+> next dev
+
+Γû▓ Next.js 16.1.5 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.100.2:3000
+- Environments: .env
+
+Γ£ô Starting...
+Creating turbopack project { dir: 'C:\\Users\\Alexa\\Desktop\\SandBox\\comicr', testMode: true }
+Γ£ô Ready in 3.8s
+Γùï Compiling /comics ...
+Query: select "id", "title", "slug", "description", "coverImage", "status", "publicationDate", "rating", "views", "url", "serialization", "authorId", "artistId", "typeId", "createdAt", "updatedAt", "searchVector" from "comic" limit $1 -- params: [20]
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+ GET /comics 200 in 21.5s (compile: 7.4s, render: 14.1s)
+ GET /api/auth/session 200 in 2.4s (compile: 2.4s, render: 41ms)
+ GET /api/auth/session 200 in 42ms (compile: 27ms, render: 15ms)
+Query: select "id", "title", "slug", "description", "coverImage", "status", "publicationDate", "rating", "views", "url", "serialization", "authorId", "artistId", "typeId", "createdAt", "updatedAt", "searchVector" from "comic" limit $1 -- params: [20]
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+Γ¿» Error: Event handlers cannot be passed to Client Component props.
+  <... src=... alt=... fill={true} className=... sizes=... onError={function onError}>
+                                                                   ^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1581650264'
+}
+ GET /comics 200 in 11.4s (compile: 18ms, render: 11.4s)
+ GET /dev/seed 200 in 3.3s (compile: 2.9s, render: 361ms)
+ GET /api/auth/session 200 in 60ms (compile: 38ms, render: 21ms)
+ GET /api/auth/session 200 in 22ms (compile: 8ms, render: 14ms)
+ POST /api/dev/seed 401 in 830ms (compile: 809ms, render: 22ms)
+[auth][error] UnknownAction: Cannot parse action at /api/auth/sign-in. Read more at https://errors.authjs.dev#unknownaction
+    at parseActionAndProviderId (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\691c0_@auth_core_a3918b23._.js:1177:262)
+    at toInternalRequest (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\691c0_@auth_core_a3918b23._.js:1115:40)
+    at Auth (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\691c0_@auth_core_a3918b23._.js:5325:272)
+    at httpHandler (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\node_modules__pnpm_fd00b580._.js:5019:258)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:59:14)
+    at AppRouteRouteModule.do (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:37945)
+    at C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:47941
+    at C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\trace\tracer.js:185:36
+    at NoopContextManager.with (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24)
+    at C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\trace\tracer.js:154:103
+    at NoopContextManager.with (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NextTracerImpl.trace (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\trace\tracer.js:154:28)
+    at C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:47780
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:45275
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:45232
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at AppRouteRouteModule.handle (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:45186)
+ GET /api/auth/sign-in 400 in 123ms (compile: 77ms, render: 46ms)
+ GET /api/auth/signin 302 in 71ms (compile: 50ms, render: 21ms)
+ GET /auth/sign-in?callbackUrl=http%3A%2F%2Flocalhost%3A3000 404 in 2.3s (compile: 1765ms, render: 494ms)
+ GET /api/auth/session 200 in 43ms (compile: 27ms, render: 16ms)
+ GET /api/auth/session 200 in 15ms (compile: 5ms, render: 11ms)
+ GET /sign-in 200 in 2.8s (compile: 2.7s, render: 147ms)
+ GET /sign-up 200 in 2.1s (compile: 1995ms, render: 100ms)
+ GET /api/auth/providers 200 in 53ms (compile: 31ms, render: 22ms)
+ GET /api/auth/csrf 200 in 16ms (compile: 6ms, render: 10ms)
+[auth][error] CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at Module.callback (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\691c0_@auth_core_a3918b23._.js:4314:30)
+    at async AuthInternal (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\691c0_@auth_core_a3918b23._.js:5148:24)
+    at async Auth (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\691c0_@auth_core_a3918b23._.js:5370:34)
+    at async AppRouteRouteModule.do (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:37866)
+    at async AppRouteRouteModule.handle (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:45156)
+    at async responseGenerator (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\75203_next_60b3de55._.js:16647:38)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:187713)
+    at async handleResponse (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\75203_next_60b3de55._.js:16710:32)
+    at async Module.handler (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\75203_next_60b3de55._.js:16763:13)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\base-server.js:1442:9)
+    at async DevServer.renderPageComponent (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\base-server.js:1494:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\base-server.js:1544:32)
+    at async DevServer.pipeImpl (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\base-server.js:1038:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\next-server.js:395:17)
+    at async DevServer.handleRequestImpl (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\base-server.js:929:17)
+    at async C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\dev\next-dev-server.js:387:20
+    at async Span.traceAsyncFn (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\trace\trace.js:157:20)
+    at async DevServer.handleRequest (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\dev\next-dev-server.js:383:24)
+    at async invokeRender (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\router-server.js:248:21)
+    at async handleRequest (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\router-server.js:447:24)
+    at async requestHandlerImpl (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\router-server.js:496:13)
+    at async Server.requestListener (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\start-server.js:226:13)
+ POST /api/auth/callback/credentials? 200 in 25ms (compile: 4ms, render: 20ms)
+ GET /api/auth/session 200 in 13ms (compile: 5ms, render: 8ms)
+ GET / 200 in 146ms (compile: 91ms, render: 55ms)
+ GET / 200 in 117ms (compile: 8ms, render: 109ms)
+ GET / 200 in 247ms (compile: 9ms, render: 238ms)
+ GET /api/auth/session 200 in 43ms (compile: 27ms, render: 16ms)
+ GET /api/auth/session 200 in 12ms (compile: 5ms, render: 7ms)
+ GET /sign-in 200 in 110ms (compile: 9ms, render: 101ms)
+ GET /api/auth/providers 200 in 93ms (compile: 63ms, render: 30ms)
+ GET /api/auth/csrf 200 in 21ms (compile: 11ms, render: 10ms)
+[auth][error] CredentialsSignin: Read more at https://errors.authjs.dev#credentialssignin
+    at Module.callback (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\691c0_@auth_core_a3918b23._.js:4314:30)
+    at async AuthInternal (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\691c0_@auth_core_a3918b23._.js:5148:24)
+    at async Auth (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\691c0_@auth_core_a3918b23._.js:5370:34)
+    at async AppRouteRouteModule.do (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:37866)
+    at async AppRouteRouteModule.handle (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:45156)
+    at async responseGenerator (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\75203_next_60b3de55._.js:16647:38)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:187713)
+    at async handleResponse (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\75203_next_60b3de55._.js:16710:32)
+    at async Module.handler (C:\Users\Alexa\Desktop\SandBox\comicr\.next\dev\server\chunks\75203_next_60b3de55._.js:16763:13)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\base-server.js:1442:9)
+    at async DevServer.renderPageComponent (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\base-server.js:1494:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\base-server.js:1544:32)
+    at async DevServer.pipeImpl (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\base-server.js:1038:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\next-server.js:395:17)
+    at async DevServer.handleRequestImpl (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\base-server.js:929:17)
+    at async C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\dev\next-dev-server.js:387:20
+    at async Span.traceAsyncFn (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\trace\trace.js:157:20)
+    at async DevServer.handleRequest (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\dev\next-dev-server.js:383:24)
+    at async invokeRender (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\router-server.js:248:21)
+    at async handleRequest (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\router-server.js:447:24)
+    at async requestHandlerImpl (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\router-server.js:496:13)
+    at async Server.requestListener (C:\Users\Alexa\Desktop\SandBox\comicr\node_modules\.pnpm\next@16.1.5_@babel+core@7.2_1e8bccf7eea036e794bc1dfd1c0586e5\node_modules\next\dist\server\lib\start-server.js:226:13)
+ POST /api/auth/callback/credentials? 200 in 25ms (compile: 6ms, render: 20ms)
+ GET /api/auth/session 200 in 18ms (compile: 6ms, render: 12ms)
+ GET / 200 in 55ms (compile: 8ms, render: 47ms)
+ GET / 200 in 80ms (compile: 7ms, render: 74ms)
+ GET / 200 in 189ms (compile: 8ms, render: 181ms)
+ GET /api/auth/session 200 in 46ms (compile: 31ms, render: 15ms)
+ GET /api/auth/session 200 in 15ms (compile: 7ms, render: 8ms)

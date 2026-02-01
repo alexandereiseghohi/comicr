@@ -1,10 +1,52 @@
+---
+title: ComicWise - Complete Setup & Optimization Plan
+version: 2.0.0
+category: setup
+phase: "1-9"
+status: active
+updated: 2026-02-01
+master-ref: master.prompt.md
+consolidated-from:
+  - mainsetup.prompt.md
+  - developer.prompt.md
+  - Setup.prompt.md (previous v1.0)
+description: 40-task comprehensive environment setup, VS Code config, and optimization
+---
+
 # ComicWise Complete Setup & Optimization Plan (40 Tasks)
+
+> **Master Prompt:** [master.prompt.md](master.prompt.md) | **Progress:** [memory-bank/progress.md](../../memory-bank/progress.md)
+
+---
+
+## Quick Start (5 minutes)
+
+```bash
+# 1. Install dependencies
+pnpm install
+
+# 2. Copy environment template
+cp .env.example .env.local
+# Edit .env.local with your values
+
+# 3. Initialize database
+pnpm db:push && pnpm db:seed
+
+# 4. Start development
+pnpm dev
+
+# 5. Validate setup
+pnpm validate
+```
+
+---
 
 ## Overview
 
 This plan addresses your comprehensive setup request with optimized sequencing to minimize rework and ensure all dependencies are properly managed. Your project is **95% complete** with production-ready infrastructure - this plan focuses on validation, optimization, and strategic enhancements.
 
 **Project Status Summary:**
+
 - Dependencies: 95 production + 95 dev (190 total packages)
 - Scripts: 150+ pnpm scripts
 - Utility Scripts: 70+ custom TypeScript/PowerShell scripts
@@ -27,6 +69,7 @@ This plan addresses your comprehensive setup request with optimized sequencing t
 **Status**: ❌ Missing - blocks all database/Redis operations
 
 **Actions**:
+
 1. Extract all variables from `src/lib/env.ts` schema (60+ server, 3 client vars)
 2. Set CUSTOM_PASSWORD for seeding system
 3. Configure required services:
@@ -38,6 +81,7 @@ This plan addresses your comprehensive setup request with optimized sequencing t
 4. Validate with `pnpm env:validate`
 
 **Expected Variables**:
+
 ```powershell
 # Database
 DATABASE_URL=postgresql://...
@@ -84,6 +128,7 @@ EMAIL_FROM=...
 **Status**: ✅ All files exist (397-216 lines each), highly optimized
 
 **Files**:
+
 1. `.vscode/mcp.json` - 397 lines, MCP servers for filesystem, git, PostgreSQL, Redis, GitHub
 2. `.vscode/extensions.json` - 132 lines, 80+ recommended extensions
 3. `.vscode/launch.json` - 158 lines, debug configs for Next.js, Chrome, Vitest, Playwright
@@ -91,7 +136,9 @@ EMAIL_FROM=...
 5. `.vscode/settings.json` - Prettier/ESLint/Tailwind/TypeScript optimization
 
 **Actions**:
+
 1. **Backup existing files**:
+
    ```powershell
    Copy-Item .vscode/mcp.json .vscode/mcp.json.backup
    Copy-Item .vscode/extensions.json .vscode/extensions.json.backup
@@ -101,6 +148,7 @@ EMAIL_FROM=...
    ```
 
 2. **Create enhanced versions** with:
+
    - Latest Next.js 16 debugger configuration
    - Additional MCP server optimizations (timeout, caching)
    - Extended extension list (AI tools: GitHub Copilot Chat, Tabnine)
@@ -108,6 +156,7 @@ EMAIL_FROM=...
    - Settings refinements (TypeScript inlay hints, file nesting)
 
 3. **Create verification script** (`scripts/verify-vscode-config.ps1`):
+
    ```powershell
    # Verify MCP servers are running
    code --list-extensions | Select-String "mcp"
@@ -122,6 +171,7 @@ EMAIL_FROM=...
    ```
 
 **Expected Enhancements**:
+
 - MCP: Increase timeout to 900s, enable advanced caching
 - Extensions: Add Playwright Test for VS Code, Docker, Prisma (if not already present)
 - Launch: Add edge runtime debugging config
@@ -139,6 +189,7 @@ EMAIL_FROM=...
 **Current**: 172 lines, React Compiler enabled, Turbopack caching, 14 optimized packages
 
 **Actions**:
+
 1. Backup: `Copy-Item next.config.ts next.config.ts.backup`
 2. Enhancements:
    - Add missing optimized packages: `@heroicons/react`, `clsx`, `class-variance-authority`
@@ -149,6 +200,7 @@ EMAIL_FROM=...
 3. Validation: `pnpm build --debug` to verify configuration
 
 **Expected Additions**:
+
 ```typescript
 experimental: {
   optimizeServerReact: true,
@@ -171,6 +223,7 @@ experimental: {
 **Current**: 17 lines, basic robots.txt generation
 
 **Actions**:
+
 1. Backup: `Copy-Item nextSitemap.config.ts nextSitemap.config.ts.backup`
 2. Enhancements:
    - Add dynamic route generation for comics/chapters
@@ -186,6 +239,7 @@ experimental: {
 **Current**: 386 lines, 150+ scripts, 190 dependencies
 
 **Actions**:
+
 1. Backup: `Copy-Item package.json package.json.backup`
 2. Audit for:
    - Unused dependencies (run `pnpm analyze:packages --dry-run`)
@@ -204,6 +258,7 @@ experimental: {
 **Current**: 104 lines, 35 path aliases, strict mode enabled
 
 **Actions**:
+
 1. Backup: `Copy-Item tsconfig.json tsconfig.json.backup`
 2. Verify all path aliases work:
    ```powershell
@@ -222,6 +277,7 @@ experimental: {
 **Files**: `.prettierrc.ts`, `postcss.config.mjs`, `eslint.config.ts`, `.gitignore`, `.dockerignore`, `.prettierignore`
 
 **Actions for each**:
+
 1. Backup to `.backup` extension
 2. Review against latest Next.js 16 / React 19 best practices
 3. Enhance with project-specific optimizations
@@ -233,15 +289,18 @@ experimental: {
 **Specific Enhancements**:
 
 **eslint.config.ts** (488 lines):
+
 - Add kebab-case file naming rule (Task 34 requirement)
 - Verify `no-explicit-any` is appropriately disabled
 - Add custom rules for server actions (`"use server"` must be first line)
 
 **.gitignore** (190 lines):
+
 - Add `.backup` extension (for cleanup)
 - Ensure all generated files excluded (`.next`, `out`, `dist`, `coverage`)
 
 **.prettierignore** (106 lines):
+
 - Add pnpm-lock.yaml, .next, out, dist
 - Exclude generated DTO files if they're auto-generated
 
@@ -254,6 +313,7 @@ experimental: {
 ### Task 17: Seeding System Optimization
 
 **Current Architecture**:
+
 - Entry: `src/database/seed/seedRunnerV3.ts` (550 lines)
 - Features: ✅ Multi-file JSON loading, image caching, onConflictDoUpdate, bcryptjs encryption
 - Data Sources: `users.json`, `comics.json`, `comicsdata1.json`, `comicsdata2.json`, `chapters.json`, `chaptersdata1.json`, `chaptersdata2.json`
@@ -261,17 +321,20 @@ experimental: {
 **Actions**:
 
 1. **Backup seeding system**:
+
    ```powershell
    Copy-Item -Recurse src/database/seed src/database/seed.backup
    ```
 
 2. **Create enhanced helpers** in `src/database/seed/helpers/`:
+
    - `imageValidator.ts` - Validate image URLs before download
    - `duplicateDetector.ts` - Advanced duplicate checking (slug, title, metadata)
    - `dataNormalizer.ts` - Normalize comic/chapter data from multiple JSON sources
    - `progressTracker.ts` - Enhanced logging with operation-specific metrics
 
 3. **Enhance seedRunnerV3.ts**:
+
    ```typescript
    // Add validation before seeding
    const validateData = async (data: unknown) => {
@@ -290,17 +353,18 @@ experimental: {
 
    // Enhanced logging
    logger.info({
-     operation: 'seedComics',
-     source: 'comicsdata1.json',
+     operation: "seedComics",
+     source: "comicsdata1.json",
      total: comics.length,
      created: 0,
      updated: 0,
      skipped: 0,
-     errors: []
+     errors: [],
    });
    ```
 
 4. **Verify integration**:
+
    ```powershell
    # Dry run with verbose logging
    pnpm db:seed:dry-run --verbose
@@ -322,6 +386,7 @@ experimental: {
    - Error handling: Graceful failure (continue seeding on individual errors)
 
 **Files to Modify**:
+
 - `src/database/seed/seedRunnerV3.ts`
 - `src/database/seed/helpers/imageHandler.ts` (create)
 - `src/database/seed/helpers/dataValidator.ts` (create)
@@ -338,6 +403,7 @@ experimental: {
 **Target**: `src/app/(root)/page.tsx`, `src/app/(root)/browse/`, `src/app/(root)/genres/`
 
 **Actions**:
+
 1. Backup existing pages
 2. Add 3D components:
    - Install Aceternity UI or use existing Radix UI with CSS transforms
@@ -345,6 +411,7 @@ experimental: {
    - Accordion for genre browsing
    - Animated page transitions
 3. Enhance homepage:
+
    ```typescript
    // src/app/(root)/page.tsx
    import { CardStack } from "@/components/ui/card-stack";
@@ -366,6 +433,7 @@ experimental: {
    ```
 
 **Expected Additions**:
+
 - 3D Card components in `src/components/ui/`
 - Carousel with auto-play and touch gestures
 - Accordion with smooth animations
@@ -379,6 +447,7 @@ experimental: {
 **Status**: ✅ Generic forms use React Hook Form + Zod
 
 **Actions**:
+
 1. Audit all auth forms for consistency:
    - `sign-in/`, `sign-up/`, `forgot-password/`, `reset-password/`, `verify-email/`
 2. Verify schemas in `src/lib/validations/authSchemas.ts`
@@ -386,6 +455,7 @@ experimental: {
 4. Add loading states and optimistic UI
 
 **Validation**:
+
 ```powershell
 # Test auth flow
 pnpm dev
@@ -401,6 +471,7 @@ pnpm dev
 **Status**: ✅ BaseForm component exists, all actions use DTOs
 
 **Actions**:
+
 1. Verify all admin pages use centralized DTOs from `src/dto/`
 2. Check CRUD operations:
    - `comics/`, `chapters/`, `users/`, `artists/`, `authors/`, `genres/`, `types/`
@@ -411,6 +482,7 @@ pnpm dev
    - Success notifications (toast)
 
 **Enhancement**:
+
 ```typescript
 // Add bulk operations to admin panel
 export async function bulkDeleteComics(ids: number[]): Promise<ActionResult> {
@@ -423,6 +495,7 @@ export async function bulkDeleteComics(ids: number[]): Promise<ActionResult> {
 ### Tasks 21-25: Feature Pages Enhancement
 
 **Target Pages**:
+
 - 21: `src/app/(root)/bookmarks/page.tsx` ✅ exists
 - 22: `src/app/(root)/profile/` ✅ exists
 - 23: `src/app/(root)/comics/page.tsx` - 373 lines, add 3D Cards
@@ -432,6 +505,7 @@ export async function bulkDeleteComics(ids: number[]): Promise<ActionResult> {
 **Actions**:
 
 **Task 23 - Comics Listing**:
+
 ```typescript
 // Enhance src/app/(root)/comics/page.tsx with 3D Cards
 import { Card3D } from "@/components/ui/card-3d";
@@ -450,11 +524,13 @@ export default async function ComicsPage() {
 ```
 
 **Task 24 - Comic Detail**:
+
 - Verify bookmark toggle works (already implemented)
 - Add reading progress indicator
 - Enhance tabs for info/chapters
 
 **Task 25 - Chapter Reader**:
+
 - Verify image gallery (currently uses `yet-another-react-lightbox` ✅)
 - Add keyboard navigation (arrow keys)
 - Add touch gestures (swipe)
@@ -469,6 +545,7 @@ export default async function ComicsPage() {
 **Status**: ✅ 7 stores implemented
 
 **Stores**:
+
 1. `src/stores/authStore.ts` - User session
 2. `src/stores/bookmarkStore.ts` - Bookmarks
 3. `src/stores/comicStore.ts` - Comic data
@@ -478,6 +555,7 @@ export default async function ComicsPage() {
 7. `src/stores/index.ts` - Re-exports
 
 **Actions**:
+
 1. Verify integration in pages (no duplicate state logic)
 2. Check for missing stores:
    - Admin store (filters, pagination)
@@ -486,6 +564,7 @@ export default async function ComicsPage() {
 4. Add store tests if missing
 
 **Validation**:
+
 ```powershell
 # Search for useState that should be in stores
 Get-ChildItem -Recurse -Filter "*.tsx" | Select-String "useState\("
@@ -498,13 +577,16 @@ Get-ChildItem -Recurse -Filter "*.tsx" | Select-String "useState\("
 **Status**: ✅ DAL pattern implemented (13 classes), queries/mutations organized
 
 **Actions**:
+
 1. Audit all server actions to ensure DAL usage:
+
    ```powershell
    # Search for direct db queries in actions
    Get-ChildItem -Recurse src/lib/actions -Filter "*.ts" | Select-String "db\.select\(|db\.insert\(|db\.update\(|db\.delete\("
    ```
 
 2. If direct queries found, refactor to use DAL:
+
    ```typescript
    // ❌ Before (direct query in action)
    const comics = await db.select().from(comic).limit(10);
@@ -525,6 +607,7 @@ Get-ChildItem -Recurse -Filter "*.tsx" | Select-String "useState\("
 ### Task 28: Folder Structure Optimization
 
 **Actions**:
+
 1. Use AST-based codemods with `jscodeshift` or `ts-morph`
 2. Create refactoring script:
 
@@ -559,6 +642,7 @@ project.save();
 **Current**: `scripts/cw.ts` (scaffolding only)
 
 **Actions**:
+
 1. Backup: `Copy-Item scripts/cw.ts scripts/cw.ts.backup`
 2. Expand CLI to include:
 
@@ -626,11 +710,13 @@ program.parse();
 **Actions**:
 
 1. **Fix Critical Playwright Error**:
+
    ```powershell
    pnpm playwright install --with-deps
    ```
 
 2. **Fix Markdown Lint Warnings** (83):
+
    ```powershell
    pnpm lint:fix
    # Or manually fix in documentation files
@@ -639,18 +725,19 @@ program.parse();
 3. **Convert `any` Types**:
 
    **Priority Files**:
+
    - `src/services/uploadService.ts` (2 functions)
+
    ```typescript
    // Before
-   export async function uploadFile(file: any): Promise<any> { }
+   export async function uploadFile(file: any): Promise<any> {}
 
    // After
-   export async function uploadFile<T extends File>(
-     file: T
-   ): Promise<UploadResult> { }
+   export async function uploadFile<T extends File>(file: T): Promise<UploadResult> {}
    ```
 
    **Convert to Generics**:
+
    - Utility functions that accept various types
    - Search service results
    - Cache operations
@@ -665,12 +752,14 @@ program.parse();
 ### Tasks 31-32: Cleanup Scripts
 
 **Existing Scripts**:
+
 - `scripts/cleanup-duplicates.ts`
 - `scripts/uninstall-unused-packages.ts`
 
 **Actions**:
 
 **Task 31 - Cleanup Code**:
+
 ```powershell
 # Create comprehensive cleanup script
 # scripts/cleanup-comprehensive.ts
@@ -698,6 +787,7 @@ Get-ChildItem -Recurse -File | Where-Object {
 ```
 
 **Task 32 - Uninstall Unused Packages**:
+
 ```powershell
 # Analyze first
 pnpm analyze:packages --dry-run
@@ -713,6 +803,7 @@ pnpm analyze:packages
 **Existing**: `scripts/replaceImportsEnhanced.ts`
 
 **Actions**:
+
 ```powershell
 # Run import optimizer
 pnpm imports:optimize
@@ -728,6 +819,7 @@ pnpm type-check
 ### Tasks 34-35: Kebab Case Convention
 
 **Task 34 - ESLint Config**:
+
 ```typescript
 // eslint.config.ts
 export default [
@@ -746,13 +838,13 @@ export default [
 ```
 
 **Task 35 - Conversion Script**:
+
 ```typescript
 // scripts/convert-to-kebab-case.ts
 import * as fs from "fs";
 import * as path from "path";
 
-const toKebabCase = (str: string) =>
-  str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+const toKebabCase = (str: string) => str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
 
 // Rename files
 // Update imports/exports
@@ -760,6 +852,7 @@ const toKebabCase = (str: string) =>
 ```
 
 **Execution**:
+
 ```powershell
 # Create script
 pnpm tsx scripts/convert-to-kebab-case.ts --dry-run
@@ -776,6 +869,7 @@ pnpm type-check
 ### Task 36: Cleanup Scripts Execution
 
 **Actions**:
+
 ```powershell
 # Run existing cleanup scripts
 pnpm cleanup --deep
@@ -805,11 +899,13 @@ Get-ChildItem -Filter "*.txt" | Where-Object {
 **Actions**:
 
 1. **Create directory structure**:
+
    ```powershell
    New-Item -ItemType Directory -Force -Path .github/prompts
    ```
 
 2. **Read existing prompt files**:
+
    - `samp.txt`
    - `Prompts.prompt.txt`
    - `recommendations-list.md`
@@ -820,53 +916,64 @@ Get-ChildItem -Filter "*.txt" | Where-Object {
 3. **Create consolidated prompts**:
 
 **.github/prompts/setup.prompt.md**:
+
 ```markdown
 # ComicWise Setup Prompt
 
 ## Prerequisites
+
 - Node.js 20+
 - pnpm 9+
 - PostgreSQL 16+
 - Redis 7+ (optional)
 
 ## Context
+
 [Include all context from existing prompts]
 
 ## Phases
+
 [Include all 40 tasks organized by phase]
 
 [All content from samp.txt, Prompts.prompt.txt, recommendations-list.md, SetupPrompt.md, sample.txt]
 ```
 
 **.github/prompts/main.prompt.md**:
+
 ```markdown
 # ComicWise Main Prompt - File Change Log
 
 ## Files Created
+
 - .github/prompts/setup.prompt.md
 - .github/prompts/run.prompt.md
 - scripts/verify-vscode-config.ps1
 - [Auto-populated during execution]
 
 ## Files Modified
+
 - next.config.ts (backup: next.config.ts.backup)
 - package.json (backup: package.json.backup)
 - [Auto-populated during execution]
 
 ## Files Deleted
-- *.backup (after validation)
-- temp*.txt
+
+- \*.backup (after validation)
+- temp\*.txt
 - [Auto-populated during execution]
 ```
 
 **.github/prompts/run.prompt.md**:
+
 ```markdown
 # ComicWise Execution Prompt
 
 ## Overview
+
 Execute all changes described in main.prompt.md
 
 ## Execution Order
+
 1. Phase 1: Foundation (Tasks 16, 1-5)
 2. Phase 2: Configuration (Tasks 6-15)
 3. Phase 3: Seeding (Task 17)
@@ -878,9 +985,11 @@ Execute all changes described in main.prompt.md
 9. Phase 9: Final Setup (Task 40)
 
 ## Commands
+
 [PowerShell commands for each phase]
 
 ## Validation
+
 [Validation steps after each phase]
 ```
 
@@ -891,13 +1000,16 @@ Execute all changes described in main.prompt.md
 ### Task 37: Implement @workspace Recommendations
 
 **Actions**:
+
 1. Run AI analysis:
+
    ```powershell
    # Use GitHub Copilot or AI agent to analyze project
    # Request: "@workspace /explain and implement all suggestions"
    ```
 
 2. Review recommendations for:
+
    - Code organization improvements
    - Performance optimizations
    - Security enhancements
@@ -912,6 +1024,7 @@ Execute all changes described in main.prompt.md
 ### Task 38: Quick Validation
 
 **Actions**:
+
 ```powershell
 # Run validation suite
 pnpm validate:quick
@@ -924,10 +1037,12 @@ pnpm validate:quick
 ```
 
 **Expected Issues**:
+
 - 84 TypeScript errors (should be 0 after Playwright fix)
 - 0 ESLint errors (after fixes)
 
 **Fixes**:
+
 1. Playwright: `pnpm playwright install`
 2. Type errors: Fix `any` types in upload service
 3. Lint errors: Run `pnpm lint:fix`
@@ -938,6 +1053,7 @@ pnpm validate:quick
 ### Task 39: Production Build
 
 **Actions**:
+
 ```powershell
 # Clean build
 pnpm clean
@@ -956,6 +1072,7 @@ pnpm start
 ```
 
 **Build Validation**:
+
 - No TypeScript errors
 - No ESLint errors
 - Bundle size reasonable (<500KB for main bundle)
@@ -971,6 +1088,7 @@ pnpm start
 **Actions**:
 
 1. **Full Reset**:
+
    ```powershell
    # Stop all processes
    # Clean everything
@@ -981,6 +1099,7 @@ pnpm start
    ```
 
 2. **Database Setup**:
+
    ```powershell
    # Reset database
    pnpm db:reset
@@ -991,6 +1110,7 @@ pnpm start
    ```
 
 3. **Build & Test**:
+
    ```powershell
    # Type check
    pnpm type-check
@@ -1009,6 +1129,7 @@ pnpm start
    ```
 
 4. **Final Validation**:
+
    - ✅ All pages load
    - ✅ Authentication works
    - ✅ Admin panel functional
@@ -1020,16 +1141,20 @@ pnpm start
 
 5. **Document Final State**:
    Create `.github/prompts/completion-report.md`:
+
    ```markdown
    # ComicWise Setup Completion Report
 
    ## Date
+
    January 22, 2026
 
    ## Summary
+
    All 40 tasks completed successfully
 
    ## Metrics
+
    - TypeScript errors: 0
    - ESLint errors: 0
    - Build time: [X]s
@@ -1037,12 +1162,15 @@ pnpm start
    - Test coverage: [X]%
 
    ## Files Modified
+
    [List from main.prompt.md]
 
    ## Files Created
+
    [List from main.prompt.md]
 
    ## Verification
+
    - [ ] All pages accessible
    - [ ] Authentication functional
    - [ ] Database seeded
@@ -1055,46 +1183,56 @@ pnpm start
 ## Execution Checklist
 
 ### Prerequisites
+
 - [ ] Task 16: `.env.local` created with all required variables
 - [ ] Git: All changes committed (clean working tree)
 - [ ] Backups: All modified files backed up to `.backup`
 
 ### Phase 1 (Foundation)
+
 - [ ] Tasks 1-5: VS Code config validated and enhanced
 - [ ] Verification script created and tested
 
 ### Phase 2 (Configuration)
+
 - [ ] Tasks 6-15: All config files optimized
 - [ ] Validation: `pnpm validate:quick` passes
 
 ### Phase 3 (Seeding)
+
 - [ ] Task 17: Seeding system enhanced
 - [ ] Dry run successful: `pnpm db:seed:dry-run`
 
 ### Phase 4 (Pages)
+
 - [ ] Tasks 18-25: All pages enhanced with modern components
 - [ ] Manual testing: All routes accessible
 
 ### Phase 5 (State)
+
 - [ ] Task 26: Zustand stores validated
 - [ ] Task 27: DAL usage audit complete
 
 ### Phase 6 (Quality)
+
 - [ ] Tasks 28-35: Code refactoring complete
 - [ ] Kebab case conversion successful
 - [ ] Cleanup scripts executed
 - [ ] `any` types fixed
 
 ### Phase 7 (Documentation)
+
 - [ ] `.github/prompts/` created with all prompts
 - [ ] Main prompt log maintained
 
 ### Phase 8 (Validation)
+
 - [ ] Task 37: AI recommendations implemented
 - [ ] Task 38: `pnpm validate:quick` passes (0 errors)
 - [ ] Task 39: `pnpm build` successful
 
 ### Phase 9 (Final)
+
 - [ ] Task 40: Complete reset and setup successful
 - [ ] Completion report created
 - [ ] All validation checks passed
@@ -1103,40 +1241,44 @@ pnpm start
 
 ## Time Estimates
 
-| Phase | Tasks | Estimated Time | Critical Path |
-|-------|-------|----------------|---------------|
-| Phase 1 | 16, 1-5 | 30-45 min | ⚠️ Critical (blocks all) |
-| Phase 2 | 6-15 | 1-1.5 hours | - |
-| Phase 3 | 17 | 1-2 hours | ⚠️ Database dependent |
-| Phase 4 | 18-25 | 2-3 hours | - |
-| Phase 5 | 26-27 | 1-1.5 hours | - |
-| Phase 6 | 28-35 | 3-4 hours | ⚠️ Code refactoring |
-| Phase 7 | Documentation | 30-45 min | - |
-| Phase 8 | 37-39 | 1-2 hours | ⚠️ Validation required |
-| Phase 9 | 40 | 1-1.5 hours | ⚠️ Final verification |
-| **Total** | **40 tasks** | **11-16 hours** | - |
+| Phase     | Tasks         | Estimated Time  | Critical Path            |
+| --------- | ------------- | --------------- | ------------------------ |
+| Phase 1   | 16, 1-5       | 30-45 min       | ⚠️ Critical (blocks all) |
+| Phase 2   | 6-15          | 1-1.5 hours     | -                        |
+| Phase 3   | 17            | 1-2 hours       | ⚠️ Database dependent    |
+| Phase 4   | 18-25         | 2-3 hours       | -                        |
+| Phase 5   | 26-27         | 1-1.5 hours     | -                        |
+| Phase 6   | 28-35         | 3-4 hours       | ⚠️ Code refactoring      |
+| Phase 7   | Documentation | 30-45 min       | -                        |
+| Phase 8   | 37-39         | 1-2 hours       | ⚠️ Validation required   |
+| Phase 9   | 40            | 1-1.5 hours     | ⚠️ Final verification    |
+| **Total** | **40 tasks**  | **11-16 hours** | -                        |
 
 ---
 
 ## Risk Mitigation
 
 ### Backup Strategy
+
 - All modified files backed up to `.backup` extension
 - Git commits after each phase completion
 - Database backup before `pnpm db:reset`
 
 ### Rollback Plan
+
 1. Restore from `.backup` files
 2. Revert Git commits: `git reset --hard HEAD~1`
 3. Restore database: `pnpm db:restore` (if backup script run)
 
 ### Validation Gates
+
 - Phase 1 gate: `.env.local` must exist
 - Phase 6 gate: `pnpm type-check` must pass
 - Phase 8 gate: `pnpm validate:quick` must pass
 - Phase 9 gate: `pnpm build` must pass
 
 ### Critical Dependencies
+
 1. `.env.local` (Task 16) - blocks database, Redis, auth
 2. Playwright installation - blocks E2E tests
 3. Seeding validation - blocks data-dependent pages
@@ -1147,6 +1289,7 @@ pnpm start
 ## Success Criteria
 
 ### Code Quality
+
 - ✅ 0 TypeScript errors
 - ✅ 0 ESLint errors
 - ✅ <10 `any` types (only in tests/external libs)
@@ -1154,6 +1297,7 @@ pnpm start
 - ✅ All files use kebab-case naming
 
 ### Functionality
+
 - ✅ All 40 pages accessible
 - ✅ Authentication flow works end-to-end
 - ✅ Admin CRUD operations functional
@@ -1162,12 +1306,14 @@ pnpm start
 - ✅ Search returns results
 
 ### Performance
+
 - ✅ Build time <2 minutes
 - ✅ Main bundle <500KB
 - ✅ First Contentful Paint <1.5s
 - ✅ Time to Interactive <3s
 
 ### Documentation
+
 - ✅ All prompts consolidated in `.github/prompts/`
 - ✅ Completion report generated
 - ✅ Change log maintained
@@ -1177,16 +1323,19 @@ pnpm start
 ## Next Steps After Completion
 
 1. **CI/CD Setup**
+
    - GitHub Actions workflows
    - Automated testing on PR
    - Deploy previews
 
 2. **Monitoring**
+
    - Sentry error tracking verification
    - Performance monitoring setup
    - User analytics
 
 3. **Feature Enhancements**
+
    - Implement remaining recommendations
    - Add missing nice-to-have features
    - Expand test coverage
