@@ -55,7 +55,7 @@ const envSchema = z.object({
   // ========== MONITORING ==========
   SENTRY_DSN: z.string().optional(),
   SENTRY_AUTH_TOKEN: z.string().optional(),
-  SENTRY_ENV: z.enum(["development", "staging", "production"]).default("development"),
+  SENTRY_ENV: z.enum(["development", "staging", "production", "test"]).default("development"),
   POSTHOG_API_KEY: z.string().optional(),
   POSTHOG_HOST: z.string().optional(),
 
@@ -75,8 +75,8 @@ const envSchema = z.object({
 
   // ========== DEVELOPMENT ==========
   CUSTOM_PASSWORD: z.string().min(8, "CUSTOM_PASSWORD must be at least 8 characters"),
-  NODE_ENV: z.enum(["development", "staging", "production"]).default("development"),
-  ENVIRONMENT: z.enum(["development", "staging", "production"]).default("development"),
+  NODE_ENV: z.enum(["development", "staging", "production", "test"]).default("development"),
+  ENVIRONMENT: z.enum(["development", "staging", "production", "test"]).default("development"),
 
   // ========== FEATURES ==========
   ENABLE_SEEDING: z
