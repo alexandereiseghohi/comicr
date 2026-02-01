@@ -1,9 +1,5 @@
 import { auth } from "@/auth";
-import {
-  createOrUpdateRating,
-  deleteRating,
-  getUserRating,
-} from "@/database/mutations/rating-mutations";
+import { deleteRating, upsertRating } from "@/database/mutations/rating-mutations";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -13,8 +9,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { comicId, value } = await request.json();
-    const rating = await createOrUpdateRating(session.user.id, comicId, value);
+    const { comicId, value, review } = await request.json();
+    const rating = await upsertRating({
+      userId: Number(session.user.id),
+      comicId,
+      rating: value,
+      review,
+    });
 
     return NextResponse.json(rating, { status: 201 });
   } catch {
@@ -30,7 +31,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { comicId } = await request.json();
-    await deleteRating(session.user.id, comicId);
+    await deleteRating(Number(session.user.id), comicId);
 
     return NextResponse.json({ success: true });
   } catch {
@@ -45,12 +46,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { searchParams } = new URL(request.url);
-    const comicId = parseInt(searchParams.get("comicId") || "0");
-
-    const rating = await getUserRating(session.user.id, comicId);
-
-    return NextResponse.json({ rating });
+    return NextResponse.json({ error: "Use query endpoint instead" }, { status: 410 });
   } catch {
     return NextResponse.json({ error: "Failed to fetch rating" }, { status: 500 });
   }

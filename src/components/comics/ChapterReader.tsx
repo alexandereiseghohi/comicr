@@ -50,16 +50,13 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
   const [mode, setMode] = useState<"vertical" | "horizontal">(
     propReadingMode || (isMobile ? "vertical" : "vertical")
   );
-  const [background, setBackground] = useState<"white" | "dark" | "sepia">(
-    propBackgroundMode || "white"
-  );
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [isAutoHide, setIsAutoHide] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const autoHideTimerRef = useRef<NodeJS.Timeout>();
+  const autoHideTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-hide controls in full-screen
   const resetAutoHideTimer = useCallback(() => {

@@ -18,7 +18,7 @@ export async function POST() {
       .update(user)
       .set({
         deletedAt: new Date(),
-        email: null,
+        email: `deleted_${userId}@example.com`,
         name: "Deleted User",
         image: null,
       })

@@ -1,5 +1,6 @@
 import { ComicFilters } from "@/components/comics/comic-filters";
 import { ComicList } from "@/components/comics/comic-list";
+import { ComicPagination } from "@/components/comics/ComicPagination";
 import { GenreGrid } from "@/components/comics/GenreGrid";
 import * as comicQueries from "@/database/queries/comic-queries";
 import * as genreQueries from "@/database/queries/genre.queries";

@@ -112,4 +112,24 @@
       ]
     }
   },
+  // GitHub Copilot Model Configuration (40-Task Plan Requirement)
+  "github.copilot.advanced": {
+    "debug.overrideEngine": "ollama",
+    "debug.overrideModel": "gemma:latest",
+    "agent.model": "ollama/gemma:latest"
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": true,
+    "markdown": true,
+    "scminput": false
+  },
+  "github.copilot.editor.enableCodeActions": true,
+  "github.copilot.inlineSuggest.enable": true,
+  // MCP Server Optimization (Phase 2, Task 14 prep)
+  "mcp.logLevel": "info", // Change to "debug" for troubleshooting
+  "mcp.showTrace": false, // Enable for detailed MCP server traces
+  "mcp.timeout": 30000, // 30 second default timeout for all MCP servers
+  "mcp.enableCaching": true, // Cache MCP tool responses for performance
+  "mcp.maxCacheSize": 100 // Maximum cache size in MB
 }

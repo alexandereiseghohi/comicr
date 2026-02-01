@@ -45,18 +45,11 @@ export default function ChangePasswordPage() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        toast({
-          title: "Error",
-          description: result.error || "Failed to change password",
-          variant: "destructive",
-        });
+        toast.error(result.error || "Failed to change password");
         return;
       }
 
-      toast({
-        title: "Success",
-        description: "Your password has been changed successfully",
-      });
+      toast.success("Your password has been changed successfully");
 
       reset();
       setTimeout(() => {
@@ -64,11 +57,7 @@ export default function ChangePasswordPage() {
       }, 1500);
     } catch (error) {
       console.error("Change password error:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }

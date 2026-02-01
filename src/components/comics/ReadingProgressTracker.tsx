@@ -1,10 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface ReadingProgressTrackerProps {
   comicId: number;
@@ -27,7 +34,10 @@ export function ReadingProgressTracker({
 }: ReadingProgressTrackerProps) {
   const { toast } = useToast();
   const [showResumeDialog, setShowResumeDialog] = useState(false);
-  const [savedProgress, setSaved Progress] = useState<{ pageIndex: number; percentage: number } | null>(null);
+  const [savedProgress, setSavedProgress] = useState<{
+    pageIndex: number;
+    percentage: number;
+  } | null>(null);
   const [currentProgress, setCurrentProgress] = useState(0);
   const saveTimerRef = useRef<NodeJS.Timeout>();
   const lastSaveRef = useRef<{ page: number; scroll: number }>({ page: 0, scroll: 0 });
@@ -71,10 +81,7 @@ export function ReadingProgressTracker({
       try {
         // Save to localStorage immediately
         const key = `progress-${comicId}-${chapterId}`;
-        localStorage.setItem(
-          key,
-          JSON.stringify({ pageIndex, percentage, timestamp: Date.now() })
-        );
+        localStorage.setItem(key, JSON.stringify({ pageIndex, percentage, timestamp: Date.now() }));
 
         // TODO: Save to database via API
         // await saveReadingProgressAction({
@@ -107,9 +114,8 @@ export function ReadingProgressTracker({
 
   // Track progress changes
   useEffect(() => {
-    const progress = mode === "horizontal"
-      ? Math.round((currentPage / totalPages) * 100)
-      : scrollPercentage;
+    const progress =
+      mode === "horizontal" ? Math.round((currentPage / totalPages) * 100) : scrollPercentage;
 
     setCurrentProgress(progress);
 
@@ -170,17 +176,15 @@ export function ReadingProgressTracker({
           <DialogHeader>
             <DialogTitle>Resume Reading?</DialogTitle>
             <DialogDescription>
-              You were last on page {savedProgress ? savedProgress.pageIndex + 1 : 1} of {totalPages}.
-              Would you like to continue from where you left off?
+              You were last on page {savedProgress ? savedProgress.pageIndex + 1 : 1} of{" "}
+              {totalPages}. Would you like to continue from where you left off?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={handleStartFromBeginning}>
               Start from Beginning
             </Button>
-            <Button onClick={handleResume}>
-              Resume Reading
-            </Button>
+            <Button onClick={handleResume}>Resume Reading</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

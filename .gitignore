@@ -32,6 +32,22 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.template
+
+# Backup files
+*.backup
+*.bak
+.backup/
+
+# Report files
+*.report.json
+*-report.json
+*.csv
+
+# Temporary files
+temp*
+test*.txt
+sample*.txt
 
 # vercel
 .vercel

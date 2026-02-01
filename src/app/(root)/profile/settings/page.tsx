@@ -70,11 +70,7 @@ export default function SettingsPage() {
         }
       } catch (error) {
         console.error("Failed to load settings:", error);
-        toast({
-          title: "Error",
-          description: "Failed to load settings",
-          variant: "destructive",
-        });
+        toast.error("Failed to update settings");
       } finally {
         setLoading(false);
       }

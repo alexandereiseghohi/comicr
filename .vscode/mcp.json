@@ -14,6 +14,8 @@
         "NODE_ENV": "development",
         "NEXT_TELEMETRY_DISABLED": "1"
       },
+      "timeout": 30000,
+      "cacheResponses": true
     },
     "typescript-enhanced": {
       "command": "npx",
@@ -27,6 +29,8 @@
       "env": {
         "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json"
       },
+      "timeout": 60000,
+      "cacheResponses": true
     },
     "postgresql-database": {
       "command": "npx",
@@ -40,6 +44,8 @@
         "PGDATABASE": "comicwise",
         "PGSCHEMA": "public"
       },
+      "timeout": 45000,
+      "cacheResponses": true
     },
     "redis-cache": {
       "command": "npx",
@@ -51,6 +57,8 @@
         "--token",
         "${env:UPSTASH_REDIS_REST_TOKEN}"
       ],
+      "timeout": 20000,
+      "cacheResponses": true
     },
     "filesystem-ops": {
       "command": "npx",
@@ -59,6 +67,8 @@
         "@modelcontextprotocol/server-filesystem",
         "${workspaceFolder}"
       ],
+      "timeout": 15000,
+      "cacheResponses": true
     },
     "git-integration": {
       "command": "npx",
@@ -67,6 +77,8 @@
         "@modelcontextprotocol/server-git",
         "${workspaceFolder}"
       ],
+      "timeout": 20000,
+      "cacheResponses": true
     },
     "sequential-thinking": {
       "command": "npx",
@@ -74,6 +86,8 @@
         "-y",
         "@modelcontextprotocol/server-sequential-thinking"
       ],
+      "timeout": 90000,
+      "cacheResponses": false
     },
     "context7": {
       "command": "npx",
@@ -81,6 +95,13 @@
         "-y",
         "@upstash/context7-mcp@latest"
       ],
+      "timeout": 30000,
+      "cacheResponses": true
     }
   },
+  "globalSettings": {
+    "defaultTimeout": 30000,
+    "enableCaching": true,
+    "maxCacheSize": 100
+  }
 }

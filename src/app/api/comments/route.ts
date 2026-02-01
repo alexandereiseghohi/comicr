@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       userId: Number(session.user.id),
       chapterId: validation.data.chapterId,
       content: validation.data.content,
-      parentId: validation.data.parentId,
+      parentId: validation.data.parentId || undefined,
     });
 
     if (!result.success) {
