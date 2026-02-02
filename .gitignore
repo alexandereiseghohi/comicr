@@ -55,4 +55,4 @@ sample*.txt
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-public/comics/*
+/public/comics
