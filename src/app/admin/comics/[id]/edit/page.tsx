@@ -1,8 +1,3 @@
-/**
- * Comic Edit Page
- * @description Admin page for editing comic details
- */
-
 import { eq } from "drizzle-orm";
 import { notFound, redirect } from "next/navigation";
 

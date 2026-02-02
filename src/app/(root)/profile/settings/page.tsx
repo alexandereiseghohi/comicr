@@ -1,14 +1,4 @@
-"use client";
-
-import {
-  AlertTriangle,
-  ArrowLeft,
-  Bell,
-  Eye,
-  Loader2,
-  Settings as SettingsIcon,
-  Trash2,
-} from "lucide-react";
+import { AlertTriangle, ArrowLeft, Bell, Eye, Loader2, Settings, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -26,15 +16,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+
+("use client");
 
 interface UserSettings {
   emailNotifications: boolean;
@@ -163,7 +149,7 @@ export default function SettingsPage() {
         {/* Header */}
         <div className="mb-6">
           <div className="mb-2 flex items-center gap-2">
-            <SettingsIcon className="h-6 w-6 text-slate-700" />
+            <Settings className="h-6 w-6 text-slate-700" />
             <h1 className="text-3xl font-bold text-slate-950">Settings</h1>
           </div>
           <p className="text-slate-600">Manage your account settings and preferences</p>
@@ -185,9 +171,7 @@ export default function SettingsPage() {
                   <Label className="font-medium" htmlFor="email-notifications">
                     Email Notifications
                   </Label>
-                  <p className="text-sm text-slate-500">
-                    Receive updates about new chapters and bookmarks
-                  </p>
+                  <p className="text-sm text-slate-500">Receive updates about new chapters and bookmarks</p>
                 </div>
                 <Switch
                   checked={settings.emailNotifications}
@@ -213,9 +197,7 @@ export default function SettingsPage() {
                   Profile Visibility
                 </Label>
                 <Select
-                  onValueChange={(value) =>
-                    handleSettingChange("profileVisibility", value as "private" | "public")
-                  }
+                  onValueChange={(value) => handleSettingChange("profileVisibility", value as "private" | "public")}
                   value={settings.profileVisibility}
                 >
                   <SelectTrigger id="profile-visibility">
@@ -226,9 +208,7 @@ export default function SettingsPage() {
                     <SelectItem value="private">Private - Only you can view</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-sm text-slate-500">
-                  Control who can see your profile information
-                </p>
+                <p className="text-sm text-slate-500">Control who can see your profile information</p>
               </div>
 
               <div className="flex items-center justify-between">
@@ -236,17 +216,13 @@ export default function SettingsPage() {
                   <Label className="font-medium" htmlFor="reading-history">
                     Reading History Visibility
                   </Label>
-                  <p className="text-sm text-slate-500">
-                    Show your reading history on your public profile
-                  </p>
+                  <p className="text-sm text-slate-500">Show your reading history on your public profile</p>
                 </div>
                 <Switch
                   checked={settings.readingHistoryVisibility}
                   disabled={settings.profileVisibility === "private"}
                   id="reading-history"
-                  onCheckedChange={(checked) =>
-                    handleSettingChange("readingHistoryVisibility", checked)
-                  }
+                  onCheckedChange={(checked) => handleSettingChange("readingHistoryVisibility", checked)}
                 />
               </div>
             </CardContent>
@@ -307,8 +283,8 @@ export default function SettingsPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your account and remove
-                all your data from our servers, including:
+                This action cannot be undone. This will permanently delete your account and remove all your data from
+                our servers, including:
                 <ul className="mt-2 list-inside list-disc space-y-1">
                   <li>Your profile information</li>
                   <li>Reading history and progress</li>

@@ -182,10 +182,7 @@ export async function getComicsByGenres(
     const orderDirection = order === "asc" ? asc(comic.createdAt) : desc(comic.createdAt);
 
     // First get genre IDs from slugs
-    const genreResults = await db
-      .select({ id: genre.id })
-      .from(genre)
-      .where(inArray(genre.slug, genreSlugs));
+    const genreResults = await db.select({ id: genre.id }).from(genre).where(inArray(genre.slug, genreSlugs));
 
     const genreIds = genreResults.map((g) => g.id);
 

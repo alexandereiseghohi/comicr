@@ -1,9 +1,9 @@
 import * as mutations from "@/database/mutations/bookmark-mutations";
 import { bookmark } from "@/database/schema";
+import { type AddBookmarkInput } from "@/schemas/bookmark-schema";
+import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
-
-import type { DbMutationResult } from "@/types";
 
 /**
  * Data Access Layer for Bookmark entities
@@ -30,16 +30,14 @@ export class BookmarkDAL extends BaseDAL<typeof bookmark> {
    * });
    * ```
    */
-  async create(data: {
-    comicId: number;
-    userId: string;
-  }): Promise<DbMutationResult<typeof bookmark.$inferSelect>> {
+  async create(data: AddBookmarkInput): Promise<DbMutationResult<typeof bookmark.$inferSelect>> {
     try {
-      const result = await mutations.createBookmark(data.userId, data.comicId);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return { success: true, data: result as any };
+      return await mutations.createBookmark(data);
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Create failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Create failed",
+      };
     }
   }
 
@@ -71,12 +69,14 @@ export class BookmarkDAL extends BaseDAL<typeof bookmark> {
    * });
    * ```
    */
-  async delete(data: { comicId: number; userId: string; }): Promise<DbMutationResult<null>> {
+  async delete(data: { comicId: number; userId: string }): Promise<DbMutationResult<null>> {
     try {
-      await mutations.deleteBookmark(data.userId, data.comicId);
-      return { success: true, data: null };
+      return await mutations.deleteBookmark(data.userId, data.comicId);
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Delete failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Delete failed",
+      };
     }
   }
 }

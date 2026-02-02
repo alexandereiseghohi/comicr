@@ -10,7 +10,7 @@ vi.mock("@/database/db", () => {
 
 import { getBookmarksByUser } from "@/database/queries/bookmark.queries";
 
-type Bookmark = { comicId: number; userId: string; };
+type Bookmark = { comicId: number; userId: string };
 
 describe("bookmark queries", () => {
   it("getBookmarksByUser returns bookmarks", async () => {

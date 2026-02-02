@@ -1,32 +1,34 @@
-"use server";
-
 import { auth } from "@/auth";
 import * as mutations from "@/database/mutations/rating-mutations";
 import * as queries from "@/database/queries/rating-queries";
 import { type RatingInput, ratingSchema } from "@/schemas/rating.schema";
+import { type ActionResult } from "@/types";
 
-import type { ActionResult } from "@/types";
+("use server");
 
 /**
  * Get user's rating for a comic
  */
 export async function getUserRatingAction(
-  comicId: number
+  comicId: number,
 ): Promise<ActionResult<{ rating: number; review: null | string } | null>> {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return { success: false, error: "Unauthorized - please sign in to rate comics" };
+      return {
+        ok: false,
+        error: "Unauthorized - please sign in to rate comics",
+      };
     }
 
     const result = await queries.getUserRating(session.user.id, comicId);
 
     if (!result.success || !result.data) {
-      return { success: true, data: null };
+      return { ok: true, data: null };
     }
 
     return {
-      success: true,
+      ok: true,
       data: {
         rating: result.data.rating,
         review: result.data.review || null,
@@ -34,7 +36,7 @@ export async function getUserRatingAction(
     };
   } catch (error) {
     console.error("Get user rating error:", error);
-    return { success: false, error: "Failed to fetch rating" };
+    return { ok: false, error: "Failed to fetch rating" };
   }
 }
 
@@ -42,17 +44,20 @@ export async function getUserRatingAction(
  * Get average rating and count for a comic
  */
 export async function getComicRatingStatsAction(
-  comicId: number
+  comicId: number,
 ): Promise<ActionResult<{ averageRating: number; totalRatings: number }>> {
   try {
     const result = await queries.getComicRatingStats(comicId);
 
     if (!result.success) {
-      return { success: false, error: result.error || "Failed to fetch rating stats" };
+      return {
+        ok: false,
+        error: result.error || "Failed to fetch rating stats",
+      };
     }
 
     return {
-      success: true,
+      ok: true,
       data: {
         averageRating: result.data?.averageRating || 0,
         totalRatings: result.data?.totalRatings || 0,
@@ -60,7 +65,7 @@ export async function getComicRatingStatsAction(
     };
   } catch (error) {
     console.error("Get rating stats error:", error);
-    return { success: false, error: "Failed to fetch rating statistics" };
+    return { ok: false, error: "Failed to fetch rating statistics" };
   }
 }
 
@@ -68,19 +73,22 @@ export async function getComicRatingStatsAction(
  * Create or update user's rating for a comic
  */
 export async function upsertRatingAction(
-  input: RatingInput
+  input: RatingInput,
 ): Promise<ActionResult<{ rating: number }>> {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return { success: false, error: "Unauthorized - please sign in to rate comics" };
+      return {
+        ok: false,
+        error: "Unauthorized - please sign in to rate comics",
+      };
     }
 
     // Validate input
     const validation = ratingSchema.safeParse(input);
     if (!validation.success) {
       return {
-        success: false,
+        ok: false,
         error: validation.error.issues[0]?.message || "Invalid rating data",
       };
     }
@@ -93,16 +101,19 @@ export async function upsertRatingAction(
     });
 
     if (!result.success) {
-      return { success: false, error: result.error || "Failed to save rating" };
+      return { ok: false, error: result.error || "Failed to save rating" };
     }
 
     return {
-      success: true,
+      ok: true,
       data: { rating: validation.data.rating },
     };
   } catch (error) {
     console.error("Upsert rating error:", error);
-    return { success: false, error: "An unexpected error occurred while saving your rating" };
+    return {
+      ok: false,
+      error: "An unexpected error occurred while saving your rating",
+    };
   }
 }
 
@@ -110,23 +121,23 @@ export async function upsertRatingAction(
  * Delete user's rating for a comic
  */
 export async function deleteRatingAction(
-  comicId: number
+  comicId: number,
 ): Promise<ActionResult<{ deleted: boolean }>> {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return { success: false, error: "Unauthorized" };
+      return { ok: false, error: "Unauthorized" };
     }
 
     const result = await mutations.deleteRating(session.user.id, comicId);
 
     if (!result.success) {
-      return { success: false, error: result.error || "Failed to delete rating" };
+      return { ok: false, error: result.error || "Failed to delete rating" };
     }
 
-    return { success: true, data: { deleted: true } };
+    return { ok: true, data: { deleted: true } };
   } catch (error) {
     console.error("Delete rating error:", error);
-    return { success: false, error: "Failed to delete rating" };
+    return { ok: false, error: "Failed to delete rating" };
   }
 }

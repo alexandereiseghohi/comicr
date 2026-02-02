@@ -1,5 +1,3 @@
-"use client";
-
 import { Loader2, Star, X } from "lucide-react";
 import { useState } from "react";
 
@@ -16,6 +14,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+
+("use client");
 
 interface StarRatingProps {
   comicId: number;
@@ -83,14 +83,16 @@ export function StarRating({
 
       const result = await response.json();
 
-      if (!response.ok || !result.success) {
+      if (!response.ok || !result.ok) {
         toast.error(result.error || "Failed to save rating");
         setRating(initialRating);
         return;
       }
 
       toast.success(
-        newRating === 0 ? "Your rating has been removed" : `You rated this comic ${newRating} stars`
+        newRating === 0
+          ? "Your rating has been removed"
+          : `You rated this comic ${newRating} stars`,
       );
 
       setReview(newReview);
@@ -117,7 +119,7 @@ export function StarRating({
 
   return (
     <>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1" data-testid="rating-stars">
         {[1, 2, 3, 4, 5].map((value) => {
           const isFilled = value <= displayRating;
           return (
@@ -126,8 +128,9 @@ export function StarRating({
               className={cn(
                 "transition-all duration-150",
                 interactive && "cursor-pointer hover:scale-110",
-                !interactive && "cursor-default"
+                !interactive && "cursor-default",
               )}
+              data-testid={`star-${value}`}
               disabled={!interactive || loading}
               key={value}
               onClick={() => handleStarClick(value)}
@@ -138,8 +141,10 @@ export function StarRating({
               <Star
                 className={cn(
                   sizeClasses[size],
-                  isFilled ? "fill-yellow-400 text-yellow-400" : "fill-transparent text-slate-300",
-                  interactive && "hover:text-yellow-300"
+                  isFilled
+                    ? "fill-yellow-400 text-yellow-400"
+                    : "fill-transparent text-slate-300",
+                  interactive && "hover:text-yellow-300",
                 )}
               />
             </button>
@@ -165,8 +170,8 @@ export function StarRating({
             <DialogHeader>
               <DialogTitle>Rate This Comic</DialogTitle>
               <DialogDescription>
-                You rated this comic {rating} {rating === 1 ? "star" : "stars"}. Add an optional
-                review below.
+                You rated this comic {rating} {rating === 1 ? "star" : "stars"}.
+                Add an optional review below.
               </DialogDescription>
             </DialogHeader>
 
@@ -179,7 +184,7 @@ export function StarRating({
                       "h-8 w-8",
                       value <= rating
                         ? "fill-yellow-400 text-yellow-400"
-                        : "fill-transparent text-slate-300"
+                        : "fill-transparent text-slate-300",
                     )}
                     key={value}
                   />
@@ -198,7 +203,9 @@ export function StarRating({
                   rows={4}
                   value={review}
                 />
-                <p className="text-right text-xs text-slate-500">{review.length}/1000 characters</p>
+                <p className="text-right text-xs text-slate-500">
+                  {review.length}/1000 characters
+                </p>
               </div>
             </div>
 

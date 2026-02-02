@@ -8,12 +8,14 @@ description: Helps create, configure, and deploy Azure Static Web Apps using the
 Azure Static Web Apps (SWA) hosts static frontends with optional serverless API backends. The SWA CLI (`swa`) provides local development emulation and deployment capabilities.
 
 **Key features:**
+
 - Local emulator with API proxy and auth simulation
 - Framework auto-detection and configuration
 - Direct deployment to Azure
 - Database connections support
 
 **Config files:**
+
 - `swa-cli.config.json` - CLI settings, **created by `swa init`** (never create manually)
 - `staticwebapp.config.json` - Runtime config (routes, auth, headers, API runtime) - can be created manually
 
@@ -39,11 +41,13 @@ Verify: `npx swa --version`
 ### Configuration Files
 
 **swa-cli.config.json** - Created by `swa init`, do not create manually:
+
 - Run `swa init` for interactive setup with framework detection
 - Run `swa init --yes` to accept auto-detected defaults
 - Edit the generated file only to customize settings after initialization
 
 Example of generated config (for reference only):
+
 ```json
 {
   "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
@@ -61,15 +65,14 @@ Example of generated config (for reference only):
 ```
 
 **staticwebapp.config.json** (in app source or output folder) - This file CAN be created manually for runtime configuration:
+
 ```json
 {
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": ["/images/*", "/css/*"]
   },
-  "routes": [
-    { "route": "/api/*", "allowedRoles": ["authenticated"] }
-  ],
+  "routes": [{ "route": "/api/*", "allowedRoles": ["authenticated"] }],
   "platform": {
     "apiRuntime": "node:20"
   }
@@ -131,6 +134,7 @@ swa start http://localhost:3000 --run "npm start"  # Auto-start dev server
 | Vite | 5173 |
 
 **Key flags:**
+
 - `--port, -p` - Emulator port (default: 4280)
 - `--api-location, -i` - API folder path
 - `--api-port, -j` - API port (default: 7071)
@@ -151,11 +155,13 @@ swa deploy --dry-run                    # Preview without deploying
 ```
 
 **Get deployment token:**
+
 - Azure Portal: Static Web App → Overview → Manage deployment token
 - CLI: `swa deploy --print-token`
 - Environment variable: `SWA_CLI_DEPLOYMENT_TOKEN`
 
 **Key flags:**
+
 - `--env` - Target environment (`preview` or `production`)
 - `--deployment-token, -d` - Deployment token
 - `--app-name, -n` - Azure SWA resource name
@@ -199,6 +205,7 @@ npx swa deploy --env production
 ### Add Azure Functions Backend
 
 1. **Create API folder:**
+
 ```bash
 mkdir api && cd api
 func init --worker-runtime node --model V4
@@ -206,20 +213,22 @@ func new --name message --template "HTTP trigger"
 ```
 
 2. **Example function** (`api/src/functions/message.js`):
-```javascript
-const { app } = require('@azure/functions');
 
-app.http('message', {
-    methods: ['GET', 'POST'],
-    authLevel: 'anonymous',
-    handler: async (request) => {
-        const name = request.query.get('name') || 'World';
-        return { jsonBody: { message: `Hello, ${name}!` } };
-    }
+```javascript
+const { app } = require("@azure/functions");
+
+app.http("message", {
+  methods: ["GET", "POST"],
+  authLevel: "anonymous",
+  handler: async (request) => {
+    const name = request.query.get("name") || "World";
+    return { jsonBody: { message: `Hello, ${name}!` } };
+  },
 });
 ```
 
 3. **Set API runtime** in `staticwebapp.config.json`:
+
 ```json
 {
   "platform": { "apiRuntime": "node:20" }
@@ -227,6 +236,7 @@ app.http('message', {
 ```
 
 4. **Update CLI config** in `swa-cli.config.json`:
+
 ```json
 {
   "configurations": {
@@ -236,6 +246,7 @@ app.http('message', {
 ```
 
 5. **Test locally:**
+
 ```bash
 npx swa start ./dist --api-location ./api
 # Access API at http://localhost:4280/api/message
@@ -249,6 +260,7 @@ npx swa start ./dist --api-location ./api
 2. **Link GitHub repository** - workflow auto-generated, or create manually:
 
 `.github/workflows/azure-static-web-apps.yml`:
+
 ```yaml
 name: Azure Static Web Apps CI/CD
 
@@ -288,6 +300,7 @@ jobs:
 3. **Add secret:** Copy deployment token to repository secret `AZURE_STATIC_WEB_APPS_API_TOKEN`
 
 **Workflow settings:**
+
 - `app_location` - Frontend source path
 - `api_location` - API source path
 - `output_location` - Built output folder
@@ -296,18 +309,19 @@ jobs:
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| 404 on client routes | Add `navigationFallback` with `rewrite: "/index.html"` to `staticwebapp.config.json` |
-| API returns 404 | Verify `api` folder structure, ensure `platform.apiRuntime` is set, check function exports |
-| Build output not found | Verify `output_location` matches actual build output directory |
-| Auth not working locally | Use `/.auth/login/<provider>` to access auth emulator UI |
-| CORS errors | APIs under `/api/*` are same-origin; external APIs need CORS headers |
-| Deployment token expired | Regenerate in Azure Portal → Static Web App → Manage deployment token |
-| Config not applied | Ensure `staticwebapp.config.json` is in `app_location` or `output_location` |
-| Local API timeout | Default is 45 seconds; optimize function or check for blocking calls |
+| Issue                    | Solution                                                                                   |
+| ------------------------ | ------------------------------------------------------------------------------------------ |
+| 404 on client routes     | Add `navigationFallback` with `rewrite: "/index.html"` to `staticwebapp.config.json`       |
+| API returns 404          | Verify `api` folder structure, ensure `platform.apiRuntime` is set, check function exports |
+| Build output not found   | Verify `output_location` matches actual build output directory                             |
+| Auth not working locally | Use `/.auth/login/<provider>` to access auth emulator UI                                   |
+| CORS errors              | APIs under `/api/*` are same-origin; external APIs need CORS headers                       |
+| Deployment token expired | Regenerate in Azure Portal → Static Web App → Manage deployment token                      |
+| Config not applied       | Ensure `staticwebapp.config.json` is in `app_location` or `output_location`                |
+| Local API timeout        | Default is 45 seconds; optimize function or check for blocking calls                       |
 
 **Debug commands:**
+
 ```bash
 swa start --verbose log        # Verbose output
 swa deploy --dry-run           # Preview deployment

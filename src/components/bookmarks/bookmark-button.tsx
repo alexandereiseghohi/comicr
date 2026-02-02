@@ -1,8 +1,9 @@
-"use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { useOptimisticAction } from "@/hooks/use-optimistic-action";
+
+("use client");
 
 export interface BookmarkButtonProps {
   comicId: number;
@@ -10,7 +11,7 @@ export interface BookmarkButtonProps {
   userId: string;
 }
 
-async function postAdd(payload: { comicId: number; userId: string; }) {
+async function postAdd(payload: { comicId: number; userId: string }) {
   const resp = await fetch("/api/bookmarks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -19,7 +20,7 @@ async function postAdd(payload: { comicId: number; userId: string; }) {
   return resp.json();
 }
 
-async function postRemove(payload: { comicId: number; userId: string; }) {
+async function postRemove(payload: { comicId: number; userId: string }) {
   const resp = await fetch("/api/bookmarks", {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
@@ -28,11 +29,7 @@ async function postRemove(payload: { comicId: number; userId: string; }) {
   return resp.json();
 }
 
-export default function BookmarkButton({
-  userId,
-  comicId,
-  initialBookmarked = false,
-}: BookmarkButtonProps) {
+export default function BookmarkButton({ userId, comicId, initialBookmarked = false }: BookmarkButtonProps) {
   const [bookmarked, setBookmarked] = useState<boolean>(initialBookmarked);
   const { run: addRun, loading: adding } = useOptimisticAction(postAdd);
   const { run: removeRun, loading: removing } = useOptimisticAction(postRemove);
@@ -77,9 +74,7 @@ export default function BookmarkButton({
   return (
     <button
       aria-pressed={bookmarked}
-      className={`rounded-md border px-3 py-1 ${
-        bookmarked ? "bg-blue-600 text-white" : "bg-white text-slate-800"
-      }`}
+      className={`rounded-md border px-3 py-1 ${bookmarked ? "bg-blue-600 text-white" : "bg-white text-slate-800"}`}
       disabled={adding || removing}
       onClick={toggle}
     >

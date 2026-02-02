@@ -38,7 +38,7 @@ interface AdminLayoutProps {
 
 export default async function AdminLayout({ children }: AdminLayoutProps) {
   const session = await auth();
-  const user = session?.user as { email?: string; name?: string; role?: string; } | undefined;
+  const user = session?.user as { email?: string; name?: string; role?: string } | undefined;
 
   // Redirect non-admins
   if (!user || user.role !== "admin") {
@@ -54,9 +54,7 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
             <Link className="text-lg font-semibold" href="/admin">
               Admin Panel
             </Link>
-            <span className="bg-primary/10 text-primary rounded px-2 py-1 text-xs">
-              {user.role}
-            </span>
+            <span className="bg-primary/10 text-primary rounded px-2 py-1 text-xs">{user.role}</span>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-muted-foreground text-sm">{user.name ?? user.email}</span>
@@ -78,9 +76,7 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
             ))}
           </nav>
           <div className="px-4 py-2">
-            <h3 className="text-muted-foreground px-3 text-xs font-semibold tracking-wider uppercase">
-              Metadata
-            </h3>
+            <h3 className="text-muted-foreground px-3 text-xs font-semibold tracking-wider uppercase">Metadata</h3>
           </div>
           <nav className="space-y-1 px-4 pb-4">
             {metadataItems.map((item) => (
@@ -112,15 +108,7 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
   );
 }
 
-function NavLink({
-  href,
-  icon: Icon,
-  children,
-}: {
-  children: React.ReactNode;
-  href: string;
-  icon: React.ElementType;
-}) {
+function NavLink({ href, icon: Icon, children }: { children: React.ReactNode; href: string; icon: React.ElementType }) {
   return (
     <Link
       className={cn(

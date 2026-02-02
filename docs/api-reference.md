@@ -424,7 +424,7 @@ GET /api/comments?chapterId={id}
 #### Query Parameters
 
 | Parameter | Type   | Required | Description         |
-|-----------|--------|----------|---------------------|
+| --------- | ------ | -------- | ------------------- |
 | chapterId | number | Yes      | Chapter ID to fetch |
 
 #### Response
@@ -522,6 +522,7 @@ DELETE /api/comments/{id}
 ```
 
 **Behavior:**
+
 - If comment has replies: Sets `deletedAt` timestamp, shows `[deleted]` in UI
 - If comment has no replies: Could hard delete, but soft deletes for consistency
 - Only comment owner can delete
@@ -598,6 +599,7 @@ POST /api/profile/delete-account
 ```
 
 **Behavior:**
+
 - Sets `deletedAt` timestamp
 - Anonymizes name to `"Deleted User"`
 - Anonymizes email to `"deleted_{id}@example.com"`
@@ -656,10 +658,10 @@ POST /api/profile/delete-account
 ```
 
 **Validation rules:**
+
 - Password must be at least 8 characters
 - Must contain at least 1 uppercase letter
 - Must contain at least 1 lowercase letter
 - Must contain at least 1 number
 - New password must be different from current password
 - Confirm password must match new password
-

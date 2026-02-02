@@ -148,7 +148,6 @@ EMAIL_FROM=...
    ```
 
 2. **Create enhanced versions** with:
-
    - Latest Next.js 16 debugger configuration
    - Additional MCP server optimizations (timeout, caching)
    - Extended extension list (AI tools: GitHub Copilot Chat, Tabnine)
@@ -327,7 +326,6 @@ experimental: {
    ```
 
 2. **Create enhanced helpers** in `src/database/seed/helpers/`:
-
    - `imageValidator.ts` - Validate image URLs before download
    - `duplicateDetector.ts` - Advanced duplicate checking (slug, title, metadata)
    - `dataNormalizer.ts` - Normalize comic/chapter data from multiple JSON sources
@@ -652,10 +650,7 @@ import { Command } from "commander";
 
 const program = new Command();
 
-program
-  .name("cw")
-  .description("ComicWise CLI - Manage all aspects of the platform")
-  .version("2.0.0");
+program.name("cw").description("ComicWise CLI - Manage all aspects of the platform").version("2.0.0");
 
 // Database commands
 program
@@ -725,7 +720,6 @@ program.parse();
 3. **Convert `any` Types**:
 
    **Priority Files**:
-
    - `src/services/uploadService.ts` (2 functions)
 
    ```typescript
@@ -737,7 +731,6 @@ program.parse();
    ```
 
    **Convert to Generics**:
-
    - Utility functions that accept various types
    - Search service results
    - Cache operations
@@ -905,7 +898,6 @@ Get-ChildItem -Filter "*.txt" | Where-Object {
    ```
 
 2. **Read existing prompt files**:
-
    - `samp.txt`
    - `Prompts.prompt.txt`
    - `recommendations-list.md`
@@ -1009,7 +1001,6 @@ Execute all changes described in main.prompt.md
    ```
 
 2. Review recommendations for:
-
    - Code organization improvements
    - Performance optimizations
    - Security enhancements
@@ -1129,7 +1120,6 @@ pnpm start
    ```
 
 4. **Final Validation**:
-
    - ✅ All pages load
    - ✅ Authentication works
    - ✅ Admin panel functional
@@ -1323,19 +1313,16 @@ pnpm start
 ## Next Steps After Completion
 
 1. **CI/CD Setup**
-
    - GitHub Actions workflows
    - Automated testing on PR
    - Deploy previews
 
 2. **Monitoring**
-
    - Sentry error tracking verification
    - Performance monitoring setup
    - User analytics
 
 3. **Feature Enhancements**
-
    - Implement remaining recommendations
    - Add missing nice-to-have features
    - Expand test coverage

@@ -1,8 +1,3 @@
-/**
- * Role Permission Seeder
- * @description Standard 3-tier RBAC seeder (Admin, Moderator, User)
- */
-
 import { eq } from "drizzle-orm";
 
 import { db } from "@/database/db";
@@ -62,12 +57,10 @@ const PERMISSIONS = {
 /**
  * Role-permission mapping
  */
-const ROLE_PERMISSIONS: Record<string, Array<{ action: string; resource: string; }>> = {
+const ROLE_PERMISSIONS: Record<string, Array<{ action: string; resource: string }>> = {
   admin: [
     // Admin has all permissions
-    ...Object.entries(PERMISSIONS).flatMap(([resource, actions]) =>
-      actions.map((action) => ({ resource, action }))
-    ),
+    ...Object.entries(PERMISSIONS).flatMap(([resource, actions]) => actions.map((action) => ({ resource, action }))),
   ],
   moderator: [
     // User management (limited)
@@ -206,8 +199,7 @@ export async function seedRolesAndPermissions(): Promise<SeedResult> {
 
         // Check if mapping exists
         const existingMapping = await db.query.rolePermission.findFirst({
-          where: (rp, { and, eq }) =>
-            and(eq(rp.roleId, roleRecord.id), eq(rp.permissionId, permRecord.id)),
+          where: (rp, { and, eq }) => and(eq(rp.roleId, roleRecord.id), eq(rp.permissionId, permRecord.id)),
         });
 
         if (!existingMapping) {
@@ -267,11 +259,7 @@ export async function getRolePermissions(roleName: string): Promise<string[]> {
 /**
  * Check if a role has a specific permission
  */
-export async function roleHasPermission(
-  roleName: string,
-  resource: string,
-  action: string
-): Promise<boolean> {
+export async function roleHasPermission(roleName: string, resource: string, action: string): Promise<boolean> {
   const perms = await getRolePermissions(roleName);
   return perms.includes(`${resource}:${action}`);
 }

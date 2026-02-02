@@ -90,11 +90,9 @@ export async function checkImageReachability(
       return {
         valid: false,
         url,
-        error: `Image too large: ${(size / 1024 / 1024).toFixed(2)}MB (max: ${(
-          maxSizeBytes /
-          1024 /
-          1024
-        ).toFixed(2)}MB)`,
+        error: `Image too large: ${(size / 1024 / 1024).toFixed(2)}MB (max: ${(maxSizeBytes / 1024 / 1024).toFixed(
+          2
+        )}MB)`,
         size,
       };
     }
@@ -120,7 +118,7 @@ export async function checkImageReachability(
  * @param url - Image URL
  * @returns Width and height in pixels, or null if unable to determine
  */
-export async function getImageSize(url: string): Promise<{ height: number; width: number; } | null> {
+export async function getImageSize(url: string): Promise<{ height: number; width: number } | null> {
   try {
     // For most images, we can get dimensions from a partial download
     const response = await fetch(url, {
@@ -250,11 +248,14 @@ export function getValidationSummary(results: ImageValidationResult[]) {
 
   const errorTypes = results
     .filter((r) => !r.valid && r.error)
-    .reduce((acc, r) => {
-      const errorKey = r.error!.split(":")[0] || "Unknown";
-      acc[errorKey] = (acc[errorKey] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    .reduce(
+      (acc, r) => {
+        const errorKey = r.error!.split(":")[0] || "Unknown";
+        acc[errorKey] = (acc[errorKey] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
   return {
     total,

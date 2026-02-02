@@ -1,9 +1,4 @@
-/**
- * API Type Definitions
- * @description Types for API routes and requests/responses
- */
-
-import type { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, type NextResponse } from "next/server";
 
 /**
  * API Route Handler type
@@ -16,7 +11,7 @@ export type ApiHandler<T = unknown> = (request: NextRequest) => Promise<NextResp
 export interface ApiQuery {
   filter?: Record<string, string>;
   limit?: string;
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
   page?: string;
   search?: string;
   sort?: string;
@@ -72,7 +67,7 @@ export interface ErrorEndpointResponse {
 /**
  * HTTP methods
  */
-export type HttpMethod = 'DELETE' | 'GET' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT';
+export type HttpMethod = "DELETE" | "GET" | "OPTIONS" | "PATCH" | "POST" | "PUT";
 
 /**
  * Request context with user info
@@ -81,5 +76,5 @@ export interface RequestContext {
   ip?: string;
   userAgent?: string;
   userId?: string;
-  userRole?: 'admin' | 'moderator' | 'user';
+  userRole?: "admin" | "moderator" | "user";
 }

@@ -105,10 +105,8 @@ const envSchema = z.object({
   RATE_LIMIT_MAX_REQUESTS: z.coerce.number().default(100),
 
   // ========== JWT ==========
-  JWT_SECRET: z
-    .string()
-    .min(32, "JWT_SECRET must be at least 32 characters")
-    .default("WbYU4gxMwZnr+uMTyvukYzsGMrpgoeT81qWSJZbTJDc="),
+  JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters - generate with: openssl rand -base64 32"),
+  // NOTE: No default - JWT_SECRET must be explicitly set in environment
   JWT_EXPIRY: z.string().default("7d"),
   REFRESH_TOKEN_EXPIRY: z.string().default("30d"),
 

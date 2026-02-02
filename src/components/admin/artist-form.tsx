@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -8,14 +6,7 @@ import { type z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,6 +15,7 @@ import { createArtistSchema, updateArtistSchema } from "@/schemas/artist-schema"
 
 import { ImageUploadField } from "./image-upload-field";
 
+("use client");
 type CreateFormValues = z.infer<typeof createArtistSchema>;
 type UpdateFormValues = z.infer<typeof updateArtistSchema>;
 
@@ -98,12 +90,7 @@ export function ArtistForm({ artist }: ArtistFormProps) {
                 <FormItem>
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Artist biography..."
-                      rows={4}
-                      {...field}
-                      value={field.value ?? ""}
-                    />
+                    <Textarea placeholder="Artist biography..." rows={4} {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,11 +104,7 @@ export function ArtistForm({ artist }: ArtistFormProps) {
                 <FormItem>
                   <FormLabel>Image</FormLabel>
                   <FormControl>
-                    <ImageUploadField
-                      label="Artist Image"
-                      onChange={field.onChange}
-                      value={field.value ?? ""}
-                    />
+                    <ImageUploadField label="Artist Image" onChange={field.onChange} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

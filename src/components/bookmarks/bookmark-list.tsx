@@ -1,5 +1,3 @@
-"use client";
-
 import { BookmarkIcon } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
@@ -20,6 +18,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { BookmarkCard } from "./bookmark-card";
 import { BookmarkListItem } from "./bookmark-list-item";
 import { type ViewMode, ViewToggle } from "./view-toggle";
+
+("use client");
 
 export interface BookmarkData {
   bookmark: {
@@ -105,9 +105,7 @@ export function BookmarkList({ initialBookmarks, userId }: BookmarkListProps) {
       <div className="py-16 text-center">
         <BookmarkIcon className="text-muted-foreground/30 mx-auto mb-4 h-16 w-16" />
         <h3 className="mb-2 text-lg font-medium">No bookmarks yet</h3>
-        <p className="text-muted-foreground mb-6">
-          Start bookmarking your favorite comics to see them here
-        </p>
+        <p className="text-muted-foreground mb-6">Start bookmarking your favorite comics to see them here</p>
         <Link href="/comics">
           <Button>Browse Comics</Button>
         </Link>
@@ -173,8 +171,7 @@ export function BookmarkList({ initialBookmarks, userId }: BookmarkListProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Remove Bookmark</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove this comic from your bookmarks? You can always add it
-              back later.
+              Are you sure you want to remove this comic from your bookmarks? You can always add it back later.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

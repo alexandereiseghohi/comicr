@@ -1,10 +1,3 @@
-/**
- * Chapters Table Component
- * @description Admin table for managing chapters with comic filter
- */
-
-"use client";
-
 import { type ColumnDef } from "@tanstack/react-table";
 import { ExternalLink, MoreHorizontal, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -33,6 +26,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { deleteChapterAction } from "@/lib/actions/admin.actions";
+
+/**
+ * Chapters Table Component
+ * @description Admin table for managing chapters with comic filter
+ */
+
+("use client");
 
 interface Chapter {
   comicId: number;
@@ -82,10 +82,7 @@ export function ChaptersTable({ chapters }: ChaptersTableProps) {
       accessorKey: "comicTitle",
       header: "Comic",
       cell: ({ row }) => (
-        <Link
-          className="text-primary block max-w-50 truncate hover:underline"
-          href={`/admin/comics`}
-        >
+        <Link className="text-primary block max-w-50 truncate hover:underline" href={`/admin/comics`}>
           {row.getValue("comicTitle")}
         </Link>
       ),
@@ -121,10 +118,7 @@ export function ChaptersTable({ chapters }: ChaptersTableProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-destructive"
-                onClick={() => setDeleteId(chapter.id)}
-              >
+              <DropdownMenuItem className="text-destructive" onClick={() => setDeleteId(chapter.id)}>
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
@@ -137,12 +131,7 @@ export function ChaptersTable({ chapters }: ChaptersTableProps) {
 
   return (
     <>
-      <DataTable
-        columns={columns}
-        data={chapters}
-        searchKey="comicTitle"
-        searchPlaceholder="Filter by comic..."
-      />
+      <DataTable columns={columns} data={chapters} searchKey="comicTitle" searchPlaceholder="Filter by comic..." />
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog onOpenChange={() => setDeleteId(null)} open={deleteId !== null}>

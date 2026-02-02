@@ -1,5 +1,3 @@
-"use client";
-
 import { SearchIcon } from "lucide-react";
 import * as React from "react";
 
@@ -7,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 
 import { SearchModal } from "./search-modal";
+
+("use client");
 
 export function SearchTrigger() {
   const [open, setOpen] = React.useState(false);

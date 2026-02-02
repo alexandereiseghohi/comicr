@@ -1,8 +1,3 @@
-/**
- * Upload Schema
- * @description Zod validation for file uploads
- */
-
 import { z } from "zod";
 
 import { ALLOWED_FILE_TYPES, FILE_SIZE_LIMITS } from "@/lib/storage/types";
@@ -33,10 +28,7 @@ export const FileValidationSchema = z.object({
   size: z
     .number()
     .positive("File size must be positive")
-    .max(
-      FILE_SIZE_LIMITS.other,
-      `File size exceeds maximum of ${FILE_SIZE_LIMITS.other / 1024 / 1024}MB`
-    ),
+    .max(FILE_SIZE_LIMITS.other, `File size exceeds maximum of ${FILE_SIZE_LIMITS.other / 1024 / 1024}MB`),
   /** Content type */
   type: z.string().min(1, "Content type is required"),
 });
@@ -50,16 +42,12 @@ export const ImageFileSchema = FileValidationSchema.extend({
   size: z
     .number()
     .positive()
-    .max(
-      FILE_SIZE_LIMITS.image,
-      `Image size exceeds maximum of ${FILE_SIZE_LIMITS.image / 1024 / 1024}MB`
-    ),
+    .max(FILE_SIZE_LIMITS.image, `Image size exceeds maximum of ${FILE_SIZE_LIMITS.image / 1024 / 1024}MB`),
   type: z
     .string()
-    .refine(
-      (val) => ALLOWED_FILE_TYPES.image.includes(val as (typeof ALLOWED_FILE_TYPES.image)[number]),
-      { message: "Invalid image type. Allowed: JPEG, PNG, GIF, WebP, AVIF" }
-    ),
+    .refine((val) => ALLOWED_FILE_TYPES.image.includes(val as (typeof ALLOWED_FILE_TYPES.image)[number]), {
+      message: "Invalid image type. Allowed: JPEG, PNG, GIF, WebP, AVIF",
+    }),
 });
 
 export type ImageFileValidation = z.infer<typeof ImageFileSchema>;
@@ -95,7 +83,7 @@ export type UploadError = z.infer<typeof UploadErrorSchema>;
 export function validateUploadFile(
   file: { name: string; size: number; type: string },
   requireImage: boolean = false
-): { error: string; valid: false; } | { valid: true } {
+): { error: string; valid: false } | { valid: true } {
   try {
     if (requireImage) {
       ImageFileSchema.parse(file);

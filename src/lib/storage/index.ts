@@ -1,16 +1,10 @@
-/**
- * Storage Provider Factory
- * @description Central export for storage abstraction layer
- */
-
 import { getEnv } from "@/lib/env";
 
 import { CloudinaryStorageProvider } from "./cloudinary-storage";
 import { ImageKitStorageProvider } from "./imagekit-storage";
 import { LocalStorageProvider } from "./local-storage";
 import { S3StorageProvider } from "./s3-storage";
-
-import type { StorageProvider, StorageProviderType } from "./types";
+import { type StorageProvider, type StorageProviderType } from "./types";
 
 // Export types
 export * from "./types";

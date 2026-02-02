@@ -64,9 +64,7 @@ test.describe("Comic Browse", () => {
     await page.goto("/comics");
 
     // Look for pagination controls
-    const nextButton = page
-      .getByRole("button", { name: /next|→|>/i })
-      .or(page.getByRole("link", { name: /next/i }));
+    const nextButton = page.getByRole("button", { name: /next|→|>/i }).or(page.getByRole("link", { name: /next/i }));
 
     if (await nextButton.isVisible()) {
       await nextButton.click();

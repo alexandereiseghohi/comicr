@@ -1,11 +1,10 @@
-"use client";
-
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
+("use client");
 export const HoverEffect = ({
   items,
   className,
@@ -58,13 +57,7 @@ export const HoverEffect = ({
   );
 };
 
-export const Card = ({
-  className,
-  children,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
+export const Card = ({ className, children }: { children: React.ReactNode; className?: string }) => {
   return (
     <div
       className={cn(
@@ -79,15 +72,7 @@ export const Card = ({
   );
 };
 
-export const CardImage = ({
-  src,
-  alt,
-  className,
-}: {
-  alt: string;
-  className?: string;
-  src: string;
-}) => {
+export const CardImage = ({ src, alt, className }: { alt: string; className?: string; src: string }) => {
   return (
     <div className={cn("relative mb-4 h-48 w-full overflow-hidden rounded-lg", className)}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -100,28 +85,10 @@ export const CardImage = ({
   );
 };
 
-export const CardTitle = ({
-  className,
-  children,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <h4 className={cn("mt-4 font-bold tracking-wide text-zinc-100", className)}>{children}</h4>
-  );
+export const CardTitle = ({ className, children }: { children: React.ReactNode; className?: string }) => {
+  return <h4 className={cn("mt-4 font-bold tracking-wide text-zinc-100", className)}>{children}</h4>;
 };
 
-export const CardDescription = ({
-  className,
-  children,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <p className={cn("mt-8 text-sm leading-relaxed tracking-wide text-zinc-400", className)}>
-      {children}
-    </p>
-  );
+export const CardDescription = ({ className, children }: { children: React.ReactNode; className?: string }) => {
+  return <p className={cn("mt-8 text-sm leading-relaxed tracking-wide text-zinc-400", className)}>{children}</p>;
 };

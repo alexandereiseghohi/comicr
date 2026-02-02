@@ -1,42 +1,45 @@
-/**
- * Comic Mutations
- * @description Create, update, delete operations for comics
- */
-
 import { eq, sql } from "drizzle-orm";
 
 import { db } from "@/database/db";
 import { comic } from "@/database/schema";
-
-import type { CreateComicInput, UpdateComicInput } from "@/schemas/comic-schema";
+import { type CreateComicInput, type UpdateComicInput } from "@/schemas/comic-schema";
 
 /**
  * Create a new comic
  */
-export async function createComic(data: CreateComicInput) {
+export async function createComic(
+  data: CreateComicInput
+): Promise<{ data: typeof comic.$inferSelect; success: true } | { error: string; success: false }> {
   try {
     const result = await db.insert(comic).values(data).returning();
-
-    return { success: true, data: result[0] };
+    return { success: true, data: result[0] as typeof comic.$inferSelect };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Creation failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Creation failed",
+    };
   }
 }
 
 /**
  * Update an existing comic
  */
-export async function updateComic(id: number, data: UpdateComicInput) {
+export async function updateComic(
+  id: number,
+  data: UpdateComicInput
+): Promise<{ data: typeof comic.$inferSelect; success: true } | { error: string; success: false }> {
   try {
     const result = await db
       .update(comic)
       .set({ ...data, updatedAt: new Date() })
       .where(eq(comic.id, id))
       .returning();
-
-    return { success: true, data: result[0] };
+    return { success: true, data: result[0] as typeof comic.$inferSelect };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Update failed",
+    };
   }
 }
 
@@ -49,7 +52,10 @@ export async function deleteComic(id: number) {
 
     return { success: true, data: null };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Deletion failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Deletion failed",
+    };
   }
 }
 
@@ -82,6 +88,9 @@ export async function incrementComicViews(id: number) {
 
     return { success: true, data: result[0] };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Update failed",
+    };
   }
 }

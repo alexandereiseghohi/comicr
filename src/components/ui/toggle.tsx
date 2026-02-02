@@ -1,19 +1,17 @@
-"use client"
+import * as TogglePrimitive from "@radix-ui/react-toggle";
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
-import * as TogglePrimitive from "@radix-ui/react-toggle"
-import { cva, type VariantProps } from "class-variance-authority"
-import * as React from "react"
+import { cn } from "@/lib/utils";
 
-import { cn } from "@/lib/utils"
-
+("use client");
 const toggleVariants = cva(
   "hover:bg-muted hover:text-muted-foreground data-[state=on]:bg-accent data-[state=on]:text-accent-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default: "bg-transparent",
-        outline:
-          "border-input hover:bg-accent hover:text-accent-foreground border bg-transparent shadow-xs",
+        outline: "border-input hover:bg-accent hover:text-accent-foreground border bg-transparent shadow-xs",
       },
       size: {
         default: "h-9 min-w-9 px-2",
@@ -26,22 +24,17 @@ const toggleVariants = cva(
       size: "default",
     },
   }
-)
+);
 
 function Toggle({
   className,
   variant,
   size,
   ...props
-}: React.ComponentProps<typeof TogglePrimitive.Root> &
-  VariantProps<typeof toggleVariants>) {
+}: React.ComponentProps<typeof TogglePrimitive.Root> & VariantProps<typeof toggleVariants>) {
   return (
-    <TogglePrimitive.Root
-      className={cn(toggleVariants({ variant, size, className }))}
-      data-slot="toggle"
-      {...props}
-    />
-  )
+    <TogglePrimitive.Root className={cn(toggleVariants({ variant, size, className }))} data-slot="toggle" {...props} />
+  );
 }
 
-export { Toggle, toggleVariants }
+export { Toggle, toggleVariants };

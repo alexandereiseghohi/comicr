@@ -1,11 +1,11 @@
-"use client";
-
 import { Maximize2, Minimize2, ZoomIn, ZoomOut } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+("use client");
 
 interface ImageViewerProps {
   alt: string;
@@ -168,10 +168,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
       if (e.touches.length === 2) {
         const touch1 = e.touches[0];
         const touch2 = e.touches[1];
-        const distance = Math.hypot(
-          touch2!.clientX - touch1!.clientX,
-          touch2!.clientY - touch1!.clientY
-        );
+        const distance = Math.hypot(touch2!.clientX - touch1!.clientX, touch2!.clientY - touch1!.clientY);
         touchStartRef.current = {
           distance,
           x: (touch1!.clientX + touch2!.clientX) / 2,
@@ -195,10 +192,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
         e.preventDefault();
         const touch1 = e.touches[0];
         const touch2 = e.touches[1];
-        const distance = Math.hypot(
-          touch2!.clientX - touch1!.clientX,
-          touch2!.clientY - touch1!.clientY
-        );
+        const distance = Math.hypot(touch2!.clientX - touch1!.clientX, touch2!.clientY - touch1!.clientY);
         const delta = distance - touchStartRef.current.distance;
         const newZoom = Math.min(Math.max(zoom + delta / 5, ZOOM_MIN), ZOOM_MAX);
         setZoom(Math.round(newZoom));
@@ -243,9 +237,13 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
   };
 
   return (
-    <div className={cn("bg-background relative overflow-hidden", className)} ref={containerRef}>
+    <div
+      className={cn("bg-background relative overflow-hidden", className)}
+      data-testid="image-viewer"
+      ref={containerRef}
+    >
       {/* Zoom controls */}
-      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2" data-testid="zoom-controls">
         <Button onClick={handleZoomIn} size="icon" title="Zoom in (+)" variant="secondary">
           <ZoomIn className="h-4 w-4" />
         </Button>
@@ -253,15 +251,9 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
           <ZoomOut className="h-4 w-4" />
         </Button>
         <Button onClick={toggleFitMode} size="icon" title="Toggle fit mode" variant="secondary">
-          {fitMode === "none" ? (
-            <Maximize2 className="h-4 w-4" />
-          ) : (
-            <Minimize2 className="h-4 w-4" />
-          )}
+          {fitMode === "none" ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
         </Button>
-        <div className="bg-secondary rounded px-2 py-1 text-center text-xs font-medium">
-          {zoom}%
-        </div>
+        <div className="bg-secondary rounded px-2 py-1 text-center text-xs font-medium">{zoom}%</div>
       </div>
 
       {/* Image container */}
@@ -305,11 +297,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
         </div>
       </div>
 
-      {caption && (
-        <figcaption className="text-muted-foreground mt-2 text-center text-sm">
-          {caption}
-        </figcaption>
-      )}
+      {caption && <figcaption className="text-muted-foreground mt-2 text-center text-sm">{caption}</figcaption>}
     </div>
   );
 };

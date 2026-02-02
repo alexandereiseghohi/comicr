@@ -1,10 +1,3 @@
-/**
- * @file validate-and-insert.ts
- * @description Validates and upserts entities with Zod and error handling
- * @author ComicWise Team
- * @date 2026-01-30
- */
-
 import { type ZodSchema } from "zod";
 
 export async function validateAndInsert<T>(

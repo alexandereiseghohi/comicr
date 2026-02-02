@@ -1023,9 +1023,7 @@ export function BookmarkButton({ comicId }: { comicId: number }) {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   return (
-    <button onClick={() => setIsBookmarked(!isBookmarked)}>
-      {isBookmarked ? "Remove Bookmark" : "Add Bookmark"}
-    </button>
+    <button onClick={() => setIsBookmarked(!isBookmarked)}>{isBookmarked ? "Remove Bookmark" : "Add Bookmark"}</button>
   );
 }
 ```

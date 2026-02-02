@@ -202,9 +202,7 @@ test.describe("Search Results Page", () => {
     await page.goto("/search?q=a"); // Broad search to get many results
 
     // Look for pagination
-    const nextButton = page
-      .getByRole("button", { name: /next|→|>/i })
-      .or(page.getByRole("link", { name: /next|2/i }));
+    const nextButton = page.getByRole("button", { name: /next|→|>/i }).or(page.getByRole("link", { name: /next|2/i }));
 
     if (await nextButton.isVisible()) {
       await nextButton.click();

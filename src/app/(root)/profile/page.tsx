@@ -21,8 +21,7 @@ export default async function ProfilePage() {
           <strong>Email:</strong> {user?.email ?? "—"}
         </p>
         <p className="text-sm">
-          <strong>Role:</strong>{" "}
-          {(user as { role?: "admin" | "moderator" | "user" })?.role ?? "user"}
+          <strong>Role:</strong> {(user as { role?: "admin" | "moderator" | "user" })?.role ?? "user"}
         </p>
       </div>
       <div>

@@ -1,8 +1,3 @@
-/**
- * @file genre-seeder.ts
- * @description Seeds genres from JSON files with validation
- */
-
 import { seedTableBatched } from "@/lib/seed-helpers";
 import { type GenreSeed, GenreSeedSchema } from "@/lib/validations/seed";
 

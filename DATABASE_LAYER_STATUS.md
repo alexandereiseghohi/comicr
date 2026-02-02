@@ -92,7 +92,6 @@
 ### Issues to Resolve
 
 1. **Mutation Signature Mismatches**
-
    - bookmark mutations use `(userId, comicId)` parameters, not data object
    - comment mutations use `addComment()` not `createComment()`
    - rating mutations use `createOrUpdateRating()` not separate create/update
@@ -100,7 +99,6 @@
    - notification mutations take 7 parameters, not a data object
 
 2. **Return Type Inconsistencies**
-
    - Some mutations return Drizzle result directly (rating, reading-progress)
    - Others return `{ success, data }` wrapper (user, artist)
    - Some return `void` (bookmark delete, reading-progress delete)

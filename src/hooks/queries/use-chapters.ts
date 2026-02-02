@@ -1,14 +1,13 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { queryKeys } from "@/lib/query-client";
+
 /**
  * Chapters Query Hooks
  * @description TanStack Query hooks for chapters data fetching
  */
 
-"use client";
-
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { queryKeys } from "@/lib/query-client";
-
+("use client");
 // Types
 interface Chapter {
   chapterNumber: number;

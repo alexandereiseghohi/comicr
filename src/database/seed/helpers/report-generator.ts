@@ -1,14 +1,7 @@
-/**
- * @file report-generator.ts
- * @description Generate seed execution reports in JSON and text formats
- * @author ComicWise Team
- * @date 2026-02-01
- */
-
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import type { getDeduplicationStats } from "./image-deduplicator";
+import { type getDeduplicationStats } from "./image-deduplicator";
 
 export interface SeedReport {
   duration: number;
@@ -226,9 +219,7 @@ export class SeedReportGenerator {
 
     for (const phase of this.report.phases) {
       const statusSymbol = phase.status === "success" ? "✓" : phase.status === "failed" ? "✖" : "⊘";
-      lines.push(
-        `${statusSymbol} ${phase.name.toUpperCase()} (${(phase.duration / 1000).toFixed(2)}s)`
-      );
+      lines.push(`${statusSymbol} ${phase.name.toUpperCase()} (${(phase.duration / 1000).toFixed(2)}s)`);
       lines.push(`  Status:       ${phase.status}`);
       lines.push(`  Processed:    ${phase.itemsProcessed}`);
       lines.push(`  Inserted:     ${phase.itemsInserted}`);

@@ -1,8 +1,3 @@
-/**
- * Users Management Page
- * @description Admin page for managing all users
- */
-
 import { redirect } from "next/navigation";
 
 import { UsersTable } from "@/components/admin/users-table";
@@ -25,9 +20,7 @@ export default async function UsersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Users</h1>
-          <p className="text-muted-foreground">
-            Manage user accounts and roles ({users.length} total)
-          </p>
+          <p className="text-muted-foreground">Manage user accounts and roles ({users.length} total)</p>
         </div>
       </div>
 

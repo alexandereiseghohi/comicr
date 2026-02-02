@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: process.env.ENV_FILE || ".env" });
 
 type ProviderReport = {
-  checks: { info?: string; name: string; ok: boolean; }[];
+  checks: { info?: string; name: string; ok: boolean }[];
   env: Record<string, string | undefined>;
   provider: string;
 };
@@ -77,11 +77,7 @@ async function main() {
     reports.push(report);
   }
 
-  await fs.writeFile(
-    reportPath,
-    JSON.stringify({ generatedAt: new Date().toISOString(), reports }, null, 2),
-    "utf8"
-  );
+  await fs.writeFile(reportPath, JSON.stringify({ generatedAt: new Date().toISOString(), reports }, null, 2), "utf8");
   console.log(`Provider verification written to ${reportPath}`);
   const failing = reports.flatMap((r) => r.checks.filter((c) => !c.ok));
   if (failing.length) {

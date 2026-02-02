@@ -1,22 +1,15 @@
-/**
- * Standard Redis Cache Provider
- * @description Local Redis caching via ioredis for development
- */
-
 import Redis from "ioredis";
 
 import { getEnv } from "@/lib/env";
 
-import { DEFAULT_CACHE_CONFIG } from "./types";
-
-import type {
-  CacheDeleteResult,
-  CacheOptions,
-  CacheProvider,
-  CacheResult,
-  CacheSetResult,
+import {
+  type CacheDeleteResult,
+  type CacheOptions,
+  type CacheProvider,
+  type CacheResult,
+  type CacheSetResult,
+  DEFAULT_CACHE_CONFIG,
 } from "./types";
-
 
 let redisClient: null | Redis = null;
 

@@ -1,19 +1,12 @@
-/**
- * Sign Up Form Component
- * @description Registration form with validation and password confirmation
- */
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-'use client';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-import { useTransition } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
-
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -21,10 +14,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { emailValidator, passwordValidator } from '@/types/validation';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { signUpAction } from "@/lib/actions/auth.actions";
+import { emailValidator, passwordValidator } from "@/types/validation";
 
+/**
+ * Sign Up Form Component
+ * @description Registration form with validation and password confirmation
+ */
+
+("use client");
 /**
  * Sign up form validation schema
  */
@@ -32,11 +32,11 @@ const signUpSchema = z
   .object({
     email: emailValidator,
     password: passwordValidator,
-    confirmPassword: z.string().min(1, 'Password confirmation required'),
+    confirmPassword: z.string().min(1, "Password confirmation required"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords must match',
-    path: ['confirmPassword'],
+    message: "Passwords must match",
+    path: ["confirmPassword"],
   });
 
 type SignUpFormData = z.infer<typeof signUpSchema>;
@@ -51,9 +51,9 @@ export function SignUpForm() {
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      email: '',
-      password: '',
-      confirmPassword: '',
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -63,28 +63,37 @@ export function SignUpForm() {
   async function onSubmit(data: SignUpFormData): Promise<void> {
     startTransition(async () => {
       try {
-        // TODO: Call server action to create user
-        // const result = await createUserAction({ email: data.email, password: data.password });
+        // Create user account via server action
+        const result = await signUpAction({
+          email: data.email,
+          password: data.password,
+        });
 
-        toast.success('Account created successfully');
+        if (!result.ok) {
+          toast.error(result.error || "Failed to create account");
+          return;
+        }
+
+        toast.success("Account created successfully");
 
         // Auto sign in after registration
-        const signInResult = await signIn('credentials', {
+        const signInResult = await signIn("credentials", {
           email: data.email,
           password: data.password,
           redirect: false,
         });
 
         if (!signInResult?.ok) {
-          router.push('/auth/sign-in');
+          router.push("/sign-in");
           return;
         }
 
-        router.push('/');
+        router.push("/");
         router.refresh();
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : 'Failed to create account');
-        console.error(error);
+        toast.error(
+          error instanceof Error ? error.message : "Failed to create account",
+        );
       }
     });
   }
@@ -133,8 +142,8 @@ export function SignUpForm() {
                   />
                 </FormControl>
                 <p className="mt-1 text-xs text-slate-400">
-                  Must be at least 8 characters with uppercase, lowercase, number, and special
-                  character
+                  Must be at least 8 characters with uppercase, lowercase,
+                  number, and special character
                 </p>
                 <FormMessage className="text-red-400" />
               </FormItem>
@@ -146,7 +155,9 @@ export function SignUpForm() {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-slate-200">Confirm Password</FormLabel>
+                <FormLabel className="text-slate-200">
+                  Confirm Password
+                </FormLabel>
                 <FormControl>
                   <Input
                     autoComplete="new-password"
@@ -170,11 +181,11 @@ export function SignUpForm() {
               type="checkbox"
             />
             <label className="text-sm text-slate-400" htmlFor="terms">
-              I agree to the{' '}
+              I agree to the{" "}
               <a className="text-blue-500 hover:text-blue-400" href="#">
                 Terms of Service
-              </a>{' '}
-              and{' '}
+              </a>{" "}
+              and{" "}
               <a className="text-blue-500 hover:text-blue-400" href="#">
                 Privacy Policy
               </a>
@@ -186,7 +197,7 @@ export function SignUpForm() {
             disabled={isPending}
             type="submit"
           >
-            {isPending ? 'Creating account...' : 'Create Account'}
+            {isPending ? "Creating account..." : "Create Account"}
           </Button>
         </form>
       </Form>

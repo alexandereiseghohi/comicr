@@ -1,18 +1,11 @@
-/**
- * Reset Password Form Component
- * @description Form for setting a new password after reset request
- */
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-'use client';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { useTransition } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
-
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -20,9 +13,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { passwordValidator } from '@/types/validation';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { resetPasswordAction } from "@/lib/actions/auth.actions";
+import { passwordValidator } from "@/types/validation";
+
+/**
+ * Reset Password Form Component
+ * @description Form for setting a new password after reset request
+ */
+
+("use client");
 
 interface ResetPasswordFormProps {
   token: string;
@@ -34,11 +35,11 @@ interface ResetPasswordFormProps {
 const resetPasswordSchema = z
   .object({
     password: passwordValidator,
-    confirmPassword: z.string().min(1, 'Password confirmation required'),
+    confirmPassword: z.string().min(1, "Password confirmation required"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords must match',
-    path: ['confirmPassword'],
+    message: "Passwords must match",
+    path: ["confirmPassword"],
   });
 
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
@@ -53,8 +54,8 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const form = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      password: '',
-      confirmPassword: '',
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -64,18 +65,24 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   async function onSubmit(data: ResetPasswordFormData) {
     startTransition(async () => {
       try {
-        // TODO: Call server action to reset password with token
-        // const result = await resetPasswordAction({
-        //   token,
-        //   password: data.password,
-        // });
-        console.log('Reset password with token:', token, 'and password:', data.password);
+        // Reset password via server action
+        const result = await resetPasswordAction({
+          token,
+          newPassword: data.password,
+          confirmPassword: data.confirmPassword,
+        });
 
-        toast.success('Password updated successfully');
-        router.push('/auth/sign-in');
+        if (!result.ok) {
+          toast.error(result.error || "Failed to reset password");
+          return;
+        }
+
+        toast.success("Password updated successfully");
+        router.push("/sign-in");
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : 'Failed to reset password');
-        console.error(error);
+        toast.error(
+          error instanceof Error ? error.message : "Failed to reset password",
+        );
       }
     });
   }
@@ -100,8 +107,8 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 />
               </FormControl>
               <p className="mt-1 text-xs text-slate-400">
-                Must be at least 8 characters with uppercase, lowercase, number, and special
-                character
+                Must be at least 8 characters with uppercase, lowercase, number,
+                and special character
               </p>
               <FormMessage className="text-red-400" />
             </FormItem>
@@ -129,8 +136,12 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           )}
         />
 
-        <Button className="w-full bg-blue-600 hover:bg-blue-700" disabled={isPending} type="submit">
-          {isPending ? 'Updating...' : 'Update Password'}
+        <Button
+          className="w-full bg-blue-600 hover:bg-blue-700"
+          disabled={isPending}
+          type="submit"
+        >
+          {isPending ? "Updating..." : "Update Password"}
         </Button>
       </form>
     </Form>

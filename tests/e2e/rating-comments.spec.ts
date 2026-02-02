@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { signInAsAdmin } from "./helpers/auth";
+
 test.describe("Comic Rating", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to a comic detail page
@@ -15,17 +17,12 @@ test.describe("Comic Rating", () => {
   });
 
   test("should allow authenticated user to rate", async ({ page }) => {
-    // Sign in first
-    await page.goto("/sign-in");
-    // ... sign in steps ...
-
+    await signInAsAdmin(page);
     await page.goto("/comics/1");
     await page.waitForLoadState("networkidle");
 
     // Find rating stars
-    const ratingStars = page
-      .locator('[aria-label*="Rate"]')
-      .or(page.locator('button:has(svg[class*="star"])'));
+    const ratingStars = page.locator('[aria-label*="Rate"]').or(page.locator('button:has(svg[class*="star"])'));
 
     const starCount = await ratingStars.count();
     if (starCount > 0) {
@@ -92,15 +89,13 @@ test.describe("Comments", () => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
     // Comments heading should be visible
-    await expect(
-      page.locator('h2:has-text("Comments")').or(page.locator('[data-testid="comments"]'))
-    ).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('h2:has-text("Comments")').or(page.locator('[data-testid="comments"]'))).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("should post a new comment", async ({ page }) => {
-    // Sign in first
-    // ... sign in steps ...
-
+    await signInAsAdmin(page);
     await page.goto("/comics/1/chapters/1");
     await page.waitForLoadState("networkidle");
 
@@ -159,10 +154,7 @@ test.describe("Comments", () => {
     await page.waitForTimeout(1000);
 
     // Find collapse/expand button
-    const toggleButton = page
-      .locator('button:has-text("Hide")')
-      .or(page.locator('button:has-text("Show")'))
-      .first();
+    const toggleButton = page.locator('button:has-text("Hide")').or(page.locator('button:has-text("Show")')).first();
 
     if (await toggleButton.isVisible()) {
       await toggleButton.click();

@@ -249,6 +249,7 @@ _See also: [API Reference](api-reference.md), [Deployment Guide](deployment.md)_
 ComicWise enforces strict separation across three layers:
 
 #### Layer 1: Schema (Validation)
+
 **Location:** `src/schemas/`
 
 Zod schemas define validation rules for all inputs.
@@ -265,6 +266,7 @@ export const ratingSchema = z.object({
 ```
 
 #### Layer 2: Database (Queries & Mutations)
+
 **Location:** `src/database/queries/`, `src/database/mutations/`
 
 All database operations with proper error handling.
@@ -285,6 +287,7 @@ export async function upsertRating(data: UpsertRatingData) {
 ```
 
 #### Layer 3: Actions (Public API)
+
 **Location:** `src/lib/actions/`
 
 Server actions with authentication and validation.
@@ -306,25 +309,30 @@ export async function upsertRatingAction(input: unknown): Promise<ActionResult<T
 ### Key Design Decisions
 
 **Hybrid Sync Strategy:**
+
 - localStorage: Zoom level, pan (device-specific, instant)
 - Database: Reading mode, quality (cross-device sync)
 
 **Soft Delete Pattern:**
+
 - Set deletedAt timestamp instead of hard delete
 - Anonymize PII (name, email)
 - Preserve structure, show [deleted] placeholder
 
 **Comment Threading:**
+
 - Self-referencing parentId allows infinite nesting
 - buildCommentTree converts flat list to tree O(n)
 - Orphaned comments become root level
 
 **Rating Upsert:**
+
 - Composite unique constraint [userId, comicId]
 - onConflictDoUpdate for insert or update
 - rating=0 triggers deletion
 
 **Reading Progress Auto-Save:**
+
 - Save every 30s, on page change, on beforeunload
 - Upsert with composite key [userId, comicId]
 
@@ -337,6 +345,7 @@ export async function upsertRatingAction(input: unknown): Promise<ActionResult<T
 ### Schema Migrations
 
 Recent additions:
+
 - readerSettings table
 - comment.parentId, comment.deletedAt
 - user.settings (JSONB), user.deletedAt
@@ -344,4 +353,3 @@ Recent additions:
 - readingProgress fields (currentImageIndex, scrollPercentage, progressPercent)
 
 Run `pnpm db:push` to apply schema changes.
-

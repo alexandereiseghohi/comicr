@@ -15,8 +15,18 @@ export const metadata: Metadata = {
 export default async function Home() {
   // Fetch featured and popular comics
   const [featuredResult, popularResult] = await Promise.all([
-    comicQueries.getAllComics({ page: 1, limit: 10, sort: "updatedAt", order: "desc" }),
-    comicQueries.getAllComics({ page: 1, limit: 8, sort: "views", order: "desc" }),
+    comicQueries.getAllComics({
+      page: 1,
+      limit: 10,
+      sort: "updatedAt",
+      order: "desc",
+    }),
+    comicQueries.getAllComics({
+      page: 1,
+      limit: 8,
+      sort: "views",
+      order: "desc",
+    }),
   ]);
 
   const featuredComics = featuredResult.success ? featuredResult.data || [] : [];
@@ -40,8 +50,8 @@ export default async function Home() {
             ComicWise
           </h1>
           <p className="mx-auto mt-4 max-w-lg text-center text-base font-normal text-neutral-300">
-            Your ultimate destination for comics, manhwa, and manga. Discover new stories, track
-            your progress, and join a community of passionate readers.
+            Your ultimate destination for comics, manhwa, and manga. Discover new stories, track your progress, and join
+            a community of passionate readers.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
@@ -96,22 +106,15 @@ export default async function Home() {
                           </div>
                         )}
                       </div>
-                      <h3 className="text-card-foreground line-clamp-2 text-sm font-semibold">
-                        {comic.title}
-                      </h3>
-                      <p className="text-muted-foreground mt-1 text-xs">
-                        {comic.status || "Ongoing"}
-                      </p>
+                      <h3 className="text-card-foreground line-clamp-2 text-sm font-semibold">{comic.title}</h3>
+                      <p className="text-muted-foreground mt-1 text-xs">{comic.status || "Ongoing"}</p>
                     </div>
                   </BackgroundGradient>
                 </Link>
               ))}
             </div>
             <div className="mt-10 text-center">
-              <Link
-                className="text-primary inline-flex items-center gap-2 hover:underline"
-                href="/comics"
-              >
+              <Link className="text-primary inline-flex items-center gap-2 hover:underline" href="/comics">
                 View All Comics
                 <svg
                   fill="none"

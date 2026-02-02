@@ -1,13 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { type Table } from "drizzle-orm";
 import { glob } from "glob";
 import { chunk } from "lodash-es";
 import { type z } from "zod";
 
-import { type Database, db as drizzleDb } from "../database/db";
-
-import type { Table } from "drizzle-orm";
+import { db, type Database } from "../database/db";
 
 /**
  * Discover JSON files matching a glob pattern
@@ -15,10 +14,7 @@ import type { Table } from "drizzle-orm";
  * @param cwd Working directory for pattern matching (default: process.cwd())
  * @returns Array of absolute file paths
  */
-export async function discoverJsonFiles(
-  pattern: string,
-  cwd: string = process.cwd()
-): Promise<string[]> {
+export async function discoverJsonFiles(pattern: string, cwd: string = process.cwd()): Promise<string[]> {
   return glob(pattern, { cwd, absolute: true });
 }
 
@@ -52,9 +48,9 @@ export async function loadJsonRaw<T = unknown>(filePath: string): Promise<T> {
 export async function loadJsonPattern<T = unknown>(
   pattern: string,
   cwd: string = process.cwd()
-): Promise<Array<{ data: T; filePath: string; }>> {
+): Promise<Array<{ data: T; filePath: string }>> {
   const files = await glob(pattern, { cwd, absolute: true });
-  const results: Array<{ data: T; filePath: string; }> = [];
+  const results: Array<{ data: T; filePath: string }> = [];
 
   for (const filePath of files) {
     try {
@@ -86,8 +82,8 @@ export async function fileExists(filePath: string): Promise<boolean> {
 export async function loadJsonFiles<T = unknown>(
   filePaths: string[],
   basePath: string = process.cwd()
-): Promise<Array<{ data: T[]; filePath: string; }>> {
-  const results: Array<{ data: T[]; filePath: string; }> = [];
+): Promise<Array<{ data: T[]; filePath: string }>> {
+  const results: Array<{ data: T[]; filePath: string }> = [];
 
   for (const file of filePaths) {
     const fullPath = path.resolve(basePath, file);
@@ -109,7 +105,7 @@ export async function loadJsonFiles<T = unknown>(
 /**
  * Merge data arrays from multiple file loads
  */
-export function mergeLoadedData<T>(loaded: Array<{ data: T[]; filePath: string; }>): T[] {
+export function mergeLoadedData<T>(loaded: Array<{ data: T[]; filePath: string }>): T[] {
   return loaded.flatMap((l) => l.data);
 }
 
@@ -128,7 +124,7 @@ export async function seedTableBatched({
   batchSize = 100,
   conflictKeys,
   updateFields,
-  db = drizzleDb,
+  // db = drizzleDb, // Commented out, drizzleDb is not defined
   dryRun = false,
 }: {
   batchSize?: number;
@@ -138,16 +134,15 @@ export async function seedTableBatched({
   items: Record<string, unknown>[];
   table: Table;
   updateFields: { name: string; value: unknown }[];
-}): Promise<{ batches: number; inserted: number; }> {
+}): Promise<{ batches: number; inserted: number }> {
   if (!items || items.length === 0) return { inserted: 0, batches: 0 };
 
   if (dryRun) {
-    console.log(
-      `[DRY-RUN] Would insert ${items.length} items in ${Math.ceil(
-        items.length / batchSize
-      )} batches`
-    );
-    return { inserted: items.length, batches: Math.ceil(items.length / batchSize) };
+    console.log(`[DRY-RUN] Would insert ${items.length} items in ${Math.ceil(items.length / batchSize)} batches`);
+    return {
+      inserted: items.length,
+      batches: Math.ceil(items.length / batchSize),
+    };
   }
 
   // Filter out undefined values from updateFields
@@ -194,9 +189,9 @@ export async function seedTableBatched({
 export function validateItems<T>(
   items: unknown[],
   schema: z.ZodType<T>
-): { errors: Array<{ error: z.ZodError; index: number; }>; valid: T[]; } {
+): { errors: Array<{ error: z.ZodError; index: number }>; valid: T[] } {
   const valid: T[] = [];
-  const errors: Array<{ error: z.ZodError; index: number; }> = [];
+  const errors: Array<{ error: z.ZodError; index: number }> = [];
 
   for (const [index, item] of items.entries()) {
     const result = schema.safeParse(item);

@@ -1,5 +1,6 @@
-"use client";
 import { useCallback, useRef, useState } from "react";
+
+("use client");
 
 interface SeedLog {
   count?: number;
@@ -235,10 +236,7 @@ export default function SeedAdminPage() {
           {status === "running" ? "Seeding..." : dryRun ? "Validate Data" : "Run Seeder"}
         </button>
         {status === "running" && useStreaming && (
-          <button
-            className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-            onClick={handleCancel}
-          >
+          <button className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600" onClick={handleCancel}>
             Cancel
           </button>
         )}
@@ -282,10 +280,7 @@ export default function SeedAdminPage() {
         <div className="overflow-hidden rounded-lg border">
           <div className="flex items-center justify-between border-b bg-gray-100 px-4 py-2 font-semibold">
             <span>Logs ({logs.length})</span>
-            <button
-              className="text-xs text-gray-500 hover:text-gray-700"
-              onClick={() => setLogs([])}
-            >
+            <button className="text-xs text-gray-500 hover:text-gray-700" onClick={() => setLogs([])}>
               Clear
             </button>
           </div>
@@ -299,9 +294,7 @@ export default function SeedAdminPage() {
                 <span className="text-gray-500">[{log.type}]</span>{" "}
                 {log.phase && <span className="text-yellow-400">{log.phase}: </span>}
                 {log.message && <span className="text-gray-300">{log.message}</span>}
-                {log.count !== undefined && (
-                  <span className="text-cyan-400">count={log.count}</span>
-                )}
+                {log.count !== undefined && <span className="text-cyan-400">count={log.count}</span>}
                 {log.error && <span className="text-red-400">{log.error}</span>}
               </div>
             ))}

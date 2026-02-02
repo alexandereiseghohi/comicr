@@ -16,10 +16,7 @@
     "comicId": 1,
     "title": "Chapter 2: The Journey Continues",
     "slug": "chapter-2-the-journey-continues",
-    "images": [
-      "https://placehold.co/800x1200/png?text=Page+1",
-      "https://placehold.co/800x1200/png?text=Page+2"
-    ],
+    "images": ["https://placehold.co/800x1200/png?text=Page+1", "https://placehold.co/800x1200/png?text=Page+2"],
     "releaseDate": "2024-01-22T00:00:00.000Z"
   },
   {

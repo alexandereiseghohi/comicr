@@ -5,11 +5,7 @@ import { artist } from "@/database/schema";
 
 export async function getArtists() {
   try {
-    const results = await db
-      .select()
-      .from(artist)
-      .where(eq(artist.isActive, true))
-      .orderBy(artist.name);
+    const results = await db.select().from(artist).where(eq(artist.isActive, true)).orderBy(artist.name);
     return { success: true, data: results };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };

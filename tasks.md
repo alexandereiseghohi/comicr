@@ -31,7 +31,6 @@
 **Subtasks**:
 
 1. Create `.env.template` with 60+ documented variables
-
    - Database connection strings (DATABASE_URL, NEON_DATABASE_URL)
    - Authentication secrets (AUTH_SECRET, Google OAuth, GitHub OAuth)
    - Redis configuration (Upstash)
@@ -47,7 +46,6 @@
    - Build/deployment (Vercel)
 
 2. Create `.env.md` comprehensive setup guide (8000+ words)
-
    - Authentication setup guides (Google OAuth step-by-step, GitHub OAuth)
    - Database setup (Neon, local PostgreSQL)
    - Redis setup (Upstash, local)
@@ -60,7 +58,6 @@
 3. Migrate existing `.env.local` values to new template format
 
 4. Add placeholder comments for:
-
    - Google OAuth credentials
    - Sentry DSN
    - Upstash Redis URL/token
@@ -114,16 +111,13 @@
 **Subtasks**:
 
 1. Fix `ReadingProgressTracker.tsx` syntax error on line 30
-
    - Change `setSaved Progress` to `setSavedProgress`
 
 2. Fix `CommentSection.tsx` import paths
-
    - Update AlertDialog imports from `@/components/ui/dialog` to `@/components/ui/alert-dialog`
    - Import all required AlertDialog subcomponents
 
 3. Fix `progress.tsx` export
-
    - Ensure default export exists: `export default Progress;`
 
 4. Fix `delete-account` route null type issue
@@ -150,32 +144,26 @@
 **Subtasks**:
 
 1. Fix `src/dal/bookmark-dal.ts`
-
    - Update parameter signatures to `(userId, comicId)` pattern
    - Ensure return types match query layer
 
 2. Fix `src/dal/comment-dal.ts`
-
    - Rename `createComment` to `addComment` for consistency
    - Update return types
 
 3. Fix `src/dal/rating-dal.ts`
-
    - Use `createOrUpdateRating` pattern for upserts
    - Handle composite unique key [userId, comicId]
 
 4. Fix `src/dal/notification-dal.ts`
-
    - Update to 7-parameter signature as per spec
    - Verify parameter types
 
 5. Fix `src/dal/reading-progress-dal.ts`
-
    - Use `createOrUpdateReadingProgress` pattern
    - Handle composite unique key [userId, comicId]
 
 6. Export missing types from `src/database/queries/comment-queries.ts`
-
    - Export `CommentWithUser` type
    - Export `buildCommentTree` function
 
@@ -229,7 +217,6 @@ git push origin main
 **Subtasks**:
 
 1. Add security headers:
-
    - Content-Security-Policy (strict CSP)
    - X-Frame-Options: DENY
    - X-Content-Type-Options: nosniff
@@ -238,14 +225,12 @@ git push origin main
    - Strict-Transport-Security (HSTS with preload)
 
 2. Optimize image configuration:
-
    - Add AVIF and WebP formats (AVIF priority)
    - Define deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
    - Define imageSizes: [16, 32, 48, 64, 96, 128, 256, 384]
    - Set minimumCacheTTL: 31536000 (1 year)
 
 3. Add package import optimizations:
-
    - Add @heroicons/react, clsx, class-variance-authority
    - Add @tanstack/react-query, react-hook-form, zod
    - Total 20+ optimized package imports
@@ -275,17 +260,14 @@ git push origin main
 **Subtasks**:
 
 1. Configure sitemap exclusions:
-
    - Exclude /admin/_, /api/_, /sign-in, /sign-up, /error, /verify-request, /forgot-password, /reset-password, /dev/\*
 
 2. Configure robots.txt:
-
    - Allow all user agents for /
    - Disallow /admin, /api, /dev
    - Add additional sitemaps (sitemap-comics.xml, sitemap-chapters.xml)
 
 3. Implement dynamic priority via transform function:
-
    - Comics: priority 0.8, changefreq weekly
    - Chapters: priority 0.6, changefreq daily
    - Other pages: priority 0.5, changefreq monthly
@@ -314,16 +296,13 @@ git push origin main
 **Subtasks**:
 
 1. Add engines field:
-
    - node: ">=20.0.0"
    - pnpm: ">=9.0.0"
 
 2. Add packageManager field:
-
    - "pnpm@9.0.0"
 
 3. Add new utility scripts:
-
    - update-deps: "pnpm update --latest --recursive"
    - security-audit: "pnpm audit --audit-level moderate"
    - analyze:deps: "pnpm list --depth=0"
@@ -331,7 +310,6 @@ git push origin main
    - check:updates: "pnpm outdated"
 
 4. Add enhanced validation scripts:
-
    - validate:full: "pnpm type-check && pnpm lint && pnpm test:unit:run && pnpm test:e2e"
    - validate:ci: "pnpm validate:full && pnpm build"
 
@@ -359,19 +337,16 @@ git push origin main
 **Subtasks**:
 
 1. Enable strictness flags:
-
    - noUnusedLocals: true
    - noUnusedParameters: true
    - noFallthroughCasesInSwitch: true
    - forceConsistentCasingInFileNames: true
 
 2. Enable additional type safety:
-
    - exactOptionalPropertyTypes: true
    - noUncheckedIndexedAccess: true
 
 3. Enable debugging improvements:
-
    - declarationMap: true
 
 4. Verify existing good settings:
@@ -397,13 +372,11 @@ git push origin main
 **Subtasks**:
 
 1. Add unicorn/filename-case rule:
-
    - Enforce kebab-case for all files
    - Ignore: README.md, CHANGELOG.md, LICENSE
    - Allow PascalCase for: src/components/**/\*.tsx, src/app/**/page.tsx, src/app/\*\*/layout.tsx
 
 2. Add no-restricted-syntax rule:
-
    - Enforce "use server" directive in server actions
    - Detect functions exported from /actions/ directory
 
@@ -431,7 +404,6 @@ git push origin main
 **Subtasks**:
 
 1. Verify optimal Prettier configuration:
-
    - semi: true ✓
    - singleQuote: false ✓
    - tabWidth: 2 ✓
@@ -441,7 +413,6 @@ git push origin main
    - endOfLine: "lf" ✓
 
 2. Run formatting check:
-
    - `pnpm format:check`
 
 3. Auto-format if needed:
@@ -465,18 +436,15 @@ git push origin main
 **Subtasks**:
 
 1. Update `.gitignore`:
-
    - Add backup files: _.backup, _.bak, .backup/
    - Add report files: _.report.json, _-report.json, \*.csv
    - Add temporary files: temp*, test*.txt, sample\*.txt
 
 2. Update `.dockerignore` (if exists):
-
    - Mirror .gitignore patterns
    - Add .git, .vscode, node_modules
 
 3. Update `.prettierignore` (if exists):
-
    - Add .next, dist, coverage
    - Add generated files
 
@@ -527,7 +495,6 @@ git push origin main
 **Subtasks**:
 
 1. Organize seed data files:
-
    - Create `data/seed-source/` directory
    - Move chapters\*.json to data/seed-source/
    - Move comics\*.json to data/seed-source/
@@ -535,7 +502,6 @@ git push origin main
    - Move merge.json to data/seed-source/
 
 2. Create enhanced seed helpers:
-
    - Create `src/database/seed/helpers/imageValidator.ts`
      - Validate image URLs (format, reachability, content-type)
      - Implement getImageSize function
@@ -544,14 +510,12 @@ git push origin main
      - Report conflicts with detailed information
 
 3. Enhance seed progress tracking:
-
    - Add real-time progress percentage
    - Add ETA calculation
    - Add success/failure counters
    - Add colored console output
 
 4. Implement seed error resilience:
-
    - Log errors without stopping
    - Skip invalid entries
    - Continue with valid data
@@ -614,24 +578,20 @@ git push origin main
 **Subtasks**:
 
 1. Install Aceternity UI components:
-
    - Run installation command
    - Configure dependencies
 
 2. Implement 3D hero section:
-
    - Use HeroParallax component
    - Integrate WavyBackground
    - Add FloatingNav for navigation
 
 3. Add featured comics section:
-
    - Fetch latest/popular comics
    - Display with 3D card effects
    - Implement hover animations
 
 4. Add statistics section:
-
    - Total comics, chapters, users
    - Animated counters
    - Visual charts
@@ -1052,7 +1012,6 @@ git push origin main
 1. Enhance `scripts/cw.ts` with new commands:
 
    **Database Commands**:
-
    - `cw db:reset` - Drop all tables and re-create
    - `cw db:seed --users` - Seed users only
    - `cw db:seed --comics` - Seed comics only
@@ -1060,27 +1019,22 @@ git push origin main
    - `cw db:studio` - Open Drizzle Studio
 
    **Testing Commands**:
-
    - `cw test:unit -w` - Run unit tests in watch mode
    - `cw test:e2e --ui` - Open Playwright UI
 
    **Deployment Commands**:
-
    - `cw deploy:preview` - Deploy to Vercel preview
    - `cw deploy:prod` - Deploy to Vercel production
 
    **Scaffolding Commands**:
-
    - `cw scaffold:page <name>` - Create new page with route
    - `cw scaffold:component <name> -d <dir>` - Create new component
 
 2. Make CLI executable:
-
    - `chmod +x scripts/cw.ts`
    - `pnpm link` (global access)
 
 3. Test all commands:
-
    - Database commands
    - Testing commands
    - Deployment commands
@@ -1141,7 +1095,6 @@ git push origin main
 **Subtasks**:
 
 1. Identify files to delete:
-
    - _.backup, _.bak files
    - chaptersdata1.json, chaptersdata2.json (duplicates)
    - comicsdata1.json, comicsdata2.json (duplicates)
@@ -1152,7 +1105,6 @@ git push origin main
 2. Create deletion script: `scripts/cleanup-duplicates.ts`
 
 3. Review files before deletion:
-
    - List files to be deleted
    - User confirmation prompt
 
@@ -1181,24 +1133,20 @@ git push origin main
 **Subtasks**:
 
 1. Analyze dependencies:
-
    - Run `pnpm list --depth=0`
    - Identify packages not imported anywhere
 
 2. Create unused package detection script:
-
    - Scan all TypeScript/JavaScript files
    - Build import graph
    - Compare with package.json dependencies
 
 3. Review suggested removals:
-
    - Confirm packages are truly unused
    - Check for dynamic imports
    - Check for build-time usage
 
 4. Remove unused packages:
-
    - `pnpm remove <package-name>`
 
 5. Test application:
@@ -1225,18 +1173,15 @@ git push origin main
 **Subtasks**:
 
 1. Find relative imports:
-
    - Search for `from '../` and `from '../../'`
    - Identify files using relative paths
 
 2. Create import replacement script:
-
    - Convert `../components/` to `@/components/`
    - Convert `../../lib/` to `@/lib/`
    - Handle all path aliases
 
 3. Run replacement:
-
    - Execute script
    - Review changes
 
@@ -1289,21 +1234,18 @@ git push origin main
 
 1. Create file renaming script: `scripts/rename-to-kebab-case.ts`
 2. Implement rename with import/reference updates:
-
    - Rename file
    - Update all imports in other files
    - Update dynamic imports
    - Update path references in tests
 
 3. Execute renames in batches:
-
    - Utilities first
    - Schemas
    - DAL files
    - Actions
 
 4. After each batch:
-
    - Run `pnpm type-check`
    - Fix any broken imports
    - Commit changes
@@ -1334,13 +1276,11 @@ git push origin main
 **Subtasks**:
 
 1. Run comprehensive cleanup:
-
    - `pnpm cleanup:reports`
    - `pnpm cleanup:cache`
    - Remove temporary scripts used during setup
 
 2. Verify workspace cleanliness:
-
    - `git status` - Only intentional changes
    - No leftover temporary files
 
@@ -1394,7 +1334,6 @@ git push origin main
 **Subtasks**:
 
 1. Review all memory-bank/ files:
-
    - projectbrief.md
    - productContext.md
    - systemPatterns.md
@@ -1404,7 +1343,6 @@ git push origin main
    - tasks/\_index.md
 
 2. Update outdated information:
-
    - Mark Phase 1-6 as complete in progress.md
    - Update activeContext.md with current phase
    - Add new tasks to tasks/\_index.md
@@ -1434,19 +1372,16 @@ git push origin main
 **Subtasks**:
 
 1. Run unit tests:
-
    - `pnpm test:unit:run`
    - Ensure 100%+ coverage for DAL, actions, schemas, utils
    - Fix any failing tests
 
 2. Run E2E tests:
-
    - `pnpm test:e2e`
    - Cover critical flows: auth, reading, comments, ratings, profile
    - Fix any failing tests
 
 3. Run accessibility audit:
-
    - Integrate axe-core with Playwright
    - Run on all major pages
    - Fix WCAG 2.1 AA violations
@@ -1471,14 +1406,12 @@ git push origin main
 **Subtasks**:
 
 1. Add JSDoc comments to all public functions:
-
    - DAL functions
    - Server actions
    - Utility functions
    - Schema definitions
 
 2. Create/update OpenAPI specification:
-
    - Update `docs/openapi.yaml`
    - Document all API routes
    - Include request/response schemas
@@ -1531,25 +1464,21 @@ git push origin main
 **Subtasks**:
 
 1. Clean build environment:
-
    - `rm -rf .next`
    - `pnpm cleanup:cache`
 
 2. Run production build:
-
    - `pnpm build`
    - Monitor for errors or warnings
    - Fix any build issues
 
 3. Analyze bundle size:
-
    - `ANALYZE=true pnpm build`
    - Review bundle visualization
    - Identify large dependencies
    - Optimize if needed (dynamic imports, tree-shaking)
 
 4. Run Lighthouse audit:
-
    - Test on development build
    - Verify scores:
      - Performance: 90+
@@ -1559,7 +1488,6 @@ git push origin main
    - Fix any issues
 
 5. Test Redis caching:
-
    - Verify Upstash connection
    - Test cache TTLs (comics, chapters, sessions)
    - Verify rate limiting works
@@ -1614,14 +1542,12 @@ git push origin main
 **Subtasks**:
 
 1. Create/update `vercel.json`:
-
    - Environment variable mappings
    - Build command overrides
    - Framework preset (Next.js)
    - Region configuration
 
 2. Configure production environment variables in Vercel:
-
    - DATABASE_URL (Neon production)
    - AUTH_SECRET (production secret)
    - GOOGLE_CLIENT_ID/SECRET (production credentials)
@@ -1633,17 +1559,14 @@ git push origin main
    - All other required production vars
 
 3. Deploy to production:
-
    - Push to main branch (auto-deploy)
    - OR run `vercel --prod`
 
 4. Run database migrations:
-
    - Verify Drizzle migrations run automatically
    - OR manually run `pnpm db:push` on production DB
 
 5. Test production deployment:
-
    - Visit production URL
    - Test authentication (Google, GitHub OAuth)
    - Test comic reading flow
@@ -1652,7 +1575,6 @@ git push origin main
    - Test profile management
 
 6. Verify health check endpoint:
-
    - GET /api/health
    - Verify response includes:
      - Application version
@@ -1661,18 +1583,15 @@ git push origin main
      - Timestamp
 
 7. Verify error monitoring:
-
    - Trigger test error
    - Verify Sentry receives error
    - Check breadcrumbs and context
 
 8. Verify security headers:
-
    - Use securityheaders.com to scan deployment
    - Verify CSP, HSTS, X-Frame-Options, etc.
 
 9. Verify SSL/TLS:
-
    - Check certificate validity
    - Verify HTTPS enforced
    - Test HTTP→HTTPS redirect

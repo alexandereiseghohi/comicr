@@ -2,7 +2,7 @@
 
 export default function GlobalError({ error }: { error: Error }) {
   // You can add logging here
-   
+
   console.error(error);
 
   return (

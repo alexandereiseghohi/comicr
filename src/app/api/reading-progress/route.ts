@@ -1,11 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/auth";
-import {
-  createOrUpdateReadingProgress,
-  deleteReadingProgress,
-  getReadingProgress,
-} from "@/database/mutations/reading-progress-mutations";
+import { getReadingProgress, upsertReadingProgress } from "@/database/mutations/reading-progress-mutations";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,32 +10,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { comicId, lastChapterId } = await request.json();
-    const readingProgress = await createOrUpdateReadingProgress(
-      session.user.id,
+    const { comicId, lastChapterId, currentImageIndex, scrollPercentage, progressPercent } = await request.json();
+    const readingProgress = await upsertReadingProgress({
+      userId: session.user.id,
       comicId,
-      lastChapterId
-    );
+      chapterId: lastChapterId,
+      currentImageIndex,
+      scrollPercentage,
+      progressPercent,
+    });
 
     return NextResponse.json(readingProgress, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Failed to save reading progress" }, { status: 500 });
-  }
-}
-
-export async function DELETE(request: NextRequest) {
-  try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { comicId } = await request.json();
-    await deleteReadingProgress(session.user.id, comicId);
-
-    return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ error: "Failed to delete reading progress" }, { status: 500 });
   }
 }
 

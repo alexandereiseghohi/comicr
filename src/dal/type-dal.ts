@@ -1,50 +1,58 @@
-import { eq } from "drizzle-orm";
-
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/type.mutations";
-import { type as typeTable } from "@/database/schema";
-
+import { type } from "@/database/schema";
+import {
+  type CreateTypeInput,
+  type UpdateTypeInput,
+} from "@/schemas/type-schema";
+import { type DbMutationResult } from "@/types";
+import { eq } from "drizzle-orm";
 import { BaseDAL } from "./base-dal";
 
-import type { DbMutationResult } from "@/types";
-
-export class TypeDAL extends BaseDAL<typeof typeTable> {
+export class TypeDAL extends BaseDAL<typeof type> {
   constructor() {
-    super(typeTable);
+    super(type);
   }
 
   async getById(id: number) {
     try {
       const result = await db.query.type.findFirst({
-        where: eq(typeTable.id, id),
+        where: eq(type.id, id),
         with: { comics: true },
       });
       return { success: true, data: result };
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Failed to fetch" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to fetch",
+      };
     }
   }
 
   async create(
-    data: typeof typeTable.$inferInsert
-  ): Promise<DbMutationResult<typeof typeTable.$inferSelect>> {
+    data: CreateTypeInput,
+  ): Promise<DbMutationResult<typeof type.$inferSelect>> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return await mutations.createType(data as any);
+      return await mutations.createType(data);
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Create failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Create failed",
+      };
     }
   }
 
   async update(
     id: number,
-    data: Partial<typeof typeTable.$inferInsert>
-  ): Promise<DbMutationResult<typeof typeTable.$inferSelect>> {
+    data: UpdateTypeInput,
+  ): Promise<DbMutationResult<typeof type.$inferSelect>> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return await mutations.updateType(id, data as any);
+      return await mutations.updateType(id, data);
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Update failed",
+      };
     }
   }
 
@@ -53,7 +61,10 @@ export class TypeDAL extends BaseDAL<typeof typeTable> {
       await mutations.deleteType(id);
       return { success: true, data: null };
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Delete failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Delete failed",
+      };
     }
   }
 }

@@ -3,12 +3,27 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/chapter-mutations";
 import { chapter } from "@/database/schema";
+import { type CreateChapterInput, type UpdateChapterInput } from "@/schemas/chapter-schema";
+import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
 
-import type { DbMutationResult } from "@/types";
-
 export class ChapterDAL extends BaseDAL<typeof chapter> {
+  async delete(id: number): Promise<DbMutationResult<null>> {
+    try {
+      const result = await mutations.deleteChapter(id);
+      if (result.success) {
+        return { success: true, data: null };
+      } else {
+        return { success: false, error: result.error || "Delete failed" };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Delete failed",
+      };
+    }
+  }
   constructor() {
     super(chapter);
   }
@@ -21,45 +36,49 @@ export class ChapterDAL extends BaseDAL<typeof chapter> {
       });
       return { success: true, data: result };
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Failed to fetch" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to fetch",
+      };
     }
   }
 
-  async create(
-    data: typeof chapter.$inferInsert
-  ): Promise<DbMutationResult<typeof chapter.$inferSelect>> {
+  async create(data: CreateChapterInput): Promise<DbMutationResult<typeof chapter.$inferSelect>> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await mutations.createChapter(data as any);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return result as any;
+      const result = await mutations.createChapter(data);
+      if (result.success && result.data) {
+        return { success: true, data: result.data };
+      } else if (!result.success) {
+        return { success: false, error: result.error || "Create failed" };
+      } else {
+        return { success: false, error: "Create failed" };
+      }
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Create failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Create failed",
+      };
     }
   }
 
-  async update(
-    id: number,
-    data: Partial<typeof chapter.$inferInsert>
-  ): Promise<DbMutationResult<typeof chapter.$inferSelect>> {
+  async update(id: number, data: UpdateChapterInput): Promise<DbMutationResult<typeof chapter.$inferSelect>> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await mutations.updateChapter(id, data as any);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return result as any;
+      const result = await mutations.updateChapter(id, data);
+      if (result.success && result.data) {
+        return { success: true, data: result.data };
+      } else if (!result.success) {
+        return { success: false, error: result.error || "Update failed" };
+      } else {
+        return { success: false, error: "Update failed" };
+      }
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Update failed",
+      };
     }
   }
-
-  async delete(id: number): Promise<DbMutationResult<null>> {
-    try {
-      await mutations.deleteChapter(id);
-      return { success: true, data: null };
-    } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Delete failed" };
-    }
-  }
+  // deleteByComicId, bulkDeleteByComicIds, and bulkDelete are not implemented because no corresponding mutations exist
 }
 
 export const chapterDAL = new ChapterDAL();

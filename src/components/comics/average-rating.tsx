@@ -1,8 +1,8 @@
-"use client";
-
 import { Star } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+
+("use client");
 
 interface AverageRatingProps {
   className?: string;
@@ -24,13 +24,7 @@ const textSizeClasses = {
   lg: "text-lg",
 };
 
-export function AverageRating({
-  rating,
-  totalRatings,
-  size = "md",
-  showCount = true,
-  className,
-}: AverageRatingProps) {
+export function AverageRating({ rating, totalRatings, size = "md", showCount = true, className }: AverageRatingProps) {
   // Round to one decimal place
   const displayRating = Math.round(rating * 10) / 10;
   const fullStars = Math.floor(rating);
@@ -42,10 +36,7 @@ export function AverageRating({
       <div className="flex items-center gap-0.5">
         {/* Full stars */}
         {Array.from({ length: fullStars }).map((_, i) => (
-          <Star
-            className={cn(sizeClasses[size], "fill-yellow-400 text-yellow-400")}
-            key={`full-${i}`}
-          />
+          <Star className={cn(sizeClasses[size], "fill-yellow-400 text-yellow-400")} key={`full-${i}`} />
         ))}
 
         {/* Half star */}
@@ -60,22 +51,15 @@ export function AverageRating({
 
         {/* Empty stars */}
         {Array.from({ length: emptyStars }).map((_, i) => (
-          <Star
-            className={cn(sizeClasses[size], "fill-transparent text-slate-300")}
-            key={`empty-${i}`}
-          />
+          <Star className={cn(sizeClasses[size], "fill-transparent text-slate-300")} key={`empty-${i}`} />
         ))}
       </div>
 
       {/* Rating text */}
       <div className="flex items-center gap-1">
-        <span className={cn("font-semibold text-slate-700", textSizeClasses[size])}>
-          {displayRating.toFixed(1)}
-        </span>
+        <span className={cn("font-semibold text-slate-700", textSizeClasses[size])}>{displayRating.toFixed(1)}</span>
         {showCount && totalRatings > 0 && (
-          <span className={cn("text-slate-500", textSizeClasses[size])}>
-            ({totalRatings.toLocaleString()})
-          </span>
+          <span className={cn("text-slate-500", textSizeClasses[size])}>({totalRatings.toLocaleString()})</span>
         )}
       </div>
     </div>

@@ -1,16 +1,10 @@
-/**
- * GET /api/comics - List all comics
- * POST /api/comics - Create new comic
- */
-
 import { type NextRequest, NextResponse } from "next/server";
 
 import * as comicMutations from "@/database/mutations/comic-mutations";
 import * as comicQueries from "@/database/queries/comic-queries";
 import { auth } from "@/lib/auth-config";
 import { createComicSchema } from "@/schemas/comic-schema";
-
-import type { AuthUser } from "@/types/auth";
+import { type AuthUser } from "@/types/auth";
 
 /**
  * GET /api/comics
@@ -41,10 +35,7 @@ export async function GET(request: NextRequest) {
       pagination: { page, limit, total: result.total },
     });
   } catch (error: unknown) {
-    return NextResponse.json(
-      { success: false, error: "Internal server error" + error },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Internal server error" + error }, { status: 500 });
   }
 }
 
@@ -66,10 +57,7 @@ export async function POST(request: NextRequest) {
     const validation = createComicSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json(
-        { success: false, error: validation.error.issues[0]?.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: validation.error.issues[0]?.message }, { status: 400 });
     }
 
     const result = await comicMutations.createComic(validation.data);
@@ -80,9 +68,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: result.data }, { status: 201 });
   } catch (error: unknown) {
-    return NextResponse.json(
-      { success: false, error: "Internal server error" + error },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Internal server error" + error }, { status: 500 });
   }
 }

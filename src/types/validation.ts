@@ -1,8 +1,3 @@
-/**
- * Custom Validation Types
- * @description Zod schemas and types for form validation
- */
-
 import { z } from "zod";
 
 /**
@@ -104,9 +99,7 @@ export type SortDirection = z.infer<typeof sortValidator>;
 /**
  * Color validation schema (hex, rgb, rgba, hsl)
  */
-export const colorValidator = z
-  .string()
-  .regex(/^(#[a-f0-9]{6}|rgb\(\d+,\s*\d+,\s*\d+\))$/i, "Invalid color format");
+export const colorValidator = z.string().regex(/^(#[a-f0-9]{6}|rgb\(\d+,\s*\d+,\s*\d+\))$/i, "Invalid color format");
 
 export type Color = z.infer<typeof colorValidator>;
 

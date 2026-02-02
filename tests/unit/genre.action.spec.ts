@@ -15,15 +15,19 @@ vi.mock("@/database/queries/genre.queries", () => ({
 // Mock the mutations
 vi.mock("@/database/mutations/genre.mutations", () => ({
   createGenre: vi.fn(async (data: unknown) => ({
-    success: true,
-    data: { id: 1, ...(data as Record<string, unknown>), createdAt: new Date() },
+    ok: true,
+    data: {
+      id: 1,
+      ...(data as Record<string, unknown>),
+      createdAt: new Date(),
+    },
   })),
   updateGenre: vi.fn(async (id: number, data: unknown) => ({
-    success: true,
+    ok: true,
     data: { id, ...(data as Record<string, unknown>) },
   })),
-  deleteGenre: vi.fn(async () => ({ success: true })),
-  setGenreActive: vi.fn(async () => ({ success: true })),
+  deleteGenre: vi.fn(async () => ({ ok: true })),
+  setGenreActive: vi.fn(async () => ({ ok: true })),
 }));
 
 // Mock revalidatePath
@@ -70,7 +74,10 @@ describe("genre actions", () => {
       expect(res.ok).toBe(true);
       if (res.ok) {
         expect(res.data).toHaveProperty("slug", "fantasy");
-        expect(res.data).toHaveProperty("description", "Fantasy comics with magic");
+        expect(res.data).toHaveProperty(
+          "description",
+          "Fantasy comics with magic",
+        );
       }
     });
   });

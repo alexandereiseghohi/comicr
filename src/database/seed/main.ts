@@ -1,16 +1,7 @@
-/**
- * Main Seed Orchestrator
- *
- * Coordinates all entity seeders in the correct order with proper error handling,
- * logging, and report generation. This is the single entry point for database seeding.
- *
- * Usage:
- *   pnpm db:seed          # Full seeding with image downloads
- *   pnpm db:seed --dry    # Dry run without database writes or downloads
- */
-
 import fs from "node:fs/promises";
 import path from "node:path";
+
+import { type z } from "zod";
 
 import { clearDownloadCache } from "@/lib/image-helper";
 import { loadJsonData } from "@/lib/seed-helpers";
@@ -19,8 +10,6 @@ import { UserSeedSchema } from "@/lib/validations/seed";
 import { createLogger, SeedReportGenerator } from "./helpers";
 import { REPORT_DIR } from "./seed-config";
 import { seedArtists, seedAuthors, seedComics, seedGenres, seedTypes, seedUsers } from "./seeders";
-
-import type { z } from "zod";
 
 export interface SeedOptions {
   dryRun?: boolean;
@@ -174,10 +163,7 @@ async function main(options: SeedOptions = {}): Promise<SeedReport> {
     const phaseStartUsers = Date.now();
 
     const usersPath = path.resolve("data/seed-source/users.json");
-    const usersData = await loadJsonData<z.infer<typeof UserSeedSchema>[]>(
-      usersPath,
-      UserSeedSchema.array()
-    );
+    const usersData = await loadJsonData<z.infer<typeof UserSeedSchema>[]>(usersPath, UserSeedSchema.array());
     const usersResult = await seedUsers({
       users: usersData,
       dryRun,

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { TypeForm } from "@/components/admin/type-form";
 import { db } from "@/database/db";
-import { type as typeTable } from "@/database/schema";
+import { type } from "@/database/schema";
 
 export const metadata = {
   title: "Edit Type - Admin",
@@ -22,7 +22,7 @@ export default async function EditTypePage({ params }: PageProps) {
     notFound();
   }
 
-  const [typeData] = await db.select().from(typeTable).where(eq(typeTable.id, typeId)).limit(1);
+  const [typeData] = await db.select().from(type).where(eq(type.id, typeId)).limit(1);
 
   if (!typeData) {
     notFound();

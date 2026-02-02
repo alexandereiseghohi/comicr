@@ -1,5 +1,3 @@
-"use client";
-
 import { Check, ChevronsUpDown, Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -9,15 +7,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
+("use client");
 const STATUSES = ["All", "Ongoing", "Completed", "Hiatus", "Dropped", "Season End", "Coming Soon"];
 const SORT_OPTIONS = [
   { label: "Latest", value: "createdAt-desc" },
@@ -92,9 +85,7 @@ export function ComicFilters() {
   };
 
   const toggleGenre = (slug: string) => {
-    setSelectedGenres((prev) =>
-      prev.includes(slug) ? prev.filter((g) => g !== slug) : [...prev, slug]
-    );
+    setSelectedGenres((prev) => (prev.includes(slug) ? prev.filter((g) => g !== slug) : [...prev, slug]));
   };
 
   return (
@@ -127,8 +118,8 @@ export function ComicFilters() {
                 {selectedGenres.length > 0
                   ? `${selectedGenres.length} selected`
                   : loading
-                  ? "Loading..."
-                  : "Select genres"}
+                    ? "Loading..."
+                    : "Select genres"}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -146,15 +137,10 @@ export function ComicFilters() {
                         id={`genre-${genre.slug}`}
                         onCheckedChange={() => toggleGenre(genre.slug)}
                       />
-                      <Label
-                        className="flex-1 cursor-pointer text-sm font-normal"
-                        htmlFor={`genre-${genre.slug}`}
-                      >
+                      <Label className="flex-1 cursor-pointer text-sm font-normal" htmlFor={`genre-${genre.slug}`}>
                         {genre.name}
                       </Label>
-                      {selectedGenres.includes(genre.slug) && (
-                        <Check className="h-4 w-4 text-emerald-600" />
-                      )}
+                      {selectedGenres.includes(genre.slug) && <Check className="h-4 w-4 text-emerald-600" />}
                     </div>
                   ))
                 )}

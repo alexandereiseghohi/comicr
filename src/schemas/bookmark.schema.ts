@@ -9,9 +9,7 @@ export const BookmarkSchema = z.object({
   createdAt: z.string().optional(),
 });
 
-export const CreateBookmarkSchema = BookmarkSchema.pick({ userId: true, comicId: true }).partial(
-  {}
-);
+export const CreateBookmarkSchema = BookmarkSchema.pick({ userId: true, comicId: true }).partial({});
 
 export type Bookmark = z.infer<typeof BookmarkSchema>;
 export type CreateBookmarkInput = z.infer<typeof CreateBookmarkSchema>;

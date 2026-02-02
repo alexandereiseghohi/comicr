@@ -1,8 +1,3 @@
-/**
- * Comic Zod Validation Schemas
- * @description Type-safe validation for comic operations
- */
-
 import { z } from "zod";
 
 import { slugValidator } from "@/types/validation";

@@ -15,15 +15,19 @@ vi.mock("@/database/queries/type.queries", () => ({
 // Mock the mutations
 vi.mock("@/database/mutations/type.mutations", () => ({
   createType: vi.fn(async (data: unknown) => ({
-    success: true,
-    data: { id: 1, ...(data as Record<string, unknown>), createdAt: new Date() },
+    ok: true,
+    data: {
+      id: 1,
+      ...(data as Record<string, unknown>),
+      createdAt: new Date(),
+    },
   })),
   updateType: vi.fn(async (id: number, data: unknown) => ({
-    success: true,
+    ok: true,
     data: { id, ...(data as Record<string, unknown>) },
   })),
-  deleteType: vi.fn(async () => ({ success: true })),
-  setTypeActive: vi.fn(async () => ({ success: true })),
+  deleteType: vi.fn(async () => ({ ok: true })),
+  setTypeActive: vi.fn(async () => ({ ok: true })),
 }));
 
 // Mock revalidatePath

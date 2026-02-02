@@ -8,9 +8,7 @@ export const SearchParamsSchema = z.object({
   page: z.coerce.number().min(1).default(1),
   limit: z.coerce.number().min(10).max(100).default(20),
   genre: z.string().optional(),
-  status: z
-    .enum(["Ongoing", "Completed", "Hiatus", "Dropped", "Season End", "Coming Soon"])
-    .optional(),
+  status: z.enum(["Ongoing", "Completed", "Hiatus", "Dropped", "Season End", "Coming Soon"]).optional(),
   sort: z.enum(["relevance", "newest", "popular", "rating"]).default("relevance"),
   order: z.enum(["asc", "desc"]).default("desc"),
 });

@@ -1,20 +1,15 @@
-/**
- * Cloudinary Storage Provider
- * @description Cloudinary CDN storage implementation
- */
-
-import { v2 as cloudinary } from "cloudinary";
+import cloudinary from "cloudinary";
 
 import { getEnv } from "@/lib/env";
 
-import type {
-  DeleteOptions,
-  DeleteResult,
-  ExistsResult,
-  GetUrlOptions,
-  StorageProvider,
-  UploadOptions,
-  UploadResponse,
+import {
+  type DeleteOptions,
+  type DeleteResult,
+  type ExistsResult,
+  type GetUrlOptions,
+  type StorageProvider,
+  type UploadOptions,
+  type UploadResponse,
 } from "./types";
 
 let isConfigured = false;
@@ -26,7 +21,7 @@ function configureCloudinary(): void {
   if (isConfigured) return;
 
   const env = getEnv();
-  cloudinary.config({
+  cloudinary.v2.config({
     cloud_name: env.CLOUDINARY_CLOUD_NAME,
     api_key: env.CLOUDINARY_API_KEY,
     api_secret: env.CLOUDINARY_API_SECRET,
@@ -65,20 +60,19 @@ export class CloudinaryStorageProvider implements StorageProvider {
       let buffer: Buffer;
       if (file instanceof Buffer) {
         buffer = file;
-      } else if (file instanceof Blob) {
+      } else if (typeof Blob !== "undefined" && file instanceof Blob) {
         const arrayBuffer = await file.arrayBuffer();
         buffer = Buffer.from(arrayBuffer);
+      } else if (file && typeof (file as any).pipe === "function") {
+        // Node.js Readable Stream
+        buffer = await new Promise<Buffer>((resolve, reject) => {
+          const chunks: Buffer[] = [];
+          (file as any).on("data", (chunk: Buffer) => chunks.push(chunk));
+          (file as any).on("end", () => resolve(Buffer.concat(chunks)));
+          (file as any).on("error", reject);
+        });
       } else {
-        const chunks: Uint8Array[] = [];
-        const stream = file as ReadableStream<Uint8Array>;
-        const reader = stream.getReader();
-        let done = false;
-        while (!done) {
-          const { value, done: streamDone } = await reader.read();
-          if (value) chunks.push(value);
-          done = streamDone;
-        }
-        buffer = Buffer.concat(chunks);
+        throw new Error("Unsupported file type for upload");
       }
 
       const contentType = options.contentType || "application/octet-stream";
@@ -97,7 +91,7 @@ export class CloudinaryStorageProvider implements StorageProvider {
         tags: options.metadata ? Object.values(options.metadata) : undefined,
       };
 
-      const response = await cloudinary.uploader.upload(dataUri, uploadOptions);
+      const response = await cloudinary.v2.uploader.upload(dataUri, uploadOptions);
 
       return {
         success: true,
@@ -125,7 +119,7 @@ export class CloudinaryStorageProvider implements StorageProvider {
   async delete(key: string, _options: DeleteOptions = {}): Promise<DeleteResult> {
     try {
       configureCloudinary();
-      await cloudinary.uploader.destroy(key);
+      await cloudinary.v2.uploader.destroy(key);
       return { success: true };
     } catch (error) {
       return {
@@ -153,7 +147,7 @@ export class CloudinaryStorageProvider implements StorageProvider {
       }
     }
 
-    return cloudinary.url(key, urlOptions);
+    return cloudinary.v2.url(key, urlOptions);
   }
 
   async getSignedUrl(key: string, expiresIn: number = 3600): Promise<string> {
@@ -161,7 +155,7 @@ export class CloudinaryStorageProvider implements StorageProvider {
 
     const timestamp = Math.floor(Date.now() / 1000) + expiresIn;
 
-    return cloudinary.url(key, {
+    return cloudinary.v2.url(key, {
       secure: true,
       sign_url: true,
       type: "authenticated",
@@ -172,7 +166,7 @@ export class CloudinaryStorageProvider implements StorageProvider {
   async exists(key: string): Promise<ExistsResult> {
     try {
       configureCloudinary();
-      const result = await cloudinary.api.resource(key);
+      const result = await cloudinary.v2.api.resource(key);
       return {
         exists: true,
         size: result.bytes,

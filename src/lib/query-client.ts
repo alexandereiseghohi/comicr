@@ -1,8 +1,3 @@
-/**
- * TanStack Query Client Configuration
- * @description Centralized React Query client with optimized defaults
- */
-
 import { QueryClient } from "@tanstack/react-query";
 
 /**
@@ -85,8 +80,7 @@ export const queryKeys = {
     all: ["bookmarks"] as const,
     lists: () => [...queryKeys.bookmarks.all, "list"] as const,
     list: (userId: string) => [...queryKeys.bookmarks.lists(), userId] as const,
-    detail: (userId: string, comicId: number) =>
-      [...queryKeys.bookmarks.all, userId, comicId] as const,
+    detail: (userId: string, comicId: number) => [...queryKeys.bookmarks.all, userId, comicId] as const,
   },
 
   // Reading Progress
@@ -94,8 +88,7 @@ export const queryKeys = {
     all: ["readingProgress"] as const,
     lists: () => [...queryKeys.readingProgress.all, "list"] as const,
     list: (userId: string) => [...queryKeys.readingProgress.lists(), userId] as const,
-    detail: (userId: string, comicId: number) =>
-      [...queryKeys.readingProgress.all, userId, comicId] as const,
+    detail: (userId: string, comicId: number) => [...queryKeys.readingProgress.all, userId, comicId] as const,
   },
 
   // Users
@@ -109,8 +102,7 @@ export const queryKeys = {
   // Search
   search: {
     all: ["search"] as const,
-    results: (query: string, filters?: Record<string, unknown>) =>
-      [...queryKeys.search.all, query, filters] as const,
+    results: (query: string, filters?: Record<string, unknown>) => [...queryKeys.search.all, query, filters] as const,
     suggestions: (query: string) => [...queryKeys.search.all, "suggestions", query] as const,
   },
 

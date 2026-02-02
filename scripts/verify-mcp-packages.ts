@@ -12,7 +12,7 @@ const execAsync = promisify(exec);
 
 type MCPPackageCheck = {
   alternatives?: string[];
-  checks: { info?: string; name: string; ok: boolean; }[];
+  checks: { info?: string; name: string; ok: boolean }[];
   package: string;
   purpose: string;
   recommended: boolean;
@@ -105,9 +105,7 @@ const recommendedMCPPackages = [
   },
 ];
 
-async function checkNpmPackage(
-  packageName: string
-): Promise<{ exists: boolean; info?: string; version?: string; }> {
+async function checkNpmPackage(packageName: string): Promise<{ exists: boolean; info?: string; version?: string }> {
   try {
     // Use npm view to check if package exists
     const { stdout } = await execAsync(`npm view ${packageName} version`, { timeout: 10000 });
@@ -119,9 +117,7 @@ async function checkNpmPackage(
   }
 }
 
-async function testNpxInstallation(
-  packageName: string
-): Promise<{ canInstall: boolean; info?: string }> {
+async function testNpxInstallation(packageName: string): Promise<{ canInstall: boolean; info?: string }> {
   try {
     // Test if npx can resolve the package (dry run)
     await execAsync(`npx --dry-run ${packageName} --help`, {
@@ -228,9 +224,7 @@ async function main() {
   console.log(`\n📄 Full report written to: ${reportPath}`);
 
   // Exit with error code if recommended packages are missing
-  const missingRecommended = packageChecks.filter(
-    (p) => p.recommended && !p.checks.every((c) => c.ok)
-  );
+  const missingRecommended = packageChecks.filter((p) => p.recommended && !p.checks.every((c) => c.ok));
   if (missingRecommended.length > 0) {
     console.warn(`\n⚠️  ${missingRecommended.length} recommended packages are not available.`);
     process.exitCode = 2;

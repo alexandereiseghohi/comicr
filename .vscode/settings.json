@@ -1,123 +1,127 @@
 {
+  // ============================================================================
+  // Editor Configuration
+  // ============================================================================
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "typescript.preferences.importModuleSpecifier": "relative",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit",
-    "source.fixAll": "explicit",
-    "source.addMissingImports.ts": "explicit",
-    "source.removeUnusedImports": "explicit",
-    "source.sortImports": "explicit"
+    "source.addMissingImports.ts": "explicit"
   },
-  "editor.rulers": [
-    80,
-    120
-  ],
+  "editor.rulers": [100, 120],
   "editor.wordWrap": "on",
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.trimAutoWhitespace": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.linkedEditing": true,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+
+  // ============================================================================
+  // File Management
+  // ============================================================================
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
   "search.exclude": {
     "**/node_modules": true,
     "**/.next": true,
     "**/dist": true,
     "**/.out": true,
     "**/coverage": true,
-    "**/.git": true
+    "**/.git": true,
+    "**/test-results": true,
+    "**/.playwright": true,
+    "pnpm-lock.yaml": true
   },
   "files.exclude": {
-    "**/node_modules": false,
-    "**/.next": false,
-    "**/dist": false,
-    "tsconfig.tsbuildinfo": false,
-    "**/.cache": false,
-    "**/.turbo": false
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
   },
+  // ============================================================================
+  // Language-Specific Overrides
+  // ============================================================================
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[tailwindcss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
     "editor.wordWrap": "on",
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  // ============================================================================
+  // TypeScript & ESLint Configuration
+  // ============================================================================
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "eslint.useFlatConfig": true,
   "eslint.validate": [
     "javascript",
     "typescript",
     "typescriptreact"
   ],
-  "eslint.format.enable": true,
-  "prettier.semi": true,
-  "prettier.singleQuote": false,
-  "prettier.trailingComma": "es5",
-  "prettier.arrowParens": "always",
-  "prettier.bracketSpacing": true,
-  "prettier.bracketSameLine": false,
-  "prettier.jsxSingleQuote": false,
-  "prettier.printWidth": 100,
-  "prettier.tabWidth": 2,
-  "prettier.useTabs": false,
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.useModuleResolution": "bundler",
+  // ============================================================================
+  // Tailwind CSS Configuration
+  // ============================================================================
   "tailwindCSS.emmetCompletions": true,
   "tailwindCSS.validate": true,
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
   "tailwindCSS.lint.cssConflict": "warning",
-  "tailwindCSS.lint.invalidApply": "warning",
-  "tailwindCSS.lint.invalidConfigPath": "warning",
-  "tailwindCSS.lint.invalidScreen": "warning",
-  "python.linting.enabled": true,
-  "python.linting.pylintEnabled": true,
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.python",
-    "editor.formatOnSave": true
+  "tailwindCSS.lint.invalidApply": "error",
+  "tailwindCSS.lint.invalidConfigPath": "error",
+  "tailwindCSS.lint.invalidScreen": "error",
+
+  // ============================================================================
+  // Emmet Configuration (React/JSX)
+  // ============================================================================
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
   },
+  "emmet.triggerExpansionOnTab": true,
+
+  // ============================================================================
+  // Git & Version Control
+  // ============================================================================
   "git.ignoreLimitWarning": true,
+  "git.autofetch": true,
   "gitlens.defaultDateFormat": "yyyy-MM-dd HH:mm:ss",
-  "notebook.cellToolbarLocation": {
-    "default": "right"
-  },
-  "redhat.telemetry.enabled": false,
-  "telemetry.telemetryLevel": "off",
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "chat.mcp.serverSampling": {
-    "comicr/.vscode/mcp.json: typescript-enhanced": {
-      "allowedModels": [
-        "copilot/gpt-5.2-codex",
-        "ollama/Ollama/1",
-        "ollama/Ollama/0"
-      ]
-    }
-  },
-  // GitHub Copilot Model Configuration (40-Task Plan Requirement)
-  "github.copilot.advanced": {
-    "debug.overrideEngine": "ollama",
-    "debug.overrideModel": "gemma:latest",
-    "agent.model": "ollama/gemma:latest"
-  },
+
+  // ============================================================================
+  // GitHub Copilot Configuration
+  // ============================================================================
   "github.copilot.enable": {
     "*": true,
     "plaintext": true,
@@ -125,11 +129,40 @@
     "scminput": false
   },
   "github.copilot.editor.enableCodeActions": true,
-  "github.copilot.inlineSuggest.enable": true,
-  // MCP Server Optimization (Phase 2, Task 14 prep)
-  "mcp.logLevel": "info", // Change to "debug" for troubleshooting
-  "mcp.showTrace": false, // Enable for detailed MCP server traces
-  "mcp.timeout": 30000, // 30 second default timeout for all MCP servers
-  "mcp.enableCaching": true, // Cache MCP tool responses for performance
-  "mcp.maxCacheSize": 100 // Maximum cache size in MB
+
+  // ============================================================================
+  // Privacy & Telemetry
+  // ============================================================================
+  "telemetry.telemetryLevel": "off",
+  "redhat.telemetry.enabled": false,
+  "chat.mcp.serverSampling": {
+    "comicr/.vscode/mcp.json: sequential-thinking": {
+      "allowedModels": [
+        "copilot/auto",
+        "copilot/claude-haiku-4.5",
+        "copilot/claude-opus-4.5",
+        "copilot/claude-sonnet-4",
+        "copilot/claude-sonnet-4.5",
+        "ollama/Ollama/1",
+        "ollama/Ollama/0",
+        "copilot/gemini-2.5-pro",
+        "copilot/gemini-3-flash-preview",
+        "copilot/gemini-3-pro-preview",
+        "copilot/gpt-4.1",
+        "copilot/gpt-4o",
+        "copilot/gpt-5",
+        "copilot/gpt-5-mini",
+        "copilot/gpt-5-codex",
+        "copilot/gpt-5.1",
+        "copilot/gpt-5.1-codex",
+        "copilot/gpt-5.1-codex-max",
+        "copilot/gpt-5.1-codex-mini",
+        "copilot/gpt-5.2",
+        "copilot/gpt-5.2-codex",
+        "copilot/grok-code-fast-1",
+        "copilot/oswe-vscode-prime"
+      ]
+    }
+  },
+
 }

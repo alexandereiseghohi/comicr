@@ -1,10 +1,3 @@
-/**
- * Comic Edit Form
- * @description Client component for editing comic details
- */
-
-"use client";
-
 import { ArrowLeft, Loader2, Save } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,15 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { updateComicAction } from "@/lib/actions/admin.actions";
+
+/**
+ * Comic Edit Form
+ * @description Client component for editing comic details
+ */
+
+("use client");
 
 interface Comic {
   coverImage: null | string;
@@ -41,14 +35,7 @@ interface ComicEditFormProps {
   comic: Comic;
 }
 
-const COMIC_STATUSES = [
-  "Ongoing",
-  "Completed",
-  "Hiatus",
-  "Dropped",
-  "Season End",
-  "Coming Soon",
-] as const;
+const COMIC_STATUSES = ["Ongoing", "Completed", "Hiatus", "Dropped", "Season End", "Coming Soon"] as const;
 
 export function ComicEditForm({ comic }: ComicEditFormProps) {
   const router = useRouter();
@@ -94,9 +81,7 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
           <Card>
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
-              <CardDescription>
-                Update the comic&apos;s title, slug, and description
-              </CardDescription>
+              <CardDescription>Update the comic&apos;s title, slug, and description</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -119,18 +104,14 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
                   required
                   value={formData.slug}
                 />
-                <p className="text-muted-foreground text-sm">
-                  URL-friendly identifier (e.g., my-comic-name)
-                </p>
+                <p className="text-muted-foreground text-sm">URL-friendly identifier (e.g., my-comic-name)</p>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
                 <Textarea
                   id="description"
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, description: e.target.value }))
-                  }
+                  onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                   placeholder="Comic description..."
                   rows={6}
                   value={formData.description}

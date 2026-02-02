@@ -1,19 +1,14 @@
-/**
- * Local Storage Provider
- * @description Saves files to public/uploads/ for development
- */
-
 import { access, constants, mkdir, stat, unlink, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 
-import type {
-  DeleteOptions,
-  DeleteResult,
-  ExistsResult,
-  GetUrlOptions,
-  StorageProvider,
-  UploadOptions,
-  UploadResponse,
+import {
+  type DeleteOptions,
+  type DeleteResult,
+  type ExistsResult,
+  type GetUrlOptions,
+  type StorageProvider,
+  type UploadOptions,
+  type UploadResponse,
 } from "./types";
 
 const UPLOAD_DIR = join(process.cwd(), "public", "uploads");

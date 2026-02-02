@@ -17,15 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { type, title, message, link, comicId, chapterId } = await request.json();
-    const notification = await createNotification(
-      session.user.id,
-      type,
-      title,
-      message,
-      link,
-      comicId,
-      chapterId
-    );
+    const notification = await createNotification(session.user.id, type, title, message, link, comicId, chapterId);
 
     return NextResponse.json(notification, { status: 201 });
   } catch {

@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Eye, EyeOff, Loader2, Shield } from "lucide-react";
 import Link from "next/link";
@@ -13,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { type ChangePasswordInput, changePasswordSchema } from "@/schemas/password-schema";
+
+("use client");
 
 export default function ChangePasswordPage() {
   const router = useRouter();
@@ -106,16 +106,10 @@ export default function ChangePasswordPage() {
                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                     type="button"
                   >
-                    {showCurrentPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.currentPassword && (
-                  <p className="text-sm text-red-600">{errors.currentPassword.message}</p>
-                )}
+                {errors.currentPassword && <p className="text-sm text-red-600">{errors.currentPassword.message}</p>}
               </div>
 
               {/* New Password */}
@@ -138,9 +132,7 @@ export default function ChangePasswordPage() {
                     {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.newPassword && (
-                  <p className="text-sm text-red-600">{errors.newPassword.message}</p>
-                )}
+                {errors.newPassword && <p className="text-sm text-red-600">{errors.newPassword.message}</p>}
                 <p className="text-xs text-slate-500">
                   Must be at least 8 characters with uppercase, lowercase, and numbers
                 </p>
@@ -163,16 +155,10 @@ export default function ChangePasswordPage() {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     type="button"
                   >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.confirmPassword && (
-                  <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
-                )}
+                {errors.confirmPassword && <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>}
               </div>
 
               {/* Submit Button */}
@@ -187,12 +173,7 @@ export default function ChangePasswordPage() {
                     "Change Password"
                   )}
                 </Button>
-                <Button
-                  disabled={loading}
-                  onClick={() => router.push("/profile")}
-                  type="button"
-                  variant="outline"
-                >
+                <Button disabled={loading} onClick={() => router.push("/profile")} type="button" variant="outline">
                   Cancel
                 </Button>
               </div>

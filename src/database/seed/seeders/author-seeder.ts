@@ -1,8 +1,3 @@
-/**
- * @file author-seeder.ts
- * @description Seeds authors from JSON files with validation and image handling
- */
-
 import { downloadAndSaveImage } from "@/lib/image-helper";
 import { seedTableBatched } from "@/lib/seed-helpers";
 import { type AuthorSeed, AuthorSeedSchema } from "@/lib/validations/seed";

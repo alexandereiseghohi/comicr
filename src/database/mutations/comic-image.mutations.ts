@@ -3,11 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import { comicImage } from "@/database/schema";
 
-export async function createComicImage(data: {
-  comicId: number;
-  imageOrder: number;
-  imageUrl: string;
-}) {
+export async function createComicImage(data: { comicId: number; imageOrder: number; imageUrl: string }) {
   try {
     const result = await db.insert(comicImage).values(data).returning();
     return { success: true, data: result[0] };

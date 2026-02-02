@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { signInAsAdmin } from "./helpers/auth";
+
 test.describe("Chapter Reader", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to a chapter (update with actual chapter URL)
@@ -49,9 +51,7 @@ test.describe("Chapter Reader", () => {
     await page.keyboard.press("s");
 
     // Settings sheet should appear
-    await expect(
-      page.locator('text="Reader Settings"').or(page.locator('text="Settings"'))
-    ).toBeVisible();
+    await expect(page.locator('text="Reader Settings"').or(page.locator('text="Settings"'))).toBeVisible();
   });
 
   test("should zoom in and out", async ({ page }) => {
@@ -99,11 +99,11 @@ test.describe("Chapter Reader", () => {
 });
 
 test.describe("Reading Progress", () => {
-  test("should save progress automatically", async ({ page }) => {
-    // Sign in first (update with actual auth flow)
-    await page.goto("/sign-in");
-    // ... sign in steps ...
+  test.beforeEach(async ({ page }) => {
+    await signInAsAdmin(page);
+  });
 
+  test("should save progress automatically", async ({ page }) => {
     await page.goto("/comics/1/chapters/1");
     await page.waitForLoadState("networkidle");
 

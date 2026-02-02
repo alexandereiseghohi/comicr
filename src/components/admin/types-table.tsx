@@ -1,5 +1,3 @@
-"use client";
-
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Pencil, RotateCcw, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -23,6 +21,8 @@ import {
 } from "@/lib/actions/type.actions";
 
 import { DataTable } from "./data-table";
+
+("use client");
 
 export interface TypeRow {
   comicsCount: number;
@@ -77,9 +77,7 @@ export function TypesTable({ items }: TypesTableProps) {
     {
       accessorKey: "description",
       header: "Description",
-      cell: ({ row }) => (
-        <span className="block max-w-[200px] truncate">{row.original.description || "—"}</span>
-      ),
+      cell: ({ row }) => <span className="block max-w-[200px] truncate">{row.original.description || "—"}</span>,
     },
     {
       accessorKey: "comicsCount",
@@ -162,12 +160,7 @@ export function TypesTable({ items }: TypesTableProps) {
           </Button>
         </div>
       )}
-      <DataTable
-        columns={columns}
-        data={items}
-        searchKey="name"
-        searchPlaceholder="Search types..."
-      />
+      <DataTable columns={columns} data={items} searchKey="name" searchPlaceholder="Search types..." />
     </div>
   );
 }

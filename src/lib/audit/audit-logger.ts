@@ -1,8 +1,3 @@
-/**
- * Audit Logger
- * @description Comprehensive audit logging with DB + file storage
- */
-
 import { db } from "@/database/db";
 import { auditLog, type resourceEnum } from "@/database/schema";
 
@@ -107,14 +102,9 @@ export async function logAudit(entry: AuditLogEntry): Promise<AuditLogResult> {
 /**
  * Helper to create audit log from request context
  */
-export function createAuditContext(
-  request: Request
-): Pick<AuditLogEntry, "ipAddress" | "userAgent"> {
+export function createAuditContext(request: Request): Pick<AuditLogEntry, "ipAddress" | "userAgent"> {
   return {
-    ipAddress:
-      request.headers.get("x-forwarded-for")?.split(",")[0] ||
-      request.headers.get("x-real-ip") ||
-      "unknown",
+    ipAddress: request.headers.get("x-forwarded-for")?.split(",")[0] || request.headers.get("x-real-ip") || "unknown",
     userAgent: request.headers.get("user-agent") || "unknown",
   };
 }
@@ -131,9 +121,9 @@ export function withAuditLog<T extends Record<string, unknown>>(
   }
 ) {
   return async (
-    handler: (body: T, context: { request: Request; userId?: string; }) => Promise<unknown>,
+    handler: (body: T, context: { request: Request; userId?: string }) => Promise<unknown>,
     body: T,
-    context: { request: Request; userId?: string; }
+    context: { request: Request; userId?: string }
   ): Promise<unknown> => {
     const startTime = Date.now();
     let result: unknown;
@@ -221,12 +211,7 @@ export const auditLoggers = {
       ...(request && createAuditContext(request)),
     }),
 
-  delete: (
-    userId: string | undefined,
-    resource: AuditResource,
-    resourceId: string,
-    request?: Request
-  ) =>
+  delete: (userId: string | undefined, resource: AuditResource, resourceId: string, request?: Request) =>
     logAudit({
       userId,
       action: "delete",

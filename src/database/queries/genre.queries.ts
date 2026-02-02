@@ -5,11 +5,7 @@ import { comicToGenre, genre } from "@/database/schema";
 
 export async function getGenres() {
   try {
-    const results = await db
-      .select()
-      .from(genre)
-      .where(eq(genre.isActive, true))
-      .orderBy(genre.name);
+    const results = await db.select().from(genre).where(eq(genre.isActive, true)).orderBy(genre.name);
     return { success: true, data: results };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };

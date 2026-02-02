@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import dotenv from "dotenv";
 
-const envPath = ".env";
+const envPath = ".env.local";
 const reportArg = process.argv.find((a) => a.startsWith("--report="));
 const reportPath = reportArg ? reportArg.split("=")[1] : undefined;
 
@@ -64,9 +64,7 @@ async function main() {
     }
     process.exitCode = 2;
   } else {
-    console.log(
-      `All ${requiredKeys.length} required keys from env schema are present in ${envPath}.`
-    );
+    console.log(`All ${requiredKeys.length} required keys from env schema are present in ${envPath}.`);
     if (reportPath) {
       const report = {
         generatedAt: new Date().toISOString(),

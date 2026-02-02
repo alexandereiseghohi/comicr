@@ -1,14 +1,9 @@
-/**
- * Database Connection & Initialization
- * @description Drizzle ORM database instance with connection pooling
- */
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { DATABASE_URL } from "@/lib/env";
 
-import { DATABASE_URL } from '@/lib/env';
-
-import * as schema from './schema';
+import * as schema from "./schema";
 
 /**
  * Create postgres connection client
@@ -24,10 +19,10 @@ const client = postgres(DATABASE_URL, {
  */
 export const db = drizzle(client, {
   schema,
-  logger: process.env.NODE_ENV === 'development',
+  logger: process.env.NODE_ENV === "development",
 });
 
 export type Database = typeof db;
 
 // Export drizzle utilities for advanced queries
-export { and, eq, inArray, not, or, sql } from 'drizzle-orm';
+export { and, eq, inArray, not, or, sql } from "drizzle-orm";

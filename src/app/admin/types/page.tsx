@@ -12,7 +12,7 @@ export const metadata = {
 };
 
 interface PageProps {
-  searchParams: Promise<{ inactive?: string; page?: string; search?: string; }>;
+  searchParams: Promise<{ inactive?: string; page?: string; search?: string }>;
 }
 
 export default async function TypesPage({ searchParams }: PageProps) {

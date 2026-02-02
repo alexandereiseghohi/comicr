@@ -1,8 +1,3 @@
-/**
- * @file type-seeder.ts
- * @description Seeds comic types from JSON files with validation
- */
-
 import { seedTableBatched } from "@/lib/seed-helpers";
 import { type TypeSeed, TypeSeedSchema } from "@/lib/validations/seed";
 

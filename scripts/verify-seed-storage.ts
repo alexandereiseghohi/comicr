@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 
-type Result = { error?: string; ok: boolean; status?: number; url: string; };
+type Result = { error?: string; ok: boolean; status?: number; url: string };
 
 async function checkUrl(url: string): Promise<Result> {
   try {
@@ -30,15 +30,9 @@ async function main() {
     results.push(await checkUrl(u));
   }
 
-  await fs.writeFile(
-    reportPath,
-    JSON.stringify({ generatedAt: new Date().toISOString(), results }, null, 2),
-    "utf8"
-  );
+  await fs.writeFile(reportPath, JSON.stringify({ generatedAt: new Date().toISOString(), results }, null, 2), "utf8");
   const failing = results.filter((r) => !r.ok);
-  console.log(
-    `Checked ${results.length} seed URLs. Failures: ${failing.length}. Report: ${reportPath}`
-  );
+  console.log(`Checked ${results.length} seed URLs. Failures: ${failing.length}. Report: ${reportPath}`);
   if (failing.length) process.exitCode = 2;
 }
 

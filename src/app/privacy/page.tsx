@@ -1,13 +1,7 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-
-import type { Metadata } from "next";
-
 /* eslint-disable react/no-unescaped-entities */
+import { type Metadata } from "next";
+
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export const metadata: Metadata = {
   title: "Privacy Policy - ComicWise",
@@ -31,16 +25,13 @@ export default function PrivacyPage() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="lead mb-8 text-lg">
-          This Privacy Policy describes how ComicWise collects, uses, and protects your personal
-          information. We are committed to protecting your privacy and complying with GDPR, CCPA,
-          and other applicable data protection laws.
+          This Privacy Policy describes how ComicWise collects, uses, and protects your personal information. We are
+          committed to protecting your privacy and complying with GDPR, CCPA, and other applicable data protection laws.
         </p>
 
         <Accordion className="w-full" collapsible type="single">
           <AccordionItem value="information-we-collect">
-            <AccordionTrigger className="text-left text-xl font-semibold">
-              1. Information We Collect
-            </AccordionTrigger>
+            <AccordionTrigger className="text-left text-xl font-semibold">1. Information We Collect</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base">
               <p>
                 <strong>Information you provide directly:</strong>
@@ -50,9 +41,7 @@ export default function PrivacyPage() {
                 <li>Profile customizations (avatar, bio, preferences)</li>
                 <li>User-generated content (comments, ratings, reviews)</li>
                 <li>Communications with us (support inquiries, feedback)</li>
-                <li>
-                  Payment information (if applicable, processed securely via third-party providers)
-                </li>
+                <li>Payment information (if applicable, processed securely via third-party providers)</li>
               </ul>
 
               <p className="mt-4">
@@ -112,12 +101,10 @@ export default function PrivacyPage() {
               <p>We use cookies and similar technologies to:</p>
               <ul className="list-disc space-y-2 pl-6">
                 <li>
-                  <strong>Essential cookies:</strong> Required for authentication, security, and
-                  core functionality
+                  <strong>Essential cookies:</strong> Required for authentication, security, and core functionality
                 </li>
                 <li>
-                  <strong>Performance cookies:</strong> Help us understand how visitors interact
-                  with our site
+                  <strong>Performance cookies:</strong> Help us understand how visitors interact with our site
                 </li>
                 <li>
                   <strong>Functional cookies:</strong> Remember your preferences and settings
@@ -128,13 +115,12 @@ export default function PrivacyPage() {
               </ul>
 
               <p className="mt-4">
-                You can control cookies through your browser settings. Note that disabling certain
-                cookies may affect site functionality.
+                You can control cookies through your browser settings. Note that disabling certain cookies may affect
+                site functionality.
               </p>
 
               <p className="mt-4">
-                <strong>Do Not Track:</strong> We honor Do Not Track browser signals where
-                applicable.
+                <strong>Do Not Track:</strong> We honor Do Not Track browser signals where applicable.
               </p>
             </AccordionContent>
           </AccordionItem>
@@ -167,25 +153,21 @@ export default function PrivacyPage() {
               </ul>
 
               <p className="mt-4">
-                <strong>Business Transfers:</strong> In the event of a merger, acquisition, or sale
-                of assets, your information may be transferred to the acquiring entity.
+                <strong>Business Transfers:</strong> In the event of a merger, acquisition, or sale of assets, your
+                information may be transferred to the acquiring entity.
               </p>
 
               <p className="mt-4">
-                <strong>With Your Consent:</strong> We may share information for other purposes with
-                your explicit consent.
+                <strong>With Your Consent:</strong> We may share information for other purposes with your explicit
+                consent.
               </p>
 
-              <p className="mt-4 font-semibold">
-                We do not sell your personal information to third parties.
-              </p>
+              <p className="mt-4 font-semibold">We do not sell your personal information to third parties.</p>
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="data-retention">
-            <AccordionTrigger className="text-left text-xl font-semibold">
-              5. Data Retention
-            </AccordionTrigger>
+            <AccordionTrigger className="text-left text-xl font-semibold">5. Data Retention</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base">
               <p>We retain your information for as long as necessary to:</p>
               <ul className="list-disc space-y-2 pl-6">
@@ -195,17 +177,15 @@ export default function PrivacyPage() {
               </ul>
 
               <p className="mt-4">
-                When you delete your account, we anonymize or delete your personal information
-                within 30 days, except where we are required to retain it by law. Some information
-                (e.g., anonymized analytics data) may be retained indefinitely.
+                When you delete your account, we anonymize or delete your personal information within 30 days, except
+                where we are required to retain it by law. Some information (e.g., anonymized analytics data) may be
+                retained indefinitely.
               </p>
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="your-rights">
-            <AccordionTrigger className="text-left text-xl font-semibold">
-              6. Your Privacy Rights
-            </AccordionTrigger>
+            <AccordionTrigger className="text-left text-xl font-semibold">6. Your Privacy Rights</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base">
               <p>
                 <strong>For all users:</strong>
@@ -228,8 +208,7 @@ export default function PrivacyPage() {
                   <strong>Right to rectification:</strong> Correct inaccurate information
                 </li>
                 <li>
-                  <strong>Right to erasure:</strong> Request deletion of your data ("right to be
-                  forgotten")
+                  <strong>Right to erasure:</strong> Request deletion of your data ("right to be forgotten")
                 </li>
                 <li>
                   <strong>Right to restriction:</strong> Limit how we use your data
@@ -266,9 +245,7 @@ export default function PrivacyPage() {
           </AccordionItem>
 
           <AccordionItem value="security">
-            <AccordionTrigger className="text-left text-xl font-semibold">
-              7. Data Security
-            </AccordionTrigger>
+            <AccordionTrigger className="text-left text-xl font-semibold">7. Data Security</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base">
               <p>We implement industry-standard security measures to protect your information:</p>
               <ul className="list-disc space-y-2 pl-6">
@@ -280,30 +257,24 @@ export default function PrivacyPage() {
               </ul>
 
               <p className="mt-4">
-                However, no system is 100% secure. We cannot guarantee absolute security. You are
-                responsible for keeping your account credentials confidential.
+                However, no system is 100% secure. We cannot guarantee absolute security. You are responsible for
+                keeping your account credentials confidential.
               </p>
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="children">
-            <AccordionTrigger className="text-left text-xl font-semibold">
-              8. Children's Privacy
-            </AccordionTrigger>
+            <AccordionTrigger className="text-left text-xl font-semibold">8. Children's Privacy</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base">
               <p>
-                Our service is not directed to children under 13. We do not knowingly collect
-                personal information from children under 13.
+                Our service is not directed to children under 13. We do not knowingly collect personal information from
+                children under 13.
               </p>
               <p>
-                If we become aware that a child under 13 has provided us with personal information,
-                we will delete it immediately. If you believe a child under 13 has provided us with
-                information, please contact us.
+                If we become aware that a child under 13 has provided us with personal information, we will delete it
+                immediately. If you believe a child under 13 has provided us with information, please contact us.
               </p>
-              <p>
-                Users between 13 and 18 should have parental or guardian consent before using our
-                service.
-              </p>
+              <p>Users between 13 and 18 should have parental or guardian consent before using our service.</p>
             </AccordionContent>
           </AccordionItem>
 
@@ -313,14 +284,10 @@ export default function PrivacyPage() {
             </AccordionTrigger>
             <AccordionContent className="space-y-4 text-base">
               <p>
-                Your information may be transferred to and processed in countries outside your
-                country of residence, including the United States, where data protection laws may
-                differ.
+                Your information may be transferred to and processed in countries outside your country of residence,
+                including the United States, where data protection laws may differ.
               </p>
-              <p>
-                For EEA users, we ensure adequate safeguards are in place for international
-                transfers, such as:
-              </p>
+              <p>For EEA users, we ensure adequate safeguards are in place for international transfers, such as:</p>
               <ul className="list-disc space-y-2 pl-6">
                 <li>Standard Contractual Clauses (SCCs)</li>
                 <li>Adequacy decisions by the European Commission</li>
@@ -334,30 +301,25 @@ export default function PrivacyPage() {
               10. Changes to This Privacy Policy
             </AccordionTrigger>
             <AccordionContent className="space-y-4 text-base">
-              <p>
-                We may update this Privacy Policy from time to time. We will notify you of material
-                changes by:
-              </p>
+              <p>We may update this Privacy Policy from time to time. We will notify you of material changes by:</p>
               <ul className="list-disc space-y-2 pl-6">
                 <li>Posting the new policy on this page with an updated "Last Updated" date</li>
                 <li>Sending you an email notification (for significant changes)</li>
                 <li>Displaying a prominent notice on our platform</li>
               </ul>
               <p className="mt-4">
-                Your continued use of the service after changes become effective constitutes
-                acceptance of the updated policy.
+                Your continued use of the service after changes become effective constitutes acceptance of the updated
+                policy.
               </p>
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="contact">
-            <AccordionTrigger className="text-left text-xl font-semibold">
-              11. Contact Us
-            </AccordionTrigger>
+            <AccordionTrigger className="text-left text-xl font-semibold">11. Contact Us</AccordionTrigger>
             <AccordionContent className="space-y-4 text-base">
               <p>
-                If you have questions, concerns, or requests regarding this Privacy Policy or your
-                personal information, please contact us:
+                If you have questions, concerns, or requests regarding this Privacy Policy or your personal information,
+                please contact us:
               </p>
               <ul className="list-none space-y-2">
                 <li>
@@ -378,8 +340,8 @@ export default function PrivacyPage() {
               </ul>
 
               <p className="mt-4">
-                For GDPR-related inquiries, you also have the right to lodge a complaint with your
-                local data protection authority.
+                For GDPR-related inquiries, you also have the right to lodge a complaint with your local data protection
+                authority.
               </p>
             </AccordionContent>
           </AccordionItem>
@@ -387,9 +349,9 @@ export default function PrivacyPage() {
 
         <div className="bg-muted mt-12 rounded-lg border p-6">
           <p className="text-muted-foreground text-sm">
-            <strong>Your Privacy Matters:</strong> We are committed to transparency and protecting
-            your privacy. This policy explains our practices in plain language. If anything is
-            unclear, please don't hesitate to contact us.
+            <strong>Your Privacy Matters:</strong> We are committed to transparency and protecting your privacy. This
+            policy explains our practices in plain language. If anything is unclear, please don't hesitate to contact
+            us.
           </p>
         </div>
       </div>

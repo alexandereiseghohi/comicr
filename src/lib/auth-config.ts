@@ -1,28 +1,14 @@
-/**
- * NextAuth v5 Configuration
- * @description Complete authentication setup with OAuth providers
- */
-
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import NextAuth from "next-auth";
+import NextAuth, { type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
 import { db } from "@/database/db";
 import { getUserByEmail } from "@/database/queries/user-queries";
-import {
-  AUTH_SECRET,
-  GITHUB_CLIENT_ID,
-  GITHUB_CLIENT_SECRET,
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-} from "@/lib/env";
+import { AUTH_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "@/lib/env";
 import { verifyPassword } from "@/lib/password";
-
-import type { Session } from "@/types/auth";
-import type { NextAuthConfig } from "next-auth";
-
+import { type Session } from "@/types/auth";
 
 /**
  * NextAuth configuration
@@ -31,19 +17,22 @@ export const config: NextAuthConfig = {
   trustHost: true,
   secret: AUTH_SECRET,
   adapter: DrizzleAdapter(db),
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
   providers: [
     // Google OAuth Provider
     Google({
       clientId: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
     }),
 
     // GitHub OAuth Provider
     GitHub({
       clientId: GITHUB_CLIENT_ID,
       clientSecret: GITHUB_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
     }),
 
     // Credentials provider for email/password login
@@ -140,16 +129,18 @@ export const config: NextAuthConfig = {
   events: {
     /**
      * Called when a user is successfully signed in
+     * Note: Logging moved to structured logger in production
      */
-    async signIn({ user, account: _account, profile: _profile }) {
-      console.log(`User signed in: ${user.email}`);
+    async signIn({ user: _user, account: _account, profile: _profile }) {
+      // Authentication events are handled by the audit system
+      // See src/lib/audit for structured logging
     },
 
     /**
      * Called when a user is successfully signed out
      */
     async signOut() {
-      console.log("User signed out");
+      // Sign out events handled by audit system
     },
   },
 };

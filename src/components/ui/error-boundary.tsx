@@ -1,9 +1,9 @@
-"use client";
-
 import * as Sentry from "@sentry/nextjs";
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
+
+("use client");
 
 interface Props {
   children: ReactNode;
@@ -70,12 +70,7 @@ class ErrorBoundary extends Component<Props, State> {
           <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
             <div className="text-center">
               <div className="mx-auto h-12 w-12 text-red-500">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
                     strokeLinecap="round"
@@ -84,12 +79,10 @@ class ErrorBoundary extends Component<Props, State> {
                   />
                 </svg>
               </div>
-              <h2 className="mt-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Something went wrong
-              </h2>
+              <h2 className="mt-4 text-lg font-semibold text-gray-900 dark:text-gray-100">Something went wrong</h2>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                We&apos;re sorry, but something unexpected happened. Please try again or contact
-                support if the problem persists.
+                We&apos;re sorry, but something unexpected happened. Please try again or contact support if the problem
+                persists.
               </p>
               {process.env.NODE_ENV === "development" && this.state.error && (
                 <details className="mt-4 text-left">

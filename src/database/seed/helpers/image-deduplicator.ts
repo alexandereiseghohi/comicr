@@ -1,10 +1,3 @@
-/**
- * @file image-deduplicator.ts
- * @description Content-based image deduplication using xxhash for fast hashing
- * @author ComicWise Team
- * @date 2026-02-01
- */
-
 import { existsSync } from "node:fs";
 import { readFile, stat, symlink } from "node:fs/promises";
 import path from "node:path";
@@ -124,8 +117,7 @@ export async function getDeduplicationStats(): Promise<{
   for (const [hash, filePath] of hashToFileMap.entries()) {
     try {
       const stats = await stat(filePath);
-      const duplicateCount =
-        Array.from(fileHashCache.entries()).filter(([, h]) => h === hash).length - 1;
+      const duplicateCount = Array.from(fileHashCache.entries()).filter(([, h]) => h === hash).length - 1;
       storageSavedBytes += stats.size * duplicateCount;
     } catch {
       // Ignore stat errors

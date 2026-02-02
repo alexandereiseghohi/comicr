@@ -1,10 +1,5 @@
-/**
- * Reset Password Page
- * @description Password reset confirmation page
- */
-
 import { type Metadata } from "next";
-import Link from "next/dist/client/link";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";

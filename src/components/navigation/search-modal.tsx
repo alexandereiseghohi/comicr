@@ -1,5 +1,3 @@
-"use client";
-
 import { ArrowRightIcon, BookOpenIcon, SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -15,6 +13,8 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Skeleton } from "@/components/ui/skeleton";
+
+("use client");
 
 interface SearchResult {
   coverImage: null | string;
@@ -155,10 +155,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
 
             {query.trim() && (
               <CommandGroup>
-                <CommandItem
-                  className="text-primary cursor-pointer justify-center"
-                  onSelect={handleViewAll}
-                >
+                <CommandItem className="text-primary cursor-pointer justify-center" onSelect={handleViewAll}>
                   <span>View all results for &quot;{query}&quot;</span>
                   <ArrowRightIcon className="ml-2 h-4 w-4" />
                 </CommandItem>

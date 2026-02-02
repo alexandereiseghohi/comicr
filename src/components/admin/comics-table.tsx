@@ -1,13 +1,5 @@
-"use client";
-
 import { type ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowUpDownIcon,
-  ExternalLinkIcon,
-  MoreHorizontalIcon,
-  PencilIcon,
-  TrashIcon,
-} from "lucide-react";
+import { ArrowUpDownIcon, ExternalLinkIcon, MoreHorizontalIcon, PencilIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
@@ -34,6 +26,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+("use client");
 
 export interface ComicRow {
   coverImage: null | string;
@@ -72,10 +66,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       header: ({ table }) => (
         <Checkbox
           aria-label="Select all"
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
+          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         />
       ),
@@ -103,13 +94,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
         return (
           <div className="relative h-12 w-9 overflow-hidden rounded">
             {coverImage ? (
-              <Image
-                alt={`Cover of ${title}`}
-                className="object-cover"
-                fill
-                sizes="36px"
-                src={coverImage}
-              />
+              <Image alt={`Cover of ${title}`} className="object-cover" fill sizes="36px" src={coverImage} />
             ) : (
               <div className="bg-muted h-full w-full" />
             )}
@@ -121,10 +106,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
     {
       accessorKey: "title",
       header: ({ column }) => (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          variant="ghost"
-        >
+        <Button onClick={() => column.toggleSorting(column.getIsSorted() === "asc")} variant="ghost">
           Title
           <ArrowUpDownIcon className="ml-2 h-4 w-4" />
         </Button>
@@ -142,11 +124,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       cell: ({ row }) => {
         const status = row.getValue("status") as null | string;
         return (
-          <Badge
-            variant={
-              status === "Ongoing" ? "default" : status === "Completed" ? "secondary" : "outline"
-            }
-          >
+          <Badge variant={status === "Ongoing" ? "default" : status === "Completed" ? "secondary" : "outline"}>
             {status ?? "Unknown"}
           </Badge>
         );
@@ -158,10 +136,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
     {
       accessorKey: "views",
       header: ({ column }) => (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          variant="ghost"
-        >
+        <Button onClick={() => column.toggleSorting(column.getIsSorted() === "asc")} variant="ghost">
           Views
           <ArrowUpDownIcon className="ml-2 h-4 w-4" />
         </Button>
@@ -174,10 +149,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
     {
       accessorKey: "rating",
       header: ({ column }) => (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          variant="ghost"
-        >
+        <Button onClick={() => column.toggleSorting(column.getIsSorted() === "asc")} variant="ghost">
           Rating
           <ArrowUpDownIcon className="ml-2 h-4 w-4" />
         </Button>
@@ -190,10 +162,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
     {
       accessorKey: "createdAt",
       header: ({ column }) => (
-        <Button
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          variant="ghost"
-        >
+        <Button onClick={() => column.toggleSorting(column.getIsSorted() === "asc")} variant="ghost">
           Created
           <ArrowUpDownIcon className="ml-2 h-4 w-4" />
         </Button>
@@ -201,9 +170,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       cell: ({ row }) => {
         const date = row.getValue("createdAt") as Date | null;
         return (
-          <span className="text-muted-foreground text-sm">
-            {date ? new Date(date).toLocaleDateString() : "N/A"}
-          </span>
+          <span className="text-muted-foreground text-sm">{date ? new Date(date).toLocaleDateString() : "N/A"}</span>
         );
       },
     },
@@ -251,13 +218,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
 
   return (
     <>
-      <DataTable
-        columns={columns}
-        data={comics}
-        pageSize={20}
-        searchKey="title"
-        searchPlaceholder="Search comics..."
-      />
+      <DataTable columns={columns} data={comics} pageSize={20} searchKey="title" searchPlaceholder="Search comics..." />
 
       {/* Delete confirmation */}
       <AlertDialog onOpenChange={() => setDeleteId(null)} open={deleteId !== null}>
@@ -265,8 +226,8 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Comic</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this comic? This action cannot be undone. All
-              associated chapters and data will also be deleted.
+              Are you sure you want to delete this comic? This action cannot be undone. All associated chapters and data
+              will also be deleted.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

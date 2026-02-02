@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { signInAsAdmin } from "./helpers/auth";
+
 test.describe("Profile pages", () => {
   test("redirects to sign-in when unauthenticated", async ({ page }) => {
     await page.goto("/profile");
@@ -9,10 +11,8 @@ test.describe("Profile pages", () => {
 
 test.describe("Profile Settings", () => {
   test.beforeEach(async ({ page }) => {
-    // Sign in first (update with actual credentials)
-    await page.goto("/sign-in");
-    // ... perform sign in ...
-    // For now, skip to settings page
+    // Sign in as admin before each test
+    await signInAsAdmin(page);
     await page.goto("/profile/settings");
   });
 
@@ -62,9 +62,9 @@ test.describe("Profile Settings", () => {
       await saveButton.click();
 
       // Should show success toast
-      await expect(
-        page.locator('text="Settings saved"').or(page.locator('text="Success"'))
-      ).toBeVisible({ timeout: 5000 });
+      await expect(page.locator('text="Settings saved"').or(page.locator('text="Success"'))).toBeVisible({
+        timeout: 5000,
+      });
     }
   });
 });
@@ -129,9 +129,7 @@ test.describe("Delete Account", () => {
       await deleteButton.click();
 
       // Should show confirmation dialog
-      await expect(
-        page.locator("text=/Are you sure/i").or(page.locator('[role="alertdialog"]'))
-      ).toBeVisible();
+      await expect(page.locator("text=/Are you sure/i").or(page.locator('[role="alertdialog"]'))).toBeVisible();
     }
   });
 });

@@ -1,17 +1,10 @@
-/**
- * GET /api/comics/[id] - Get comic details
- * PATCH /api/comics/[id] - Update comic
- * DELETE /api/comics/[id] - Delete comic
- */
-
 import { type NextRequest, NextResponse } from "next/server";
 
 import * as comicMutations from "@/database/mutations/comic-mutations";
 import * as comicQueries from "@/database/queries/comic-queries";
 import { auth } from "@/lib/auth-config";
 import { updateComicSchema } from "@/schemas/comic-schema";
-
-import type { AuthUser } from "@/types/auth";
+import { type AuthUser } from "@/types/auth";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -73,10 +66,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     const validation = updateComicSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json(
-        { success: false, error: validation.error.issues[0]?.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: validation.error.issues[0]?.message }, { status: 400 });
     }
 
     const result = await comicMutations.updateComic(comicId, validation.data);

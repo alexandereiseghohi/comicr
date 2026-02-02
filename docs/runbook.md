@@ -208,12 +208,10 @@ WHERE id = 'user-id';
    ```
 
 2. **Check Sentry**
-
    - Review recent errors
    - Identify patterns
 
 3. **Check external services**
-
    - Database connectivity
    - Redis connectivity
    - Storage provider status
@@ -264,7 +262,6 @@ WHERE id = 'user-id';
 ### Authentication Issues
 
 1. **Session issues**
-
    - Check `AUTH_SECRET` matches across deployments
    - Verify OAuth callback URLs
 

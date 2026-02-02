@@ -1,9 +1,3 @@
-/**
- * @file image-helper.ts
- * @description Image download utilities for seeding with deduplication, retry logic, and concurrency control.
- * All paths are relative to the public directory - do NOT include "public/" in destDir.
- */
-
 import { createWriteStream, type WriteStream } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -30,19 +24,10 @@ const DEFAULT_CONFIG = {
 
 /** Runtime configuration from environment */
 const config = {
-  maxSizeBytes: parseInt(
-    process.env.SEED_MAX_IMAGE_SIZE_BYTES || String(DEFAULT_CONFIG.maxSizeBytes),
-    10
-  ),
-  concurrency: parseInt(
-    process.env.SEED_DOWNLOAD_CONCURRENCY || String(DEFAULT_CONFIG.concurrency),
-    10
-  ),
+  maxSizeBytes: parseInt(process.env.SEED_MAX_IMAGE_SIZE_BYTES || String(DEFAULT_CONFIG.maxSizeBytes), 10),
+  concurrency: parseInt(process.env.SEED_DOWNLOAD_CONCURRENCY || String(DEFAULT_CONFIG.concurrency), 10),
   maxRetries: parseInt(process.env.SEED_MAX_RETRIES || String(DEFAULT_CONFIG.maxRetries), 10),
-  requestTimeoutMs: parseInt(
-    process.env.SEED_REQUEST_TIMEOUT_MS || String(DEFAULT_CONFIG.requestTimeoutMs),
-    10
-  ),
+  requestTimeoutMs: parseInt(process.env.SEED_REQUEST_TIMEOUT_MS || String(DEFAULT_CONFIG.requestTimeoutMs), 10),
   publicDir: process.env.SEED_PUBLIC_DIR || DEFAULT_CONFIG.publicDir,
   placeholderPath: DEFAULT_CONFIG.placeholderPath,
 } as const;
@@ -53,38 +38,38 @@ const config = {
 
 /** Options for downloading and saving an image */
 export interface DownloadImageOptions {
-  /** Source URL to download from */
-  url: string;
   /** Destination directory relative to public/ (e.g., "images/comics") */
   destDir: string;
-  /** Target filename with extension */
-  filename: string;
   /** Fallback path if download fails (relative to public/) */
   fallback?: string;
+  /** Target filename with extension */
+  filename: string;
   /** Maximum retry attempts */
   maxRetries?: number;
   /** Skip cache check (force re-download) */
   skipCache?: boolean;
+  /** Source URL to download from */
+  url: string;
 }
 
 /** Result of a download operation */
 export interface DownloadResult {
-  /** Whether download succeeded */
-  success: boolean;
-  /** Relative path from public/ to saved file */
-  path: string;
   /** Whether file was retrieved from cache */
   cached: boolean;
   /** Error message if failed */
   error?: string;
+  /** Relative path from public/ to saved file */
+  path: string;
+  /** Whether download succeeded */
+  success: boolean;
 }
 
 /** Batch download item */
 export interface BatchDownloadItem {
-  url: string;
   destDir: string;
-  filename: string;
   fallback?: string;
+  filename: string;
+  url: string;
 }
 
 /** Progress callback for batch operations */
@@ -100,8 +85,7 @@ export type ProgressCallback = (completed: number, total: number, current: strin
 export function getExtension(input: string): string {
   // Handle URLs with query params
   const cleanPath = input.split("?")[0] || input;
-  const ext = path.extname(cleanPath).replace(".", "").toLowerCase();
-  return ext;
+  return path.extname(cleanPath).replace(".", "").toLowerCase();
 }
 
 /**
@@ -115,9 +99,9 @@ export function isAllowedFormat(ext: string): boolean {
  * Validate image format from filename or URL
  */
 export function validateImageFormat(input: string): {
-  valid: boolean;
-  ext: string;
   error?: string;
+  ext: string;
+  valid: boolean;
 } {
   const ext = getExtension(input);
   if (!ext) {
@@ -168,19 +152,21 @@ export function toPublicRelativePath(absolutePath: string): string {
   const publicAbs = path.resolve(config.publicDir);
   const relative = path.relative(publicAbs, absolutePath);
   // Always use forward slashes and leading /
-  return "/" + relative.replace(/\\/g, "/");
+  return "/" + relative.replaceAll("\\", "/");
 }
 
 /**
  * Sanitize filename to remove invalid characters
  */
 export function sanitizeFilename(filename: string): string {
+  /* eslint-disable no-control-regex -- Intentionally stripping control chars for filesystem safety */
   return filename
-    .replace(/[<>:"/\\|?*\x00-\x1f]/g, "-") // Replace invalid chars
-    .replace(/\.+/g, ".") // Collapse multiple dots
-    .replace(/-+/g, "-") // Collapse multiple dashes
-    .replace(/^[-.\s]+|[-.\s]+$/g, "") // Trim leading/trailing
+    .replaceAll(/[<>:"/\\|?*\x00-\x1f]/g, "-") // Replace invalid chars
+    .replaceAll(/\.+/g, ".") // Collapse multiple dots
+    .replaceAll(/-+/g, "-") // Collapse multiple dashes
+    .replaceAll(/^[-.\s]+|[-.\s]+$/g, "") // Trim leading/trailing
     .slice(0, 255); // Max filename length
+  /* eslint-enable no-control-regex */
 }
 
 /**
@@ -214,10 +200,7 @@ export async function getUniqueFilename(dirPath: string, filename: string): Prom
 /**
  * Calculate exponential backoff delay
  */
-export function getBackoffDelay(
-  attempt: number,
-  baseDelay: number = DEFAULT_CONFIG.baseRetryDelayMs
-): number {
+export function getBackoffDelay(attempt: number, baseDelay: number = DEFAULT_CONFIG.baseRetryDelayMs): number {
   // Exponential backoff with jitter: 100ms, 200ms, 400ms, etc. + random 0-50ms
   const exponential = baseDelay * Math.pow(2, attempt);
   const jitter = Math.random() * 50;
@@ -272,7 +255,7 @@ class ConcurrencyLimiter {
   }
 
   /** Get current stats */
-  getStats(): { running: number; queued: number; limit: number } {
+  getStats(): { limit: number; queued: number; running: number } {
     return {
       running: this.running,
       queued: this.queue.length,
@@ -337,8 +320,8 @@ function webStreamToNodeStream(webStream: ReadableStream<Uint8Array>): NodeJS.Re
  * Create abort controller with timeout
  */
 function createTimeoutController(timeoutMs: number): {
-  controller: AbortController;
   clear: () => void;
+  controller: AbortController;
 } {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -409,7 +392,7 @@ export async function downloadAndSaveImage(options: DownloadImageOptions): Promi
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       const { controller, clear } = createTimeoutController(config.requestTimeoutMs);
-      let writeStream: WriteStream | undefined;
+      let writeStream: undefined | WriteStream;
 
       try {
         const response = await fetch(url, { signal: controller.signal });
@@ -475,9 +458,7 @@ export async function downloadAndSaveImage(options: DownloadImageOptions): Promi
 /**
  * Download and save image with detailed result
  */
-export async function downloadAndSaveImageWithResult(
-  options: DownloadImageOptions
-): Promise<DownloadResult> {
+export async function downloadAndSaveImageWithResult(options: DownloadImageOptions): Promise<DownloadResult> {
   const { url, fallback = config.placeholderPath } = options;
 
   // Check cache
@@ -523,7 +504,7 @@ export async function downloadImagesInBatch(
   const total = items.length;
   let completed = 0;
 
-  const results = await Promise.all(
+  return await Promise.all(
     items.map(async (item) => {
       const result = await downloadAndSaveImage(item);
       completed++;
@@ -531,8 +512,6 @@ export async function downloadImagesInBatch(
       return result;
     })
   );
-
-  return results;
 }
 
 /**
@@ -545,7 +524,7 @@ export async function downloadImagesInBatchWithResults(
   const total = items.length;
   let completed = 0;
 
-  const results = await Promise.all(
+  return await Promise.all(
     items.map(async (item) => {
       const result = await downloadAndSaveImageWithResult(item);
       completed++;
@@ -553,8 +532,6 @@ export async function downloadImagesInBatchWithResults(
       return result;
     })
   );
-
-  return results;
 }
 
 /**
@@ -599,6 +576,6 @@ export function getConfig(): typeof config {
 /**
  * Get limiter statistics
  */
-export function getLimiterStats(): { running: number; queued: number; limit: number } {
+export function getLimiterStats(): { limit: number; queued: number; running: number } {
   return downloadLimiter.getStats();
 }

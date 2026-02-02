@@ -63,9 +63,7 @@ async function GenreComicsContent({
       <div className="flex h-96 flex-col items-center justify-center text-center">
         <BookOpen className="mb-4 h-16 w-16 text-slate-300" />
         <h3 className="mb-2 text-lg font-semibold text-slate-900">No comics found</h3>
-        <p className="mb-6 text-sm text-slate-600">
-          There are no comics in this genre yet. Check back later!
-        </p>
+        <p className="mb-6 text-sm text-slate-600">There are no comics in this genre yet. Check back later!</p>
         <Link href="/comics">
           <Button>Browse All Comics</Button>
         </Link>

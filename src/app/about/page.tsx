@@ -1,13 +1,10 @@
+/* eslint-disable react/no-unescaped-entities */
 import { BookOpen, Heart, Users, Zap } from "lucide-react";
+import { type Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-import type { Metadata } from "next";
-
-
-/* eslint-disable react/no-unescaped-entities */
 
 export const metadata: Metadata = {
   title: "About ComicWise - Your Ultimate Comic Reading Platform",
@@ -25,12 +22,10 @@ export default function AboutPage() {
     <div className="container mx-auto px-4 py-12">
       {/* Hero Section */}
       <section className="mb-16 text-center">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-          About ComicWise
-        </h1>
+        <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">About ComicWise</h1>
         <p className="text-muted-foreground mx-auto max-w-2xl text-lg md:text-xl">
-          Bringing comic enthusiasts together with the stories they love through innovative reading
-          experiences and community-driven features.
+          Bringing comic enthusiasts together with the stories they love through innovative reading experiences and
+          community-driven features.
         </p>
       </section>
 
@@ -46,9 +41,9 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                To create the most accessible and enjoyable comic reading platform that empowers
-                readers to discover, track, and engage with their favorite stories while supporting
-                creators and building a vibrant community.
+                To create the most accessible and enjoyable comic reading platform that empowers readers to discover,
+                track, and engage with their favorite stories while supporting creators and building a vibrant
+                community.
               </p>
             </CardContent>
           </Card>
@@ -62,9 +57,8 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                To be the world's leading platform where comic enthusiasts of all backgrounds can
-                explore diverse content, connect with fellow readers, and experience stories in ways
-                that enhance their reading journey.
+                To be the world's leading platform where comic enthusiasts of all backgrounds can explore diverse
+                content, connect with fellow readers, and experience stories in ways that enhance their reading journey.
               </p>
             </CardContent>
           </Card>
@@ -82,8 +76,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Access thousands of comics across multiple genres, from manga and manhwa to webtoons
-                and graphic novels.
+                Access thousands of comics across multiple genres, from manga and manhwa to webtoons and graphic novels.
               </CardDescription>
             </CardContent>
           </Card>
@@ -95,8 +88,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Choose from single-page, continuous scroll, or double-page reading modes optimized
-                for your device.
+                Choose from single-page, continuous scroll, or double-page reading modes optimized for your device.
               </CardDescription>
             </CardContent>
           </Card>
@@ -108,8 +100,8 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Bookmark favorites, track reading progress, and get personalized recommendations
-                based on your preferences.
+                Bookmark favorites, track reading progress, and get personalized recommendations based on your
+                preferences.
               </CardDescription>
             </CardContent>
           </Card>
@@ -121,8 +113,8 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Engage with fellow readers through ratings, reviews, and comments. Share your
-                thoughts on the latest chapters.
+                Engage with fellow readers through ratings, reviews, and comments. Share your thoughts on the latest
+                chapters.
               </CardDescription>
             </CardContent>
           </Card>
@@ -133,8 +125,8 @@ export default function AboutPage() {
       <section className="mb-16">
         <h2 className="mb-8 text-center text-3xl font-bold">Meet the Team</h2>
         <p className="text-muted-foreground mb-8 text-center">
-          ComicWise is built by a passionate team of developers, designers, and comic enthusiasts
-          dedicated to creating the best reading experience.
+          ComicWise is built by a passionate team of developers, designers, and comic enthusiasts dedicated to creating
+          the best reading experience.
         </p>
         <div className="grid gap-6 md:grid-cols-3">
           <Card>
@@ -144,8 +136,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <CardDescription className="text-center">
-                Building robust, scalable infrastructure with modern technologies and best
-                practices.
+                Building robust, scalable infrastructure with modern technologies and best practices.
               </CardDescription>
             </CardContent>
           </Card>
@@ -157,8 +148,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <CardDescription className="text-center">
-                Crafting intuitive, beautiful interfaces that enhance the reading experience across
-                all devices.
+                Crafting intuitive, beautiful interfaces that enhance the reading experience across all devices.
               </CardDescription>
             </CardContent>
           </Card>
@@ -170,8 +160,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <CardDescription className="text-center">
-                Supporting users, moderating content, and fostering a welcoming environment for all
-                readers.
+                Supporting users, moderating content, and fostering a welcoming environment for all readers.
               </CardDescription>
             </CardContent>
           </Card>

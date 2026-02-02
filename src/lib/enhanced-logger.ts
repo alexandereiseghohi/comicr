@@ -83,7 +83,9 @@ class Logger {
       timestamp: new Date().toISOString(),
       ...this.defaultContext,
       ...context,
-      ...(error && { error: { name: error.name, message: error.message, stack: error.stack } }),
+      ...(error && {
+        error: { name: error.name, message: error.message, stack: error.stack },
+      }),
     };
 
     this.winston.log(level, message, logEntry);
@@ -200,11 +202,17 @@ export function createRequestLogger(req: unknown) {
     ...logger,
     setRequestContext: (context: Partial<LogContext>) => {
       logger.setDefaultContext({
-        requestId: (req as any).id || Math.random().toString(36),
-        ip: (req as any).ip || (req as any).connection?.remoteAddress,
-        userAgent: (req as any).headers?.["user-agent"],
-        url: (req as any).url,
-        method: (req as any).method,
+        requestId: typeof req === "object" && req && "id" in req ? (req as any).id : Math.random().toString(36),
+        ip:
+          typeof req === "object" && req && "ip" in req
+            ? (req as any).ip
+            : typeof req === "object" && req && "connection" in req && (req as any).connection?.remoteAddress,
+        userAgent:
+          typeof req === "object" && req && "headers" in req && (req as any).headers
+            ? (req as any).headers["user-agent"]
+            : undefined,
+        url: typeof req === "object" && req && "url" in req ? (req as any).url : undefined,
+        method: typeof req === "object" && req && "method" in req ? (req as any).method : undefined,
         ...context,
       });
     },

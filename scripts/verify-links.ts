@@ -100,21 +100,17 @@ async function main() {
   const csvLines = ["sourceFile,link,status,notes"];
   for (const r of results) {
     csvLines.push(
-      `${r.sourceFile.replaceAll(',', "%2C")},${r.link.replaceAll(',', "%2C")},${r.status},${(
-        r.notes ?? ""
-      ).replaceAll(',', "%2C")}`
+      `${r.sourceFile.replaceAll(",", "%2C")},${r.link.replaceAll(",", "%2C")},${r.status},${(r.notes ?? "").replaceAll(
+        ",",
+        "%2C"
+      )}`
     );
   }
   await fs.writeFile(reportPath, csvLines.join("\n"), "utf8");
   const bad = results.filter(
-    (r) =>
-      (typeof r.status === "number" && r.status >= 400) ||
-      r.status === "MISSING" ||
-      r.status === "ERROR"
+    (r) => (typeof r.status === "number" && r.status >= 400) || r.status === "MISSING" || r.status === "ERROR"
   );
-  console.log(
-    `Checked ${results.length} links across ${files.length} markdown files. Report: ${reportPath}`
-  );
+  console.log(`Checked ${results.length} links across ${files.length} markdown files. Report: ${reportPath}`);
   if (bad.length) {
     console.warn(`Found ${bad.length} failing links. See ${reportPath} for details.`);
     process.exitCode = 2;

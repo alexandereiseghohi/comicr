@@ -88,9 +88,7 @@ async function main() {
     console.log(`[${file}] Autofix log written: ${logPath}`);
     console.log(`[${file}] Total records: ${data.length}, autofixed: ${log.length}`);
   }
-  console.log(
-    "\nAuto-fix complete. Review .cleaned.json and .autofix-log.json files before using in seeding."
-  );
+  console.log("\nAuto-fix complete. Review .cleaned.json and .autofix-log.json files before using in seeding.");
 }
 
 main().catch((err) => {

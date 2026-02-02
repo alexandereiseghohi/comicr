@@ -688,8 +688,7 @@ export { queryCache, apiCache, userCache, cacheKeys, useCache } from './caching'
       analyze: "ANALYZE=true next build",
       "analyze:server": "BUNDLE_ANALYZE=server next build",
       "analyze:browser": "BUNDLE_ANALYZE=browser next build",
-      "perf:audit":
-        "npx lighthouse http://localhost:3000 --output html --output-path ./reports/lighthouse.html",
+      "perf:audit": "npx lighthouse http://localhost:3000 --output html --output-path ./reports/lighthouse.html",
     };
 
     let scriptsUpdated = false;

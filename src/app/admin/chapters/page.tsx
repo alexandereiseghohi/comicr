@@ -1,8 +1,3 @@
-/**
- * Chapters Management Page
- * @description Admin page for managing all chapters
- */
-
 import { redirect } from "next/navigation";
 
 import { ChaptersTable } from "@/components/admin/chapters-table";
@@ -25,9 +20,7 @@ export default async function ChaptersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Chapters</h1>
-          <p className="text-muted-foreground">
-            Manage all comic chapters ({chapters.length} total)
-          </p>
+          <p className="text-muted-foreground">Manage all comic chapters ({chapters.length} total)</p>
         </div>
       </div>
 

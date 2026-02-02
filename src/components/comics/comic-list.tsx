@@ -1,4 +1,4 @@
-import { ComicCard } from './comic-card';
+import { ComicCard } from "./comic-card";
 
 interface Comic {
   author?: {
@@ -35,9 +35,7 @@ export function ComicList({ comics, isLoading }: ComicListProps) {
       <div className="flex h-96 items-center justify-center">
         <div className="text-center">
           <h3 className="text-lg font-semibold text-slate-900">No comics found</h3>
-          <p className="mt-2 text-sm text-slate-600">
-            Try adjusting your search parameters or browse all comics
-          </p>
+          <p className="mt-2 text-sm text-slate-600">Try adjusting your search parameters or browse all comics</p>
         </div>
       </div>
     );

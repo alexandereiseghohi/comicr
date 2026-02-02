@@ -1,22 +1,15 @@
-/**
- * Upstash Redis Cache Provider
- * @description Serverless-compatible Redis caching via Upstash REST API
- */
-
 import { Redis } from "@upstash/redis";
 
 import { getEnv } from "@/lib/env";
 
-import { DEFAULT_CACHE_CONFIG } from "./types";
-
-import type {
-  CacheDeleteResult,
-  CacheOptions,
-  CacheProvider,
-  CacheResult,
-  CacheSetResult,
+import {
+  type CacheDeleteResult,
+  type CacheOptions,
+  type CacheProvider,
+  type CacheResult,
+  type CacheSetResult,
+  DEFAULT_CACHE_CONFIG,
 } from "./types";
-
 
 let redisClient: null | Redis = null;
 

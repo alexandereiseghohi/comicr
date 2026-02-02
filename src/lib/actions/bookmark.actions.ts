@@ -3,9 +3,7 @@ import { z } from "zod";
 import * as mutations from "@/database/mutations/bookmark.mutations";
 import { type CreateBookmarkInput, CreateBookmarkSchema } from "@/schemas/bookmark.schema";
 
-type ActionResult<T = unknown> =
-  | { data: T; ok: true; }
-  | { error: { code: string; message: string }; ok: false; };
+type ActionResult<T = unknown> = { data: T; ok: true } | { error: { code: string; message: string }; ok: false };
 
 /**
  * Add a bookmark.

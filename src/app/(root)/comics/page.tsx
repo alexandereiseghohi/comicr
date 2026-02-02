@@ -32,14 +32,7 @@ async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
   const limit = parseInt(limitValue ?? "20");
   const sort = sortValue || "createdAt";
   const order = orderValue === "asc" ? "asc" : "desc";
-  const validStatuses = [
-    "Ongoing",
-    "Hiatus",
-    "Completed",
-    "Dropped",
-    "Season End",
-    "Coming Soon",
-  ] as const;
+  const validStatuses = ["Ongoing", "Hiatus", "Completed", "Dropped", "Season End", "Coming Soon"] as const;
 
   let result;
 
@@ -48,15 +41,9 @@ async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
   } else if (genresValue) {
     const genreSlugs = genresValue.split(",").filter(Boolean);
     result = await comicQueries.getComicsByGenres(genreSlugs, { page, limit, sort, order });
-  } else if (
-    statusValue &&
-    statusValue !== "All" &&
-    (validStatuses as readonly string[]).includes(statusValue)
-  ) {
+  } else if (statusValue && statusValue !== "All" && (validStatuses as readonly string[]).includes(statusValue)) {
     // Narrow statusValue to the correct union type
-    const narrowedStatus = validStatuses.find(
-      (s) => s === statusValue
-    ) as (typeof validStatuses)[number];
+    const narrowedStatus = validStatuses.find((s) => s === statusValue) as (typeof validStatuses)[number];
     result = await comicQueries.getComicsByStatus(narrowedStatus, {
       page,
       limit,

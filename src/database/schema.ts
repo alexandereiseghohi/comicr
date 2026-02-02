@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql, type SQL } from "drizzle-orm";
 import {
   boolean,
   decimal,
@@ -15,9 +15,7 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
-
-import type { SQL } from "drizzle-orm";
-import type { AdapterAccountType } from "next-auth/adapters";
+import { type AdapterAccountType } from "next-auth/adapters";
 
 // ═══════════════════════════════════════════════════
 // CUSTOM SQL TYPES FOR FULL-TEXT SEARCH

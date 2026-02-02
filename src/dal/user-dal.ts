@@ -3,10 +3,9 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/user.mutations";
 import { user } from "@/database/schema";
+import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
-
-import type { DbMutationResult } from "@/types";
 
 /**
  * Data Access Layer for User entities
@@ -45,9 +44,7 @@ export class UserDAL extends BaseDAL<typeof user> {
    * @returns Error result directing to use createUser action
    * @deprecated User creation is managed through NextAuth authentication flow
    */
-  async create(
-    _data: typeof user.$inferInsert
-  ): Promise<DbMutationResult<typeof user.$inferSelect>> {
+  async create(_data: typeof user.$inferInsert): Promise<DbMutationResult<typeof user.$inferSelect>> {
     return { success: false, error: "Use createUser action instead" };
   }
 

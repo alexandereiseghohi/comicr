@@ -1,17 +1,10 @@
-/**
- * Forgot Password Form Component
- * @description Form for requesting password reset
- */
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-'use client';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useTransition } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
-
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -19,10 +12,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { emailValidator } from '@/types/validation';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { requestPasswordResetAction } from "@/lib/actions/auth.actions";
+import { emailValidator } from "@/types/validation";
 
+/**
+ * Forgot Password Form Component
+ * @description Form for requesting password reset
+ */
+
+("use client");
 /**
  * Forgot Password Form Schema
  */
@@ -41,7 +41,7 @@ export function ForgotPasswordForm() {
   const form = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
-      email: '',
+      email: "",
     },
   });
 
@@ -51,14 +51,22 @@ export function ForgotPasswordForm() {
   async function onSubmit(data: ForgotPasswordFormData): Promise<void> {
     startTransition(async () => {
       try {
-        // TODO: Call server action to send password reset email
-        // const result = await sendPasswordResetEmailAction({ email: data.email });
-        console.log('Reset email sent to:', data.email);
+        // Request password reset via server action
+        const result = await requestPasswordResetAction(data.email);
 
-        toast.success('Check your email for password reset instructions');
+        if (!result.ok) {
+          toast.error(result.error || "Failed to send reset email");
+          return;
+        }
+
+        toast.success(
+          "If an account exists with that email, you will receive reset instructions",
+        );
+        form.reset();
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : 'Failed to send reset email');
-        console.error(error);
+        toast.error(
+          error instanceof Error ? error.message : "Failed to send reset email",
+        );
       }
     });
   }
@@ -89,8 +97,12 @@ export function ForgotPasswordForm() {
           )}
         />
 
-        <Button className="w-full bg-blue-600 hover:bg-blue-700" disabled={isPending} type="submit">
-          {isPending ? 'Sending...' : 'Send Reset Link'}
+        <Button
+          className="w-full bg-blue-600 hover:bg-blue-700"
+          disabled={isPending}
+          type="submit"
+        >
+          {isPending ? "Sending..." : "Send Reset Link"}
         </Button>
       </form>
     </Form>

@@ -1,6 +1,7 @@
-// Consolidated Zustand store for global app state (Next.js 16+, Sentry logging)
 import * as Sentry from "@sentry/nextjs";
 import { create } from "zustand";
+
+// Consolidated Zustand store for global app state (Next.js 16+, Sentry logging)
 
 interface AppState {
   clearSearch: () => void;

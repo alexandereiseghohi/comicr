@@ -1,8 +1,3 @@
-/**
- * Upload API Route
- * @description Authenticated file upload with multi-provider support
- */
-
 import { type NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/auth";
@@ -22,10 +17,7 @@ export async function POST(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { success: false, error: "Authentication required" },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 });
     }
 
     // Parse multipart form data
@@ -41,9 +33,7 @@ export async function POST(request: NextRequest) {
       folder: formData.get("folder")?.toString(),
       filename: formData.get("filename")?.toString(),
       access: formData.get("access")?.toString() as "private" | "public" | undefined,
-      metadata: formData.get("metadata")
-        ? JSON.parse(formData.get("metadata")!.toString())
-        : undefined,
+      metadata: formData.get("metadata") ? JSON.parse(formData.get("metadata")!.toString()) : undefined,
     };
 
     // Validate parameters
@@ -95,10 +85,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!result.success) {
-      return NextResponse.json(
-        { success: false, error: result.error, code: result.code },
-        { status: 500 }
-      );
+      return NextResponse.json({ success: false, error: result.error, code: result.code }, { status: 500 });
     }
 
     // Log audit
@@ -145,10 +132,7 @@ export async function DELETE(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { success: false, error: "Authentication required" },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -165,10 +149,7 @@ export async function DELETE(request: NextRequest) {
     const isAdmin = userRole === "admin";
 
     if (!isOwnFile && !isAdmin) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized to delete this file" },
-        { status: 403 }
-      );
+      return NextResponse.json({ success: false, error: "Unauthorized to delete this file" }, { status: 403 });
     }
 
     const storage = getStorageProvider();

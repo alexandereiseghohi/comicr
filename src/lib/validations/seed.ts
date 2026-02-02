@@ -137,9 +137,7 @@ export type SeedConfig = z.infer<typeof SeedConfigSchema>;
 export const SeedManifestSchema = z.object({
   version: z.string().optional().default("1.0"),
   timestamp: z.string().datetime().optional(),
-  entities: z
-    .array(z.enum(["users", "authors", "artists", "genres", "types", "comics", "chapters"]))
-    .optional(),
+  entities: z.array(z.enum(["users", "authors", "artists", "genres", "types", "comics", "chapters"])).optional(),
   config: SeedConfigSchema.optional(),
 });
 
@@ -213,20 +211,10 @@ export function normalizeGenres(genres: unknown): string[] {
   return genres
     .map((g) => {
       if (typeof g === "string") return g;
-      if (
-        g &&
-        typeof g === "object" &&
-        "name" in g &&
-        typeof (g as { name: unknown }).name === "string"
-      ) {
+      if (g && typeof g === "object" && "name" in g && typeof (g as { name: unknown }).name === "string") {
         return (g as { name: string }).name;
       }
-      if (
-        g &&
-        typeof g === "object" &&
-        "id" in g &&
-        typeof (g as { id: unknown }).id === "string"
-      ) {
+      if (g && typeof g === "object" && "id" in g && typeof (g as { id: unknown }).id === "string") {
         return (g as { id: string }).id;
       }
       return "";

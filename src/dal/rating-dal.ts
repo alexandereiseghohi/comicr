@@ -3,10 +3,9 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/rating-mutations";
 import { rating } from "@/database/schema";
+import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
-
-import type { DbMutationResult } from "@/types";
 
 export class RatingDAL extends BaseDAL<typeof rating> {
   constructor() {

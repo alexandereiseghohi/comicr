@@ -1,11 +1,4 @@
-/**
- * @file duplicateDetector.ts
- * @description Detects duplicate comics by slug, title, and metadata with detailed conflict reporting
- * @author ComicWise Team
- * @date 2026-02-01
- */
-
-import type { comic } from "../../schema";
+import { type comic } from "../../schema";
 
 type Comic = typeof comic.$inferSelect;
 
@@ -238,10 +231,13 @@ export function detectDuplicates(
   }
 
   // Calculate summary
-  const conflictsByField = conflicts.reduce((acc, conflict) => {
-    acc[conflict.field] = (acc[conflict.field] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const conflictsByField = conflicts.reduce(
+    (acc, conflict) => {
+      acc[conflict.field] = (acc[conflict.field] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   const duplicateCount = comics.length - uniqueComics.length;
 
@@ -298,9 +294,7 @@ export function generateDuplicateReport(result: DuplicateDetectionResult): strin
       for (const [idx, conflict] of critical.entries()) {
         lines.push(`  ${idx + 1}. ${conflict.field.toUpperCase()}: ${conflict.value}`);
         lines.push(
-          `     Affected: ${conflict.comics.length} comics (kept first, skipped ${
-            conflict.comics.length - 1
-          })`
+          `     Affected: ${conflict.comics.length} comics (kept first, skipped ${conflict.comics.length - 1})`
         );
         for (const [i, comic] of conflict.comics.entries()) {
           const status = i === 0 ? "✅ KEPT" : "⏭️  SKIPPED";

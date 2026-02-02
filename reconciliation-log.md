@@ -222,25 +222,21 @@ $ pnpm test:unit:run --coverage
 **Established Priority Order**:
 
 1. **`.github/prompts/plan-comicwiseComplete40TaskSetup.prompt.md`** ← **PRIMARY SOURCE**
-
    - 4,317 lines, 40 tasks, 9 phases
    - Comprehensive implementation plan
    - Overrides all contradictory information
 
 2. **Spec-Driven Artifacts (Newly Created)**:
-
    - `requirements.md` (EARS-format requirements)
    - `design.md` (Architecture, data flow, security)
    - `tasks.md` (Phase-by-phase task breakdown)
 
 3. **Memory Bank (`memory-bank/`)** ← Corrected to match source of truth
-
    - projectbrief.md, productContext.md, systemPatterns.md
    - techContext.md, activeContext.md, progress.md
    - tasks/\_index.md
 
 4. **Documentation (`docs/`)**:
-
    - phase-status.md (more accurate than Memory Bank currently)
    - api-reference.md, architecture.md
    - openapi.yaml (pending completion)
@@ -254,7 +250,6 @@ $ pnpm test:unit:run --coverage
 ### Immediate Actions (Before Phase 1 Implementation)
 
 1. ✅ **Create spec-driven artifacts**:
-
    - [x] requirements.md
    - [x] design.md
    - [x] tasks.md
@@ -290,7 +285,6 @@ $ pnpm test:unit:run --coverage
    ```
 
 4. ⏳ **Update docs/phase-status.md**:
-
    - Mark Phases 1-4 as "Partially Complete"
    - Mark Phases 5-9 as "Not Started"
    - Add reference to 40-task plan as execution strategy

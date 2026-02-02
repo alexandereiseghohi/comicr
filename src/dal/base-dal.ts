@@ -1,12 +1,7 @@
-/**
- * Base Data Access Layer
- * @description Generic CRUD operations for all tables
- */
+import { type Table } from "drizzle-orm";
 
 import { db } from "@/database/db";
-
-import type { DbMutationResult, PaginatedResponse, QueryOptions } from "@/types";
-import type { Table } from "drizzle-orm";
+import { type DbMutationResult, type PaginatedResponse, type QueryOptions } from "@/types";
 
 /**
  * Generic Base DAL for type-safe database operations

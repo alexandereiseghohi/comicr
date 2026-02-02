@@ -4,8 +4,7 @@ import * as chapterMutations from "@/database/mutations/chapter.mutations";
 import * as chapterQueries from "@/database/queries/chapter.queries";
 import { auth } from "@/lib/auth-config";
 import { createChapterSchema } from "@/schemas/chapter-schema";
-
-import type { AuthUser } from "@/types/auth";
+import { type AuthUser } from "@/types/auth";
 
 /**
  * GET /api/chapters
@@ -57,10 +56,7 @@ export async function POST(request: NextRequest) {
     const validation = createChapterSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json(
-        { success: false, error: validation.error.issues[0]?.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: validation.error.issues[0]?.message }, { status: 400 });
     }
 
     const result = await chapterMutations.createChapter(validation.data);

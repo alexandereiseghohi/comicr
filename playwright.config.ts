@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 
 // Load test environment variables
 dotenv.config({ path: path.resolve(__dirname, ".env.test") });
-dotenv.config({ path: path.resolve(__dirname, ".env") });
+dotenv.config({ path: path.resolve(__dirname, ".env.local") });
 
 const isCI = !!process.env.CI;
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";

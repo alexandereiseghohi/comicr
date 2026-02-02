@@ -1,10 +1,10 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+("use client");
 
 interface ComicCardProps {
   authorName?: string;
@@ -53,11 +53,7 @@ export function ComicCard({
               <CardTitle className="line-clamp-2">{title}</CardTitle>
               {authorName && <CardDescription>{authorName}</CardDescription>}
             </div>
-            <Badge
-              variant={
-                status === "Ongoing" ? "default" : status === "Completed" ? "secondary" : "outline"
-              }
-            >
+            <Badge variant={status === "Ongoing" ? "default" : status === "Completed" ? "secondary" : "outline"}>
               {status}
             </Badge>
           </div>

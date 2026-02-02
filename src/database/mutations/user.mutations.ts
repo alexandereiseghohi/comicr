@@ -3,6 +3,27 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import { user } from "@/database/schema";
 
+export async function createUser({ email, name, password }: { email: string; name: null | string; password: string }) {
+  try {
+    const result = await db
+      .insert(user)
+      .values({
+        email,
+        name,
+        password,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return { success: true, data: result[0] };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "User creation failed",
+    };
+  }
+}
+
 type UpdateUserInput = {
   image?: null | string;
   name?: null | string;
@@ -18,7 +39,10 @@ export async function updateUserById(id: string, data: UpdateUserInput) {
 
     return { success: true, data: result[0] };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Update failed",
+    };
   }
 }
 
@@ -41,11 +65,7 @@ export async function changeUserPassword(id: string, hashedPassword: string) {
 
 export async function changeUserEmail(id: string, email: string) {
   try {
-    const result = await db
-      .update(user)
-      .set({ email, updatedAt: new Date() })
-      .where(eq(user.id, id))
-      .returning();
+    const result = await db.update(user).set({ email, updatedAt: new Date() }).where(eq(user.id, id)).returning();
 
     return { success: true, data: result[0] };
   } catch (error) {

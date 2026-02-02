@@ -20,7 +20,7 @@ export interface ApiResponse<T = unknown> {
 export interface ActionResult<T = unknown> {
   data?: T;
   error?: string;
-  success: boolean;
+  ok: boolean;
 }
 
 /**
@@ -66,7 +66,7 @@ export interface SearchParams {
 export interface QueryOptions {
   filter?: Record<string, unknown>;
   limit?: number;
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
   page?: number;
   search?: string;
   sort?: string;
@@ -79,7 +79,7 @@ export interface Notification {
   duration?: number;
   id: string;
   message: string;
-  type: 'error' | 'info' | 'success' | 'warning';
+  type: "error" | "info" | "success" | "warning";
 }
 
 /**
@@ -101,7 +101,7 @@ export interface SessionUser {
   id: string;
   image?: string;
   name?: string;
-  role?: 'admin' | 'moderator' | 'user';
+  role?: "admin" | "moderator" | "user";
 }
 
 /**
@@ -122,6 +122,6 @@ export type Optional<T> = T | undefined;
 /**
  * Promise type utility
  */
-export type AsyncReturnType<T extends (...args: unknown[]) => Promise<unknown>> = Awaited<
-  ReturnType<T>
->;
+export type AsyncReturnType<
+  T extends (...args: unknown[]) => Promise<unknown>,
+> = Awaited<ReturnType<T>>;

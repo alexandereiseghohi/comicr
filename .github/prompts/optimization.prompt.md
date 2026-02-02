@@ -213,11 +213,7 @@ const CACHE_TTL = {
   user: 5 * 60, // 5 minutes
 };
 
-export async function getCachedData<T>(
-  key: string,
-  fetcher: () => Promise<T>,
-  ttl: number
-): Promise<T> {
+export async function getCachedData<T>(key: string, fetcher: () => Promise<T>, ttl: number): Promise<T> {
   const cached = await redis.get<T>(key);
   if (cached) return cached;
 

@@ -1,10 +1,3 @@
-/**
- * Users Table Component
- * @description Admin table for managing users with role management
- */
-
-"use client";
-
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Shield, ShieldAlert, UserCheck, UserX } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -37,6 +30,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { banUserAction, unbanUserAction, updateUserRoleAction } from "@/lib/actions/admin.actions";
+
+/**
+ * Users Table Component
+ * @description Admin table for managing users with role management
+ */
+
+("use client");
 
 interface User {
   createdAt: Date | null;
@@ -99,10 +99,7 @@ export function UsersTable({ users }: UsersTableProps) {
       header: ({ table }) => (
         <Checkbox
           aria-label="Select all"
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
+          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         />
       ),
@@ -150,11 +147,7 @@ export function UsersTable({ users }: UsersTableProps) {
         const roleConfig = ROLES.find((r) => r.value === role) ?? ROLES[2];
 
         return (
-          <Badge
-            variant={
-              role === "admin" ? "destructive" : role === "moderator" ? "default" : "secondary"
-            }
-          >
+          <Badge variant={role === "admin" ? "destructive" : role === "moderator" ? "default" : "secondary"}>
             {roleConfig.label}
           </Badge>
         );
@@ -165,11 +158,7 @@ export function UsersTable({ users }: UsersTableProps) {
       header: "Status",
       cell: ({ row }) => {
         const verified = row.getValue("emailVerified") as Date | null;
-        return (
-          <Badge variant={verified ? "outline" : "destructive"}>
-            {verified ? "Active" : "Banned"}
-          </Badge>
-        );
+        return <Badge variant={verified ? "outline" : "destructive"}>{verified ? "Active" : "Banned"}</Badge>;
       },
     },
     {
@@ -222,10 +211,7 @@ export function UsersTable({ users }: UsersTableProps) {
                   Unban User
                 </DropdownMenuItem>
               ) : (
-                <DropdownMenuItem
-                  className="text-destructive"
-                  onClick={() => setBanUserId(user.id)}
-                >
+                <DropdownMenuItem className="text-destructive" onClick={() => setBanUserId(user.id)}>
                   <UserX className="mr-2 h-4 w-4" />
                   Ban User
                 </DropdownMenuItem>
@@ -239,12 +225,7 @@ export function UsersTable({ users }: UsersTableProps) {
 
   return (
     <>
-      <DataTable
-        columns={columns}
-        data={users}
-        searchKey="name"
-        searchPlaceholder="Search users..."
-      />
+      <DataTable columns={columns} data={users} searchKey="name" searchPlaceholder="Search users..." />
 
       {/* Ban Confirmation Dialog */}
       <AlertDialog onOpenChange={() => setBanUserId(null)} open={banUserId !== null}>
@@ -252,8 +233,7 @@ export function UsersTable({ users }: UsersTableProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Ban User</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to ban this user? They will not be able to sign in until
-              unbanned.
+              Are you sure you want to ban this user? They will not be able to sign in until unbanned.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -280,10 +260,7 @@ export function UsersTable({ users }: UsersTableProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              disabled={isPending}
-              onClick={() => unbanUserId && handleUnban(unbanUserId)}
-            >
+            <AlertDialogAction disabled={isPending} onClick={() => unbanUserId && handleUnban(unbanUserId)}>
               {isPending ? "Unbanning..." : "Unban User"}
             </AlertDialogAction>
           </AlertDialogFooter>

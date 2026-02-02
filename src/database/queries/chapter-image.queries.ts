@@ -5,11 +5,7 @@ import { chapterImage } from "@/database/schema";
 
 export async function getImagesByChapterId(chapterId: number) {
   try {
-    const results = await db
-      .select()
-      .from(chapterImage)
-      .where(eq(chapterImage.chapterId, chapterId))
-      .limit(100);
+    const results = await db.select().from(chapterImage).where(eq(chapterImage.chapterId, chapterId)).limit(100);
     return { success: true, data: results };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };

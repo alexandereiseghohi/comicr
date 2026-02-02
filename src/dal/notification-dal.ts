@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm";
 
 import { db } from "@/database/db";
+import type { DbNotification } from "@/database/mutations/notification-mutations";
 import * as mutations from "@/database/mutations/notification-mutations";
 import { notification } from "@/database/schema";
+import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
-
-import type { DbMutationResult } from "@/types";
 
 export class NotificationDAL extends BaseDAL<typeof notification> {
   constructor() {
@@ -21,13 +21,16 @@ export class NotificationDAL extends BaseDAL<typeof notification> {
       });
       return { success: true, data: result };
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Failed to fetch" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to fetch",
+      };
     }
   }
 
   async create(
-    data: typeof notification.$inferInsert
-  ): Promise<DbMutationResult<typeof notification.$inferSelect>> {
+    data: typeof notification.$inferInsert,
+  ): Promise<DbMutationResult<DbNotification>> {
     try {
       const result = await mutations.createNotification(
         data.userId,
@@ -36,25 +39,37 @@ export class NotificationDAL extends BaseDAL<typeof notification> {
         data.message,
         data.link ?? undefined,
         data.comicId ?? undefined,
-        data.chapterId ?? undefined
+        data.chapterId ?? undefined,
       );
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return { success: true, data: result as any };
+      if (result && typeof result === "object" && "id" in result) {
+        return { success: true, data: result as DbNotification };
+      } else {
+        return { success: false, error: "Create failed" };
+      }
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Create failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Create failed",
+      };
     }
   }
 
   async update(
     id: number,
-    _data: Partial<typeof notification.$inferInsert>
-  ): Promise<DbMutationResult<typeof notification.$inferSelect>> {
+    _data: Partial<typeof notification.$inferInsert>,
+  ): Promise<DbMutationResult<DbNotification>> {
     try {
       const result = await mutations.markAsRead(id);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return { success: true, data: result as any };
+      if (result && typeof result === "object" && "id" in result) {
+        return { success: true, data: result };
+      } else {
+        return { success: false, error: "Update failed" };
+      }
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Update failed",
+      };
     }
   }
 
@@ -63,7 +78,10 @@ export class NotificationDAL extends BaseDAL<typeof notification> {
       await mutations.deleteNotification(id);
       return { success: true, data: null };
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Delete failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Delete failed",
+      };
     }
   }
 }

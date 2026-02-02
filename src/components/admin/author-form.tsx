@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -8,14 +6,7 @@ import { type z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,6 +15,7 @@ import { createAuthorSchema, updateAuthorSchema } from "@/schemas/author-schema"
 
 import { ImageUploadField } from "./image-upload-field";
 
+("use client");
 type CreateFormValues = z.infer<typeof createAuthorSchema>;
 type UpdateFormValues = z.infer<typeof updateAuthorSchema>;
 
@@ -98,12 +90,7 @@ export function AuthorForm({ author }: AuthorFormProps) {
                 <FormItem>
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Author biography..."
-                      rows={4}
-                      {...field}
-                      value={field.value ?? ""}
-                    />
+                    <Textarea placeholder="Author biography..." rows={4} {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,11 +104,7 @@ export function AuthorForm({ author }: AuthorFormProps) {
                 <FormItem>
                   <FormLabel>Image</FormLabel>
                   <FormControl>
-                    <ImageUploadField
-                      label="Author Image"
-                      onChange={field.onChange}
-                      value={field.value ?? ""}
-                    />
+                    <ImageUploadField label="Author Image" onChange={field.onChange} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

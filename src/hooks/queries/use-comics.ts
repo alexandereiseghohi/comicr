@@ -1,14 +1,13 @@
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { queryKeys } from "@/lib/query-client";
+
 /**
  * Comics Query Hooks
  * @description TanStack Query hooks for comics data fetching
  */
 
-"use client";
-
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { queryKeys } from "@/lib/query-client";
-
+("use client");
 // Types
 interface Comic {
   coverImage: string;
@@ -98,8 +97,7 @@ export function useInfiniteComics(filters: Omit<ComicFilters, "page"> = {}) {
   return useInfiniteQuery({
     queryKey: queryKeys.comics.list({ ...filters, infinite: true } as Record<string, unknown>),
     queryFn: ({ pageParam = 1 }) => fetchComics({ ...filters, page: pageParam }),
-    getNextPageParam: (lastPage) =>
-      lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined,
+    getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined),
     initialPageParam: 1,
     staleTime: 60 * 1000,
   });

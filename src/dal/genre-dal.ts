@@ -3,10 +3,13 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/genre.mutations";
 import { genre } from "@/database/schema";
+import {
+  type CreateGenreInput,
+  type UpdateGenreInput,
+} from "@/schemas/genre-schema";
+import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
-
-import type { DbMutationResult } from "@/types";
 
 export class GenreDAL extends BaseDAL<typeof genre> {
   constructor() {
@@ -21,30 +24,37 @@ export class GenreDAL extends BaseDAL<typeof genre> {
       });
       return { success: true, data: result };
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Failed to fetch" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to fetch",
+      };
     }
   }
 
   async create(
-    data: typeof genre.$inferInsert
+    data: CreateGenreInput,
   ): Promise<DbMutationResult<typeof genre.$inferSelect>> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return await mutations.createGenre(data as any);
+      return await mutations.createGenre(data as CreateGenreInput);
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Create failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Create failed",
+      };
     }
   }
 
   async update(
     id: number,
-    data: Partial<typeof genre.$inferInsert>
+    data: UpdateGenreInput,
   ): Promise<DbMutationResult<typeof genre.$inferSelect>> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return await mutations.updateGenre(id, data as any);
+      return await mutations.updateGenre(id, data as UpdateGenreInput);
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Update failed",
+      };
     }
   }
 
@@ -53,7 +63,10 @@ export class GenreDAL extends BaseDAL<typeof genre> {
       await mutations.deleteGenre(id);
       return { success: true, data: null };
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Delete failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Delete failed",
+      };
     }
   }
 }

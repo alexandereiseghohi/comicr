@@ -1,5 +1,3 @@
-"use client";
-
 import {
   AlignJustify,
   ChevronLeft,
@@ -13,17 +11,14 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 import { ImageViewer } from "./image-viewer";
+import { ReaderSettings } from "./reader-settings";
+
+("use client");
 
 interface ChapterReaderProps {
   backgroundMode?: "dark" | "sepia" | "white";
@@ -50,10 +45,9 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 
   // State
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [mode, setMode] = useState<"horizontal" | "vertical">(
-    propReadingMode || (isMobile ? "vertical" : "vertical")
-  );
-  const [background] = useState<"dark" | "sepia" | "white">(propBackgroundMode || "white");
+  const [mode, setMode] = useState<"horizontal" | "vertical">(propReadingMode || (isMobile ? "vertical" : "vertical"));
+  const [background, setBackground] = useState<"dark" | "sepia" | "white">(propBackgroundMode || "white");
+  const [currentQuality, setCurrentQuality] = useState<"high" | "low" | "medium">(quality);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -126,13 +120,8 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
       await containerRef.current?.requestFullscreen();
       setIsFullScreen(true);
       // Request landscape lock on mobile
-      if (screen.orientation && "lock" in screen.orientation) {
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          await (screen.orientation as any).lock("landscape").catch(() => {});
-        } catch {
-          // Ignore errors
-        }
+      if ("orientation" in screen && screen.orientation && typeof (screen.orientation as any).lock === "function") {
+        await (screen.orientation as any).lock("landscape").catch(() => {});
       }
     } else {
       await document.exitFullscreen();
@@ -289,6 +278,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
   return (
     <div
       className={cn("relative min-h-screen transition-colors", backgroundColors[background])}
+      data-testid="chapter-reader"
       onMouseMove={resetAutoHideTimer}
       onTouchEnd={handleTouchEnd}
       onTouchStart={handleTouchStart}
@@ -311,40 +301,21 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
             title={`Switch to ${mode === "vertical" ? "horizontal" : "vertical"} mode`}
             variant="outline"
           >
-            {mode === "vertical" ? (
-              <AlignJustify className="h-4 w-4" />
-            ) : (
-              <Grid3x3 className="h-4 w-4" />
-            )}
+            {mode === "vertical" ? <AlignJustify className="h-4 w-4" /> : <Grid3x3 className="h-4 w-4" />}
           </Button>
 
           {/* Settings */}
-          <Button
-            onClick={() => setShowSettings(true)}
-            size="sm"
-            title="Settings (S)"
-            variant="outline"
-          >
+          <Button onClick={() => setShowSettings(true)} size="sm" title="Settings (S)" variant="outline">
             <Settings className="h-4 w-4" />
           </Button>
 
           {/* Help */}
-          <Button
-            onClick={() => setShowHelp(true)}
-            size="sm"
-            title="Keyboard shortcuts (?)"
-            variant="outline"
-          >
+          <Button onClick={() => setShowHelp(true)} size="sm" title="Keyboard shortcuts (?)" variant="outline">
             <HelpCircle className="h-4 w-4" />
           </Button>
 
           {/* Full screen */}
-          <Button
-            onClick={toggleFullScreen}
-            size="sm"
-            title="Toggle fullscreen (F)"
-            variant="outline"
-          >
+          <Button onClick={toggleFullScreen} size="sm" title="Toggle fullscreen (F)" variant="outline">
             {isFullScreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
           </Button>
         </div>
@@ -355,12 +326,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
         <div className="mx-auto max-w-4xl space-y-2 px-4 py-8">
           {pages.map((src, idx) => (
             <div className="relative" key={idx}>
-              <ImageViewer
-                alt={`Page ${idx + 1} of ${title}`}
-                className="mb-2"
-                quality={quality}
-                src={src}
-              />
+              <ImageViewer alt={`Page ${idx + 1} of ${title}`} className="mb-2" quality={currentQuality} src={src} />
             </div>
           ))}
         </div>
@@ -371,10 +337,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
         <div className="relative flex min-h-[calc(100vh-73px)] items-center justify-center">
           {/* Previous button */}
           <Button
-            className={cn(
-              "absolute left-4 z-10 h-12 w-12",
-              currentPage === 0 && "cursor-not-allowed opacity-50"
-            )}
+            className={cn("absolute left-4 z-10 h-12 w-12", currentPage === 0 && "cursor-not-allowed opacity-50")}
             disabled={currentPage === 0}
             onClick={previousPage}
             size="icon"
@@ -388,7 +351,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
             <ImageViewer
               alt={`Page ${currentPage + 1} of ${title}`}
               className="max-h-[calc(100vh-100px)]"
-              quality={quality}
+              quality={currentQuality}
               src={pages[currentPage] || ""}
             />
           </div>
@@ -408,7 +371,10 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
           </Button>
 
           {/* Page indicator */}
-          <div className="bg-background/95 absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-4 py-2 text-sm font-medium backdrop-blur">
+          <div
+            className="bg-background/95 absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-4 py-2 text-sm font-medium backdrop-blur"
+            data-testid="page-indicator"
+          >
             {currentPage + 1} / {pages.length}
           </div>
         </div>
@@ -419,9 +385,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Keyboard Shortcuts</DialogTitle>
-            <DialogDescription>
-              Navigate and control the reader with these shortcuts
-            </DialogDescription>
+            <DialogDescription>Navigate and control the reader with these shortcuts</DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-4 py-4">
             <div>
@@ -467,6 +431,17 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Reader Settings Sheet */}
+      <ReaderSettings
+        onOpenChange={setShowSettings}
+        onSettingsChange={(settings) => {
+          setMode(settings.readingMode);
+          setBackground(settings.backgroundMode);
+          setCurrentQuality(settings.defaultQuality);
+        }}
+        open={showSettings}
+      />
     </div>
   );
 };

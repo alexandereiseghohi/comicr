@@ -1,16 +1,6 @@
-/**
- * @file comic-seeder.ts
- * @description Seeds comics from JSON files with validation, cover image download, and duplicate detection
- */
-
 import { downloadAndSaveImage } from "@/lib/image-helper";
 import { seedTableBatched } from "@/lib/seed-helpers";
-import {
-  type ComicSeed,
-  ComicSeedSchema,
-  normalizeDateString,
-  normalizeGenres,
-} from "@/lib/validations/seed";
+import { type ComicSeed, ComicSeedSchema, normalizeDateString, normalizeGenres } from "@/lib/validations/seed";
 
 import { db } from "../../db";
 import { comic, comicToGenre } from "../../schema";
@@ -162,9 +152,7 @@ export async function seedComics(options: ComicSeederOptions): Promise<ComicSeed
       if (!authorId) {
         // Author not found - this is likely a seeding data issue
         throw new Error(
-          `Author "${authorName}" not found in database. Available authors: ${Array.from(
-            authorMap.keys()
-          ).join(", ")}`
+          `Author "${authorName}" not found in database. Available authors: ${Array.from(authorMap.keys()).join(", ")}`
         );
       }
       const artistId = artistName ? artistMap.get(artistName) : undefined;
@@ -183,9 +171,7 @@ export async function seedComics(options: ComicSeederOptions): Promise<ComicSeed
         publicationDate: normalizeDateString(rawComic.updatedAt as string),
         status: (rawComic.status as ComicSeed["status"]) || "Ongoing",
         rating:
-          typeof rawComic.rating === "string"
-            ? parseFloat(rawComic.rating) || 0
-            : (rawComic.rating as number) || 0,
+          typeof rawComic.rating === "string" ? parseFloat(rawComic.rating) || 0 : (rawComic.rating as number) || 0,
         views: (rawComic.views as number) || 0,
       });
     } catch (err) {
@@ -197,13 +183,10 @@ export async function seedComics(options: ComicSeederOptions): Promise<ComicSeed
   }
 
   // Detect and skip duplicates
-  const duplicateResult = detectDuplicates(
-    transformedComics as Partial<typeof comic.$inferSelect>[],
-    {
-      checkSlugs: true,
-      checkTitles: false, // Only use slug for exact duplicate detection
-    }
-  );
+  const duplicateResult = detectDuplicates(transformedComics as Partial<typeof comic.$inferSelect>[], {
+    checkSlugs: true,
+    checkTitles: false, // Only use slug for exact duplicate detection
+  });
 
   // Validate unique comics
   const validComics: ComicSeed[] = [];
@@ -311,9 +294,7 @@ export async function seedComics(options: ComicSeederOptions): Promise<ComicSeed
   });
   const deduped = beforeDedup - itemsToInsert.length;
   if (deduped > 0) {
-    console.warn(
-      `[SEED] Removed ${deduped} duplicate-title items from batch to avoid unique constraint errors`
-    );
+    console.warn(`[SEED] Removed ${deduped} duplicate-title items from batch to avoid unique constraint errors`);
   }
 
   const result = await seedTableBatched({

@@ -1,5 +1,3 @@
-"use server";
-
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
@@ -7,9 +5,8 @@ import * as artistMutations from "@/database/mutations/artist.mutations";
 import { getArtistByName } from "@/database/queries/artist.queries";
 import { createArtistSchema } from "@/schemas/artist-schema";
 
-type ActionResult<T = unknown> =
-  | { data: T; ok: true; }
-  | { error: { code: string; message: string }; ok: false; };
+("use server");
+type ActionResult<T = unknown> = { data: T; ok: true } | { error: { code: string; message: string }; ok: false };
 
 async function verifyAdmin(): Promise<{ userId: string } | null> {
   const session = await auth();
@@ -121,9 +118,7 @@ export async function bulkDeleteArtistsAction(ids: number[]): Promise<ActionResu
     return { ok: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
   }
 
-  const results = await Promise.all(
-    ids.map((id) => artistMutations.updateArtist(id, { isActive: false }))
-  );
+  const results = await Promise.all(ids.map((id) => artistMutations.updateArtist(id, { isActive: false })));
   const failed = results.filter((r) => !r.success);
   if (failed.length > 0) {
     return {
@@ -142,9 +137,7 @@ export async function bulkRestoreArtistsAction(ids: number[]): Promise<ActionRes
     return { ok: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
   }
 
-  const results = await Promise.all(
-    ids.map((id) => artistMutations.updateArtist(id, { isActive: true }))
-  );
+  const results = await Promise.all(ids.map((id) => artistMutations.updateArtist(id, { isActive: true })));
   const failed = results.filter((r) => !r.success);
   if (failed.length > 0) {
     return {

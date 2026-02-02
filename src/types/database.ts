@@ -1,9 +1,4 @@
-/**
- * Database Type Definitions
- * @description Types for database entities and operations
- */
-
-import type { UUID } from './validation';
+import { type UUID } from "./validation";
 
 /**
  * Base database entity with common fields
@@ -23,7 +18,7 @@ export interface User extends BaseEntity {
   image?: string;
   isActive: boolean;
   name?: string;
-  role: 'admin' | 'moderator' | 'user';
+  role: "admin" | "moderator" | "user";
 }
 
 /**
@@ -37,7 +32,7 @@ export interface Comic extends BaseEntity {
   isPublished: boolean;
   rating: number;
   slug: string;
-  status: 'Completed' | 'Ongoing' | 'OnHold';
+  status: "Completed" | "Ongoing" | "OnHold";
   title: string;
   views: number;
 }
@@ -123,7 +118,7 @@ export interface Genre extends BaseEntity {
  */
 export interface ContentType extends BaseEntity {
   description?: string;
-  name: 'Comic' | 'Light Novel' | 'Manga' | 'Manhua' | 'Manhwa';
+  name: "Comic" | "Light Novel" | "Manga" | "Manhua" | "Manhwa";
 }
 
 /**
@@ -132,7 +127,7 @@ export interface ContentType extends BaseEntity {
 export interface DbQueryOptions {
   include?: string[];
   limit?: number;
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
   page?: number;
   sort?: string;
 }

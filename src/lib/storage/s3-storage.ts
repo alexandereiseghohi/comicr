@@ -1,8 +1,3 @@
-/**
- * S3 Storage Provider
- * @description AWS S3 compatible storage implementation
- */
-
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -10,18 +5,17 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import { getSignedUrl as getS3SignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { getEnv } from "@/lib/env";
 
-import type {
-  DeleteOptions,
-  DeleteResult,
-  ExistsResult,
-  GetUrlOptions,
-  StorageProvider,
-  UploadOptions,
-  UploadResponse,
+import {
+  type DeleteOptions,
+  type DeleteResult,
+  type ExistsResult,
+  type GetUrlOptions,
+  type StorageProvider,
+  type UploadOptions,
+  type UploadResponse,
 } from "./types";
 
 /**
@@ -41,7 +35,11 @@ function getS3Client(): S3Client {
 /**
  * Generate a unique S3 key
  */
-function generateKey(filename: string, folder?: string, customName?: string): string {
+function generateKey(
+  filename: string,
+  folder?: string,
+  customName?: string,
+): string {
   const timestamp = Date.now();
   const random = Math.random().toString(36).substring(2, 8);
   const ext = filename.split(".").pop() || "";
@@ -69,7 +67,7 @@ export class S3StorageProvider implements StorageProvider {
   async upload(
     file: Blob | Buffer | ReadableStream,
     filename: string,
-    options: UploadOptions = {}
+    options: UploadOptions = {},
   ): Promise<UploadResponse> {
     try {
       const client = this.getClient();
@@ -106,7 +104,9 @@ export class S3StorageProvider implements StorageProvider {
 
       await client.send(command);
 
-      const url = `https://${this.bucket}.s3.${getEnv().AWS_REGION}.amazonaws.com/${key}`;
+      const url = `https://${this.bucket}.s3.${
+        getEnv().AWS_REGION
+      }.amazonaws.com/${key}`;
 
       return {
         success: true,
@@ -125,7 +125,10 @@ export class S3StorageProvider implements StorageProvider {
     }
   }
 
-  async delete(key: string, _options: DeleteOptions = {}): Promise<DeleteResult> {
+  async delete(
+    key: string,
+    _options: DeleteOptions = {},
+  ): Promise<DeleteResult> {
     try {
       const client = this.getClient();
       const command = new DeleteObjectCommand({
@@ -147,7 +150,9 @@ export class S3StorageProvider implements StorageProvider {
     if (options.expiresIn) {
       return this.getSignedUrl(key, options.expiresIn);
     }
-    return `https://${this.bucket}.s3.${getEnv().AWS_REGION}.amazonaws.com/${key}`;
+    return `https://${this.bucket}.s3.${
+      getEnv().AWS_REGION
+    }.amazonaws.com/${key}`;
   }
 
   async getSignedUrl(key: string, expiresIn: number = 3600): Promise<string> {
@@ -157,7 +162,7 @@ export class S3StorageProvider implements StorageProvider {
       Key: key,
     });
 
-    return getS3SignedUrl(client, command, { expiresIn });
+    return getSignedUrl(client, command, { expiresIn });
   }
 
   async exists(key: string): Promise<ExistsResult> {
@@ -185,3 +190,13 @@ export class S3StorageProvider implements StorageProvider {
 }
 
 export const s3StorageProvider = new S3StorageProvider();
+function getSignedUrl(
+  client: S3Client,
+  command: GetObjectCommand,
+  arg2: { expiresIn: number },
+): Promise<string> {
+  return getSignedUrlOrig(client, command, arg2);
+}
+
+// Alias to avoid shadowing the imported getSignedUrl
+const getSignedUrlOrig = getSignedUrl as typeof getSignedUrl;

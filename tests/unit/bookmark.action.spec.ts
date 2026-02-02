@@ -3,12 +3,20 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("@/database/mutations/bookmark.mutations", () => ({
   addBookmark: vi.fn(async (data: unknown) => ({
     success: true,
-    data: { ...(data as Record<string, unknown>), createdAt: new Date().toISOString() },
+    data: {
+      ...(data as Record<string, unknown>),
+      createdAt: new Date().toISOString(),
+    },
+    error: undefined,
   })),
-  removeBookmark: vi.fn(async () => ({ success: true })),
+  removeBookmark: vi.fn(async () => ({
+    success: true,
+    error: undefined,
+    data: null,
+  })),
 }));
 
-import { addBookmarkAction, removeBookmarkAction } from "@/lib/actions/bookmark.action";
+import { addBookmarkAction, removeBookmarkAction } from "@/lib/actions/bookmark.actions";
 
 describe("bookmark actions", () => {
   it("rejects invalid add input", async () => {

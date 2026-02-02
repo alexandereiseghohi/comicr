@@ -107,11 +107,7 @@ export interface StorageProvider {
    * @param filename - Original filename with extension
    * @param options - Upload options
    */
-  upload(
-    file: Blob | Buffer | ReadableStream,
-    filename: string,
-    options?: UploadOptions
-  ): Promise<UploadResponse>;
+  upload(file: Blob | Buffer | ReadableStream, filename: string, options?: UploadOptions): Promise<UploadResponse>;
 }
 
 /**
@@ -139,18 +135,14 @@ export const ALLOWED_FILE_TYPES = {
 export function getFileCategory(contentType: string): keyof typeof FILE_SIZE_LIMITS {
   if (contentType.startsWith("image/")) return "image";
   if (contentType.startsWith("video/")) return "video";
-  if (contentType.startsWith("application/pdf") || contentType.includes("document"))
-    return "document";
+  if (contentType.startsWith("application/pdf") || contentType.includes("document")) return "document";
   return "other";
 }
 
 /**
  * Validate file against size and type limits
  */
-export function validateFile(
-  size: number,
-  contentType: string
-): { error: string; valid: false; } | { valid: true } {
+export function validateFile(size: number, contentType: string): { error: string; valid: false } | { valid: true } {
   const category = getFileCategory(contentType);
   const maxSize = FILE_SIZE_LIMITS[category];
 

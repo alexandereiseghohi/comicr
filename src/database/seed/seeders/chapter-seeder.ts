@@ -1,8 +1,3 @@
-/**
- * @file chapter-seeder.ts
- * @description Seeds chapters from JSON files with validation and full image download
- */
-
 import { downloadAndSaveImage } from "@/lib/image-helper";
 import { seedTableBatched } from "@/lib/seed-helpers";
 import { normalizeDateString, RawChapterSchema } from "@/lib/validations/seed";
@@ -10,11 +5,7 @@ import { normalizeDateString, RawChapterSchema } from "@/lib/validations/seed";
 import { db } from "../../db";
 import { chapter, chapterImage } from "../../schema";
 import { chunkArray, processDuplicateImage } from "../helpers";
-import {
-  CHAPTERS_IMAGE_DIR,
-  PLACEHOLDER_CHAPTER,
-  SEED_DOWNLOAD_CONCURRENCY_VALUE,
-} from "../seed-config";
+import { CHAPTERS_IMAGE_DIR, PLACEHOLDER_CHAPTER, SEED_DOWNLOAD_CONCURRENCY_VALUE } from "../seed-config";
 
 export interface ChapterSeederOptions {
   /** Array of chapters to seed */
@@ -90,9 +81,7 @@ function extractImages(chapterData: Record<string, unknown>): string[] {
 
   // Try image_urls array
   if (Array.isArray(chapterData.image_urls)) {
-    return chapterData.image_urls.filter(
-      (url): url is string => typeof url === "string" && url.length > 0
-    );
+    return chapterData.image_urls.filter((url): url is string => typeof url === "string" && url.length > 0);
   }
 
   return [];
@@ -267,12 +256,8 @@ export async function seedChapters(options: ChapterSeederOptions): Promise<Chapt
     const title = parsed.data.title || parsed.data.chaptername || `Chapter ${chapterNumber}`;
 
     // Use comic slug for chapter slug generation, fallback to normalized title
-    const comicSlugForChapter =
-      comicSlug || normalizeForMatching(comicTitle || "unknown").replaceAll(/\s+/g, "-");
-    const slug =
-      parsed.data.chapterslug ||
-      parsed.data.slug ||
-      generateChapterSlug(comicSlugForChapter, chapterNumber);
+    const comicSlugForChapter = comicSlug || normalizeForMatching(comicTitle || "unknown").replaceAll(/\s+/g, "-");
+    const slug = parsed.data.chapterslug || parsed.data.slug || generateChapterSlug(comicSlugForChapter, chapterNumber);
 
     const images = extractImages(rawChapter);
     const releaseDate = normalizeDateString(parsed.data.updated_at || parsed.data.releaseDate);

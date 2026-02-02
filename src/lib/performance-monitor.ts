@@ -148,7 +148,10 @@ export function trackWebVitals() {
           logger.performance("LCP measured", {
             metadata: {
               startTime: entry.startTime,
-              element: (entry as any).target?.tagName,
+              element:
+                typeof entry === "object" && entry && "target" in entry && (entry as any).target
+                  ? (entry as any).target.tagName
+                  : undefined,
             },
           });
         }
@@ -160,7 +163,7 @@ export function trackWebVitals() {
   }
 }
 
-function onVitalCollected(metric: { delta: number; name: string; rating: string; value: number; }) {
+function onVitalCollected(metric: { delta: number; name: string; rating: string; value: number }) {
   logger.performance(`Web Vital: ${metric.name}`, {
     metadata: {
       value: metric.value,

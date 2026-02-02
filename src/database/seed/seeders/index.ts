@@ -10,23 +10,16 @@ export { type GenreSeederOptions, type GenreSeederResult, seedGenres } from "./g
 export { seedTypes, type TypeSeederOptions, type TypeSeederResult } from "./type-seeder";
 
 // Core entity seeders
-export {
-  type ChapterSeederOptions,
-  type ChapterSeederResult,
-  seedChapters,
-} from "./chapter-seeder";
+export { type ChapterSeederOptions, type ChapterSeederResult, seedChapters } from "./chapter-seeder";
 export { type ComicSeederOptions, type ComicSeederResult, seedComics } from "./comic-seeder";
 export { seedUsers, type UserSeederOptions, type UserSeederResult } from "./user-seeder";
 
 // RBAC seeder
-export {
-  type SeedResult as RolePermissionSeederResult,
-  seedRolesAndPermissions,
-} from "./role-permission-seeder";
+export { type SeedResult as RolePermissionSeederResult, seedRolesAndPermissions } from "./role-permission-seeder";
 
 // Common seeder result type
 export interface SeederResult {
-  errors: Array<{ error: string; item?: unknown; }>;
+  errors: Array<{ error: string; item?: unknown }>;
   seeded: number;
   skipped: number;
   success: boolean;

@@ -17,10 +17,7 @@ export async function GET(request: NextRequest) {
 
     const parsed = QuickSearchSchema.safeParse(rawParams);
     if (!parsed.success) {
-      return NextResponse.json(
-        { success: false, error: "Invalid search parameters" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: "Invalid search parameters" }, { status: 400 });
     }
 
     const { q, limit } = parsed.data;

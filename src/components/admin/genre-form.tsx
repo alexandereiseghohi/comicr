@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -8,20 +6,14 @@ import { type z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { createGenreAction, updateGenreAction } from "@/lib/actions/genre.actions";
 import { createGenreSchema, updateGenreSchema } from "@/schemas/genre-schema";
 
+("use client");
 type CreateFormValues = z.infer<typeof createGenreSchema>;
 type UpdateFormValues = z.infer<typeof updateGenreSchema>;
 
@@ -103,9 +95,7 @@ export function GenreForm({ genre }: GenreFormProps) {
                     />
                   </FormControl>
                   <FormMessage />
-                  <p className="text-muted-foreground text-xs">
-                    Leave empty to auto-generate from name
-                  </p>
+                  <p className="text-muted-foreground text-xs">Leave empty to auto-generate from name</p>
                 </FormItem>
               )}
             />
@@ -117,12 +107,7 @@ export function GenreForm({ genre }: GenreFormProps) {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Genre description..."
-                      rows={3}
-                      {...field}
-                      value={field.value ?? ""}
-                    />
+                    <Textarea placeholder="Genre description..." rows={3} {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -137,9 +122,7 @@ export function GenreForm({ genre }: GenreFormProps) {
                   <FormItem className="flex items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
                       <FormLabel>Active Status</FormLabel>
-                      <p className="text-muted-foreground text-sm">
-                        Inactive genres won&apos;t appear in filters
-                      </p>
+                      <p className="text-muted-foreground text-sm">Inactive genres won&apos;t appear in filters</p>
                     </div>
                     <FormControl>
                       <Switch checked={field.value} onCheckedChange={field.onChange} />

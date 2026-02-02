@@ -3,10 +3,9 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/chapter-image.mutations";
 import { chapterImage } from "@/database/schema";
+import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
-
-import type { DbMutationResult } from "@/types";
 
 export class ChapterImageDAL extends BaseDAL<typeof chapterImage> {
   constructor() {
@@ -25,9 +24,7 @@ export class ChapterImageDAL extends BaseDAL<typeof chapterImage> {
     }
   }
 
-  async create(
-    data: typeof chapterImage.$inferInsert
-  ): Promise<DbMutationResult<typeof chapterImage.$inferSelect>> {
+  async create(data: typeof chapterImage.$inferInsert): Promise<DbMutationResult<typeof chapterImage.$inferSelect>> {
     try {
       return await mutations.createChapterImage(data);
     } catch (error) {

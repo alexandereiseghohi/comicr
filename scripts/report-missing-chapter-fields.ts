@@ -67,19 +67,10 @@ async function main() {
     console.log(`\nFile: ${file}`);
     console.log(`  Records missing fields: ${missing.length}`);
     for (const entry of missing.slice(0, 10)) {
-      if (
-        entry &&
-        Array.isArray(entry.missingFields) &&
-        entry.record &&
-        typeof entry.record === "object"
-      ) {
+      if (entry && Array.isArray(entry.missingFields) && entry.record && typeof entry.record === "object") {
         console.log(`    [Index ${entry.index}] Missing: ${entry.missingFields.join(", ")}`);
         // Optionally, print a summary of the record
-        console.log(
-          `      Title: ${entry.record.title || "(no title)"}, Slug: ${
-            entry.record.slug || "(no slug)"
-          }`
-        );
+        console.log(`      Title: ${entry.record.title || "(no title)"}, Slug: ${entry.record.slug || "(no slug)"}`);
       }
     }
     if (missing.length > 10) {

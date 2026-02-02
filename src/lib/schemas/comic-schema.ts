@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 export const ComicSchema = z.object({
   id: z.string().uuid(),
   createdAt: z.date(),

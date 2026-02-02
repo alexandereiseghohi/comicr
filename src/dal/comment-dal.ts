@@ -3,10 +3,9 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/comment-mutations";
 import { comment } from "@/database/schema";
+import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
-
-import type { DbMutationResult } from "@/types";
 
 export class CommentDAL extends BaseDAL<typeof comment> {
   constructor() {
@@ -38,10 +37,7 @@ export class CommentDAL extends BaseDAL<typeof comment> {
     }
   }
 
-  async update(
-    id: number,
-    content: string
-  ): Promise<DbMutationResult<typeof comment.$inferSelect>> {
+  async update(id: number, content: string): Promise<DbMutationResult<typeof comment.$inferSelect>> {
     try {
       return await mutations.updateComment(id, content);
     } catch (error) {

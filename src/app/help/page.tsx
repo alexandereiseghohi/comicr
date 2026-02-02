@@ -1,18 +1,12 @@
-"use client";
-
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+("use client");
 /* eslint-disable react/no-unescaped-entities */
 
 const faqs = [
@@ -120,9 +114,7 @@ export default function HelpPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
       <h1 className="mb-4 text-4xl font-bold tracking-tight">Help & FAQ</h1>
-      <p className="text-muted-foreground mb-8 text-lg">
-        Find answers to common questions about using ComicWise
-      </p>
+      <p className="text-muted-foreground mb-8 text-lg">Find answers to common questions about using ComicWise</p>
 
       {/* Search Bar */}
       <div className="relative mb-8">
@@ -141,12 +133,8 @@ export default function HelpPage() {
         <Accordion className="w-full" collapsible type="single">
           {filteredFaqs.map((faq) => (
             <AccordionItem key={faq.id} value={faq.id}>
-              <AccordionTrigger className="text-left text-lg font-semibold">
-                {faq.question}
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground text-base">
-                {faq.answer}
-              </AccordionContent>
+              <AccordionTrigger className="text-left text-lg font-semibold">{faq.question}</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground text-base">{faq.answer}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
@@ -155,9 +143,7 @@ export default function HelpPage() {
           <p className="text-muted-foreground">
             No results found for "<strong>{searchQuery}</strong>"
           </p>
-          <p className="text-muted-foreground mt-2 text-sm">
-            Try adjusting your search or browse all questions above.
-          </p>
+          <p className="text-muted-foreground mt-2 text-sm">Try adjusting your search or browse all questions above.</p>
         </div>
       )}
 

@@ -43,15 +43,7 @@ function TableSkeleton() {
   );
 }
 
-async function ComicsContent({
-  page,
-  search,
-  status,
-}: {
-  page: number;
-  search?: string;
-  status?: string;
-}) {
+async function ComicsContent({ page, search, status }: { page: number; search?: string; status?: string }) {
   const result = await getComicsForAdmin({ page, limit: 50, search, status });
 
   if (!result.success || !result.data) {

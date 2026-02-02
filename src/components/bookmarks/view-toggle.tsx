@@ -1,9 +1,8 @@
-"use client";
-
 import { LayoutGridIcon, ListIcon } from "lucide-react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
+("use client");
 export type ViewMode = "grid" | "list";
 
 interface ViewToggleProps {
@@ -13,12 +12,7 @@ interface ViewToggleProps {
 
 export function ViewToggle({ value, onChange }: ViewToggleProps) {
   return (
-    <ToggleGroup
-      aria-label="View mode"
-      onValueChange={(v) => v && onChange(v as ViewMode)}
-      type="single"
-      value={value}
-    >
+    <ToggleGroup aria-label="View mode" onValueChange={(v) => v && onChange(v as ViewMode)} type="single" value={value}>
       <ToggleGroupItem aria-label="Grid view" value="grid">
         <LayoutGridIcon className="h-4 w-4" />
       </ToggleGroupItem>

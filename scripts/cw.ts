@@ -46,7 +46,7 @@ const log = {
 const ROOT_DIR = path.resolve(__dirname, "..");
 
 // Helper to run shell commands
-function run(cmd: string, options?: { cwd?: string; silent?: boolean; }): string {
+function run(cmd: string, options?: { cwd?: string; silent?: boolean }): string {
   try {
     const result = execSync(cmd, {
       cwd: options?.cwd || ROOT_DIR,
@@ -176,9 +176,7 @@ export async function getAll${pascalCase(name)}s() {
 
 export async function get${pascalCase(name)}ById(id: number) {
   try {
-    // const result = await db.select().from(${camelCase(name)}).where(eq(${camelCase(
-      name
-    )}.id, id));
+    // const result = await db.select().from(${camelCase(name)}).where(eq(${camelCase(name)}.id, id));
     // return { success: true, data: result[0] || null };
     return { success: true, data: null };
   } catch (error) {
@@ -206,13 +204,9 @@ export async function create${pascalCase(name)}(input: ${pascalCase(name)}Input)
   }
 }
 
-export async function update${pascalCase(name)}(id: number, input: Partial<${pascalCase(
-      name
-    )}Input>) {
+export async function update${pascalCase(name)}(id: number, input: Partial<${pascalCase(name)}Input>) {
   try {
-    // const result = await db.update(${camelCase(name)}).set(input).where(eq(${camelCase(
-      name
-    )}.id, id)).returning();
+    // const result = await db.update(${camelCase(name)}).set(input).where(eq(${camelCase(name)}.id, id)).returning();
     // return { success: true, data: result[0] };
     return { success: true, data: { id, ...input } };
   } catch (error) {
@@ -446,8 +440,7 @@ async function testCommand(args: string[]) {
 
       if (hasWatch) {
         log.info("Running unit tests in watch mode...");
-        const command =
-          patterns.length > 0 ? `pnpm test ${patterns.join(" ")} --watch` : "pnpm test --watch";
+        const command = patterns.length > 0 ? `pnpm test ${patterns.join(" ")} --watch` : "pnpm test --watch";
         spawn("pnpm", command.split(" ").slice(1), {
           stdio: "inherit",
           shell: true,

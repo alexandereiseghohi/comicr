@@ -63,7 +63,6 @@ ComicWise uses **8 MCP (Model Context Protocol) servers** to enhance AI agent ca
    ```
 
 4. **Redis**: Upstash Redis account (serverless, no local install needed)
-
    - Sign up at [console.upstash.com](https://console.upstash.com)
    - Create a Redis database
    - Copy REST URL and token
@@ -179,38 +178,27 @@ SENTRY_DSN="https://your-sentry-dsn@sentry.io/project"
         "--workspace",
         "${workspaceFolder}",
         "--framework",
-        "nextjs-16"
+        "nextjs-16",
       ],
       "env": {
         "NODE_ENV": "development",
-        "NEXT_TELEMETRY_DISABLED": "1"
-      }
+        "NEXT_TELEMETRY_DISABLED": "1",
+      },
     },
     "typescript-enhanced": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-typescript",
-        "--strict",
-        "--workspace",
-        "${workspaceFolder}"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-typescript", "--strict", "--workspace", "${workspaceFolder}"],
       "env": {
-        "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json"
-      }
+        "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json",
+      },
     },
     "postgresql-database": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-postgres",
-        "--connection-string",
-        "${env:DATABASE_URL}"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "--connection-string", "${env:DATABASE_URL}"],
       "env": {
         "PGDATABASE": "comicwise",
-        "PGSCHEMA": "public"
-      }
+        "PGSCHEMA": "public",
+      },
     },
     "redis-cache": {
       "command": "npx",
@@ -220,26 +208,26 @@ SENTRY_DSN="https://your-sentry-dsn@sentry.io/project"
         "--url",
         "${env:UPSTASH_REDIS_REST_URL}",
         "--token",
-        "${env:UPSTASH_REDIS_REST_TOKEN}"
-      ]
+        "${env:UPSTASH_REDIS_REST_TOKEN}",
+      ],
     },
     "filesystem-ops": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"],
     },
     "git-integration": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-git", "${workspaceFolder}"]
+      "args": ["-y", "@modelcontextprotocol/server-git", "${workspaceFolder}"],
     },
     "sequential-thinking": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
     },
     "context7": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
-    }
-  }
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+    },
+  },
 }
 ```
 
@@ -771,20 +759,20 @@ npx -y @modelcontextprotocol/server-typescript --help
     "nextjs-dev": {
       // ... existing config ...
       "timeout": 30000, // 30 second timeout
-      "cacheResponses": true // Cache tool responses
+      "cacheResponses": true, // Cache tool responses
     },
     "typescript-enhanced": {
       // ... existing config ...
       "timeout": 60000, // 60 seconds for large codebases
-      "cacheResponses": true
-    }
+      "cacheResponses": true,
+    },
     // ... repeat for other servers
   },
   "globalSettings": {
     "defaultTimeout": 30000,
     "enableCaching": true,
-    "maxCacheSize": 100 // MB
-  }
+    "maxCacheSize": 100, // MB
+  },
 }
 ```
 
@@ -797,19 +785,14 @@ npx -y @modelcontextprotocol/server-typescript --help
   "servers": {
     "postgresql-database": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-postgres",
-        "--connection-string",
-        "${env:DATABASE_URL}"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "--connection-string", "${env:DATABASE_URL}"],
       "env": {
         "PGDATABASE": "comicwise",
         "PGSCHEMA": "public",
-        "PGSSLMODE": "require" // Force SSL for production
-      }
-    }
-  }
+        "PGSSLMODE": "require", // Force SSL for production
+      },
+    },
+  },
 }
 ```
 
@@ -826,12 +809,12 @@ npx -y @modelcontextprotocol/server-typescript --help
       "filesystem-ops",
       "git-integration",
       "sequential-thinking",
-      "context7"
+      "context7",
     ],
     "testing": ["postgresql-database", "redis-cache", "typescript-enhanced"],
-    "production": [] // No MCP servers in production
+    "production": [], // No MCP servers in production
   },
-  "activeProfile": "development"
+  "activeProfile": "development",
 }
 ```
 

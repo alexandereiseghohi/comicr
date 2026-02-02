@@ -21,14 +21,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validation = createTypeSchema.safeParse(body);
     if (!validation.success)
-      return NextResponse.json(
-        { success: false, error: validation.error.issues[0]?.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: validation.error.issues[0]?.message }, { status: 400 });
 
     const result = await typeMutations.createType(validation.data);
-    if (!result.success)
-      return NextResponse.json({ success: false, error: result.error }, { status: 400 });
+    if (!result.success) return NextResponse.json({ success: false, error: result.error }, { status: 400 });
 
     return NextResponse.json({ success: true, data: result.data }, { status: 201 });
   } catch (error) {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 export const ChapterSchema = z.object({
   id: z.string().uuid(),
   createdAt: z.date(),

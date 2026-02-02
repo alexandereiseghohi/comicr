@@ -3,10 +3,13 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/author.mutations";
 import { author } from "@/database/schema";
+import {
+  type CreateAuthorInput,
+  type UpdateAuthorInput,
+} from "@/schemas/author-schema";
+import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
-
-import type { DbMutationResult } from "@/types";
 
 export class AuthorDAL extends BaseDAL<typeof author> {
   constructor() {
@@ -21,30 +24,37 @@ export class AuthorDAL extends BaseDAL<typeof author> {
       });
       return { success: true, data: result };
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Failed to fetch" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to fetch",
+      };
     }
   }
 
   async create(
-    data: typeof author.$inferInsert
+    data: CreateAuthorInput,
   ): Promise<DbMutationResult<typeof author.$inferSelect>> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return await mutations.createAuthor(data as any);
+      return await mutations.createAuthor(data as CreateAuthorInput);
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Create failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Create failed",
+      };
     }
   }
 
   async update(
     id: number,
-    data: Partial<typeof author.$inferInsert>
+    data: UpdateAuthorInput,
   ): Promise<DbMutationResult<typeof author.$inferSelect>> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return await mutations.updateAuthor(id, data as any);
+      return await mutations.updateAuthor(id, data as UpdateAuthorInput);
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Update failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Update failed",
+      };
     }
   }
 
@@ -53,7 +63,10 @@ export class AuthorDAL extends BaseDAL<typeof author> {
       await mutations.deleteAuthor(id);
       return { success: true, data: null };
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : "Delete failed" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Delete failed",
+      };
     }
   }
 }

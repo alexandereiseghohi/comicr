@@ -1,9 +1,8 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
+("use client");
 export const BackgroundGradient = ({
   children,
   className,
@@ -155,9 +154,7 @@ export const BackgroundGradientAnimation = ({
       }
       setCurX(curX + (tgX - curX) / 20);
       setCurY(curY + (tgY - curY) / 20);
-      interactiveRef.current.style.transform = `translate(${Math.round(curX)}px, ${Math.round(
-        curY
-      )}px)`;
+      interactiveRef.current.style.transform = `translate(${Math.round(curX)}px, ${Math.round(curY)}px)`;
     };
 
     move();
@@ -202,12 +199,7 @@ export const BackgroundGradientAnimation = ({
         <defs>
           <filter id="blurMe">
             <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10" />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              result="goo"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"
-            />
+            <feColorMatrix in="blur" mode="matrix" result="goo" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" />
             <feBlend in="SourceGraphic" in2="goo" />
           </filter>
         </defs>

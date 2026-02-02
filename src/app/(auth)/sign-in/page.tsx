@@ -1,14 +1,9 @@
-/**
- * Sign In Page
- * @description User login page with email/password and OAuth options
- */
-
 import { type Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { auth } from "@/auth";
 import { SignInForm } from "@/components/auth/sign-in-form";
-import { auth } from "@/lib/auth-config";
 
 export const metadata: Metadata = {
   title: "Sign In | ComicWise",

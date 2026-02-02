@@ -1,9 +1,8 @@
-"use client";
-
 import { useCallback, useLayoutEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
+("use client");
 export const InfiniteMovingCards = ({
   items,
   direction = "left",
@@ -106,18 +105,12 @@ export const InfiniteMovingCards = ({
                 </div>
               )}
               {item.quote && (
-                <span className="relative z-20 text-sm leading-[1.6] font-normal text-gray-100">
-                  {item.quote}
-                </span>
+                <span className="relative z-20 text-sm leading-[1.6] font-normal text-gray-100">{item.quote}</span>
               )}
               <div className="relative z-20 mt-6 flex flex-row items-center">
                 <span className="flex flex-col gap-1">
-                  <span className="text-sm leading-[1.6] font-normal text-gray-400">
-                    {item.name}
-                  </span>
-                  <span className="text-sm leading-[1.6] font-normal text-gray-400">
-                    {item.title}
-                  </span>
+                  <span className="text-sm leading-[1.6] font-normal text-gray-400">{item.name}</span>
+                  <span className="text-sm leading-[1.6] font-normal text-gray-400">{item.title}</span>
                 </span>
               </div>
             </blockquote>

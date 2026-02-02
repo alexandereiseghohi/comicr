@@ -1,5 +1,3 @@
-"use server";
-
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
@@ -7,9 +5,8 @@ import * as authorMutations from "@/database/mutations/author.mutations";
 import { getAuthorByName } from "@/database/queries/author.queries";
 import { createAuthorSchema } from "@/schemas/author-schema";
 
-type ActionResult<T = unknown> =
-  | { data: T; ok: true; }
-  | { error: { code: string; message: string }; ok: false; };
+("use server");
+type ActionResult<T = unknown> = { data: T; ok: true } | { error: { code: string; message: string }; ok: false };
 
 async function verifyAdmin(): Promise<{ userId: string } | null> {
   const session = await auth();
@@ -21,7 +18,10 @@ async function verifyAdmin(): Promise<{ userId: string } | null> {
 export async function createAuthorAction(formData: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return {
+      ok: false,
+      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+    };
   }
 
   const validation = createAuthorSchema.safeParse(formData);
@@ -38,12 +38,18 @@ export async function createAuthorAction(formData: unknown): Promise<ActionResul
   // Check unique name
   const existing = await getAuthorByName(validation.data.name);
   if (existing) {
-    return { ok: false, error: { code: "DUPLICATE", message: "Author name already exists" } };
+    return {
+      ok: false,
+      error: { code: "DUPLICATE", message: "Author name already exists" },
+    };
   }
 
   const result = await authorMutations.createAuthor(validation.data);
   if (!result.success) {
-    return { ok: false, error: { code: "DB_ERROR", message: result.error ?? "Creation failed" } };
+    return {
+      ok: false,
+      error: { code: "DB_ERROR", message: result.error ?? "Creation failed" },
+    };
   }
 
   revalidatePath("/admin/authors");
@@ -53,7 +59,10 @@ export async function createAuthorAction(formData: unknown): Promise<ActionResul
 export async function updateAuthorAction(id: number, formData: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return {
+      ok: false,
+      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+    };
   }
 
   const validation = createAuthorSchema.partial().safeParse(formData);
@@ -71,13 +80,19 @@ export async function updateAuthorAction(id: number, formData: unknown): Promise
   if (validation.data.name) {
     const existing = await getAuthorByName(validation.data.name);
     if (existing && existing.id !== id) {
-      return { ok: false, error: { code: "DUPLICATE", message: "Author name already exists" } };
+      return {
+        ok: false,
+        error: { code: "DUPLICATE", message: "Author name already exists" },
+      };
     }
   }
 
   const result = await authorMutations.updateAuthor(id, validation.data);
   if (!result.success) {
-    return { ok: false, error: { code: "DB_ERROR", message: result.error ?? "Update failed" } };
+    return {
+      ok: false,
+      error: { code: "DB_ERROR", message: result.error ?? "Update failed" },
+    };
   }
 
   revalidatePath("/admin/authors");
@@ -87,13 +102,19 @@ export async function updateAuthorAction(id: number, formData: unknown): Promise
 export async function deleteAuthorAction(id: number): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return {
+      ok: false,
+      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+    };
   }
 
   // Soft delete: set isActive = false
   const result = await authorMutations.updateAuthor(id, { isActive: false });
   if (!result.success) {
-    return { ok: false, error: { code: "DB_ERROR", message: result.error ?? "Delete failed" } };
+    return {
+      ok: false,
+      error: { code: "DB_ERROR", message: result.error ?? "Delete failed" },
+    };
   }
 
   revalidatePath("/admin/authors");
@@ -103,12 +124,18 @@ export async function deleteAuthorAction(id: number): Promise<ActionResult> {
 export async function restoreAuthorAction(id: number): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return {
+      ok: false,
+      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+    };
   }
 
   const result = await authorMutations.updateAuthor(id, { isActive: true });
   if (!result.success) {
-    return { ok: false, error: { code: "DB_ERROR", message: result.error ?? "Restore failed" } };
+    return {
+      ok: false,
+      error: { code: "DB_ERROR", message: result.error ?? "Restore failed" },
+    };
   }
 
   revalidatePath("/admin/authors");
@@ -118,17 +145,21 @@ export async function restoreAuthorAction(id: number): Promise<ActionResult> {
 export async function bulkDeleteAuthorsAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return {
+      ok: false,
+      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+    };
   }
 
-  const results = await Promise.all(
-    ids.map((id) => authorMutations.updateAuthor(id, { isActive: false }))
-  );
+  const results = await Promise.all(ids.map((id) => authorMutations.updateAuthor(id, { isActive: false })));
   const failed = results.filter((r) => !r.success);
   if (failed.length > 0) {
     return {
       ok: false,
-      error: { code: "PARTIAL_FAILURE", message: `${failed.length} of ${ids.length} failed` },
+      error: {
+        code: "PARTIAL_FAILURE",
+        message: `${failed.length} of ${ids.length} failed`,
+      },
     };
   }
 
@@ -139,17 +170,21 @@ export async function bulkDeleteAuthorsAction(ids: number[]): Promise<ActionResu
 export async function bulkRestoreAuthorsAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return {
+      ok: false,
+      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+    };
   }
 
-  const results = await Promise.all(
-    ids.map((id) => authorMutations.updateAuthor(id, { isActive: true }))
-  );
+  const results = await Promise.all(ids.map((id) => authorMutations.updateAuthor(id, { isActive: true })));
   const failed = results.filter((r) => !r.success);
   if (failed.length > 0) {
     return {
       ok: false,
-      error: { code: "PARTIAL_FAILURE", message: `${failed.length} of ${ids.length} failed` },
+      error: {
+        code: "PARTIAL_FAILURE",
+        message: `${failed.length} of ${ids.length} failed`,
+      },
     };
   }
 

@@ -36,11 +36,7 @@ async function scanFile(filePath: string): Promise<void> {
 
   for (const [index, line] of lines.entries()) {
     // Skip import statements and comments
-    if (
-      line.trim().startsWith("import") ||
-      line.trim().startsWith("//") ||
-      line.trim().startsWith("*")
-    ) {
+    if (line.trim().startsWith("import") || line.trim().startsWith("//") || line.trim().startsWith("*")) {
       continue;
     }
 

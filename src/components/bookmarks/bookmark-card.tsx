@@ -1,5 +1,3 @@
-"use client";
-
 import { BookOpenIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,6 +5,8 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+("use client");
 
 export interface BookmarkCardProps {
   comicId: number;
@@ -56,11 +56,7 @@ export function BookmarkCard({
           />
           {/* Status badge overlay */}
           <div className="absolute top-2 left-2">
-            <Badge
-              variant={
-                status === "Ongoing" ? "default" : status === "Completed" ? "secondary" : "outline"
-              }
-            >
+            <Badge variant={status === "Ongoing" ? "default" : status === "Completed" ? "secondary" : "outline"}>
               {status ?? "Unknown"}
             </Badge>
           </div>
@@ -70,9 +66,7 @@ export function BookmarkCard({
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
           <Link className="flex-1" href={`/comics/${comicSlug}`}>
-            <CardTitle className="hover:text-primary line-clamp-2 transition-colors">
-              {comicTitle}
-            </CardTitle>
+            <CardTitle className="hover:text-primary line-clamp-2 transition-colors">{comicTitle}</CardTitle>
           </Link>
         </div>
       </CardHeader>

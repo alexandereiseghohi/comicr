@@ -1,9 +1,3 @@
-/**
- * POST /api/seed
- * Protected endpoint to seed the database with initial data
- * Requires SEED_TOKEN environment variable to match
- */
-
 import { type NextRequest, NextResponse } from "next/server";
 
 import seedMain from "@/database/seed/main";
@@ -25,10 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!token || token !== expectedToken) {
-      return NextResponse.json(
-        { success: false, error: "Invalid or missing seed token" },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: "Invalid or missing seed token" }, { status: 401 });
     }
 
     // Check for dry-run flag
@@ -69,10 +60,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (!token || token !== expectedToken) {
-      return NextResponse.json(
-        { success: false, error: "Invalid or missing seed token" },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: "Invalid or missing seed token" }, { status: 401 });
     }
 
     // Check for dry-run flag

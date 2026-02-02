@@ -1,9 +1,15 @@
-/**
- * Authentication Type Definitions
- * @description Types for NextAuth and auth-related operations
- */
+// Minimal NextAuth types for local extension
+export interface NextAuthUser {
+  email?: null | string;
+  id: string;
+  image?: null | string;
+  name?: null | string;
+}
 
-import type { Session as NextAuthSession, User as NextAuthUser } from "next-auth";
+export interface NextAuthSession {
+  expires: string;
+  user: NextAuthUser;
+}
 
 /**
  * Extended NextAuth User

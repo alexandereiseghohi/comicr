@@ -4,8 +4,7 @@ import * as chapterMutations from "@/database/mutations/chapter.mutations";
 import * as chapterQueries from "@/database/queries/chapter.queries";
 import { auth } from "@/lib/auth-config";
 import { updateChapterSchema } from "@/schemas/chapter-schema";
-
-import type { AuthUser } from "@/types/auth";
+import { type AuthUser } from "@/types/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -25,10 +24,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
     const result = await chapterQueries.getChapterById(numId);
 
     if (!result.success || !result.data) {
-      return NextResponse.json(
-        { success: false, error: result.error || "Chapter not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ success: false, error: result.error || "Chapter not found" }, { status: 404 });
     }
 
     // Increment views
@@ -64,10 +60,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const validation = updateChapterSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json(
-        { success: false, error: validation.error.issues[0]?.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: validation.error.issues[0]?.message }, { status: 400 });
     }
 
     const result = await chapterMutations.updateChapter(numId, validation.data);
@@ -86,10 +79,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
  * DELETE /api/chapters/[id]
  * Delete a chapter
  */
-export async function DELETE(
-  _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     const user = session?.user as AuthUser | undefined;

@@ -1,8 +1,3 @@
-/**
- * Audit File Writer
- * @description Backup audit logs to files under logs/audit/
- */
-
 import { appendFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 

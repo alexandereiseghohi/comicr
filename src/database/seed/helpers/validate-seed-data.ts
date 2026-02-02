@@ -1,4 +1,4 @@
-import { ZodError, ZodSchema } from "zod";
+import { ZodError, type ZodSchema } from "zod";
 
 /**
  * Validates an array of seed data using the provided Zod schema.
@@ -8,11 +8,11 @@ export function validateSeedData<T>(
   schema: ZodSchema<T>,
   data: unknown[]
 ): {
+  errors: Array<{ error: string; item: unknown }>;
   valid: T[];
-  errors: Array<{ item: unknown; error: string }>;
 } {
   const valid: T[] = [];
-  const errors: Array<{ item: unknown; error: string }> = [];
+  const errors: Array<{ error: string; item: unknown }> = [];
   for (const item of data) {
     const parsed = schema.safeParse(item);
     if (parsed.success) {

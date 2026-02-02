@@ -1,5 +1,4 @@
 "use server";
-
 import { auth } from "@/auth";
 import * as mutations from "@/database/mutations/reader-settings-mutations";
 import * as progressMutations from "@/database/mutations/reading-progress-mutations";
@@ -7,8 +6,12 @@ import {
   type UpdateReaderSettingsInput,
   updateReaderSettingsSchema,
 } from "@/schemas/reader-settings.schema";
-
-import type { ActionResult } from "@/types";
+import {
+  getReadingProgressSchema,
+  type SaveReadingProgressInput,
+  saveReadingProgressSchema,
+} from "@/schemas/reading-progress.schema";
+import { type ActionResult } from "@/types";
 
 /**
  * Get reader settings for the current user
@@ -22,66 +25,124 @@ export async function getReaderSettingsAction(): Promise<
 > {
   const session = await auth();
   if (!session?.user?.id) {
-    return { success: false, error: "Unauthorized" };
+    return { ok: false, error: "Unauthorized" };
   }
 
   const result = await mutations.getUserReaderSettings(session.user.id);
   if (!result.success) {
-    return { success: false, error: result.error || "Failed to get reader settings" };
+    return {
+      ok: false,
+      error: result.error || "Failed to get reader settings",
+    };
   }
-  return { success: true, data: result.data };
+  return { ok: true, data: result.data };
 }
 
 /**
  * Update reader settings for the current user
  */
 export async function updateReaderSettingsAction(
-  input: UpdateReaderSettingsInput
+  input: UpdateReaderSettingsInput,
 ): Promise<ActionResult<{ success: true }>> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { success: false, error: "Unauthorized" };
+    return { ok: false, error: "Unauthorized" };
   }
 
   const validation = updateReaderSettingsSchema.safeParse(input);
   if (!validation.success) {
     return {
-      success: false,
+      ok: false,
       error: validation.error.issues[0]?.message || "Validation failed",
     };
   }
 
-  const result = await mutations.upsertReaderSettings(session.user.id, validation.data);
+  const result = await mutations.upsertReaderSettings(
+    session.user.id,
+    validation.data,
+  );
   return result.success
-    ? { success: true, data: { success: true } }
-    : { success: false, error: result.error || "Failed to update reader settings" };
+    ? { ok: true, data: { success: true } }
+    : {
+        ok: false,
+        error: result.error || "Failed to update reader settings",
+      };
 }
 
 /**
  * Save reading progress for a comic chapter
  */
-export async function saveReadingProgressAction(input: {
-  chapterId: number;
-  comicId: number;
-  currentImageIndex?: number;
-  progressPercent?: number;
-  scrollPercentage?: number;
-}): Promise<ActionResult<{ saved: boolean }>> {
+export async function saveReadingProgressAction(
+  input: SaveReadingProgressInput,
+): Promise<ActionResult<{ saved: boolean }>> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { success: false, error: "Unauthorized" };
+    return { ok: false, error: "Unauthorized" };
+  }
+
+  const validation = saveReadingProgressSchema.safeParse(input);
+  if (!validation.success) {
+    return {
+      ok: false,
+      error: validation.error.issues[0]?.message || "Validation failed",
+    };
   }
 
   const result = await progressMutations.upsertReadingProgress({
     userId: session.user.id,
-    comicId: input.comicId,
-    chapterId: input.chapterId,
-    currentImageIndex: input.currentImageIndex,
-    scrollPercentage: input.scrollPercentage,
-    progressPercent: input.progressPercent,
+    ...validation.data,
   });
 
   return result.success
-    ? { success: true, data: { saved: true } }
-    : { success: false, error: result.error || "Failed to save reading progress" };
+    ? { ok: true, data: { saved: true } }
+    : {
+        ok: false,
+        error: result.error || "Failed to save reading progress",
+      };
+}
+
+/**
+ * Get reading progress for a comic
+ */
+export async function getReadingProgressAction(input: {
+  comicId: number;
+}): Promise<
+  ActionResult<{
+    chapterId: number;
+    currentImageIndex: number;
+    progressPercent: number;
+    scrollPercentage: number;
+  } | null>
+> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { ok: false, error: "Unauthorized" };
+  }
+
+  const validation = getReadingProgressSchema.safeParse(input);
+  if (!validation.success) {
+    return {
+      ok: false,
+      error: validation.error.issues[0]?.message || "Validation failed",
+    };
+  }
+
+  const result = await progressMutations.getReadingProgress(
+    session.user.id,
+    validation.data.comicId,
+  );
+
+  if (!result) {
+    return { ok: true, data: null };
+  }
+
+  return {
+    ok: true,
+    data: {
+      chapterId: result.chapterId,
+      currentImageIndex: result.currentImageIndex ?? 0,
+      scrollPercentage: result.scrollPercentage ?? 0,
+      progressPercent: result.progressPercent ?? 0,
+    },
+  };
 }

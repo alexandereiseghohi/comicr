@@ -1,11 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/auth";
-import {
-  createComment,
-  deleteComment,
-  updateComment,
-} from "@/database/mutations/comment-mutations";
+import { createComment, deleteComment, updateComment } from "@/database/mutations/comment-mutations";
 import { getComments } from "@/database/queries/comment-queries";
 import { commentSchema } from "@/schemas/comment.schema";
 
@@ -13,10 +9,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized - please sign in to comment" },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: "Unauthorized - please sign in to comment" }, { status: 401 });
     }
 
     const body = await request.json();
@@ -82,10 +75,7 @@ export async function PATCH(request: NextRequest) {
     });
   } catch (error) {
     console.error("Comment PATCH error:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to update comment" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Failed to update comment" }, { status: 500 });
   }
 }
 
@@ -106,10 +96,7 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Comment DELETE error:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to delete comment" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Failed to delete comment" }, { status: 500 });
   }
 }
 
@@ -119,10 +106,7 @@ export async function GET(request: NextRequest) {
     const chapterId = parseInt(searchParams.get("chapterId") || "0");
 
     if (!chapterId) {
-      return NextResponse.json(
-        { success: false, error: "Chapter ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: "Chapter ID is required" }, { status: 400 });
     }
 
     const result = await getComments(chapterId);
@@ -137,9 +121,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Comment GET error:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch comments" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Failed to fetch comments" }, { status: 500 });
   }
 }

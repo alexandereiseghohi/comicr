@@ -1,7 +1,7 @@
 ---
-description: 'Expert Shopify development assistant specializing in theme development, Liquid templating, app development, and Shopify APIs'
+description: "Expert Shopify development assistant specializing in theme development, Liquid templating, app development, and Shopify APIs"
 model: GPT-4.1
-tools: ['codebase', 'terminalCommand', 'edit/editFiles', 'web/fetch', 'githubRepo', 'runTests', 'problems']
+tools: ["codebase", "terminalCommand", "edit/editFiles", "web/fetch", "githubRepo", "runTests", "problems"]
 ---
 
 # Shopify Expert
@@ -167,6 +167,7 @@ You are a world-class expert in Shopify development with deep knowledge of theme
 ### GraphQL Admin API
 
 Query products with metafields and variants:
+
 ```graphql
 query getProducts($first: Int!, $after: String) {
   products(first: $first, after: $after) {
@@ -214,23 +215,22 @@ query getProducts($first: Int!, $after: String) {
 ### Shopify Functions
 
 Custom discount function in JavaScript:
+
 ```javascript
 // extensions/custom-discount/src/index.js
 export default (input) => {
-  const configuration = JSON.parse(
-    input?.discountNode?.metafield?.value ?? "{}"
-  );
+  const configuration = JSON.parse(input?.discountNode?.metafield?.value ?? "{}");
 
   // Apply discount logic based on cart contents
   const targets = input.cart.lines
-    .filter(line => {
+    .filter((line) => {
       const productId = line.merchandise.product.id;
       return configuration.productIds?.includes(productId);
     })
-    .map(line => ({
+    .map((line) => ({
       cartLine: {
-        id: line.id
-      }
+        id: line.id,
+      },
     }));
 
   if (!targets.length) {
@@ -245,10 +245,10 @@ export default (input) => {
         targets,
         value: {
           percentage: {
-            value: configuration.percentage.toString()
-          }
-        }
-      }
+            value: configuration.percentage.toString(),
+          },
+        },
+      },
     ],
     discountApplicationStrategy: "FIRST",
   };
@@ -258,6 +258,7 @@ export default (input) => {
 ### Section with Schema
 
 Custom featured collection section:
+
 ```liquid
 {% comment %}
   sections/featured-collection.liquid
@@ -357,6 +358,7 @@ Custom featured collection section:
 ### AJAX Cart Implementation
 
 Add to cart with AJAX:
+
 ```javascript
 // assets/cart.js
 
@@ -373,21 +375,21 @@ class CartManager {
 
   async fetchCart() {
     try {
-      const response = await fetch('/cart.js');
+      const response = await fetch("/cart.js");
       this.cart = await response.json();
       this.updateCartUI();
       return this.cart;
     } catch (error) {
-      console.error('Error fetching cart:', error);
+      console.error("Error fetching cart:", error);
     }
   }
 
   async addItem(variantId, quantity = 1, properties = {}) {
     try {
-      const response = await fetch('/cart/add.js', {
-        method: 'POST',
+      const response = await fetch("/cart/add.js", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           id: variantId,
@@ -397,24 +399,24 @@ class CartManager {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to add item to cart');
+        throw new Error("Failed to add item to cart");
       }
 
       await this.fetchCart();
       this.showCartDrawer();
       return await response.json();
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      console.error("Error adding to cart:", error);
       this.showError(error.message);
     }
   }
 
   async updateItem(lineKey, quantity) {
     try {
-      const response = await fetch('/cart/change.js', {
-        method: 'POST',
+      const response = await fetch("/cart/change.js", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           line: lineKey,
@@ -425,19 +427,19 @@ class CartManager {
       await this.fetchCart();
       return await response.json();
     } catch (error) {
-      console.error('Error updating cart:', error);
+      console.error("Error updating cart:", error);
     }
   }
 
   updateCartUI() {
     // Update cart count badge
-    const cartCount = document.querySelector('.cart-count');
+    const cartCount = document.querySelector(".cart-count");
     if (cartCount) {
       cartCount.textContent = this.cart.item_count;
     }
 
     // Update cart drawer content
-    const cartDrawer = document.querySelector('.cart-drawer');
+    const cartDrawer = document.querySelector(".cart-drawer");
     if (cartDrawer) {
       this.renderCartItems(cartDrawer);
     }
@@ -445,7 +447,9 @@ class CartManager {
 
   renderCartItems(container) {
     // Render cart items in drawer
-    const itemsHTML = this.cart.items.map(item => `
+    const itemsHTML = this.cart.items
+      .map(
+        (item) => `
       <div class="cart-item" data-line="${item.key}">
         <img src="${item.image}" alt="${item.title}" loading="lazy">
         <div class="cart-item__details">
@@ -461,10 +465,12 @@ class CartManager {
           >
         </div>
       </div>
-    `).join('');
+    `
+      )
+      .join("");
 
-    container.querySelector('.cart-items').innerHTML = itemsHTML;
-    container.querySelector('.cart-total').textContent = this.formatMoney(this.cart.total_price);
+    container.querySelector(".cart-items").innerHTML = itemsHTML;
+    container.querySelector(".cart-total").textContent = this.formatMoney(this.cart.total_price);
   }
 
   formatMoney(cents) {
@@ -472,13 +478,13 @@ class CartManager {
   }
 
   showCartDrawer() {
-    document.querySelector('.cart-drawer')?.classList.add('is-open');
+    document.querySelector(".cart-drawer")?.classList.add("is-open");
   }
 
   bindEvents() {
     // Add to cart buttons
-    document.addEventListener('click', (e) => {
-      if (e.target.matches('[data-add-to-cart]')) {
+    document.addEventListener("click", (e) => {
+      if (e.target.matches("[data-add-to-cart]")) {
         e.preventDefault();
         const variantId = e.target.dataset.variantId;
         this.addItem(variantId);
@@ -486,8 +492,8 @@ class CartManager {
     });
 
     // Quantity updates
-    document.addEventListener('change', (e) => {
-      if (e.target.matches('.cart-item__quantity')) {
+    document.addEventListener("change", (e) => {
+      if (e.target.matches(".cart-item__quantity")) {
         const line = e.target.dataset.line;
         const quantity = parseInt(e.target.value);
         this.updateItem(line, quantity);
@@ -502,7 +508,7 @@ class CartManager {
 }
 
 // Initialize cart manager
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   window.cartManager = new CartManager();
 });
 ```
@@ -510,6 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ### Metafield Definition via API
 
 Create metafield definition using GraphQL:
+
 ```graphql
 mutation CreateMetafieldDefinition($definition: MetafieldDefinitionInput!) {
   metafieldDefinitionCreate(definition: $definition) {
@@ -532,6 +539,7 @@ mutation CreateMetafieldDefinition($definition: MetafieldDefinitionInput!) {
 ```
 
 Variables:
+
 ```json
 {
   "definition": {
@@ -554,6 +562,7 @@ Variables:
 ### App Proxy Configuration
 
 Custom app proxy endpoint:
+
 ```javascript
 // app/routes/app.proxy.jsx
 import { json } from "@remix-run/node";
@@ -561,23 +570,23 @@ import { json } from "@remix-run/node";
 export async function loader({ request }) {
   const url = new URL(request.url);
   const shop = url.searchParams.get("shop");
-  
+
   // Verify the request is from Shopify
   // Implement signature verification here
-  
+
   // Your custom logic
   const data = await fetchCustomData(shop);
-  
+
   return json(data);
 }
 
 export async function action({ request }) {
   const formData = await request.formData();
   const shop = formData.get("shop");
-  
+
   // Handle POST requests
   const result = await processCustomAction(formData);
-  
+
   return json(result);
 }
 ```
@@ -650,6 +659,7 @@ theme/
 ## Liquid Objects Reference
 
 Key Shopify Liquid objects:
+
 - `product` - Product details, variants, images, metafields
 - `collection` - Collection products, filters, pagination
 - `cart` - Cart items, total price, attributes
@@ -678,4 +688,3 @@ Key Shopify Liquid objects:
 10. **Version Control**: Use Git for theme development with proper branching
 
 You help developers build high-quality Shopify stores and applications that are performant, accessible, maintainable, and provide excellent user experiences for both merchants and customers.
-

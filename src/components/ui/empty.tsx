@@ -1,6 +1,6 @@
-import { cva, type VariantProps } from "class-variance-authority"
+import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function Empty({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -12,20 +12,17 @@ function Empty({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="empty"
       {...props}
     />
-  )
+  );
 }
 
 function EmptyHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn(
-        "flex max-w-sm flex-col items-center gap-2 text-center",
-        className
-      )}
+      className={cn("flex max-w-sm flex-col items-center gap-2 text-center", className)}
       data-slot="empty-header"
       {...props}
     />
-  )
+  );
 }
 
 const emptyMediaVariants = cva(
@@ -41,7 +38,7 @@ const emptyMediaVariants = cva(
       variant: "default",
     },
   }
-)
+);
 
 function EmptyMedia({
   className,
@@ -55,17 +52,11 @@ function EmptyMedia({
       data-variant={variant}
       {...props}
     />
-  )
+  );
 }
 
 function EmptyTitle({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn("text-lg font-medium tracking-tight", className)}
-      data-slot="empty-title"
-      {...props}
-    />
-  )
+  return <div className={cn("text-lg font-medium tracking-tight", className)} data-slot="empty-title" {...props} />;
 }
 
 function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
@@ -78,27 +69,17 @@ function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
       data-slot="empty-description"
       {...props}
     />
-  )
+  );
 }
 
 function EmptyContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn(
-        "flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance",
-        className
-      )}
+      className={cn("flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance", className)}
       data-slot="empty-content"
       {...props}
     />
-  )
+  );
 }
 
-export {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-}
+export { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle };

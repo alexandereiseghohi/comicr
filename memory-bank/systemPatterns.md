@@ -61,9 +61,7 @@
 ### Action Return Shape
 
 ```typescript
-type ActionResult<T> =
-  | { ok: true; data: T }
-  | { ok: false; error: { code: string; message: string } };
+type ActionResult<T> = { ok: true; data: T } | { ok: false; error: { code: string; message: string } };
 ```
 
 ### Query/Mutation Return Shape

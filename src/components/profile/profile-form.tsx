@@ -1,8 +1,8 @@
-"use client";
 import Image from "next/image";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
+("use client");
 type Props = {
   defaultEmail?: null | string;
   defaultImage?: null | string;
@@ -75,8 +75,7 @@ export default function ProfileForm({ defaultName, defaultImage, defaultEmail }:
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const newEmail = (form.elements.namedItem("newEmail") as HTMLInputElement).value;
-    const currentPassword = (form.elements.namedItem("currentPasswordForEmail") as HTMLInputElement)
-      .value;
+    const currentPassword = (form.elements.namedItem("currentPasswordForEmail") as HTMLInputElement).value;
     setEmailLoading(true);
 
     try {
@@ -139,11 +138,7 @@ export default function ProfileForm({ defaultName, defaultImage, defaultEmail }:
         </div>
 
         <div className="flex items-center space-x-2">
-          <button
-            className="rounded bg-blue-600 px-4 py-2 text-white"
-            disabled={loading}
-            type="submit"
-          >
+          <button className="rounded bg-blue-600 px-4 py-2 text-white" disabled={loading} type="submit">
             {loading ? "Saving..." : "Save"}
           </button>
           <a className="text-muted-foreground text-sm" href="/profile">
@@ -156,26 +151,14 @@ export default function ProfileForm({ defaultName, defaultImage, defaultEmail }:
         <h3 className="text-lg font-medium">Change password</h3>
         <div>
           <label className="block text-sm">Current password</label>
-          <input
-            className="mt-1 block w-full rounded border px-3 py-2"
-            name="currentPassword"
-            type="password"
-          />
+          <input className="mt-1 block w-full rounded border px-3 py-2" name="currentPassword" type="password" />
         </div>
         <div>
           <label className="block text-sm">New password</label>
-          <input
-            className="mt-1 block w-full rounded border px-3 py-2"
-            name="newPassword"
-            type="password"
-          />
+          <input className="mt-1 block w-full rounded border px-3 py-2" name="newPassword" type="password" />
         </div>
         <div>
-          <button
-            className="rounded bg-red-600 px-4 py-2 text-white"
-            disabled={pwLoading}
-            type="submit"
-          >
+          <button className="rounded bg-red-600 px-4 py-2 text-white" disabled={pwLoading} type="submit">
             {pwLoading ? "Changing..." : "Change password"}
           </button>
         </div>
@@ -201,11 +184,7 @@ export default function ProfileForm({ defaultName, defaultImage, defaultEmail }:
           />
         </div>
         <div>
-          <button
-            className="rounded bg-yellow-600 px-4 py-2 text-white"
-            disabled={emailLoading}
-            type="submit"
-          >
+          <button className="rounded bg-yellow-600 px-4 py-2 text-white" disabled={emailLoading} type="submit">
             {emailLoading ? "Updating..." : "Change email"}
           </button>
         </div>

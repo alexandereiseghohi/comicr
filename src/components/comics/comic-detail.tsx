@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ComicDetailProps {
-  chapters?: { id: number; number?: number; slug?: string; title: string; }[];
+  chapters?: { id: number; number?: number; slug?: string; title: string }[];
   comic: {
     artists?: { name: string }[];
     authors?: { name: string }[];
@@ -81,24 +81,16 @@ export function ComicDetail({ comic, chapters = [], isAdmin = false }: ComicDeta
       </Card>
 
       <section>
-        <h3 className="text-lg font-semibold">
-          Chapters ({(chapters.length ?? comic.chaptersCount) || 0})
-        </h3>
+        <h3 className="text-lg font-semibold">Chapters ({(chapters.length ?? comic.chaptersCount) || 0})</h3>
         <div className="mt-3 space-y-2">
           {chapters.length === 0 && <p className="text-sm text-slate-500">No chapters yet.</p>}
           {chapters.map((c) => (
-            <div
-              className="flex items-center justify-between rounded-md bg-slate-50 p-3"
-              key={c.id}
-            >
+            <div className="flex items-center justify-between rounded-md bg-slate-50 p-3" key={c.id}>
               <div>
                 <div className="font-medium">{c.title}</div>
                 <div className="text-sm text-slate-500">Chapter {c.number ?? "-"}</div>
               </div>
-              <Link
-                className="text-sm text-blue-600"
-                href={`/comics/${comic.slug}/chapter/${c.slug ?? c.id}`}
-              >
+              <Link className="text-sm text-blue-600" href={`/comics/${comic.slug}/chapter/${c.slug ?? c.id}`}>
                 Read
               </Link>
             </div>

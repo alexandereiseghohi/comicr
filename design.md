@@ -80,13 +80,11 @@ Component → Action → Mutation/Query → Drizzle → PostgreSQL
 **Layer Responsibilities:**
 
 1. **Schema Layer** (`src/schemas/`)
-
    - Zod validation schemas
    - Input/output type definitions
    - Separate from Drizzle database schema
 
 2. **Mutation/Query Layer** (`src/database/mutations/`, `src/database/queries/`)
-
    - Direct Drizzle ORM operations
    - Database transaction management
    - Returns `{ success: boolean, data?: T, error?: string }`
@@ -123,9 +121,7 @@ export async function createComic(input: CreateComicInput) {
 ("use server");
 import { auth } from "@/lib/auth-config";
 
-export async function createComicAction(
-  input: CreateComicInput
-): Promise<ActionResult<{ id: number }>> {
+export async function createComicAction(input: CreateComicInput): Promise<ActionResult<{ id: number }>> {
   const session = await auth();
   if (!session?.user || session.user.role !== "admin") {
     return { success: false, error: "Unauthorized" };

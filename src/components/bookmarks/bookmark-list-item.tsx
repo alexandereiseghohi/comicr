@@ -1,5 +1,3 @@
-"use client";
-
 import { BookOpenIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +5,9 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-import type { BookmarkCardProps } from "./bookmark-card";
+import { type BookmarkCardProps } from "./bookmark-card";
+
+("use client");
 
 export function BookmarkListItem({
   comicId,
@@ -45,17 +45,12 @@ export function BookmarkListItem({
       {/* Info */}
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-start gap-2">
-          <Link
-            className="hover:text-primary truncate font-medium transition-colors"
-            href={`/comics/${comicSlug}`}
-          >
+          <Link className="hover:text-primary truncate font-medium transition-colors" href={`/comics/${comicSlug}`}>
             {comicTitle}
           </Link>
           <Badge
             className="shrink-0"
-            variant={
-              status === "Ongoing" ? "default" : status === "Completed" ? "secondary" : "outline"
-            }
+            variant={status === "Ongoing" ? "default" : status === "Completed" ? "secondary" : "outline"}
           >
             {status ?? "Unknown"}
           </Badge>

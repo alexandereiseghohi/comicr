@@ -1,11 +1,11 @@
-"use client";
-
 import { cva, type VariantProps } from "class-variance-authority";
 import { useMemo } from "react";
 
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+
+("use client");
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (
@@ -28,12 +28,7 @@ function FieldLegend({
 }: React.ComponentProps<"legend"> & { variant?: "label" | "legend" }) {
   return (
     <legend
-      className={cn(
-        "mb-3 font-medium",
-        "data-[variant=legend]:text-base",
-        "data-[variant=label]:text-sm",
-        className
-      )}
+      className={cn("mb-3 font-medium", "data-[variant=legend]:text-base", "data-[variant=label]:text-sm", className)}
       data-slot="field-legend"
       data-variant={variant}
       {...props}
@@ -153,10 +148,7 @@ function FieldSeparator({
 }) {
   return (
     <div
-      className={cn(
-        "relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2",
-        className
-      )}
+      className={cn("relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2", className)}
       data-content={!!children}
       data-slot="field-separator"
       {...props}

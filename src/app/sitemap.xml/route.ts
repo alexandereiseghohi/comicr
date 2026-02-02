@@ -48,25 +48,30 @@ export async function GET() {
 ${
   comics.success && comics.data
     ? comics.data
-        .map(
-          (comic: any) => `  <url>
-    <loc>${process.env.NEXT_PUBLIC_API_URL}/comics/${comic.slug}</loc>
-    <lastmod>${
-      comic.updatedAt?.toISOString() || comic.createdAt?.toISOString() || new Date().toISOString()
-    }</lastmod>
+        .map((comic) => {
+          const c = comic as {
+            coverImage?: string;
+            createdAt?: Date;
+            slug: string;
+            title?: string;
+            updatedAt?: Date;
+          };
+          return `  <url>
+    <loc>${process.env.NEXT_PUBLIC_API_URL}/comics/${c.slug}</loc>
+    <lastmod>${c.updatedAt?.toISOString() || c.createdAt?.toISOString() || new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     ${
-      comic.coverImage
+      c.coverImage
         ? `<image:image>
-      <image:loc>${comic.coverImage}</image:loc>
-      <image:caption>${comic.title}</image:caption>
-      <image:title>${comic.title}</image:title>
+      <image:loc>${c.coverImage}</image:loc>
+      <image:caption>${c.title}</image:caption>
+      <image:title>${c.title}</image:title>
     </image:image>`
         : ""
     }
-  </url>`
-        )
+  </url>`;
+        })
         .join("\n")
     : ""
 }

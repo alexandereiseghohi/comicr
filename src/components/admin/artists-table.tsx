@@ -1,5 +1,3 @@
-"use client";
-
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Pencil, RotateCcw, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -23,6 +21,8 @@ import {
 } from "@/lib/actions/artist.actions";
 
 import { DataTable } from "./data-table";
+
+("use client");
 
 export interface ArtistRow {
   bio: null | string;
@@ -78,9 +78,7 @@ export function ArtistsTable({ items }: ArtistsTableProps) {
     {
       accessorKey: "bio",
       header: "Bio",
-      cell: ({ row }) => (
-        <span className="block max-w-[200px] truncate">{row.original.bio || "—"}</span>
-      ),
+      cell: ({ row }) => <span className="block max-w-[200px] truncate">{row.original.bio || "—"}</span>,
     },
     {
       accessorKey: "comicsCount",
@@ -163,12 +161,7 @@ export function ArtistsTable({ items }: ArtistsTableProps) {
           </Button>
         </div>
       )}
-      <DataTable
-        columns={columns}
-        data={items}
-        searchKey="name"
-        searchPlaceholder="Search artists..."
-      />
+      <DataTable columns={columns} data={items} searchKey="name" searchPlaceholder="Search artists..." />
     </div>
   );
 }

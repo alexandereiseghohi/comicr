@@ -2,64 +2,87 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Next: Dev",
+      "name": "Next.js: Dev Server",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["dev"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "serverReadyAction": {
+        "pattern": "- Local:.*http://localhost:([0-9]+)",
+        "uriFormat": "http://localhost:%s",
+        "action": "debugWithChrome"
+      },
+      "env": {
+        "NODE_OPTIONS": "--inspect"
+      }
     },
     {
-      "name": "Next.js: Server",
+      "name": "Next.js: Server-Side Debug",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/node_modules/.bin/next",
-      "args": ["dev"],
-      "runtimeArgs": ["--inspect-brk"],
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
       "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
       "env": {
-        "NODE_ENV": "development",
-        "NODE_OPTIONS": "--max-old-space-size=4096"
-      },
-      "outputCapture": "console"
+        "NODE_OPTIONS": "--inspect"
+      }
     },
     {
-      "name": "Next.js: Client",
+      "name": "Next.js: Client-Side Debug",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}",
-      "runtimeArgs": ["--disable-background-networking"]
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack://_N_E/*": "${webRoot}/*"
+      }
     },
     {
-      "name": "Node.js: Current File",
+      "name": "Next.js: Attach to Chrome",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true
+    },
+    {
+      "name": "Node: Current TS File",
       "type": "node",
       "request": "launch",
-      "program": "${file}",
-      "restart": true,
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "${file}"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "Playwright: Debug Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["playwright", "test", "--debug"],
+      "cwd": "${workspaceFolder}",
       "console": "integratedTerminal"
     },
     {
-      "name": "Node.js: Chrome DevTools",
+      "name": "Vitest: Run Tests",
       "type": "node",
       "request": "launch",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/src/index.ts",
-      "preLaunchTask": "npm: build"
-    },
-    {
-      "name": "Playwright: Run Tests",
-      "type": "node",
-      "request": "launch",
-      "program": "${workspaceFolder}/node_modules/.bin/playwright",
-      "args": ["test"],
-      "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}"
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["test"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
     }
   ],
-  "compounds": []
+  "compounds": [
+    {
+      "name": "Next.js: Full Stack",
+      "configurations": ["Next.js: Server-Side Debug", "Next.js: Client-Side Debug"],
+      "stopAll": true
+    }
+  ]
 }

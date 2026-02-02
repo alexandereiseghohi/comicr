@@ -1,36 +1,29 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { emailValidator } from "@/types/validation";
+
 /**
  * Sign In Form Component
  * @description Login form with email, password, and OAuth options
  */
 
-'use client';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-import { useTransition } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
-
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { emailValidator } from '@/types/validation';
-
+("use client");
 /**
  * Sign in form validation schema
  */
 const signInSchema = z.object({
   email: emailValidator,
-  password: z.string().min(1, 'Password required'),
+  password: z.string().min(1, "Password required"),
 });
 
 type SignInFormData = z.infer<typeof signInSchema>;
@@ -45,8 +38,8 @@ export function SignInForm() {
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -56,22 +49,22 @@ export function SignInForm() {
   async function onSubmit(data: SignInFormData): Promise<void> {
     startTransition(async () => {
       try {
-        const result = await signIn('credentials', {
+        const result = await signIn("credentials", {
           email: data.email,
           password: data.password,
           redirect: false,
         });
 
         if (!result?.ok) {
-          toast.error(result?.error || 'Failed to sign in');
+          toast.error(result?.error || "Failed to sign in");
           return;
         }
 
-        toast.success('Signed in successfully');
-        router.push('/');
+        toast.success("Signed in successfully");
+        router.push("/");
         router.refresh();
       } catch (error) {
-        toast.error('An error occurred');
+        toast.error("An error occurred");
         console.error(error);
       }
     });
@@ -80,10 +73,10 @@ export function SignInForm() {
   /**
    * Handle OAuth sign in
    */
-  function handleOAuthSignIn(provider: 'github' | 'google'): void {
+  function handleOAuthSignIn(provider: "github" | "google"): void {
     startTransition(async () => {
       try {
-        await signIn(provider, { redirect: true, redirectUrl: '/' });
+        await signIn(provider, { redirect: true, redirectUrl: "/" });
       } catch (error) {
         toast.error(`Failed to sign in with ${provider}`);
         console.error(error);
@@ -125,12 +118,9 @@ export function SignInForm() {
               <FormItem>
                 <div className="flex items-center justify-between">
                   <FormLabel className="text-slate-200">Password</FormLabel>
-                  <a
-                    className="text-xs text-blue-500 hover:text-blue-400"
-                    href="/auth/forgot-password"
-                  >
+                  <Link className="text-xs text-blue-500 hover:text-blue-400" href="/forgot-password">
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
                 <FormControl>
                   <Input
@@ -147,12 +137,8 @@ export function SignInForm() {
             )}
           />
 
-          <Button
-            className="w-full bg-blue-600 hover:bg-blue-700"
-            disabled={isPending}
-            type="submit"
-          >
-            {isPending ? 'Signing in...' : 'Sign In'}
+          <Button className="w-full bg-blue-600 hover:bg-blue-700" disabled={isPending} type="submit">
+            {isPending ? "Signing in..." : "Sign In"}
           </Button>
         </form>
       </Form>
@@ -170,7 +156,7 @@ export function SignInForm() {
         <Button
           className="border-slate-700 text-slate-200 hover:bg-slate-800"
           disabled={isPending}
-          onClick={() => handleOAuthSignIn('google')}
+          onClick={() => handleOAuthSignIn("google")}
           variant="outline"
         >
           <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
@@ -197,7 +183,7 @@ export function SignInForm() {
         <Button
           className="border-slate-700 text-slate-200 hover:bg-slate-800"
           disabled={isPending}
-          onClick={() => handleOAuthSignIn('github')}
+          onClick={() => handleOAuthSignIn("github")}
           variant="outline"
         >
           <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">

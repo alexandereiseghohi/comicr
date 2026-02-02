@@ -1,12 +1,4 @@
-import {
-  ArrowRightIcon,
-  BookOpenIcon,
-  EyeIcon,
-  FileTextIcon,
-  PlusIcon,
-  TrendingUpIcon,
-  UsersIcon,
-} from "lucide-react";
+import { ArrowRightIcon, BookOpenIcon, EyeIcon, FileTextIcon, PlusIcon, TrendingUpIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -15,12 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  getDashboardStats,
-  getPopularComics,
-  getRecentComics,
-  getRecentUsers,
-} from "@/database/queries/admin.queries";
+import { getDashboardStats, getPopularComics, getRecentComics, getRecentUsers } from "@/database/queries/admin.queries";
 import { auth } from "@/lib/auth-config";
 
 export const metadata = {
@@ -124,17 +111,11 @@ async function RecentComicsCard() {
             <div className="flex items-center justify-between" key={comic.id}>
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium">{comic.title}</p>
-                <p className="text-muted-foreground text-sm">
-                  {comic.views?.toLocaleString() ?? 0} views
-                </p>
+                <p className="text-muted-foreground text-sm">{comic.views?.toLocaleString() ?? 0} views</p>
               </div>
               <Badge
                 variant={
-                  comic.status === "Ongoing"
-                    ? "default"
-                    : comic.status === "Completed"
-                    ? "secondary"
-                    : "outline"
+                  comic.status === "Ongoing" ? "default" : comic.status === "Completed" ? "secondary" : "outline"
                 }
               >
                 {comic.status}

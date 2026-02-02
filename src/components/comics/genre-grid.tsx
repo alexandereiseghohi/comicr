@@ -1,12 +1,10 @@
-"use client";
-
-import { BookOpen, Drama, Heart, Laugh, Rocket, Sparkles, Star, Swords, Zap } from "lucide-react";
+import { BookOpen, Drama, Heart, Laugh, type LucideIcon, Rocket, Sparkles, Star, Swords, Zap } from "lucide-react";
 import Link from "next/link";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-import type { LucideIcon } from "lucide-react";
+("use client");
 
 interface GenreWithCount {
   comicCount: number;
@@ -68,26 +66,17 @@ export function GenreGrid({ genres, className }: GenreGridProps) {
 
         return (
           <Link href={`/comics?genres=${genre.slug}`} key={genre.id}>
-            <Card
-              className={cn(
-                "h-full cursor-pointer border-2 transition-all duration-200",
-                colorScheme
-              )}
-            >
+            <Card className={cn("h-full cursor-pointer border-2 transition-all duration-200", colorScheme)}>
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <Icon className="h-6 w-6 flex-shrink-0" />
-                  <span className="rounded-full bg-white/50 px-2 py-1 text-sm font-semibold">
-                    {genre.comicCount}
-                  </span>
+                  <span className="rounded-full bg-white/50 px-2 py-1 text-sm font-semibold">{genre.comicCount}</span>
                 </div>
               </CardHeader>
               <CardContent className="pt-0">
                 <CardTitle className="mb-1 text-lg leading-tight">{genre.name}</CardTitle>
                 {genre.description && (
-                  <CardDescription className="line-clamp-2 text-sm opacity-80">
-                    {genre.description}
-                  </CardDescription>
+                  <CardDescription className="line-clamp-2 text-sm opacity-80">{genre.description}</CardDescription>
                 )}
               </CardContent>
             </Card>

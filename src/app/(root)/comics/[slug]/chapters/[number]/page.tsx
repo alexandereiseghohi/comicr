@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -10,52 +9,65 @@ import * as comicQueries from "@/database/queries/comic-queries";
 export const revalidate = 3600;
 
 async function getChapterData(comicId: number, chapterNumber: number) {
-  const result = await chapterQueries.getChaptersByComicId(comicId, { limit: 100 });
+  const result = await chapterQueries.getChaptersByComicId(comicId, {
+    limit: 100,
+  });
   if (!result.success) notFound();
 
-  const chapter = (result.data || []).find(
-    (c: { chapterNumber: number }) => c.chapterNumber === chapterNumber
-  );
+  const chapters = (result.data || []) as Chapter[];
+  const chapter = chapters.find((c) => c.chapterNumber === chapterNumber);
   if (!chapter) notFound();
 
   return chapter;
 }
 
 async function getAllChaptersForNavigation(comicId: number) {
-  const result = await chapterQueries.getChaptersByComicId(comicId, { limit: 100 });
-  return (result.success ? result.data : []) || [];
+  const result = await chapterQueries.getChaptersByComicId(comicId, {
+    limit: 100,
+  });
+  return (result.success ? (result.data as Chapter[]) : []) || [];
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ number: string; slug: string; }>;
-}) {
+export async function generateMetadata({ params }: { params: Promise<{ number: string; slug: string }> }) {
   const { slug, number } = await params;
   const comicResult = await comicQueries.getComicBySlug(slug);
   if (!comicResult.success || !comicResult.data) return {};
   // Support both legacy and joined shape
   let title = "";
-  // Try joined shape first
-  if (
-    (comicResult.data as any).comic &&
-    typeof (comicResult.data as any).comic.title === "string"
-  ) {
-    title = (comicResult.data as { comic: { title: string } }).comic.title;
-  } else if (typeof (comicResult.data as any).title === "string") {
-    // Cast to unknown first to satisfy TypeScript
-    title = (comicResult.data as unknown as { title: string }).title;
+  function hasComicField(obj: unknown): obj is { comic: { title: string } } {
+    return typeof obj === "object" && obj !== null && "comic" in obj && typeof (obj as any).comic?.title === "string";
   }
+  if (hasComicField(comicResult.data)) {
+    title = comicResult.data.comic.title;
+  } else if (
+    typeof comicResult.data === "object" &&
+    comicResult.data !== null &&
+    "title" in comicResult.data &&
+    typeof (comicResult.data as any).title === "string"
+  ) {
+    title = (comicResult.data as any).title;
+  }
+  // ...existing code...
   return {
     title: `${title} - Chapter ${number} | ComicWise`,
   };
 }
 
-export default async function ChapterReaderPage({
-  params,
-}: {
-  params: Promise<{ number: string; slug: string; }>;
-}) {
+export type Chapter = {
+  chapterNumber: number;
+  comicId: number;
+  content?: string;
+  createdAt?: Date | string;
+  id: number;
+  releaseDate: Date | string;
+  slug: string;
+  title: string;
+  updatedAt?: Date | string;
+  url?: string;
+  views: number;
+};
+
+export default async function ChapterReaderPage({ params }: { params: Promise<{ number: string; slug: string }> }) {
   const { slug, number } = await params;
   const chapterNumber = parseInt(number);
 
@@ -65,36 +77,40 @@ export default async function ChapterReaderPage({
   // Support both legacy and joined shape
   let comic: { id: number; title: string } | undefined = undefined;
   let author: { name?: string } | null = null;
-  // Joined shape: has 'comic' property
-  if (
-    typeof comicResult.data === "object" &&
-    comicResult.data !== null &&
-    "comic" in comicResult.data &&
-    comicResult.data.comic &&
-    typeof comicResult.data.comic.id === "number" &&
-    typeof comicResult.data.comic.title === "string"
-  ) {
+  function hasComicField(obj: unknown): obj is {
+    author?: { name?: string };
+    comic: { id: number; title: string };
+  } {
+    return (
+      typeof obj === "object" &&
+      obj !== null &&
+      "comic" in obj &&
+      typeof (obj as any).comic?.id === "number" &&
+      typeof (obj as any).comic?.title === "string"
+    );
+  }
+  if (hasComicField(comicResult.data)) {
     comic = {
       id: comicResult.data.comic.id,
       title: comicResult.data.comic.title,
     };
-    if ("author" in comicResult.data && comicResult.data.author) {
+    if (comicResult.data.author) {
       author = comicResult.data.author;
     }
   } else if (
     typeof comicResult.data === "object" &&
     comicResult.data !== null &&
     "id" in comicResult.data &&
-    typeof comicResult.data.id === "number" &&
+    typeof (comicResult.data as any).id === "number" &&
     "title" in comicResult.data &&
-    typeof comicResult.data.title === "string"
+    typeof (comicResult.data as any).title === "string"
   ) {
     comic = {
-      id: comicResult.data.id,
-      title: comicResult.data.title,
+      id: (comicResult.data as any).id,
+      title: (comicResult.data as any).title,
     };
-    if ("author" in comicResult.data && comicResult.data.author) {
-      author = comicResult.data.author;
+    if ((comicResult.data as any).author) {
+      author = (comicResult.data as any).author;
     }
   }
 
@@ -104,14 +120,9 @@ export default async function ChapterReaderPage({
   const chapter = await getChapterData(comic.id, chapterNumber);
 
   // Get all chapters for navigation
-  const allChapters = (await getAllChaptersForNavigation(comic.id)).sort(
-    (a: { chapterNumber: number }, b: { chapterNumber: number }) =>
-      a.chapterNumber - b.chapterNumber
-  );
+  const allChapters = (await getAllChaptersForNavigation(comic.id)).sort((a, b) => a.chapterNumber - b.chapterNumber);
 
-  const currentIndex = allChapters.findIndex(
-    (c: { chapterNumber: number }) => c.chapterNumber === chapterNumber
-  );
+  const currentIndex = allChapters.findIndex((c) => c.chapterNumber === chapterNumber);
   const prevChapter = currentIndex > 0 ? allChapters[currentIndex - 1] : null;
   const nextChapter = currentIndex < allChapters.length - 1 ? allChapters[currentIndex + 1] : null;
 
@@ -130,9 +141,7 @@ export default async function ChapterReaderPage({
             <h1 className="text-3xl font-bold text-white">
               Ch. {chapter.chapterNumber}: {chapter.title}
             </h1>
-            <p className="mt-2 text-slate-400">
-              Released {new Date(chapter.releaseDate).toLocaleDateString()}
-            </p>
+            <p className="mt-2 text-slate-400">Released {new Date(chapter.releaseDate).toLocaleDateString()}</p>
           </div>
         </div>
 
@@ -193,7 +202,7 @@ export default async function ChapterReaderPage({
           <CardContent className="p-6">
             <h2 className="mb-4 text-lg font-semibold text-white">Jump to Chapter</h2>
             <div className="grid max-h-64 grid-cols-2 gap-2 overflow-y-auto md:grid-cols-4 lg:grid-cols-6">
-              {allChapters.map((ch: { chapterNumber: number; id: number; }) => (
+              {allChapters.map((ch) => (
                 <Link href={`/comics/${slug}/chapters/${ch.chapterNumber}`} key={ch.id}>
                   <Button
                     className="w-full text-sm"

@@ -10,7 +10,7 @@ vi.mock("@/database/db", () => {
 
 import { getAuthorById } from "@/database/queries/author.queries";
 
-type Author = { bio: null | string; id: number; image: null | string; name: string; };
+type Author = { bio: null | string; id: number; image: null | string; name: string };
 
 describe("author queries", () => {
   it("getAuthorById returns author row", async () => {

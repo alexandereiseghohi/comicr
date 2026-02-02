@@ -14,9 +14,7 @@ export async function addGenreToComic(comicId: number, genreId: number) {
 
 export async function removeGenreFromComic(comicId: number, genreId: number) {
   try {
-    await db
-      .delete(comicToGenre)
-      .where(and(eq(comicToGenre.comicId, comicId), eq(comicToGenre.genreId, genreId)));
+    await db.delete(comicToGenre).where(and(eq(comicToGenre.comicId, comicId), eq(comicToGenre.genreId, genreId)));
     return { success: true };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Deletion failed" };

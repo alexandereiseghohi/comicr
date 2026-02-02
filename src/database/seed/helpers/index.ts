@@ -4,13 +4,7 @@
  */
 
 // Logger
-export {
-  createLogger,
-  type LogLevel,
-  type ProgressOptions,
-  SeedLogger,
-  seedLogger,
-} from "./logger";
+export { createLogger, type LogLevel, type ProgressOptions, SeedLogger, seedLogger } from "./logger";
 
 // Password hashing
 export { hashPassword, verifyPassword } from "./password-hasher";

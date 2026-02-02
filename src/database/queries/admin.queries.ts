@@ -1,21 +1,7 @@
-/**
- * Admin Queries
- * @description Read operations for admin dashboard and management
- */
-
 import { count, desc, eq, ilike, or, sql, sum } from "drizzle-orm";
 
 import { db } from "@/database/db";
-import {
-  artist,
-  author,
-  chapter,
-  comic,
-  comicToGenre,
-  genre,
-  type as typeTable,
-  user,
-} from "@/database/schema";
+import { artist, author, chapter, comic, comicToGenre, genre, type, user } from "@/database/schema";
 
 /**
  * Get dashboard statistics
@@ -39,7 +25,10 @@ export async function getDashboardStats() {
       },
     };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }
 
@@ -63,7 +52,10 @@ export async function getRecentComics(limit = 5) {
 
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }
 
@@ -86,7 +78,10 @@ export async function getRecentUsers(limit = 5) {
 
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }
 
@@ -111,7 +106,10 @@ export async function getPopularComics(limit = 10) {
 
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }
 
@@ -164,7 +162,10 @@ export async function getComicsForAdmin({
       },
     };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }
 
@@ -212,7 +213,10 @@ export async function getUsersForAdmin({
       },
     };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }
 
@@ -277,7 +281,10 @@ export async function getChaptersForAdmin({
       },
     };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }
 
@@ -333,7 +340,10 @@ export async function getAuthorsForAdmin({
       },
     };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }
 
@@ -389,7 +399,10 @@ export async function getArtistsForAdmin({
       },
     };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }
 
@@ -407,9 +420,7 @@ export async function getGenresForAdmin({
 } = {}) {
   try {
     const offset = (page - 1) * limit;
-    const whereClause = search
-      ? or(ilike(genre.name, `%${search}%`), ilike(genre.slug, `%${search}%`))
-      : undefined;
+    const whereClause = search ? or(ilike(genre.name, `%${search}%`), ilike(genre.slug, `%${search}%`)) : undefined;
 
     const [items, countResult] = await Promise.all([
       db
@@ -447,7 +458,10 @@ export async function getGenresForAdmin({
       },
     };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }
 
@@ -465,29 +479,29 @@ export async function getTypesForAdmin({
 } = {}) {
   try {
     const offset = (page - 1) * limit;
-    const whereClause = search ? ilike(typeTable.name, `%${search}%`) : undefined;
+    const whereClause = search ? ilike(type.name, `%${search}%`) : undefined;
 
     const [items, countResult] = await Promise.all([
       db
         .select({
-          id: typeTable.id,
-          name: typeTable.name,
-          description: typeTable.description,
-          isActive: typeTable.isActive,
-          createdAt: typeTable.createdAt,
+          id: type.id,
+          name: type.name,
+          description: type.description,
+          isActive: type.isActive,
+          createdAt: type.createdAt,
           comicsCount: sql<number>`(
             SELECT COUNT(*) FROM comic
-            WHERE comic.type_id = ${typeTable.id}
+            WHERE comic.type_id = ${type.id}
           )`.as("comics_count"),
         })
-        .from(typeTable)
+        .from(type)
         .where(whereClause)
-        .orderBy(desc(typeTable.createdAt))
+        .orderBy(desc(type.createdAt))
         .limit(limit)
         .offset(offset),
       db
         .select({ count: sql<number>`count(*)` })
-        .from(typeTable)
+        .from(type)
         .where(whereClause),
     ]);
 
@@ -502,6 +516,9 @@ export async function getTypesForAdmin({
       },
     };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Query failed",
+    };
   }
 }

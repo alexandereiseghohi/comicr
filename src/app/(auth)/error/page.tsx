@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -7,6 +5,7 @@ import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+("use client");
 const errorMessages: Record<string, string> = {
   Configuration: "There is a problem with the server configuration.",
   AccessDenied: "You do not have permission to sign in.",
@@ -27,9 +26,7 @@ const errorMessages: Record<string, string> = {
 function AuthErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
-  const errorMessage = error
-    ? errorMessages[error] || errorMessages.Default
-    : errorMessages.Default;
+  const errorMessage = error ? errorMessages[error] || errorMessages.Default : errorMessages.Default;
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">

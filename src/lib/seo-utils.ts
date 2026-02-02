@@ -1,6 +1,6 @@
-import type { Comic } from "@/types";
-import type { Metadata } from "next";
+import { type Metadata } from "next";
 
+import { type Comic } from "@/types";
 
 export interface SEOConfig {
   defaultImage: string;
@@ -14,8 +14,7 @@ export interface SEOConfig {
 
 export const seoConfig: SEOConfig = {
   siteName: "ComicWise",
-  siteDescription:
-    "Discover, read, and enjoy the best comics online. Your gateway to amazing stories and artwork.",
+  siteDescription: "Discover, read, and enjoy the best comics online. Your gateway to amazing stories and artwork.",
   siteUrl: process.env.NEXT_PUBLIC_API_URL || "https://comicwise.com",
   defaultImage: "/images/og-default.jpg",
   twitterHandle: "@comicwise",
@@ -134,12 +133,8 @@ export function generateChapterMetadata(
   comic: Comic,
   chapter: { createdAt?: Date; imageUrl?: string; number: number; title?: string; updatedAt?: Date }
 ): Metadata {
-  const title = `${comic.title} - Chapter ${chapter.number}${
-    chapter.title ? `: ${chapter.title}` : ""
-  }`;
-  const description = `Read ${comic.title} Chapter ${chapter.number} online. ${
-    comic.description || ""
-  }`;
+  const title = `${comic.title} - Chapter ${chapter.number}${chapter.title ? `: ${chapter.title}` : ""}`;
+  const description = `Read ${comic.title} Chapter ${chapter.number} online. ${comic.description || ""}`;
 
   return generateMetadata({
     title,

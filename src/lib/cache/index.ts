@@ -1,13 +1,13 @@
-/**
- * Cache Provider Factory
- * @description Central export for dual Redis caching abstraction
- */
-
 import { RedisCacheProvider } from "./redis-cache";
-import { cacheKeys, DEFAULT_CACHE_CONFIG } from "./types";
+import {
+  cacheKeys,
+  type CacheOptions,
+  type CacheProvider,
+  type CacheProviderType,
+  DEFAULT_CACHE_CONFIG,
+  type WithCacheOptions,
+} from "./types";
 import { UpstashCacheProvider } from "./upstash-cache";
-
-import type { CacheOptions, CacheProvider, CacheProviderType, WithCacheOptions } from "./types";
 
 // Export types and utilities
 export * from "./types";
@@ -94,11 +94,7 @@ export function withCache<TArgs extends unknown[], TResult>(
       options.onHit?.(key, cached.value);
 
       // Stale-while-revalidate: return cached but refresh in background
-      if (
-        options.staleWhileRevalidate &&
-        cached.ttl &&
-        cached.ttl < DEFAULT_CACHE_CONFIG.staleWindow
-      ) {
+      if (options.staleWhileRevalidate && cached.ttl && cached.ttl < DEFAULT_CACHE_CONFIG.staleWindow) {
         // Refresh in background without blocking
         fn(...args).then((freshValue) => {
           cache.set(key, freshValue, {
@@ -133,8 +129,7 @@ export function withCache<TArgs extends unknown[], TResult>(
  */
 export const cache = {
   get: <T>(key: string) => getCacheProvider().get<T>(key),
-  set: <T>(key: string, value: T, options?: CacheOptions) =>
-    getCacheProvider().set(key, value, options),
+  set: <T>(key: string, value: T, options?: CacheOptions) => getCacheProvider().set(key, value, options),
   delete: (key: string) => getCacheProvider().delete(key),
   deletePattern: (pattern: string) => getCacheProvider().deletePattern(pattern),
   exists: (key: string) => getCacheProvider().exists(key),

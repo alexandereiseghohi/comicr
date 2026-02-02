@@ -1,20 +1,15 @@
-/**
- * ImageKit Storage Provider
- * @description ImageKit CDN storage implementation
- */
-
 import ImageKit from "imagekit";
 
 import { getEnv } from "@/lib/env";
 
-import type {
-  DeleteOptions,
-  DeleteResult,
-  ExistsResult,
-  GetUrlOptions,
-  StorageProvider,
-  UploadOptions,
-  UploadResponse,
+import {
+  type DeleteOptions,
+  type DeleteResult,
+  type ExistsResult,
+  type GetUrlOptions,
+  type StorageProvider,
+  type UploadOptions,
+  type UploadResponse,
 } from "./types";
 
 /**

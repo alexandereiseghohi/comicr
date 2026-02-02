@@ -6,13 +6,7 @@ import { Suspense } from "react";
 import { ComicCard } from "@/components/comics/comic-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { searchComics } from "@/database/queries/comic-queries";
 import { SearchParamsSchema } from "@/schemas/search.schema";
@@ -215,14 +209,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
       {/* Results */}
       <Suspense fallback={<SearchResultsSkeleton />}>
-        <SearchResults
-          limit={limit}
-          order={order}
-          page={page}
-          query={q}
-          sort={sort}
-          status={status}
-        />
+        <SearchResults limit={limit} order={order} page={page} query={q} sort={sort} status={status} />
       </Suspense>
     </main>
   );

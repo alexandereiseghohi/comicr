@@ -1,5 +1,3 @@
-"use client";
-
 import { Link, Upload } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -7,6 +5,8 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+("use client");
 
 interface ImageUploadFieldProps {
   label?: string;
@@ -48,11 +48,7 @@ export function ImageUploadField({ value, onChange, label = "Image" }: ImageUplo
           </TabsTrigger>
         </TabsList>
         <TabsContent value="url">
-          <Input
-            onChange={(e) => onChange(e.target.value)}
-            placeholder="https://example.com/image.jpg"
-            value={value}
-          />
+          <Input onChange={(e) => onChange(e.target.value)} placeholder="https://example.com/image.jpg" value={value} />
         </TabsContent>
         <TabsContent value="upload">
           <Input

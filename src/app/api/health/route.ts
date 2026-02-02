@@ -1,10 +1,3 @@
-/**
- * Health Check Endpoint
- * Used by deployment platforms and monitoring services to verify app status
- *
- * GET /api/health - Returns health status
- */
-
 import { NextResponse } from "next/server";
 
 interface HealthStatus {

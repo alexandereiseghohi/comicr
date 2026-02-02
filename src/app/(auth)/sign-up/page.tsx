@@ -1,14 +1,9 @@
-/**
- * Sign Up Page
- * @description User registration page
- */
-
 import { type Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { auth } from "@/auth";
 import { SignUpForm } from "@/components/auth/sign-up-form";
-import { auth } from "@/lib/auth-config";
 
 export const metadata: Metadata = {
   title: "Sign Up | ComicWise",

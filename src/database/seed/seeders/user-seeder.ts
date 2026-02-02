@@ -1,8 +1,3 @@
-/**
- * @file user-seeder.ts
- * @description Seeds users from JSON files with validation and password hashing
- */
-
 import { downloadAndSaveImage } from "@/lib/image-helper";
 import { seedTableBatched } from "@/lib/seed-helpers";
 import { type UserSeed, UserSeedSchema } from "@/lib/validations/seed";

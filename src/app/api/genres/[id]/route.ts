@@ -12,8 +12,7 @@ interface RouteParams {
 export async function GET(_request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
   const genreId = parseInt(id);
-  if (isNaN(genreId))
-    return NextResponse.json({ success: false, error: "Invalid id" }, { status: 400 });
+  if (isNaN(genreId)) return NextResponse.json({ success: false, error: "Invalid id" }, { status: 400 });
   const res = await genreQueries.getGenreById(genreId);
   if (!res.success) return NextResponse.json({ success: false, error: res.error }, { status: 404 });
   return NextResponse.json({ success: true, data: res.data });
@@ -28,20 +27,15 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     const { id } = await params;
     const genreId = parseInt(id);
-    if (isNaN(genreId))
-      return NextResponse.json({ success: false, error: "Invalid id" }, { status: 400 });
+    if (isNaN(genreId)) return NextResponse.json({ success: false, error: "Invalid id" }, { status: 400 });
 
     const body = await request.json();
     const validation = updateGenreSchema.safeParse(body);
     if (!validation.success)
-      return NextResponse.json(
-        { success: false, error: validation.error.issues[0]?.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: validation.error.issues[0]?.message }, { status: 400 });
 
     const result = await genreMutations.updateGenre(genreId, validation.data);
-    if (!result.success)
-      return NextResponse.json({ success: false, error: result.error }, { status: 400 });
+    if (!result.success) return NextResponse.json({ success: false, error: result.error }, { status: 400 });
 
     return NextResponse.json({ success: true, data: result.data });
   } catch (error) {
@@ -59,12 +53,10 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
 
     const { id } = await params;
     const genreId = parseInt(id);
-    if (isNaN(genreId))
-      return NextResponse.json({ success: false, error: "Invalid id" }, { status: 400 });
+    if (isNaN(genreId)) return NextResponse.json({ success: false, error: "Invalid id" }, { status: 400 });
 
     const result = await genreMutations.deleteGenre(genreId);
-    if (!result.success)
-      return NextResponse.json({ success: false, error: result.error }, { status: 400 });
+    if (!result.success) return NextResponse.json({ success: false, error: result.error }, { status: 400 });
 
     return NextResponse.json({ success: true });
   } catch (error) {

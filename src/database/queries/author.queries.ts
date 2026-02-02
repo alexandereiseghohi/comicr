@@ -5,11 +5,7 @@ import { author } from "@/database/schema";
 
 export async function getAuthors() {
   try {
-    const results = await db
-      .select()
-      .from(author)
-      .where(eq(author.isActive, true))
-      .orderBy(author.name);
+    const results = await db.select().from(author).where(eq(author.isActive, true)).orderBy(author.name);
     return { success: true, data: results };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Query failed" };

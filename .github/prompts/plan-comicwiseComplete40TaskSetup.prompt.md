@@ -747,8 +747,7 @@ export default [
       "no-restricted-syntax": [
         "error",
         {
-          selector:
-            'ExportNamedDeclaration[declaration.type="FunctionDeclaration"][source.value=/actions/]',
+          selector: 'ExportNamedDeclaration[declaration.type="FunctionDeclaration"][source.value=/actions/]',
           message: 'Server actions must have "use server" directive',
         },
       ],
@@ -934,10 +933,7 @@ import { z } from "zod";
 const imageLinkSchema = z
   .string()
   .url()
-  .refine(
-    (url) => /\.(jpg|jpeg|png|webp|avif)$/i.test(url),
-    "Image URL must end with valid extension"
-  );
+  .refine((url) => /\.(jpg|jpeg|png|webp|avif)$/i.test(url), "Image URL must end with valid extension");
 
 /**
  * Validate image URL before download
@@ -1008,10 +1004,7 @@ export function findDuplicateComics(comics: Partial<Comic>[]): Map<string, numbe
 /**
  * Detect orphaned chapters (comic doesn't exist)
  */
-export function findOrphanedChapters(
-  chapters: Partial<Chapter>[],
-  comicIds: Set<number>
-): number[] {
+export function findOrphanedChapters(chapters: Partial<Chapter>[], comicIds: Set<number>): number[] {
   return chapters
     .map((ch, idx) => ({ comicId: ch.comicId, idx }))
     .filter(({ comicId }) => comicId && !comicIds.has(comicId))
@@ -1073,10 +1066,7 @@ import { validateImageUrl } from "./helpers/imageValidator";
 /**
  * Validate chapter references before seeding
  */
-async function validateChapterReferences(
-  chapters: Partial<Chapter>[],
-  comicIds: Set<number>
-): Promise<void> {
+async function validateChapterReferences(chapters: Partial<Chapter>[], comicIds: Set<number>): Promise<void> {
   const orphaned = findOrphanedChapters(chapters, comicIds);
 
   if (orphaned.length > 0) {
@@ -1094,11 +1084,7 @@ async function validateChapterReferences(
 /**
  * Enhanced image download with validation and retry
  */
-async function downloadImageWithRetry(
-  url: string,
-  targetPath: string,
-  maxRetries = 3
-): Promise<boolean> {
+async function downloadImageWithRetry(url: string, targetPath: string, maxRetries = 3): Promise<boolean> {
   // Validate image URL first
   if (!(await validateImageUrl(url))) {
     logger.error(`Invalid image URL: ${url}`);
@@ -2108,10 +2094,7 @@ import { execSync } from "child_process";
 
 const program = new Command();
 
-program
-  .name("cw")
-  .description("ComicWise CLI - Database, Testing, Deployment, Scaffolding")
-  .version("2.0.0");
+program.name("cw").description("ComicWise CLI - Database, Testing, Deployment, Scaffolding").version("2.0.0");
 
 // Database commands
 program
@@ -2129,10 +2112,8 @@ program
   .option("--chapters", "Seed chapters only")
   .action((options) => {
     if (options.users) execSync("pnpm tsx src/database/seed/seedUsers.ts", { stdio: "inherit" });
-    else if (options.comics)
-      execSync("pnpm tsx src/database/seed/seedComics.ts", { stdio: "inherit" });
-    else if (options.chapters)
-      execSync("pnpm tsx src/database/seed/seedChapters.ts", { stdio: "inherit" });
+    else if (options.comics) execSync("pnpm tsx src/database/seed/seedComics.ts", { stdio: "inherit" });
+    else if (options.chapters) execSync("pnpm tsx src/database/seed/seedChapters.ts", { stdio: "inherit" });
     else execSync("pnpm db:seed", { stdio: "inherit" });
   });
 
@@ -2273,10 +2254,7 @@ File: `src/lib/uploadService.ts`
  * This is a pragmatic choice to avoid complex union types.
  * Each provider is validated at runtime.
  */
-export async function uploadFile(
-  file: File,
-  provider: "imagekit" | "cloudinary" | "s3"
-): Promise<UploadResult> {
+export async function uploadFile(file: File, provider: "imagekit" | "cloudinary" | "s3"): Promise<UploadResult> {
   let response: any; // Documented exception to strict typing
 
   if (provider === "imagekit") {
@@ -3267,11 +3245,7 @@ File: `.lighthouserc.json`
 {
   "ci": {
     "collect": {
-      "url": [
-        "http://localhost:3000/",
-        "http://localhost:3000/comics",
-        "http://localhost:3000/comics/sample-comic"
-      ],
+      "url": ["http://localhost:3000/", "http://localhost:3000/comics", "http://localhost:3000/comics/sample-comic"],
       "numberOfRuns": 3
     },
     "assert": {
@@ -3645,7 +3619,6 @@ NEXT_PUBLIC_API_URL=https://comicwise.app/api
 **Sentry Integration**:
 
 1. Verify Sentry is receiving errors:
-
    - Go to https://sentry.io/organizations/your-org/projects/comicwise/
    - Check Issues tab for any errors
    - Review Performance tab for slow transactions
@@ -4160,19 +4133,16 @@ git push origin main
 **Short-term (1-2 months)**:
 
 1. **Internationalization (i18n)**
-
    - Add locale files for: English, Spanish, French, Japanese
    - Update all UI strings to use i18n keys
    - Configure locale routing in Next.js
 
 2. **Advanced Caching**
-
    - Implement stale-while-revalidate for comics
    - Redis cache for search results
    - Edge caching for static assets
 
 3. **Enhanced Testing**
-
    - Add visual regression tests (Percy, Chromatic)
    - Expand E2E coverage to 100% user flows
    - Add load testing (k6, Artillery)
@@ -4185,19 +4155,16 @@ git push origin main
 **Medium-term (3-6 months)**:
 
 1. **Real-time Features**
-
    - WebSocket updates for new chapters
    - Live comment updates
    - Real-time reading statistics
 
 2. **Mobile App**
-
    - React Native app for iOS/Android
    - Shared codebase with web
    - Offline reading support
 
 3. **Analytics Dashboard**
-
    - Admin analytics for popular comics
    - User engagement metrics
    - Reading patterns visualization
@@ -4210,19 +4177,16 @@ git push origin main
 **Long-term (6-12 months)**:
 
 1. **Community Features**
-
    - User forums/discussions
    - Fan art galleries
    - Creator profiles and portfolios
 
 2. **Monetization**
-
    - Premium subscriptions
    - Creator support/donations
    - Ad integration (non-intrusive)
 
 3. **Content Management**
-
    - Creator dashboard for uploads
    - Automated chapter scheduling
    - Content moderation tools

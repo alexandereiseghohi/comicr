@@ -1,5 +1,3 @@
-"use client";
-
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -26,6 +24,8 @@ import {
   updateReaderSettingsAction,
 } from "@/lib/actions/reading-progress.actions";
 
+("use client");
+
 interface ReaderSettingsProps {
   onOpenChange: (open: boolean) => void;
   onSettingsChange?: (settings: {
@@ -36,14 +36,24 @@ interface ReaderSettingsProps {
   open: boolean;
 }
 
-export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderSettingsProps) {
+export function ReaderSettings({
+  open,
+  onOpenChange,
+  onSettingsChange,
+}: ReaderSettingsProps) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const [backgroundMode, setBackgroundMode] = useState<"dark" | "sepia" | "white">("white");
-  const [readingMode, setReadingMode] = useState<"horizontal" | "vertical">("vertical");
-  const [defaultQuality, setDefaultQuality] = useState<"high" | "low" | "medium">("medium");
+  const [backgroundMode, setBackgroundMode] = useState<
+    "dark" | "sepia" | "white"
+  >("white");
+  const [readingMode, setReadingMode] = useState<"horizontal" | "vertical">(
+    "vertical",
+  );
+  const [defaultQuality, setDefaultQuality] = useState<
+    "high" | "low" | "medium"
+  >("medium");
 
   // Load settings on mount
   useEffect(() => {
@@ -56,7 +66,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
     setLoading(true);
     try {
       const result = await getReaderSettingsAction();
-      if (result.success && result.data) {
+      if (result.ok && result.data) {
         // Map API values to component state types
         const bgMode = result.data.backgroundMode;
         if (bgMode === "dark" || bgMode === "white" || bgMode === "sepia") {
@@ -87,7 +97,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
         defaultQuality,
       });
 
-      if (result.success) {
+      if (result.ok) {
         toast.success("Your reader preferences have been updated");
         onSettingsChange?.({
           backgroundMode,
@@ -111,7 +121,8 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
         <SheetHeader>
           <SheetTitle>Reader Settings</SheetTitle>
           <SheetDescription>
-            Customize your reading experience. Settings will sync across devices.
+            Customize your reading experience. Settings will sync across
+            devices.
           </SheetDescription>
         </SheetHeader>
 
@@ -125,26 +136,37 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
             <div className="space-y-3">
               <Label>Background Color</Label>
               <RadioGroup
-                onValueChange={(value) => setBackgroundMode(value as typeof backgroundMode)}
+                onValueChange={(value) =>
+                  setBackgroundMode(value as typeof backgroundMode)
+                }
                 value={backgroundMode}
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem id="bg-white" value="white" />
-                  <Label className="flex cursor-pointer items-center gap-2" htmlFor="bg-white">
+                  <Label
+                    className="flex cursor-pointer items-center gap-2"
+                    htmlFor="bg-white"
+                  >
                     <div className="border-border h-8 w-8 rounded border-2 bg-white" />
                     White
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem id="bg-dark" value="dark" />
-                  <Label className="flex cursor-pointer items-center gap-2" htmlFor="bg-dark">
+                  <Label
+                    className="flex cursor-pointer items-center gap-2"
+                    htmlFor="bg-dark"
+                  >
                     <div className="border-border h-8 w-8 rounded border-2 bg-gray-900" />
                     Dark
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem id="bg-sepia" value="sepia" />
-                  <Label className="flex cursor-pointer items-center gap-2" htmlFor="bg-sepia">
+                  <Label
+                    className="flex cursor-pointer items-center gap-2"
+                    htmlFor="bg-sepia"
+                  >
                     <div className="border-border h-8 w-8 rounded border-2 bg-amber-50" />
                     Sepia
                   </Label>
@@ -156,7 +178,9 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
             <div className="space-y-3">
               <Label>Reading Mode</Label>
               <RadioGroup
-                onValueChange={(value) => setReadingMode(value as typeof readingMode)}
+                onValueChange={(value) =>
+                  setReadingMode(value as typeof readingMode)
+                }
                 value={readingMode}
               >
                 <div className="flex items-center space-x-2">
@@ -183,7 +207,9 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
             <div className="space-y-3">
               <Label htmlFor="quality">Default Image Quality</Label>
               <Select
-                onValueChange={(value) => setDefaultQuality(value as typeof defaultQuality)}
+                onValueChange={(value) =>
+                  setDefaultQuality(value as typeof defaultQuality)
+                }
                 value={defaultQuality}
               >
                 <SelectTrigger id="quality">
@@ -196,7 +222,8 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
                 </SelectContent>
               </Select>
               <p className="text-muted-foreground text-sm">
-                Higher quality uses more bandwidth but provides better image clarity
+                Higher quality uses more bandwidth but provides better image
+                clarity
               </p>
             </div>
 

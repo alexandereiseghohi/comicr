@@ -1,6 +1,4 @@
-"use client";
-
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +11,12 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import {
+  getReadingProgressAction,
+  saveReadingProgressAction,
+} from "@/lib/actions/reading-progress.actions";
+
+("use client");
 
 interface ReadingProgressTrackerProps {
   chapterId: number;
@@ -40,13 +44,34 @@ export function ReadingProgressTracker({
     percentage: number;
   } | null>(null);
   const [currentProgress, setCurrentProgress] = useState(0);
+  const [_isPending, startTransition] = useTransition();
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const lastSaveRef = useRef<{ page: number; scroll: number }>({ page: 0, scroll: 0 });
+  const lastSaveRef = useRef<{ page: number; scroll: number }>({
+    page: 0,
+    scroll: 0,
+  });
 
   const loadProgress = useCallback(async () => {
     try {
-      // TODO: Fetch reading progress from API
-      // For now, check localStorage as fallback
+      // First try to fetch from database
+      const result = await getReadingProgressAction({ comicId });
+      if (result.ok && result.data) {
+        // Check if current chapter matches and has significant progress
+        if (
+          result.data.chapterId === chapterId &&
+          (result.data.currentImageIndex > 0 ||
+            result.data.scrollPercentage > 10)
+        ) {
+          setSavedProgress({
+            pageIndex: result.data.currentImageIndex,
+            percentage: result.data.scrollPercentage,
+          });
+          setShowResumeDialog(true);
+          return;
+        }
+      }
+
+      // Fall back to localStorage if not authenticated or no DB progress
       const key = `progress-${comicId}-${chapterId}`;
       const stored = localStorage.getItem(key);
       if (stored) {
@@ -59,6 +84,20 @@ export function ReadingProgressTracker({
       }
     } catch (error) {
       console.error("Failed to load progress:", error);
+      // Fall back to localStorage on error
+      try {
+        const key = `progress-${comicId}-${chapterId}`;
+        const stored = localStorage.getItem(key);
+        if (stored) {
+          const data = JSON.parse(stored);
+          if (data.pageIndex > 0 || data.percentage > 10) {
+            setSavedProgress(data);
+            setShowResumeDialog(true);
+          }
+        }
+      } catch {
+        // Ignore localStorage errors
+      }
     }
   }, [comicId, chapterId]);
 
@@ -71,7 +110,8 @@ export function ReadingProgressTracker({
     async (pageIndex: number, percentage: number, immediate = false) => {
       // Don't save if values haven't changed significantly
       const pageChanged = pageIndex !== lastSaveRef.current.page;
-      const scrollChanged = Math.abs(percentage - lastSaveRef.current.scroll) > 5;
+      const scrollChanged =
+        Math.abs(percentage - lastSaveRef.current.scroll) > 5;
 
       if (!immediate && !pageChanged && !scrollChanged) {
         return;
@@ -80,23 +120,32 @@ export function ReadingProgressTracker({
       lastSaveRef.current = { page: pageIndex, scroll: percentage };
 
       try {
-        // Save to localStorage immediately
+        // Save to localStorage immediately (backup for unauthenticated users)
         const key = `progress-${comicId}-${chapterId}`;
-        localStorage.setItem(key, JSON.stringify({ pageIndex, percentage, timestamp: Date.now() }));
+        localStorage.setItem(
+          key,
+          JSON.stringify({ pageIndex, percentage, timestamp: Date.now() }),
+        );
 
-        // TODO: Save to database via API
-        // await saveReadingProgressAction({
-        //   comicId,
-        //   chapterId,
-        //   currentImageIndex: pageIndex,
-        //   scrollPercentage: percentage,
-        //   progressPercent: Math.round((pageIndex / totalPages) * 100),
-        // });
+        // Save to database via server action (non-blocking)
+        startTransition(async () => {
+          try {
+            await saveReadingProgressAction({
+              comicId,
+              chapterId,
+              currentImageIndex: pageIndex,
+              scrollPercentage: percentage,
+              progressPercent: Math.round((pageIndex / totalPages) * 100),
+            });
+          } catch {
+            // Silently fail - localStorage is the fallback
+          }
+        });
       } catch (error) {
         console.error("Failed to save progress:", error);
       }
     },
-    [comicId, chapterId]
+    [comicId, chapterId, totalPages],
   );
 
   // Debounced save - triggers 30s after last interaction
@@ -110,13 +159,15 @@ export function ReadingProgressTracker({
         saveProgress(pageIndex, percentage, false);
       }, 30000); // 30 seconds
     },
-    [saveProgress]
+    [saveProgress],
   );
 
   // Track progress changes
   useEffect(() => {
     const progress =
-      mode === "horizontal" ? Math.round((currentPage / totalPages) * 100) : scrollPercentage;
+      mode === "horizontal"
+        ? Math.round((currentPage / totalPages) * 100)
+        : scrollPercentage;
 
     // Update UI progress state
     setCurrentProgress(progress);
@@ -176,8 +227,9 @@ export function ReadingProgressTracker({
           <DialogHeader>
             <DialogTitle>Resume Reading?</DialogTitle>
             <DialogDescription>
-              You were last on page {savedProgress ? savedProgress.pageIndex + 1 : 1} of{" "}
-              {totalPages}. Would you like to continue from where you left off?
+              You were last on page{" "}
+              {savedProgress ? savedProgress.pageIndex + 1 : 1} of {totalPages}.
+              Would you like to continue from where you left off?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">

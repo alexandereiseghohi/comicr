@@ -8,12 +8,11 @@ import { vi } from "vitest";
 
 // Support running from any directory
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(__dirname, "../.env.local") });
 
 // Set default test environment variables (required by @/lib/env)
 process.env.DATABASE_URL = process.env.DATABASE_URL || "postgresql://test:test@localhost:5432/test";
-process.env.AUTH_SECRET =
-  process.env.AUTH_SECRET || "test-secret-key-min-32-chars-long-for-testing-purposes";
+process.env.AUTH_SECRET = process.env.AUTH_SECRET || "test-secret-key-min-32-chars-long-for-testing-purposes";
 process.env.GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "test-google-client-id";
 process.env.GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "test-google-client-secret";
 process.env.GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || "test-github-client-id";

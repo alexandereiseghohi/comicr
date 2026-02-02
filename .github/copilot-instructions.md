@@ -2,26 +2,38 @@
 
 ## Architecture Overview
 
-**Stack**: Next.js 16 (App Router) + Drizzle ORM + PostgreSQL + NextAuth v5 + Zod + Zustand
+**Stack**: Next.js 16.x (App Router) + Drizzle ORM + PostgreSQL + NextAuth v5 + Zod + Zustand
 
-**Data Flow**: `Component → Action → Mutation/Query → Drizzle → PostgreSQL`
+**Data Flow**: `Component → Action → DAL/Mutation → Drizzle → PostgreSQL`
 
 ### Key Directories
 
 - `src/app/` — Next.js App Router pages (route groups: `(auth)`, `(root)`, `admin`, `dev`)
-- `src/components/` — React components organized by feature (`comics/`, `bookmarks/`, `auth/`, `ui/`)
-- `src/database/` — Schema, queries, mutations, and seed logic
+- `src/components/` — React components by feature (`comics/`, `bookmarks/`, `auth/`, `ui/`)
+- `src/dal/` — **Data Access Layer** - typed DB operations (`import { comicDAL } from '@/dal'`)
+- `src/database/` — Schema, raw queries/mutations, seed logic
 - `src/lib/actions/` — Server actions with Zod validation
 - `src/schemas/` — Zod validation schemas (separate from Drizzle schema)
-- `src/types/` — Centralized TypeScript types (import from `@/types`)
+- `src/types/` — Centralized TypeScript types (`import from '@/types'`)
 
-## Data Layer Pattern
+## Data Layer Patterns
 
-**Always follow this 3-layer pattern:**
+### Option 1: DAL Pattern (Preferred for new code)
+
+```typescript
+import { comicDAL } from "@/dal";
+
+// Typed CRUD operations
+const comics = await comicDAL.getAll({ page: 1, limit: 20 });
+const comic = await comicDAL.findById(id);
+const result = await comicDAL.create(data);
+```
+
+### Option 2: Server Action Pattern (For forms/mutations)
 
 1. **Schema** (`src/schemas/{entity}.schema.ts`) — Zod validation
-2. **Mutation/Query** (`src/database/mutations/`, `src/database/queries/`) — Direct Drizzle operations
-3. **Action** (`src/lib/actions/{entity}.ts`) — Public API with `"use server"` directive
+2. **Mutation/Query** (`src/database/mutations/`, `src/database/queries/`)
+3. **Action** (`src/lib/actions/{entity}.ts`) — Public API with `"use server"`
 
 ```typescript
 // Pattern: Server action with auth + validation + mutation
@@ -30,16 +42,17 @@ import type { ActionResult } from "@/types";
 import * as mutations from "@/database/mutations/comic-mutations";
 import { createComicSchema, type CreateComicInput } from "@/schemas/comic-schema";
 
-export async function createComicAction(
-  input: CreateComicInput
-): Promise<ActionResult<{ id: number }>> {
+export async function createComicAction(input: CreateComicInput): Promise<ActionResult<{ id: number }>> {
   const session = await auth();
   if (!session?.user || session.user.role !== "admin") {
     return { success: false, error: "Unauthorized" };
   }
   const validation = createComicSchema.safeParse(input);
   if (!validation.success) {
-    return { success: false, error: validation.error.issues[0]?.message || "Validation failed" };
+    return {
+      success: false,
+      error: validation.error.issues[0]?.message || "Validation failed",
+    };
   }
   const result = await mutations.createComic(validation.data);
   return result.success

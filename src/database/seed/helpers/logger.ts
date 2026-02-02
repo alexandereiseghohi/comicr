@@ -1,10 +1,3 @@
-/**
- * @file logger.ts
- * @description Enhanced console logger with colored output and progress indicators
- * @author ComicWise Team
- * @date 2026-02-01
- */
-
 import chalk from "chalk";
 
 export type LogLevel = "debug" | "error" | "info" | "success" | "warn";
@@ -129,9 +122,7 @@ export class SeedLogger {
     const percentageStr = showPercentage ? chalk.yellow(`${percentage}%`) : "";
     const countStr = chalk.gray(`(${current}/${total})`);
 
-    process.stdout.write(
-      `\r${chalk.blue("►")} ${chalk.cyan(label)}: ${progressBar} ${percentageStr} ${countStr}`
-    );
+    process.stdout.write(`\r${chalk.blue("►")} ${chalk.cyan(label)}: ${progressBar} ${percentageStr} ${countStr}`);
 
     // Add newline when complete
     if (current >= total) {
@@ -154,11 +145,7 @@ export class SeedLogger {
    */
   endPhase(phase: string, duration?: number): void {
     const durationStr = duration ? chalk.gray(`(${duration}ms)`) : "";
-    console.log(
-      "\n" + chalk.green("✓"),
-      chalk.green.bold(`${phase} completed`),
-      durationStr + "\n"
-    );
+    console.log("\n" + chalk.green("✓"), chalk.green.bold(`${phase} completed`), durationStr + "\n");
   }
 
   /**

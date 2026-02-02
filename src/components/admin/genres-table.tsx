@@ -1,5 +1,3 @@
-"use client";
-
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Pencil, RotateCcw, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -23,6 +21,8 @@ import {
 } from "@/lib/actions/genre.actions";
 
 import { DataTable } from "./data-table";
+
+("use client");
 
 export interface GenreRow {
   comicsCount: number;
@@ -78,16 +78,12 @@ export function GenresTable({ items }: GenresTableProps) {
     {
       accessorKey: "slug",
       header: "Slug",
-      cell: ({ row }) => (
-        <code className="bg-muted rounded px-1 py-0.5 text-xs">{row.original.slug}</code>
-      ),
+      cell: ({ row }) => <code className="bg-muted rounded px-1 py-0.5 text-xs">{row.original.slug}</code>,
     },
     {
       accessorKey: "description",
       header: "Description",
-      cell: ({ row }) => (
-        <span className="block max-w-[200px] truncate">{row.original.description || "—"}</span>
-      ),
+      cell: ({ row }) => <span className="block max-w-[200px] truncate">{row.original.description || "—"}</span>,
     },
     {
       accessorKey: "comicsCount",
@@ -170,12 +166,7 @@ export function GenresTable({ items }: GenresTableProps) {
           </Button>
         </div>
       )}
-      <DataTable
-        columns={columns}
-        data={items}
-        searchKey="name"
-        searchPlaceholder="Search genres..."
-      />
+      <DataTable columns={columns} data={items} searchKey="name" searchPlaceholder="Search genres..." />
     </div>
   );
 }

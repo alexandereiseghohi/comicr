@@ -43,10 +43,7 @@ function replaceAnyTypes(fileP: string) {
     const text = parent?.getText() || "";
 
     // Only replace if not in eslint-disable comment
-    if (
-      !text.includes("eslint-disable-next-line") &&
-      !text.includes("@typescript-eslint/no-explicit-any")
-    ) {
+    if (!text.includes("eslint-disable-next-line") && !text.includes("@typescript-eslint/no-explicit-any")) {
       try {
         // Replace 'any' with 'unknown' for safer typing
         anyNode.replaceWithText("unknown");
@@ -59,12 +56,7 @@ function replaceAnyTypes(fileP: string) {
 
   if (replacements > 0) {
     stats.anyTypesReplaced += replacements;
-    console.log(
-      `   Replaced ${replacements} 'any' types with 'unknown' in ${path.relative(
-        process.cwd(),
-        fileP
-      )}`
-    );
+    console.log(`   Replaced ${replacements} 'any' types with 'unknown' in ${path.relative(process.cwd(), fileP)}`);
   }
 }
 
@@ -133,12 +125,7 @@ async function refactor() {
   console.log("🔧 AST Refactoring Tool");
   console.log("========================\n");
 
-  const sourceFiles = project.getSourceFiles([
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "!src/**/*.test.ts",
-    "!src/**/*.spec.ts",
-  ]);
+  const sourceFiles = project.getSourceFiles(["src/**/*.ts", "src/**/*.tsx", "!src/**/*.test.ts", "!src/**/*.spec.ts"]);
 
   console.log(`Found ${sourceFiles.length} files to process\n`);
 

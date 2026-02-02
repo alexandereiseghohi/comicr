@@ -2,8 +2,7 @@ import { eq, inArray } from "drizzle-orm";
 
 import { db } from "@/database/db";
 import { genre } from "@/database/schema";
-
-import type { CreateGenreInput, UpdateGenreInput } from "@/schemas/genre-schema";
+import { type CreateGenreInput, type UpdateGenreInput } from "@/schemas/genre-schema";
 
 export async function createGenre(data: CreateGenreInput) {
   try {

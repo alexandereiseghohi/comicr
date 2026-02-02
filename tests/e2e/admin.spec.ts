@@ -60,9 +60,7 @@ test.describe("Admin Panel", () => {
       await page.goto("/admin/authors/new");
       await page.getByRole("button", { name: /create|save|submit/i }).click();
       // Should show validation error (form stays on page or shows error message)
-      await expect(
-        page.getByText(/required|name/i).or(page.locator("[aria-invalid=true]"))
-      ).toBeVisible();
+      await expect(page.getByText(/required|name/i).or(page.locator("[aria-invalid=true]"))).toBeVisible();
     });
   });
 
