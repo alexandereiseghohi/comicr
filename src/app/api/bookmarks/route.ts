@@ -1,10 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/auth";
-import {
-  createBookmark,
-  deleteBookmark,
-} from "@/database/mutations/bookmark-mutations";
+import { createBookmark, deleteBookmark } from "@/database/mutations/bookmark-mutations";
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,10 +15,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(bookmark, { status: 201 });
   } catch (error) {
     console.error("Bookmarks POST error:", error);
-    return NextResponse.json(
-      { error: "Failed to create bookmark" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to create bookmark" }, { status: 500 });
   }
 }
 
@@ -38,10 +32,7 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Bookmarks DELETE error:", error);
-    return NextResponse.json(
-      { error: "Failed to delete bookmark" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to delete bookmark" }, { status: 500 });
   }
 }
 
@@ -58,9 +49,6 @@ export async function GET() {
     return NextResponse.json({ bookmarked });
   } catch (error) {
     console.error("Bookmarks GET error:", error);
-    return NextResponse.json(
-      { error: "Failed to check bookmark" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to check bookmark" }, { status: 500 });
   }
 }

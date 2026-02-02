@@ -3,10 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/artist.mutations";
 import { artist } from "@/database/schema";
-import {
-  type CreateArtistInput,
-  type UpdateArtistInput,
-} from "@/schemas/artist-schema";
+import { type CreateArtistInput, type UpdateArtistInput } from "@/schemas/artist-schema";
 import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
@@ -31,9 +28,7 @@ export class ArtistDAL extends BaseDAL<typeof artist> {
     }
   }
 
-  async create(
-    data: CreateArtistInput,
-  ): Promise<DbMutationResult<typeof artist.$inferSelect>> {
+  async create(data: CreateArtistInput): Promise<DbMutationResult<typeof artist.$inferSelect>> {
     try {
       return await mutations.createArtist(data as CreateArtistInput);
     } catch (error) {
@@ -44,10 +39,7 @@ export class ArtistDAL extends BaseDAL<typeof artist> {
     }
   }
 
-  async update(
-    id: number,
-    data: UpdateArtistInput,
-  ): Promise<DbMutationResult<typeof artist.$inferSelect>> {
+  async update(id: number, data: UpdateArtistInput): Promise<DbMutationResult<typeof artist.$inferSelect>> {
     try {
       return await mutations.updateArtist(id, data as UpdateArtistInput);
     } catch (error) {

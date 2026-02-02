@@ -47,7 +47,7 @@ export class ReadingProgressDAL extends BaseDAL<typeof readingProgress> {
 
   async update(
     _id: number,
-    _data: Partial<typeof readingProgress.$inferInsert>,
+    _data: Partial<typeof readingProgress.$inferInsert>
   ): Promise<DbMutationResult<typeof readingProgress.$inferSelect>> {
     return {
       success: false,

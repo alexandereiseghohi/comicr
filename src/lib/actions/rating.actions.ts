@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import { auth } from "@/auth";
 import * as mutations from "@/database/mutations/rating-mutations";
 import * as queries from "@/database/queries/rating-queries";

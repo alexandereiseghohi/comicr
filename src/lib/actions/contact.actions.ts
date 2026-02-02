@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import nodemailer from "nodemailer";
 
 import { type ContactInput, contactSchema } from "@/schemas/contact.schema";

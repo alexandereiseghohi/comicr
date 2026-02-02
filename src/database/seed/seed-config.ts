@@ -1,8 +1,5 @@
 // Compatibility re-exports for legacy imports
-export {
-  CUSTOM_PASSWORD_VALUE as CUSTOM_PASSWORD,
-  SEED_API_KEY_VALUE as SEED_API_KEY,
-};
+export { CUSTOM_PASSWORD_VALUE as CUSTOM_PASSWORD, SEED_API_KEY_VALUE as SEED_API_KEY };
 import path from "node:path";
 
 import {
@@ -16,8 +13,7 @@ import {
 
 // Environment-validated configuration
 export const SEED_DOWNLOAD_CONCURRENCY_VALUE = SEED_DOWNLOAD_CONCURRENCY || 10;
-export const SEED_MAX_IMAGE_SIZE_BYTES_VALUE =
-  SEED_MAX_IMAGE_SIZE_BYTES || 5242880;
+export const SEED_MAX_IMAGE_SIZE_BYTES_VALUE = SEED_MAX_IMAGE_SIZE_BYTES || 5242880;
 export const SEED_BATCH_SIZE_VALUE = SEED_BATCH_SIZE || 100;
 export const SEED_TIMEOUT_MS_VALUE = SEED_TIMEOUT_MS || 30000;
 export const SEED_API_KEY_VALUE = SEED_API_KEY || "";

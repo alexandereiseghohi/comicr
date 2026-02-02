@@ -3,10 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/type.mutations";
 import { type } from "@/database/schema";
-import {
-  type CreateTypeInput,
-  type UpdateTypeInput,
-} from "@/schemas/type-schema";
+import { type CreateTypeInput, type UpdateTypeInput } from "@/schemas/type-schema";
 import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
@@ -31,9 +28,7 @@ export class TypeDAL extends BaseDAL<typeof type> {
     }
   }
 
-  async create(
-    data: CreateTypeInput,
-  ): Promise<DbMutationResult<typeof type.$inferSelect>> {
+  async create(data: CreateTypeInput): Promise<DbMutationResult<typeof type.$inferSelect>> {
     try {
       return await mutations.createType(data);
     } catch (error) {
@@ -44,10 +39,7 @@ export class TypeDAL extends BaseDAL<typeof type> {
     }
   }
 
-  async update(
-    id: number,
-    data: UpdateTypeInput,
-  ): Promise<DbMutationResult<typeof type.$inferSelect>> {
+  async update(id: number, data: UpdateTypeInput): Promise<DbMutationResult<typeof type.$inferSelect>> {
     try {
       return await mutations.updateType(id, data);
     } catch (error) {

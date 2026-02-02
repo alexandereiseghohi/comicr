@@ -1,11 +1,8 @@
-"use server"
+"use server";
 import { auth } from "@/auth";
 import * as mutations from "@/database/mutations/reader-settings-mutations";
 import * as progressMutations from "@/database/mutations/reading-progress-mutations";
-import {
-  type UpdateReaderSettingsInput,
-  updateReaderSettingsSchema,
-} from "@/schemas/reader-settings.schema";
+import { type UpdateReaderSettingsInput, updateReaderSettingsSchema } from "@/schemas/reader-settings.schema";
 import {
   getReadingProgressSchema,
   type SaveReadingProgressInput,
@@ -42,7 +39,7 @@ export async function getReaderSettingsAction(): Promise<
  * Update reader settings for the current user
  */
 export async function updateReaderSettingsAction(
-  input: UpdateReaderSettingsInput,
+  input: UpdateReaderSettingsInput
 ): Promise<ActionResult<{ success: true }>> {
   const session = await auth();
   if (!session?.user?.id) {
@@ -57,10 +54,7 @@ export async function updateReaderSettingsAction(
     };
   }
 
-  const result = await mutations.upsertReaderSettings(
-    session.user.id,
-    validation.data,
-  );
+  const result = await mutations.upsertReaderSettings(session.user.id, validation.data);
   return result.success
     ? { ok: true, data: { success: true } }
     : {
@@ -73,7 +67,7 @@ export async function updateReaderSettingsAction(
  * Save reading progress for a comic chapter
  */
 export async function saveReadingProgressAction(
-  input: SaveReadingProgressInput,
+  input: SaveReadingProgressInput
 ): Promise<ActionResult<{ saved: boolean }>> {
   const session = await auth();
   if (!session?.user?.id) {
@@ -104,9 +98,7 @@ export async function saveReadingProgressAction(
 /**
  * Get reading progress for a comic
  */
-export async function getReadingProgressAction(input: {
-  comicId: number;
-}): Promise<
+export async function getReadingProgressAction(input: { comicId: number }): Promise<
   ActionResult<{
     chapterId: number;
     currentImageIndex: number;
@@ -127,10 +119,7 @@ export async function getReadingProgressAction(input: {
     };
   }
 
-  const result = await progressMutations.getReadingProgress(
-    session.user.id,
-    validation.data.comicId,
-  );
+  const result = await progressMutations.getReadingProgress(session.user.id, validation.data.comicId);
 
   if (!result) {
     return { ok: true, data: null };

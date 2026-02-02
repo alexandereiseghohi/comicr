@@ -122,6 +122,4 @@ export type Optional<T> = T | undefined;
 /**
  * Promise type utility
  */
-export type AsyncReturnType<
-  T extends (...args: unknown[]) => Promise<unknown>,
-> = Awaited<ReturnType<T>>;
+export type AsyncReturnType<T extends (...args: unknown[]) => Promise<unknown>> = Awaited<ReturnType<T>>;

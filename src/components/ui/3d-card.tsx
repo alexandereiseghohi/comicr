@@ -1,18 +1,10 @@
-import React, {
-  createContext,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, type ReactNode, useContext, useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-
-const MouseEnterContext = createContext<
-  [boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined
->(undefined);
+const MouseEnterContext = createContext<[boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined>(
+  undefined
+);
 
 export const CardContainer = ({
   children,
@@ -28,8 +20,7 @@ export const CardContainer = ({
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
-    const { left, top, width, height } =
-      containerRef.current.getBoundingClientRect();
+    const { left, top, width, height } = containerRef.current.getBoundingClientRect();
     const x = (e.clientX - left - width / 2) / 25;
     const y = (e.clientY - top - height / 2) / 25;
     containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
@@ -48,19 +39,13 @@ export const CardContainer = ({
   return (
     <MouseEnterContext.Provider value={[isMouseEntered, setIsMouseEntered]}>
       <div
-        className={cn(
-          "flex items-center justify-center py-20",
-          containerClassName,
-        )}
+        className={cn("flex items-center justify-center py-20", containerClassName)}
         style={{
           perspective: "1000px",
         }}
       >
         <div
-          className={cn(
-            "relative flex items-center justify-center transition-all duration-200 ease-linear",
-            className,
-          )}
+          className={cn("relative flex items-center justify-center transition-all duration-200 ease-linear", className)}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           onMouseMove={handleMouseMove}
@@ -76,18 +61,8 @@ export const CardContainer = ({
   );
 };
 
-export const CardBody = ({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) => {
-  return (
-    <div className={cn("h-96 w-96 transform-3d *:transform-3d", className)}>
-      {children}
-    </div>
-  );
+export const CardBody = ({ children, className }: { children: ReactNode; className?: string }) => {
+  return <div className={cn("h-96 w-96 transform-3d *:transform-3d", className)}>{children}</div>;
 };
 
 export const CardItem = ({
@@ -131,11 +106,7 @@ export const CardItem = ({
   };
 
   return (
-    <Tag
-      className={cn("w-fit transition duration-200 ease-linear", className)}
-      ref={ref}
-      {...rest}
-    >
+    <Tag className={cn("w-fit transition duration-200 ease-linear", className)} ref={ref} {...rest}>
       {children}
     </Tag>
   );

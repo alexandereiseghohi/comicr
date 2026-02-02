@@ -7,7 +7,6 @@ import { queryKeys } from "@/lib/query-client";
  * @description TanStack Query hooks for comics data fetching
  */
 
-
 // Types
 interface Comic {
   coverImage: string;

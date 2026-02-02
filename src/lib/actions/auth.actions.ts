@@ -12,7 +12,6 @@ import { type ActionResult } from "@/types";
 
 import { db } from "../../database/db";
 
-
 // ═══════════════════════════════════════════════════
 // SIGN UP ACTION
 // ═══════════════════════════════════════════════════
@@ -26,9 +25,7 @@ export type SignUpInput = {
 /**
  * Create a new user account with email/password
  */
-export async function signUpAction(
-  input: SignUpInput,
-): Promise<ActionResult<{ userId: string }>> {
+export async function signUpAction(input: SignUpInput): Promise<ActionResult<{ userId: string }>> {
   try {
     // Validate input
     const validation = SignUpSchema.safeParse(input);
@@ -52,13 +49,12 @@ export async function signUpAction(
     const hashedPassword = hashPassword(input.password);
 
     // Create user using mutation (since userDAL.create is a stub)
-    const result = await import("@/database/mutations/user.mutations").then(
-      (m) =>
-        m.createUser({
-          email: input.email,
-          name: input.name || null,
-          password: hashedPassword,
-        }),
+    const result = await import("@/database/mutations/user.mutations").then((m) =>
+      m.createUser({
+        email: input.email,
+        name: input.name || null,
+        password: hashedPassword,
+      })
     );
 
     if (!result.success || !result.data) {
@@ -86,9 +82,7 @@ export async function signUpAction(
  * Generate a password reset token and store it
  * In production, this should send an email with the reset link
  */
-export async function requestPasswordResetAction(
-  email: string,
-): Promise<ActionResult<{ message: string }>> {
+export async function requestPasswordResetAction(email: string): Promise<ActionResult<{ message: string }>> {
   try {
     if (!email || typeof email !== "string") {
       return { ok: false, error: "Email is required" };
@@ -112,19 +106,15 @@ export async function requestPasswordResetAction(
     const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
 
     // Delete any existing tokens for this email
-    await db
-      .delete(passwordResetToken)
-      .where(eq(passwordResetToken.email, email));
+    await db.delete(passwordResetToken).where(eq(passwordResetToken.email, email));
 
     // Store the hashed token using mutation
-    await import(
-      "../../database/mutations/password-reset-token.mutations"
-    ).then((m) =>
+    await import("../../database/mutations/password-reset-token.mutations").then((m) =>
       m.createPasswordResetToken({
         email,
         token: hashedToken,
         expires,
-      }),
+      })
     );
 
     // TODO: In production, send email with reset link containing the unhashed token
@@ -162,9 +152,7 @@ export type ResetPasswordInput = {
 /**
  * Reset password using a valid token
  */
-export async function resetPasswordAction(
-  input: ResetPasswordInput,
-): Promise<ActionResult<{ message: string }>> {
+export async function resetPasswordAction(input: ResetPasswordInput): Promise<ActionResult<{ message: string }>> {
   try {
     const { token, newPassword, confirmPassword } = input;
 
@@ -207,9 +195,7 @@ export async function resetPasswordAction(
       .limit(100);
 
     // Find matching token by verifying hash
-    const tokenRecord = tokenRecords.find((record) =>
-      verifyPassword(token, record.token),
-    );
+    const tokenRecord = tokenRecords.find((record) => verifyPassword(token, record.token));
 
     if (!tokenRecord) {
       return { ok: false, error: "Invalid or expired reset token" };
@@ -218,9 +204,7 @@ export async function resetPasswordAction(
     // Check if token has expired
     if (tokenRecord.expires < new Date()) {
       // Delete expired token
-      await db
-        .delete(passwordResetToken)
-        .where(eq(passwordResetToken.id, tokenRecord.id));
+      await db.delete(passwordResetToken).where(eq(passwordResetToken.id, tokenRecord.id));
       return {
         ok: false,
         error: "Reset token has expired. Please request a new one.",
@@ -246,9 +230,7 @@ export async function resetPasswordAction(
       .where(eq(user.id, existingUser.data.id));
 
     // Delete the used token by ID (since we store hashed tokens)
-    await db
-      .delete(passwordResetToken)
-      .where(eq(passwordResetToken.id, tokenRecord.id));
+    await db.delete(passwordResetToken).where(eq(passwordResetToken.id, tokenRecord.id));
 
     return {
       ok: true,
@@ -273,9 +255,7 @@ export type ChangePasswordInput = {
 /**
  * Change password for authenticated user
  */
-export async function changePasswordAction(
-  input: ChangePasswordInput,
-): Promise<ActionResult<{ message: string }>> {
+export async function changePasswordAction(input: ChangePasswordInput): Promise<ActionResult<{ message: string }>> {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -317,18 +297,14 @@ export async function changePasswordAction(
 
     // Get user with password
     const userResult = await userDAL.getById(session.user.id);
-    const userRecord =
-      userResult.success && userResult.data ? userResult.data : undefined;
+    const userRecord = userResult.success && userResult.data ? userResult.data : undefined;
 
     if (!userRecord) {
       return { ok: false, error: "User not found" };
     }
 
     // Verify current password
-    if (
-      !userRecord.password ||
-      !verifyPassword(currentPassword, userRecord.password)
-    ) {
+    if (!userRecord.password || !verifyPassword(currentPassword, userRecord.password)) {
       return { ok: false, error: "Current password is incorrect" };
     }
 

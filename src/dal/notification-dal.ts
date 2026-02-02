@@ -29,9 +29,7 @@ export class NotificationDAL extends BaseDAL<typeof notification> {
     }
   }
 
-  async create(
-    data: typeof notification.$inferInsert,
-  ): Promise<DbMutationResult<DbNotification>> {
+  async create(data: typeof notification.$inferInsert): Promise<DbMutationResult<DbNotification>> {
     try {
       const result = await mutations.createNotification(
         data.userId,
@@ -40,7 +38,7 @@ export class NotificationDAL extends BaseDAL<typeof notification> {
         data.message,
         data.link ?? undefined,
         data.comicId ?? undefined,
-        data.chapterId ?? undefined,
+        data.chapterId ?? undefined
       );
       if (result && typeof result === "object" && "id" in result) {
         return { success: true, data: result as DbNotification };
@@ -57,7 +55,7 @@ export class NotificationDAL extends BaseDAL<typeof notification> {
 
   async update(
     id: number,
-    _data: Partial<typeof notification.$inferInsert>,
+    _data: Partial<typeof notification.$inferInsert>
   ): Promise<DbMutationResult<DbNotification>> {
     try {
       const result = await mutations.markAsRead(id);

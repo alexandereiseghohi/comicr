@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 
 import { type BookmarkCardProps } from "./bookmark-card";
 
-
-
 export function BookmarkListItem({
   comicId,
   comicTitle,

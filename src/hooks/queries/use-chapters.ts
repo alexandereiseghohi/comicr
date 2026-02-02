@@ -7,7 +7,6 @@ import { queryKeys } from "@/lib/query-client";
  * @description TanStack Query hooks for chapters data fetching
  */
 
-
 // Types
 interface Chapter {
   chapterNumber: number;

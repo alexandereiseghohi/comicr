@@ -2,8 +2,6 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-
-
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div className="relative w-full overflow-x-auto" data-slot="table-container">

@@ -3,8 +3,6 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-
-
 function ScrollArea({ className, children, ...props }: React.ComponentProps<typeof ScrollAreaPrimitive.Root>) {
   return (
     <ScrollAreaPrimitive.Root className={cn("relative", className)} data-slot="scroll-area" {...props}>

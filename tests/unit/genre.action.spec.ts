@@ -74,10 +74,7 @@ describe("genre actions", () => {
       expect(res.ok).toBe(true);
       if (res.ok) {
         expect(res.data).toHaveProperty("slug", "fantasy");
-        expect(res.data).toHaveProperty(
-          "description",
-          "Fantasy comics with magic",
-        );
+        expect(res.data).toHaveProperty("description", "Fantasy comics with magic");
       }
     });
   });

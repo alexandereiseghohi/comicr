@@ -1,8 +1,10 @@
-# ComicWise (comicr) – AI Agent Instructions
+---
 
-## 1. Architecture & Data Flow
+# ComicWise (comicr) – AI Agent Instructions (2026)
 
-- **Stack:** Next.js 16 (App Router), Drizzle ORM, PostgreSQL, NextAuth v5, Zod, Zustand.
+## 1. System Architecture & Data Flow
+
+- **Stack:** Next.js 16 (App Router), Drizzle ORM, PostgreSQL, NextAuth v5, Zod, Zustand
 - **Data Flow:**
   `Component → Action → DAL/Mutation → Drizzle → PostgreSQL`
 - **Key Directories:**
@@ -14,14 +16,15 @@
   - `src/schemas/` – Zod validation schemas (not Drizzle schema)
   - `src/types/` – Centralized TypeScript types
 
-## 2. Data Layer Patterns
+## 2. Data Layer & Validation Patterns
 
-- **Preferred:** Use DAL for CRUD (`comicDAL.getAll`, `comicDAL.findById`, etc.).
+- **DAL First:** Use DAL for all CRUD (`comicDAL.getAll`, `comicDAL.findById`, etc.)
 - **Server Actions:** For forms/mutations, use Zod schema → mutation/query → action with `"use server"`. Always check auth at the start of actions.
 - **Return Shape:**
   `{ success: true, data: T } | { success: false, error: string }`
+- **Validation:** All input via Zod schemas in `src/schemas/`.
 
-## 3. Critical Patterns & Conventions
+## 3. Core Conventions & Patterns
 
 - **Soft Delete:** Never hard-delete users/comments with children. Set `deletedAt`, anonymize PII for users, show `[deleted]` for comments.
 - **Rating Upsert:** Use composite key `[userId, comicId]`, `onConflictDoUpdate`. `rating=0` triggers deletion (in API route).
@@ -37,8 +40,14 @@
   - UI: `src/components/ui/` (shadcn/ui)
 - **Legacy Note:** Prefer `ActionResult` from `@/types` for new code.
 
-## 4. Developer Workflows
+## 4. Developer Workflow & Commands
 
+- **Setup:**
+  1. `pnpm install`
+  2. Copy `.env.local.example` → `.env.local` and configure all required vars (see `src/lib/env.ts`)
+  3. `pnpm db:push && pnpm db:seed` (see `src/database/seed/README.md` for seeding details)
+  4. `pnpm dev` (start dev server)
+  5. `pnpm validate` (type-check, lint, unit tests)
 - **Build/Dev:**
   - `pnpm dev` – Start dev server
   - `pnpm build` – Production build
@@ -52,7 +61,7 @@
   - `pnpm test:e2e` – E2E tests (Playwright, `tests/e2e/`)
 - **Seeding:** See `src/database/seed/README.md` for CLI/API/UI options.
 
-## 5. API & Validation
+## 5. API, Routes & Response Patterns
 
 - **API routes:**
   - `POST /api/comics/rate` – Upsert/delete rating
@@ -61,37 +70,33 @@
   - `DELETE /api/comments/{id}` – Soft delete
   - `PUT /api/profile/settings` – Update user settings
   - `POST /api/profile/delete-account` – Soft delete user
-- **Validation:** All input via Zod schemas in `src/schemas/`.
 - **Response:** Always `{ success, data?, error?, message? }`.
 
-## 6. Common Pitfalls
+## 6. Testing & Validation
 
-- Always include 3–5 lines of context for file edits.
-- `"use client"` required for event handlers and image `onError`.
-- Always check auth in server actions.
-- Use `buildCommentTree` for comment threading.
-- Use upsert for progress/rating, not separate insert logic.
-- Check `deletedAt IS NULL` for active records.
-- Passwords: min 8 chars, uppercase, lowercase, number (see schema).
+- **Unit tests:** Vitest (`tests/unit/`), Zod schemas, server actions, utilities
+- **E2E tests:** Playwright (`tests/e2e/`), critical flows (auth, reader, profile, ratings, comments)
+- **Coverage targets:** 80%+ statements/lines, 70%+ branches, 100% on critical paths
+- **Validation:**
+  - `pnpm type-check` (TypeScript)
+  - `pnpm lint`/`pnpm lint:fix` (ESLint)
+  - `pnpm test`/`pnpm test:e2e` (Vitest/Playwright)
+  - `pnpm validate` (all checks)
 
-## 7. Environment & CI/CD
+## 7. Optimization & Cleanup
 
-- **Env vars:** All validated in `src/lib/env.ts`. See `.env.local.example`.
-- **CI/CD:** GitHub Actions in `.github/workflows/`. Vercel auto-deploys on push to `main`.
-- **Secrets:** `DATABASE_URL`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+- **Performance:**
+  - Redis caching for hot data
+  - Optimize DB queries (avoid N+1, use indexes)
+  - Image optimization (WebP, AVIF, lazy loading)
+  - Bundle size reduction (code splitting, dynamic imports)
+- **Code Quality:**
+  - Remove unused/duplicate code
+  - Kebab-case for files, PascalCase for components
+  - Remove `any` types, add generics
+  - Organize imports, delete deprecated files
 
-## 8. Quick Reference
+## 8. Common Pitfalls & Gotchas
 
-- Add DB feature: schema → Drizzle table → `db:push` → mutations/queries → action → tests.
-- Add API endpoint: route → Zod validation → auth → return shape → call DB layer.
-- Debug:
-  - Type: `pnpm type-check`
-  - Lint: `pnpm lint`/`pnpm lint:fix`
-  - Test: `pnpm test`/`pnpm test:e2e`
-  - DB: `pnpm db:studio`
-  - All: `pnpm validate`
-
----
-
-**Feedback requested:**
-Are any sections unclear, missing, or too detailed? Let me know what to clarify or expand for your AI agent workflow.
+- Always include 3–5 lines of context for file edits
+- `

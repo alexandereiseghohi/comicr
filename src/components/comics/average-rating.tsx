@@ -2,8 +2,6 @@ import { Star } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-
-
 interface AverageRatingProps {
   className?: string;
   rating: number;
