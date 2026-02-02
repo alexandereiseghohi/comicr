@@ -1,8 +1,8 @@
+"use client";
 import Image from "next/image";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
-("use client");
 type Props = {
   defaultEmail?: null | string;
   defaultImage?: null | string;

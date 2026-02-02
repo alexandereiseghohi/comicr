@@ -1,3 +1,4 @@
+    "use server"
 import { redirect } from "next/navigation";
 
 import ProfileForm from "@/components/profile/profile-form";
@@ -12,7 +13,6 @@ export default async function EditProfilePage() {
 
   // Server action to update profile (non-JS fallback)
   async function updateProfileAction(form: FormData) {
-    "use server";
     const name = form.get("name") as null | string;
     const image = form.get("image") as null | string;
     if (!me?.id) return;

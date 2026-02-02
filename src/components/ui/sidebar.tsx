@@ -32,7 +32,7 @@ import {
   SIDEBAR_WIDTH_MOBILE,
 } from "./sidebar-constants";
 
-("use client");
+
 
 type SidebarContextProps = {
   isMobile: boolean;

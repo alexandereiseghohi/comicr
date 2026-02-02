@@ -1,3 +1,4 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,7 +14,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { createTypeAction, updateTypeAction } from "@/lib/actions/type.actions";
 import { createTypeSchema, updateTypeSchema } from "@/schemas/type-schema";
 
-("use client");
 type CreateFormValues = z.infer<typeof createTypeSchema>;
 type UpdateFormValues = z.infer<typeof updateTypeSchema>;
 

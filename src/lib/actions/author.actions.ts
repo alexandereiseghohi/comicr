@@ -1,3 +1,4 @@
+"use server";
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
@@ -5,7 +6,6 @@ import * as authorMutations from "@/database/mutations/author.mutations";
 import { getAuthorByName } from "@/database/queries/author.queries";
 import { createAuthorSchema } from "@/schemas/author-schema";
 
-("use server");
 type ActionResult<T = unknown> = { data: T; ok: true } | { error: { code: string; message: string }; ok: false };
 
 async function verifyAdmin(): Promise<{ userId: string } | null> {

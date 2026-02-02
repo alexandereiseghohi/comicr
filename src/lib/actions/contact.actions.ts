@@ -1,9 +1,8 @@
+"use server"
 import nodemailer from "nodemailer";
 
 import { type ContactInput, contactSchema } from "@/schemas/contact.schema";
 import { type ActionResult } from "@/types";
-
-("use server");
 
 /**
  * Send contact form email via SMTP

@@ -1,20 +1,13 @@
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
-
-const KEY_LEN = 64;
+import bcrypt from "bcryptjs";
 
 export function hashPassword(password: string): string {
-  const salt = randomBytes(16).toString("hex");
-  const derived = scryptSync(password, salt, KEY_LEN);
-  return `${salt}:${derived.toString("hex")}`;
+  // 10 salt rounds is a common default
+  return bcrypt.hashSync(password, 10);
 }
 
 export function verifyPassword(password: string, stored: string): boolean {
   try {
-    const [salt, keyHex] = stored.split(":");
-    if (!salt || !keyHex) return false;
-    const derived = scryptSync(password, salt, KEY_LEN);
-    const keyBuf = Buffer.from(keyHex, "hex");
-    return timingSafeEqual(derived, keyBuf);
+    return bcrypt.compareSync(password, stored);
   } catch {
     return false;
   }

@@ -1,3 +1,4 @@
+"use client";
 import { Check, ChevronsUpDown, Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,7 +11,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
-("use client");
 const STATUSES = ["All", "Ongoing", "Completed", "Hiatus", "Dropped", "Season End", "Coming Soon"];
 const SORT_OPTIONS = [
   { label: "Latest", value: "createdAt-desc" },

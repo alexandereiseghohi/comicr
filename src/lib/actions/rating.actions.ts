@@ -1,16 +1,15 @@
+"use server"
 import { auth } from "@/auth";
 import * as mutations from "@/database/mutations/rating-mutations";
 import * as queries from "@/database/queries/rating-queries";
 import { type RatingInput, ratingSchema } from "@/schemas/rating.schema";
 import { type ActionResult } from "@/types";
 
-("use server");
-
 /**
  * Get user's rating for a comic
  */
 export async function getUserRatingAction(
-  comicId: number,
+  comicId: number
 ): Promise<ActionResult<{ rating: number; review: null | string } | null>> {
   try {
     const session = await auth();
@@ -44,7 +43,7 @@ export async function getUserRatingAction(
  * Get average rating and count for a comic
  */
 export async function getComicRatingStatsAction(
-  comicId: number,
+  comicId: number
 ): Promise<ActionResult<{ averageRating: number; totalRatings: number }>> {
   try {
     const result = await queries.getComicRatingStats(comicId);
@@ -72,9 +71,7 @@ export async function getComicRatingStatsAction(
 /**
  * Create or update user's rating for a comic
  */
-export async function upsertRatingAction(
-  input: RatingInput,
-): Promise<ActionResult<{ rating: number }>> {
+export async function upsertRatingAction(input: RatingInput): Promise<ActionResult<{ rating: number }>> {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -120,9 +117,7 @@ export async function upsertRatingAction(
 /**
  * Delete user's rating for a comic
  */
-export async function deleteRatingAction(
-  comicId: number,
-): Promise<ActionResult<{ deleted: boolean }>> {
+export async function deleteRatingAction(comicId: number): Promise<ActionResult<{ deleted: boolean }>> {
   try {
     const session = await auth();
     if (!session?.user?.id) {

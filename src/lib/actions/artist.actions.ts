@@ -1,3 +1,4 @@
+"use server";
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
@@ -5,7 +6,6 @@ import * as artistMutations from "@/database/mutations/artist.mutations";
 import { getArtistByName } from "@/database/queries/artist.queries";
 import { createArtistSchema } from "@/schemas/artist-schema";
 
-("use server");
 type ActionResult<T = unknown> = { data: T; ok: true } | { error: { code: string; message: string }; ok: false };
 
 async function verifyAdmin(): Promise<{ userId: string } | null> {

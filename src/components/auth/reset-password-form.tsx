@@ -1,3 +1,4 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -5,25 +6,16 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { resetPasswordServerAction } from "@/app/(auth)/reset-password/[token]/actions";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { resetPasswordAction } from "@/lib/actions/auth.actions";
 import { passwordValidator } from "@/types/validation";
 
 /**
  * Reset Password Form Component
  * @description Form for setting a new password after reset request
  */
-
-("use client");
 
 interface ResetPasswordFormProps {
   token: string;
@@ -49,7 +41,7 @@ type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
  */
 export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
 
   const form = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
@@ -62,34 +54,22 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   /**
    * Handle form submission
    */
-  async function onSubmit(data: ResetPasswordFormData) {
-    startTransition(async () => {
-      try {
-        // Reset password via server action
-        const result = await resetPasswordAction({
-          token,
-          newPassword: data.password,
-          confirmPassword: data.confirmPassword,
-        });
 
-        if (!result.ok) {
-          toast.error(result.error || "Failed to reset password");
-          return;
-        }
-
-        toast.success("Password updated successfully");
-        router.push("/sign-in");
-      } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "Failed to reset password",
-        );
-      }
-    });
+  // Handler for server action result
+  async function handleServerAction(formData: FormData) {
+    const result = await resetPasswordServerAction(formData);
+    if (!result.ok) {
+      toast.error(result.error || "Failed to reset password");
+      return;
+    }
+    toast.success("Password updated successfully");
+    router.push("/sign-in");
   }
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form action={handleServerAction} className="space-y-4">
+        <input name="token" type="hidden" value={token} />
         <FormField
           control={form.control}
           name="password"
@@ -107,8 +87,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 />
               </FormControl>
               <p className="mt-1 text-xs text-slate-400">
-                Must be at least 8 characters with uppercase, lowercase, number,
-                and special character
+                Must be at least 8 characters with uppercase, lowercase, number, and special character
               </p>
               <FormMessage className="text-red-400" />
             </FormItem>
@@ -136,11 +115,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           )}
         />
 
-        <Button
-          className="w-full bg-blue-600 hover:bg-blue-700"
-          disabled={isPending}
-          type="submit"
-        >
+        <Button className="w-full bg-blue-600 hover:bg-blue-700" disabled={isPending} type="submit">
           {isPending ? "Updating..." : "Update Password"}
         </Button>
       </form>

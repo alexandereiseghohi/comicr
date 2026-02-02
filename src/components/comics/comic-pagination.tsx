@@ -1,3 +1,4 @@
+"use client";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import {
@@ -10,8 +11,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-("use client");
 
 interface ComicPaginationProps {
   currentPage: number;

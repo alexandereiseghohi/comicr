@@ -1,4 +1,4 @@
-"use server";
+"use server"
 import { auth } from "@/auth";
 import * as mutations from "@/database/mutations/reader-settings-mutations";
 import * as progressMutations from "@/database/mutations/reading-progress-mutations";

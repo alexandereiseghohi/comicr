@@ -1,6 +1,5 @@
+"use client";
 import { useCallback, useRef, useState } from "react";
-
-("use client");
 
 interface SeedLog {
   count?: number;
@@ -14,6 +13,7 @@ interface SeedLog {
 type SeedStatus = "error" | "idle" | "running" | "success";
 
 export default function SeedAdminPage() {
+  "use client";
   const [status, setStatus] = useState<SeedStatus>("idle");
   const [logs, setLogs] = useState<SeedLog[]>([]);
   const [apiKey, setApiKey] = useState<string>("");

@@ -1,9 +1,8 @@
+"use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { useOptimisticAction } from "@/hooks/use-optimistic-action";
-
-("use client");
 
 export interface BookmarkButtonProps {
   comicId: number;

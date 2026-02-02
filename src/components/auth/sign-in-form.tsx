@@ -1,3 +1,4 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,7 +18,6 @@ import { emailValidator } from "@/types/validation";
  * @description Login form with email, password, and OAuth options
  */
 
-("use client");
 /**
  * Sign in form validation schema
  */

@@ -1,3 +1,4 @@
+"use client";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,8 +17,6 @@ import { updateComicAction } from "@/lib/actions/admin.actions";
  * Comic Edit Form
  * @description Client component for editing comic details
  */
-
-("use client");
 
 interface Comic {
   coverImage: null | string;

@@ -103,7 +103,7 @@ function isProtectedRoute(pathname: string): boolean {
 /**
  * Middleware function
  */
-export async function middleware(request: NextRequest): Promise<NextResponse> {
+export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
   const clientIP = getClientIP(request);
 

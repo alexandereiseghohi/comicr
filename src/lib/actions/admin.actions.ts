@@ -1,3 +1,4 @@
+"use server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -11,19 +12,14 @@ import { auth } from "@/lib/auth-config";
  * @description Server actions for admin operations with role verification
  */
 
-("use server");
-type ActionResult<T = unknown> =
-  | { data: T; ok: true }
-  | { error: { code: string; message: string }; ok: false };
+type ActionResult<T = unknown> = { data: T; ok: true } | { error: { code: string; message: string }; ok: false };
 
 /**
  * Verify admin role before executing action
  */
 async function verifyAdmin(): Promise<{ userId: string } | null> {
   const session = await auth();
-  const currentUser = session?.user as
-    | { id?: string; role?: string }
-    | undefined;
+  const currentUser = session?.user as { id?: string; role?: string } | undefined;
 
   if (!currentUser?.id || currentUser.role !== "admin") {
     return null;
@@ -41,22 +37,10 @@ const UpdateComicSchema = z.object({
   slug: z.string().min(1).max(255).optional(),
   description: z.string().optional(),
   coverImage: z.string().url().optional(),
-  status: z
-    .enum([
-      "Ongoing",
-      "Completed",
-      "Hiatus",
-      "Dropped",
-      "Season End",
-      "Coming Soon",
-    ])
-    .optional(),
+  status: z.enum(["Ongoing", "Completed", "Hiatus", "Dropped", "Season End", "Coming Soon"]).optional(),
 });
 
-export async function updateComicAction(
-  id: number,
-  input: unknown,
-): Promise<ActionResult<{ id: number }>> {
+export async function updateComicAction(id: number, input: unknown): Promise<ActionResult<{ id: number }>> {
   const admin = await verifyAdmin();
   if (!admin) {
     return {
@@ -77,12 +61,9 @@ export async function updateComicAction(
     const updateData: Record<string, unknown> = {};
     if (parsed.data.title !== undefined) updateData.title = parsed.data.title;
     if (parsed.data.slug !== undefined) updateData.slug = parsed.data.slug;
-    if (parsed.data.description !== undefined)
-      updateData.description = parsed.data.description;
-    if (parsed.data.coverImage !== undefined)
-      updateData.coverImage = parsed.data.coverImage;
-    if (parsed.data.status !== undefined)
-      updateData.status = parsed.data.status;
+    if (parsed.data.description !== undefined) updateData.description = parsed.data.description;
+    if (parsed.data.coverImage !== undefined) updateData.coverImage = parsed.data.coverImage;
+    if (parsed.data.status !== undefined) updateData.status = parsed.data.status;
 
     const result = await comicDAL.update(id, updateData);
     if (!result.success || !result.data) {
@@ -108,9 +89,7 @@ export async function updateComicAction(
   }
 }
 
-export async function deleteComicAction(
-  id: number,
-): Promise<ActionResult<null>> {
+export async function deleteComicAction(id: number): Promise<ActionResult<null>> {
   const admin = await verifyAdmin();
   if (!admin) {
     return {
@@ -147,9 +126,7 @@ export async function deleteComicAction(
   }
 }
 
-export async function bulkDeleteComicsAction(
-  ids: number[],
-): Promise<ActionResult<{ count: number }>> {
+export async function bulkDeleteComicsAction(ids: number[]): Promise<ActionResult<{ count: number }>> {
   const admin = await verifyAdmin();
   if (!admin) {
     return {
@@ -193,10 +170,7 @@ const UpdateChapterSchema = z.object({
   number: z.number().min(0).optional(),
 });
 
-export async function updateChapterAction(
-  id: number,
-  input: unknown,
-): Promise<ActionResult<{ id: number }>> {
+export async function updateChapterAction(id: number, input: unknown): Promise<ActionResult<{ id: number }>> {
   const admin = await verifyAdmin();
   if (!admin) {
     return {
@@ -239,9 +213,7 @@ export async function updateChapterAction(
   }
 }
 
-export async function deleteChapterAction(
-  id: number,
-): Promise<ActionResult<null>> {
+export async function deleteChapterAction(id: number): Promise<ActionResult<null>> {
   const admin = await verifyAdmin();
   if (!admin) {
     return {
@@ -274,9 +246,7 @@ export async function deleteChapterAction(
   }
 }
 
-export async function bulkDeleteChaptersAction(
-  ids: number[],
-): Promise<ActionResult<{ count: number }>> {
+export async function bulkDeleteChaptersAction(ids: number[]): Promise<ActionResult<{ count: number }>> {
   const admin = await verifyAdmin();
   if (!admin) {
     return {
@@ -320,7 +290,7 @@ const UpdateUserRoleSchema = z.object({
 
 export async function updateUserRoleAction(
   userId: string,
-  input: unknown,
+  input: unknown
 ): Promise<ActionResult<{ id: string; role: string }>> {
   const admin = await verifyAdmin();
   if (!admin) {
@@ -370,9 +340,7 @@ export async function updateUserRoleAction(
   }
 }
 
-export async function banUserAction(
-  userId: string,
-): Promise<ActionResult<null>> {
+export async function banUserAction(userId: string): Promise<ActionResult<null>> {
   const admin = await verifyAdmin();
   if (!admin) {
     return {
@@ -411,9 +379,7 @@ export async function banUserAction(
   }
 }
 
-export async function unbanUserAction(
-  userId: string,
-): Promise<ActionResult<null>> {
+export async function unbanUserAction(userId: string): Promise<ActionResult<null>> {
   const admin = await verifyAdmin();
   if (!admin) {
     return {

@@ -1,7 +1,6 @@
+"use client";
 import Link from "next/link";
 import { useEffect } from "react";
-
-("use client");
 
 interface AuthErrorProps {
   error: Error & { digest?: string };

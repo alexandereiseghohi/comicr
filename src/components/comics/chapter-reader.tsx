@@ -1,3 +1,4 @@
+"use client";
 import {
   AlignJustify,
   ChevronLeft,
@@ -17,8 +18,6 @@ import { cn } from "@/lib/utils";
 
 import { ImageViewer } from "./image-viewer";
 import { ReaderSettings } from "./reader-settings";
-
-("use client");
 
 interface ChapterReaderProps {
   backgroundMode?: "dark" | "sepia" | "white";

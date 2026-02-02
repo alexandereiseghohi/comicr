@@ -1,3 +1,4 @@
+"use client";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -6,7 +7,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-("use client");
 /* eslint-disable react/no-unescaped-entities */
 
 const faqs = [

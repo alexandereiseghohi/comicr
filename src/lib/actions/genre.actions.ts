@@ -1,3 +1,4 @@
+"use server";
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
@@ -7,13 +8,9 @@ import { slugify } from "@/lib/utils";
 import { createGenreSchema, updateGenreSchema } from "@/schemas/genre-schema";
 import { type ActionResult } from "@/types";
 
-("use server");
-
 async function verifyAdmin(): Promise<{ userId: string } | null> {
   const session = await auth();
-  const currentUser = session?.user as
-    | { id?: string; role?: string }
-    | undefined;
+  const currentUser = session?.user as { id?: string; role?: string } | undefined;
   if (!currentUser?.id || currentUser.role !== "admin") return null;
   return { userId: currentUser.id };
 }
@@ -26,12 +23,7 @@ export async function createGenreAction(input: unknown): Promise<ActionResult> {
 
   // Handle slug auto-generation
   const inputData = input as Record<string, unknown>;
-  if (
-    inputData &&
-    typeof inputData === "object" &&
-    !inputData.slug &&
-    inputData.name
-  ) {
+  if (inputData && typeof inputData === "object" && !inputData.slug && inputData.name) {
     inputData.slug = slugify(String(inputData.name));
   }
 
@@ -55,10 +47,7 @@ export async function createGenreAction(input: unknown): Promise<ActionResult> {
   return { ok: true, data: result.data };
 }
 
-export async function updateGenreAction(
-  id: number,
-  input: unknown,
-): Promise<ActionResult> {
+export async function updateGenreAction(id: number, input: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
     return { ok: false, error: "Admin access required" };
@@ -117,17 +106,13 @@ export async function restoreGenreAction(id: number): Promise<ActionResult> {
   return { ok: true, data: { id } };
 }
 
-export async function bulkDeleteGenresAction(
-  ids: number[],
-): Promise<ActionResult> {
+export async function bulkDeleteGenresAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
     return { ok: false, error: "Admin access required" };
   }
 
-  const results = await Promise.all(
-    ids.map((id) => mutations.updateGenre(id, { isActive: false })),
-  );
+  const results = await Promise.all(ids.map((id) => mutations.updateGenre(id, { isActive: false })));
   const failed = results.filter((r) => !r.success);
   if (failed.length > 0) {
     return {
@@ -140,17 +125,13 @@ export async function bulkDeleteGenresAction(
   return { ok: true, data: { count: ids.length } };
 }
 
-export async function bulkRestoreGenresAction(
-  ids: number[],
-): Promise<ActionResult> {
+export async function bulkRestoreGenresAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
     return { ok: false, error: "Admin access required" };
   }
 
-  const results = await Promise.all(
-    ids.map((id) => mutations.updateGenre(id, { isActive: true })),
-  );
+  const results = await Promise.all(ids.map((id) => mutations.updateGenre(id, { isActive: true })));
   const failed = results.filter((r) => !r.success);
   if (failed.length > 0) {
     return {

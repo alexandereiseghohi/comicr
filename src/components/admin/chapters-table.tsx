@@ -1,3 +1,4 @@
+"use client";
 import { type ColumnDef } from "@tanstack/react-table";
 import { ExternalLink, MoreHorizontal, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -31,8 +32,6 @@ import { deleteChapterAction } from "@/lib/actions/admin.actions";
  * Chapters Table Component
  * @description Admin table for managing chapters with comic filter
  */
-
-("use client");
 
 interface Chapter {
   comicId: number;

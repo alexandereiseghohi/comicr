@@ -1,15 +1,8 @@
-import {
-  ChevronDown,
-  ChevronUp,
-  Loader2,
-  MessageSquare,
-  Pencil,
-  Reply,
-  Trash2,
-} from "lucide-react";
-import { useSession } from "next-auth/react";
+"use client";
+import { ChevronDown, ChevronUp, Loader2, MessageSquare, Pencil, Reply, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 import {
@@ -26,8 +19,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-
-("use client");
 
 interface Comment {
   children?: Comment[];
@@ -73,8 +64,7 @@ function CommentItem({
   const [editSubmitting, setEditSubmitting] = useState(false);
 
   const isDeleted = comment.deletedAt !== null;
-  const isOwner =
-    session?.user?.id && Number(session.user.id) === comment.userId;
+  const isOwner = session?.user?.id && Number(session.user.id) === comment.userId;
   const hasChildren = comment.children && comment.children.length > 0;
   const isReplying = replyingTo === comment.id;
 
@@ -120,7 +110,7 @@ function CommentItem({
       className={cn(
         "border-l-2 pl-4",
         depth === 0 ? "border-transparent" : "border-slate-200",
-        depth > 0 && "mt-3 ml-4",
+        depth > 0 && "mt-3 ml-4"
       )}
     >
       {/* Comment Header */}
@@ -146,12 +136,8 @@ function CommentItem({
         <div className="min-w-0 flex-1">
           {/* Author and Date */}
           <div className="mb-1 flex items-center gap-2">
-            <span className="font-semibold text-slate-900">
-              {comment.userName}
-            </span>
-            <span className="text-xs text-slate-500">
-              {new Date(comment.createdAt).toLocaleDateString()}
-            </span>
+            <span className="font-semibold text-slate-900">{comment.userName}</span>
+            <span className="text-xs text-slate-500">{new Date(comment.createdAt).toLocaleDateString()}</span>
             {comment.updatedAt.getTime() !== comment.createdAt.getTime() && (
               <span className="text-xs text-slate-500 italic">(edited)</span>
             )}
@@ -170,23 +156,12 @@ function CommentItem({
                 value={editContent}
               />
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-500">
-                  {editContent.length}/2000 characters
-                </span>
+                <span className="text-xs text-slate-500">{editContent.length}/2000 characters</span>
                 <div className="flex gap-2">
-                  <Button
-                    disabled={editSubmitting}
-                    onClick={handleCancelEdit}
-                    size="sm"
-                    variant="outline"
-                  >
+                  <Button disabled={editSubmitting} onClick={handleCancelEdit} size="sm" variant="outline">
                     Cancel
                   </Button>
-                  <Button
-                    disabled={editSubmitting || !editContent.trim()}
-                    onClick={handleSubmitEdit}
-                    size="sm"
-                  >
+                  <Button disabled={editSubmitting || !editContent.trim()} onClick={handleSubmitEdit} size="sm">
                     {editSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -200,9 +175,7 @@ function CommentItem({
               </div>
             </div>
           ) : (
-            <p className="wrap-break-word whitespace-pre-wrap text-slate-700">
-              {comment.content}
-            </p>
+            <p className="wrap-break-word whitespace-pre-wrap text-slate-700">{comment.content}</p>
           )}
 
           {/* Actions */}
@@ -246,14 +219,12 @@ function CommentItem({
                   {collapsed ? (
                     <>
                       <ChevronDown className="h-3 w-3" />
-                      Show {comment.children!.length}{" "}
-                      {comment.children!.length === 1 ? "reply" : "replies"}
+                      Show {comment.children!.length} {comment.children!.length === 1 ? "reply" : "replies"}
                     </>
                   ) : (
                     <>
                       <ChevronUp className="h-3 w-3" />
-                      Hide{" "}
-                      {comment.children!.length === 1 ? "reply" : "replies"}
+                      Hide {comment.children!.length === 1 ? "reply" : "replies"}
                     </>
                   )}
                 </button>
@@ -273,23 +244,12 @@ function CommentItem({
                 value={replyContent}
               />
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-500">
-                  {replyContent.length}/2000 characters
-                </span>
+                <span className="text-xs text-slate-500">{replyContent.length}/2000 characters</span>
                 <div className="flex gap-2">
-                  <Button
-                    disabled={submitting}
-                    onClick={onCancelReply}
-                    size="sm"
-                    variant="outline"
-                  >
+                  <Button disabled={submitting} onClick={onCancelReply} size="sm" variant="outline">
                     Cancel
                   </Button>
-                  <Button
-                    disabled={submitting || !replyContent.trim()}
-                    onClick={handleSubmitReply}
-                    size="sm"
-                  >
+                  <Button disabled={submitting || !replyContent.trim()} onClick={handleSubmitReply} size="sm">
                     {submitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -338,10 +298,7 @@ function CommentItem({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-red-600 hover:bg-red-700"
-              onClick={handleDelete}
-            >
+            <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={handleDelete}>
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -356,10 +313,7 @@ interface CommentSectionProps {
   initialComments: Comment[];
 }
 
-export function CommentSection({
-  chapterId,
-  initialComments,
-}: CommentSectionProps) {
+export function CommentSection({ chapterId, initialComments }: CommentSectionProps) {
   const { data: session } = useSession();
   const { toast } = useToast();
   const [comments, setComments] = useState<Comment[]>(initialComments);
@@ -584,13 +538,8 @@ export function CommentSection({
             value={newComment}
           />
           <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-500">
-              {newComment.length}/2000 characters
-            </span>
-            <Button
-              disabled={submitting || !newComment.trim()}
-              onClick={handleSubmitComment}
-            >
+            <span className="text-xs text-slate-500">{newComment.length}/2000 characters</span>
+            <Button disabled={submitting || !newComment.trim()} onClick={handleSubmitComment}>
               {submitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

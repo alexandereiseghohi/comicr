@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-("use client");
+
 
 interface GenreWithCount {
   comicCount: number;

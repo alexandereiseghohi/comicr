@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -11,12 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import {
-  getReadingProgressAction,
-  saveReadingProgressAction,
-} from "@/lib/actions/reading-progress.actions";
-
-("use client");
+import { getReadingProgressAction, saveReadingProgressAction } from "@/lib/actions/reading-progress.actions";
 
 interface ReadingProgressTrackerProps {
   chapterId: number;
@@ -59,8 +55,7 @@ export function ReadingProgressTracker({
         // Check if current chapter matches and has significant progress
         if (
           result.data.chapterId === chapterId &&
-          (result.data.currentImageIndex > 0 ||
-            result.data.scrollPercentage > 10)
+          (result.data.currentImageIndex > 0 || result.data.scrollPercentage > 10)
         ) {
           setSavedProgress({
             pageIndex: result.data.currentImageIndex,
@@ -110,8 +105,7 @@ export function ReadingProgressTracker({
     async (pageIndex: number, percentage: number, immediate = false) => {
       // Don't save if values haven't changed significantly
       const pageChanged = pageIndex !== lastSaveRef.current.page;
-      const scrollChanged =
-        Math.abs(percentage - lastSaveRef.current.scroll) > 5;
+      const scrollChanged = Math.abs(percentage - lastSaveRef.current.scroll) > 5;
 
       if (!immediate && !pageChanged && !scrollChanged) {
         return;
@@ -122,10 +116,7 @@ export function ReadingProgressTracker({
       try {
         // Save to localStorage immediately (backup for unauthenticated users)
         const key = `progress-${comicId}-${chapterId}`;
-        localStorage.setItem(
-          key,
-          JSON.stringify({ pageIndex, percentage, timestamp: Date.now() }),
-        );
+        localStorage.setItem(key, JSON.stringify({ pageIndex, percentage, timestamp: Date.now() }));
 
         // Save to database via server action (non-blocking)
         startTransition(async () => {
@@ -145,7 +136,7 @@ export function ReadingProgressTracker({
         console.error("Failed to save progress:", error);
       }
     },
-    [comicId, chapterId, totalPages],
+    [comicId, chapterId, totalPages]
   );
 
   // Debounced save - triggers 30s after last interaction
@@ -159,15 +150,12 @@ export function ReadingProgressTracker({
         saveProgress(pageIndex, percentage, false);
       }, 30000); // 30 seconds
     },
-    [saveProgress],
+    [saveProgress]
   );
 
   // Track progress changes
   useEffect(() => {
-    const progress =
-      mode === "horizontal"
-        ? Math.round((currentPage / totalPages) * 100)
-        : scrollPercentage;
+    const progress = mode === "horizontal" ? Math.round((currentPage / totalPages) * 100) : scrollPercentage;
 
     // Update UI progress state
     setCurrentProgress(progress);
@@ -227,9 +215,8 @@ export function ReadingProgressTracker({
           <DialogHeader>
             <DialogTitle>Resume Reading?</DialogTitle>
             <DialogDescription>
-              You were last on page{" "}
-              {savedProgress ? savedProgress.pageIndex + 1 : 1} of {totalPages}.
-              Would you like to continue from where you left off?
+              You were last on page {savedProgress ? savedProgress.pageIndex + 1 : 1} of {totalPages}. Would you like to
+              continue from where you left off?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">

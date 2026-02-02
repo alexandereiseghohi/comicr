@@ -1,3 +1,4 @@
+"use server";
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
@@ -6,13 +7,9 @@ import { getTypeByName } from "@/database/queries/type.queries";
 import { createTypeSchema, updateTypeSchema } from "@/schemas/type-schema";
 import { type ActionResult } from "@/types";
 
-("use server");
-
 async function verifyAdmin(): Promise<{ userId: string } | null> {
   const session = await auth();
-  const currentUser = session?.user as
-    | { id?: string; role?: string }
-    | undefined;
+  const currentUser = session?.user as { id?: string; role?: string } | undefined;
   if (!currentUser?.id || currentUser.role !== "admin") return null;
   return { userId: currentUser.id };
 }
@@ -52,10 +49,7 @@ export async function createTypeAction(input: unknown): Promise<ActionResult> {
   return { ok: true, data: result.data };
 }
 
-export async function updateTypeAction(
-  id: number,
-  input: unknown,
-): Promise<ActionResult> {
+export async function updateTypeAction(id: number, input: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
     return { ok: false, error: "Admin access required" };
@@ -129,17 +123,13 @@ export async function restoreTypeAction(id: number): Promise<ActionResult> {
   return { ok: true, data: { id } };
 }
 
-export async function bulkDeleteTypesAction(
-  ids: number[],
-): Promise<ActionResult> {
+export async function bulkDeleteTypesAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
     return { ok: false, error: "Admin access required" };
   }
 
-  const results = await Promise.all(
-    ids.map((id) => mutations.updateType(id, { isActive: false })),
-  );
+  const results = await Promise.all(ids.map((id) => mutations.updateType(id, { isActive: false })));
   const failed = results.filter((r) => !r.success);
   if (failed.length > 0) {
     return {
@@ -152,17 +142,13 @@ export async function bulkDeleteTypesAction(
   return { ok: true, data: { count: ids.length } };
 }
 
-export async function bulkRestoreTypesAction(
-  ids: number[],
-): Promise<ActionResult> {
+export async function bulkRestoreTypesAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
     return { ok: false, error: "Admin access required" };
   }
 
-  const results = await Promise.all(
-    ids.map((id) => mutations.updateType(id, { isActive: true })),
-  );
+  const results = await Promise.all(ids.map((id) => mutations.updateType(id, { isActive: true })));
   const failed = results.filter((r) => !r.success);
   if (failed.length > 0) {
     return {

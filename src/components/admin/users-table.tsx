@@ -1,3 +1,4 @@
+"use client";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Shield, ShieldAlert, UserCheck, UserX } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -35,8 +36,6 @@ import { banUserAction, unbanUserAction, updateUserRoleAction } from "@/lib/acti
  * Users Table Component
  * @description Admin table for managing users with role management
  */
-
-("use client");
 
 interface User {
   createdAt: Date | null;

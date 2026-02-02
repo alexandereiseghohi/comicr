@@ -1,12 +1,13 @@
 import { eq } from "drizzle-orm";
 
 import { db } from "@/database/db";
-import type { DbNotification } from "@/database/mutations/notification-mutations";
 import * as mutations from "@/database/mutations/notification-mutations";
 import { notification } from "@/database/schema";
 import { type DbMutationResult } from "@/types";
 
 import { BaseDAL } from "./base-dal";
+
+import type { DbNotification } from "@/database/mutations/notification-mutations";
 
 export class NotificationDAL extends BaseDAL<typeof notification> {
   constructor() {

@@ -1,3 +1,4 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,7 +16,6 @@ import { createArtistSchema, updateArtistSchema } from "@/schemas/artist-schema"
 
 import { ImageUploadField } from "./image-upload-field";
 
-("use client");
 type CreateFormValues = z.infer<typeof createArtistSchema>;
 type UpdateFormValues = z.infer<typeof updateArtistSchema>;
 

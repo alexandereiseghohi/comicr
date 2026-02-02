@@ -1,3 +1,4 @@
+"use client";
 import { type ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDownIcon, ExternalLinkIcon, MoreHorizontalIcon, PencilIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
@@ -26,8 +27,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-("use client");
 
 export interface ComicRow {
   coverImage: null | string;
@@ -112,7 +111,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="max-w-[200px]">
+        <div className="max-w-50">
           <p className="truncate font-medium">{row.getValue("title")}</p>
           <p className="text-muted-foreground truncate text-xs">/{row.original.slug}</p>
         </div>

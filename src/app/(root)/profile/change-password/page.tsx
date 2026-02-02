@@ -1,3 +1,4 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Eye, EyeOff, Loader2, Shield } from "lucide-react";
 import Link from "next/link";
@@ -11,8 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { type ChangePasswordInput, changePasswordSchema } from "@/schemas/password-schema";
-
-("use client");
 
 export default function ChangePasswordPage() {
   const router = useRouter();

@@ -1,20 +1,14 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { forgotPasswordServerAction } from "@/app/(auth)/forgot-password/actions";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { requestPasswordResetAction } from "@/lib/actions/auth.actions";
 import { emailValidator } from "@/types/validation";
 
 /**
@@ -22,7 +16,6 @@ import { emailValidator } from "@/types/validation";
  * @description Form for requesting password reset
  */
 
-("use client");
 /**
  * Forgot Password Form Schema
  */
@@ -36,7 +29,7 @@ type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
  * Forgot Password Form Component
  */
 export function ForgotPasswordForm() {
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
 
   const form = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -48,32 +41,21 @@ export function ForgotPasswordForm() {
   /**
    * Handle form submission
    */
-  async function onSubmit(data: ForgotPasswordFormData): Promise<void> {
-    startTransition(async () => {
-      try {
-        // Request password reset via server action
-        const result = await requestPasswordResetAction(data.email);
 
-        if (!result.ok) {
-          toast.error(result.error || "Failed to send reset email");
-          return;
-        }
-
-        toast.success(
-          "If an account exists with that email, you will receive reset instructions",
-        );
-        form.reset();
-      } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "Failed to send reset email",
-        );
-      }
-    });
+  // Handler for server action result
+  async function handleServerAction(formData: FormData) {
+    const result = await forgotPasswordServerAction(formData);
+    if (!result.ok) {
+      toast.error(result.error || "Failed to send reset email");
+      return;
+    }
+    toast.success("If an account exists with that email, you will receive reset instructions");
+    form.reset();
   }
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form action={handleServerAction} className="space-y-4">
         <FormField
           control={form.control}
           name="email"
@@ -97,11 +79,7 @@ export function ForgotPasswordForm() {
           )}
         />
 
-        <Button
-          className="w-full bg-blue-600 hover:bg-blue-700"
-          disabled={isPending}
-          type="submit"
-        >
+        <Button className="w-full bg-blue-600 hover:bg-blue-700" disabled={isPending} type="submit">
           {isPending ? "Sending..." : "Send Reset Link"}
         </Button>
       </form>

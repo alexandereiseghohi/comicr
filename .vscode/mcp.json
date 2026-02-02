@@ -1,151 +1,21 @@
 {
-  "$schema": "https://modelcontextprotocol.io/schema/mcp.schema.json",
-  "featureFlags": {
-    "enableAutoComplete": true,
-    "enableCodeActions": true,
-    "enableDiagnostics": true,
-    "enableHover": true,
-    "enableSignatureHelp": true,
-    "enableDefinition": true,
-    "enableReferences": true,
-    "enableDocumentSymbols": true,
-    "enableWorkspaceSymbols": true,
-    "enableCodeLens": true,
-    "enableInlayHints": true,
-    "enableSemanticTokens": true,
-    "enableCallHierarchy": true,
-    "enableTypeHierarchy": true
-  },
-  "globalSettings": {
-    "logging": {
-      "level": "info",
-      "file": "${workspaceFolder}/.logs/mcp.log",
-      "maxSize": "10MB",
-      "maxFiles": 5,
-      "console": false
-    },
-    "timeout": {
-      "default": 30000,
-      "database": 60000,
-      "longRunning": 120000
-    },
-    "retry": {
-      "maxAttempts": 3,
-      "backoffMs": 1000,
-      "exponential": true
-    },
-    "cache": {
-      "enabled": true,
-      "ttl": 300000,
-      "maxSize": "100MB"
-    }
-  },
-  "mcpServers": {
-    "nextjs-dev": {
+  "servers": {
+    "filesystem": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-nextjs",
-        "--workspace",
-        "${workspaceFolder}",
-        "--framework",
-        "nextjs-16"
-      ],
-      "env": {
-        "NODE_ENV": "development",
-        "NEXT_TELEMETRY_DISABLED": "1"
-      },
-      "description": "Next.js 16 development server with App Router support",
-      "enabledByDefault": true,
-      "priority": 100
+      "args": ["-y", "@anthropic-ai/mcp-server-filesystem@latest", "${workspaceFolder}"]
     },
-    "typescript-enhanced": {
+    "postgres": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-typescript",
-        "--strict",
-        "--workspace",
-        "${workspaceFolder}"
-      ],
-      "env": {
-        "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json"
-      },
-      "description": "TypeScript IntelliSense with strict mode validation",
-      "enabledByDefault": true,
-      "priority": 95
-    },
-    "postgresql-database": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-postgres",
-        "--connection-string",
-        "${env:DATABASE_URL}"
-      ],
-      "env": {
-        "PGDATABASE": "comicwise",
-        "PGSCHEMA": "public"
-      },
-      "description": "PostgreSQL database access with Drizzle ORM integration",
-      "enabledByDefault": true,
-      "priority": 90,
-      "requiresEnvironment": ["DATABASE_URL"]
-    },
-    "redis-cache": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-redis",
-        "--url",
-        "${env:UPSTASH_REDIS_REST_URL}",
-        "--token",
-        "${env:UPSTASH_REDIS_REST_TOKEN}"
-      ],
-      "description": "Redis cache management (Upstash)",
-      "enabledByDefault": true,
-      "priority": 85,
-      "requiresEnvironment": [
-        "UPSTASH_REDIS_REST_URL",
-        "UPSTASH_REDIS_REST_TOKEN"
-      ]
-    },
-    "filesystem-ops": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "${workspaceFolder}"
-      ],
-      "description": "Secure filesystem operations",
-      "enabledByDefault": true,
-      "priority": 80
-    },
-    "git-integration": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-git", "${workspaceFolder}"],
-      "description": "Git repository operations",
-      "enabledByDefault": true,
-      "priority": 75
+      "args": ["-y", "@anthropic-ai/mcp-server-postgres@latest"],
+      "env": { "POSTGRES_URL": "${env:DATABASE_URL}" }
     },
     "sequential-thinking": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
-      "description": "AI-powered sequential reasoning",
-      "enabledByDefault": false,
-      "priority": 50
+      "args": ["-y", "@anthropic-ai/mcp-server-sequential-thinking@latest"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
     }
-  },
-  "securityPolicy": {
-    "allowedCommands": ["npx", "pnpm", "node"],
-    "blockedPaths": [
-      "**/node_modules/**",
-      "**/.git/**",
-      "**/.env",
-      "**/.env.local"
-    ],
-    "requireEnvironmentValidation": true,
-    "sandboxMode": false
-  },
-  "version": "4.0.0"
+  }
 }

@@ -12,7 +12,7 @@ import { type ActionResult } from "@/types";
 
 import { db } from "../../database/db";
 
-("use server");
+
 // ═══════════════════════════════════════════════════
 // SIGN UP ACTION
 // ═══════════════════════════════════════════════════

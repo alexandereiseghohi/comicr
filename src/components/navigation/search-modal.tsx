@@ -1,3 +1,4 @@
+"use client";
 import { ArrowRightIcon, BookOpenIcon, SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -13,8 +14,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Skeleton } from "@/components/ui/skeleton";
-
-("use client");
 
 interface SearchResult {
   coverImage: null | string;

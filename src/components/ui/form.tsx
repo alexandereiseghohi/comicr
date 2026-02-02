@@ -1,3 +1,4 @@
+"use client";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 import {
@@ -15,7 +16,6 @@ import { cn } from "@/lib/utils";
 
 import type * as LabelPrimitive from "@radix-ui/react-label";
 
-("use client");
 const Form = FormProvider;
 
 type FormFieldContextValue<

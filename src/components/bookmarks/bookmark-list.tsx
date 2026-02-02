@@ -1,3 +1,4 @@
+"use client";
 import { BookmarkIcon } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
@@ -18,8 +19,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { BookmarkCard } from "./bookmark-card";
 import { BookmarkListItem } from "./bookmark-list-item";
 import { type ViewMode, ViewToggle } from "./view-toggle";
-
-("use client");
 
 export interface BookmarkData {
   bookmark: {

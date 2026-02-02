@@ -1,3 +1,5 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/type.mutations";
 import { type } from "@/database/schema";
@@ -6,7 +8,7 @@ import {
   type UpdateTypeInput,
 } from "@/schemas/type-schema";
 import { type DbMutationResult } from "@/types";
-import { eq } from "drizzle-orm";
+
 import { BaseDAL } from "./base-dal";
 
 export class TypeDAL extends BaseDAL<typeof type> {

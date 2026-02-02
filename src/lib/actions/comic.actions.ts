@@ -1,3 +1,4 @@
+"use server";
 import { revalidatePath } from "next/cache";
 
 import * as comicMutations from "@/database/mutations/comic-mutations";
@@ -15,8 +16,6 @@ import { type AuthUser } from "@/types/auth";
  * Comic Server Actions
  * @description Server-side mutations for comics with authentication
  */
-
-("use server");
 
 /**
  * Create Comic Server Action

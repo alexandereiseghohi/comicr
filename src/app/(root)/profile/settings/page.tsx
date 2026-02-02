@@ -1,3 +1,4 @@
+"use client";
 import { AlertTriangle, ArrowLeft, Bell, Eye, Loader2, Settings, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,8 +21,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 
-("use client");
-
 interface UserSettings {
   emailNotifications: boolean;
   profileVisibility: "private" | "public";
@@ -29,6 +28,7 @@ interface UserSettings {
 }
 
 export default function SettingsPage() {
+  "use client";
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);

@@ -1,3 +1,4 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -6,17 +7,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { signUpServerAction } from "@/app/(auth)/sign-up/actions";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUpAction } from "@/lib/actions/auth.actions";
 import { emailValidator, passwordValidator } from "@/types/validation";
 
 /**
@@ -24,7 +18,6 @@ import { emailValidator, passwordValidator } from "@/types/validation";
  * @description Registration form with validation and password confirmation
  */
 
-("use client");
 /**
  * Sign up form validation schema
  */
@@ -46,7 +39,7 @@ type SignUpFormData = z.infer<typeof signUpSchema>;
  */
 export function SignUpForm() {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
 
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
@@ -60,48 +53,35 @@ export function SignUpForm() {
   /**
    * Handle form submission
    */
-  async function onSubmit(data: SignUpFormData): Promise<void> {
-    startTransition(async () => {
-      try {
-        // Create user account via server action
-        const result = await signUpAction({
-          email: data.email,
-          password: data.password,
-        });
 
-        if (!result.ok) {
-          toast.error(result.error || "Failed to create account");
-          return;
-        }
-
-        toast.success("Account created successfully");
-
-        // Auto sign in after registration
-        const signInResult = await signIn("credentials", {
-          email: data.email,
-          password: data.password,
-          redirect: false,
-        });
-
-        if (!signInResult?.ok) {
-          router.push("/sign-in");
-          return;
-        }
-
-        router.push("/");
-        router.refresh();
-      } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "Failed to create account",
-        );
-      }
+  // Handler for server action result
+  async function handleServerAction(formData: FormData) {
+    const result = await signUpServerAction(formData);
+    if (!result.ok) {
+      toast.error(result.error || "Failed to create account");
+      return;
+    }
+    toast.success("Account created successfully");
+    // Auto sign in after registration
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const signInResult = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
     });
+    if (!signInResult?.ok) {
+      router.push("/sign-in");
+      return;
+    }
+    router.push("/");
+    router.refresh();
   }
 
   return (
     <div>
       <Form {...form}>
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <form action={handleServerAction} className="space-y-4">
           <FormField
             control={form.control}
             name="email"
@@ -142,8 +122,7 @@ export function SignUpForm() {
                   />
                 </FormControl>
                 <p className="mt-1 text-xs text-slate-400">
-                  Must be at least 8 characters with uppercase, lowercase,
-                  number, and special character
+                  Must be at least 8 characters with uppercase, lowercase, number, and special character
                 </p>
                 <FormMessage className="text-red-400" />
               </FormItem>
@@ -155,9 +134,7 @@ export function SignUpForm() {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-slate-200">
-                  Confirm Password
-                </FormLabel>
+                <FormLabel className="text-slate-200">Confirm Password</FormLabel>
                 <FormControl>
                   <Input
                     autoComplete="new-password"
@@ -192,11 +169,7 @@ export function SignUpForm() {
             </label>
           </div>
 
-          <Button
-            className="w-full bg-blue-600 hover:bg-blue-700"
-            disabled={isPending}
-            type="submit"
-          >
+          <Button className="w-full bg-blue-600 hover:bg-blue-700" disabled={isPending} type="submit">
             {isPending ? "Creating account..." : "Create Account"}
           </Button>
         </form>

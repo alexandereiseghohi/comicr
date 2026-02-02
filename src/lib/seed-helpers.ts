@@ -6,7 +6,7 @@ import { glob } from "glob";
 import { chunk } from "lodash-es";
 import { type z } from "zod";
 
-import { db, type Database } from "../database/db";
+import { type Database, db } from "../database/db";
 
 /**
  * Discover JSON files matching a glob pattern

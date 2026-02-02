@@ -1,8 +1,8 @@
+"use client";
 import { LayoutGridIcon, ListIcon } from "lucide-react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-("use client");
 export type ViewMode = "grid" | "list";
 
 interface ViewToggleProps {

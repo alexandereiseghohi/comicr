@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-("use client");
+
 export const HoverEffect = ({
   items,
   className,

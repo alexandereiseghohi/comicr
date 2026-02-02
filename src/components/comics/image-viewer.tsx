@@ -1,11 +1,10 @@
+"use client";
 import { Maximize2, Minimize2, ZoomIn, ZoomOut } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-("use client");
 
 interface ImageViewerProps {
   alt: string;

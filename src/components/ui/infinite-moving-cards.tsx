@@ -1,8 +1,8 @@
+"use client";
 import { useCallback, useLayoutEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
-("use client");
 export const InfiniteMovingCards = ({
   items,
   direction = "left",
@@ -69,7 +69,7 @@ export const InfiniteMovingCards = ({
   return (
     <div
       className={cn(
-        "scroller relative z-20 max-w-7xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
+        "scroller relative z-20 max-w-7xl overflow-hidden mask-[linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
         className
       )}
       ref={containerRef}
@@ -83,7 +83,7 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item, idx) => (
           <li
-            className="relative w-[350px] max-w-full flex-shrink-0 rounded-2xl border border-b-0 border-slate-700 px-8 py-6 md:w-[450px]"
+            className="relative w-87.5 max-w-full shrink-0 rounded-2xl border border-b-0 border-slate-700 px-8 py-6 md:w-112.5"
             key={item.id || item.name || idx}
             style={{
               background: "linear-gradient(180deg, var(--slate-800), var(--slate-900)",

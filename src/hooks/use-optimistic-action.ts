@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-("use client");
+
 type ActionFn<T = unknown, R = unknown> = (payload: T) => Promise<R>;
 
 /**
