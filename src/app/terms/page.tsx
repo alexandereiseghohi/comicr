@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
 import type { Metadata } from "next";
 
 /* eslint-disable react/no-unescaped-entities */
@@ -24,7 +25,7 @@ export default function TermsPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
       <h1 className="mb-4 text-4xl font-bold tracking-tight">Terms of Service</h1>
-      <p className="mb-8 text-muted-foreground">
+      <p className="text-muted-foreground mb-8">
         Last updated: <time dateTime="2026-02-01">{lastUpdated}</time>
       </p>
 
@@ -34,7 +35,7 @@ export default function TermsPage() {
           our service, you agree to be bound by these terms.
         </p>
 
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion className="w-full" collapsible type="single">
           <AccordionItem value="acceptance">
             <AccordionTrigger className="text-left text-xl font-semibold">
               1. Acceptance of Terms
@@ -278,8 +279,8 @@ export default function TermsPage() {
           </AccordionItem>
         </Accordion>
 
-        <div className="mt-12 rounded-lg border bg-muted p-6">
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-muted mt-12 rounded-lg border p-6">
+          <p className="text-muted-foreground text-sm">
             <strong>Note:</strong> By continuing to use ComicWise, you acknowledge that you have
             read, understood, and agree to be bound by these Terms of Service. If you do not agree
             with any part of these terms, please discontinue your use of our service immediately.

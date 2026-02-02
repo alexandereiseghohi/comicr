@@ -1,8 +1,9 @@
+import { type NextRequest, NextResponse } from "next/server";
+
 import * as genreMutations from "@/database/mutations/genre.mutations";
 import * as genreQueries from "@/database/queries/genre.queries";
 import { auth } from "@/lib/auth-config";
 import { updateGenreSchema } from "@/schemas/genre-schema";
-import { NextRequest, NextResponse } from "next/server";
 
 interface RouteParams {
   params: Promise<{ id: string }>;

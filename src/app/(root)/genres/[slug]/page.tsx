@@ -1,3 +1,9 @@
+import { ArrowLeft, BookOpen } from "lucide-react";
+import { type Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+
 import { ComicList } from "@/components/comics/comic-list";
 import { ComicPagination } from "@/components/comics/comic-pagination";
 import { GenreGrid } from "@/components/comics/genre-grid";
@@ -5,19 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import * as comicQueries from "@/database/queries/comic-queries";
 import * as genreQueries from "@/database/queries/genre.queries";
-import { ArrowLeft, BookOpen } from "lucide-react";
-import { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 interface GenrePageProps {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{
-    page?: string;
     limit?: string;
-    sort?: string;
     order?: "asc" | "desc";
+    page?: string;
+    sort?: string;
   }>;
 }
 
@@ -25,13 +26,13 @@ async function GenreComicsContent({
   slug,
   searchParams,
 }: {
-  slug: string;
   searchParams: {
-    page?: string;
     limit?: string;
-    sort?: string;
     order?: "asc" | "desc";
+    page?: string;
+    sort?: string;
   };
+  slug: string;
 }) {
   const page = parseInt(searchParams.page ?? "1");
   const limit = parseInt(searchParams.limit ?? "20");
@@ -42,10 +43,10 @@ async function GenreComicsContent({
 
   if (!result.success) {
     return (
-      <div className="flex items-center justify-center h-96">
+      <div className="flex h-96 items-center justify-center">
         <div className="text-center">
           <h3 className="text-lg font-semibold text-slate-900">Error loading comics</h3>
-          <p className="text-sm text-slate-600 mt-2">{result.error}</p>
+          <p className="mt-2 text-sm text-slate-600">{result.error}</p>
         </div>
       </div>
     );
@@ -59,10 +60,10 @@ async function GenreComicsContent({
 
   if (comics.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 text-center">
-        <BookOpen className="h-16 w-16 text-slate-300 mb-4" />
-        <h3 className="text-lg font-semibold text-slate-900 mb-2">No comics found</h3>
-        <p className="text-sm text-slate-600 mb-6">
+      <div className="flex h-96 flex-col items-center justify-center text-center">
+        <BookOpen className="mb-4 h-16 w-16 text-slate-300" />
+        <h3 className="mb-2 text-lg font-semibold text-slate-900">No comics found</h3>
+        <p className="mb-6 text-sm text-slate-600">
           There are no comics in this genre yet. Check back later!
         </p>
         <Link href="/comics">
@@ -75,13 +76,13 @@ async function GenreComicsContent({
   return (
     <div className="space-y-8">
       {/* Pagination - Top */}
-      <ComicPagination currentPage={page} totalItems={total} itemsPerPage={limit} />
+      <ComicPagination currentPage={page} itemsPerPage={limit} totalItems={total} />
 
       {/* Comic List */}
       <ComicList comics={comics} />
 
       {/* Pagination - Bottom */}
-      <ComicPagination currentPage={page} totalItems={total} itemsPerPage={limit} />
+      <ComicPagination currentPage={page} itemsPerPage={limit} totalItems={total} />
     </div>
   );
 }
@@ -107,7 +108,7 @@ async function RelatedGenres({ currentSlug }: { currentSlug: string }) {
         <CardDescription>Explore similar genres you might enjoy</CardDescription>
       </CardHeader>
       <CardContent>
-        <GenreGrid genres={relatedGenres} className="grid-cols-1 sm:grid-cols-2 gap-3" />
+        <GenreGrid className="grid-cols-1 gap-3 sm:grid-cols-2" genres={relatedGenres} />
       </CardContent>
     </Card>
   );
@@ -132,19 +133,19 @@ export default async function GenrePage({ params, searchParams }: GenrePageProps
         {/* Back Button */}
         <div className="mb-6">
           <Link href="/comics">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+            <Button size="sm" variant="ghost">
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Comics
             </Button>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           {/* Main Content */}
           <div className="lg:col-span-3">
             {/* Genre Header */}
             <div className="mb-8">
-              <h1 className="text-4xl font-bold text-slate-950 mb-2">{genre.name}</h1>
+              <h1 className="mb-2 text-4xl font-bold text-slate-950">{genre.name}</h1>
               {genre.description && <p className="text-lg text-slate-600">{genre.description}</p>}
             </div>
 
@@ -152,17 +153,17 @@ export default async function GenrePage({ params, searchParams }: GenrePageProps
             <Suspense
               fallback={
                 <div className="space-y-8">
-                  <div className="h-12 bg-slate-100 rounded animate-pulse" />
+                  <div className="h-12 animate-pulse rounded bg-slate-100" />
                   <div className="grid grid-cols-4 gap-6">
                     {Array.from({ length: 12 }).map((_, i) => (
-                      <div key={i} className="bg-slate-200 rounded-lg h-72 animate-pulse" />
+                      <div className="h-72 animate-pulse rounded-lg bg-slate-200" key={i} />
                     ))}
                   </div>
-                  <div className="h-12 bg-slate-100 rounded animate-pulse" />
+                  <div className="h-12 animate-pulse rounded bg-slate-100" />
                 </div>
               }
             >
-              <GenreComicsContent slug={slug} searchParams={searchParamsResolved} />
+              <GenreComicsContent searchParams={searchParamsResolved} slug={slug} />
             </Suspense>
           </div>
 
@@ -172,13 +173,13 @@ export default async function GenrePage({ params, searchParams }: GenrePageProps
               fallback={
                 <Card>
                   <CardHeader>
-                    <div className="h-6 w-32 bg-slate-200 rounded animate-pulse mb-2" />
-                    <div className="h-4 w-full bg-slate-100 rounded animate-pulse" />
+                    <div className="mb-2 h-6 w-32 animate-pulse rounded bg-slate-200" />
+                    <div className="h-4 w-full animate-pulse rounded bg-slate-100" />
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       {Array.from({ length: 4 }).map((_, i) => (
-                        <div key={i} className="h-24 bg-slate-100 rounded animate-pulse" />
+                        <div className="h-24 animate-pulse rounded bg-slate-100" key={i} />
                       ))}
                     </div>
                   </CardContent>

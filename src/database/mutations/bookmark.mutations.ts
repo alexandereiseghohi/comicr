@@ -1,11 +1,12 @@
-import { db } from "@/database/db";
-import { bookmark } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
 
+import { db } from "@/database/db";
+import { bookmark } from "@/database/schema";
+
 export async function addBookmark(data: {
-  userId: string;
   comicId: number;
   lastReadChapterId?: number;
+  userId: string;
 }) {
   try {
     const result = await db.insert(bookmark).values(data).returning();

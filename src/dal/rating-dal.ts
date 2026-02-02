@@ -1,9 +1,12 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/rating-mutations";
 import { rating } from "@/database/schema";
-import type { DbMutationResult } from "@/types";
-import { eq } from "drizzle-orm";
+
 import { BaseDAL } from "./base-dal";
+
+import type { DbMutationResult } from "@/types";
 
 export class RatingDAL extends BaseDAL<typeof rating> {
   constructor() {
@@ -23,14 +26,13 @@ export class RatingDAL extends BaseDAL<typeof rating> {
   }
 
   async create(data: {
-    userId: string;
     comicId: number;
     rating: number;
     review?: string;
+    userId: string;
   }): Promise<DbMutationResult<typeof rating.$inferSelect>> {
     try {
-      const result = await mutations.upsertRating(data);
-      return result;
+      return await mutations.upsertRating(data);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }

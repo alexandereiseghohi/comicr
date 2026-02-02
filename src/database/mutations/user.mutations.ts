@@ -1,10 +1,11 @@
-import { db } from "@/database/db";
-import { user } from "@/database/schema";
 import { eq } from "drizzle-orm";
 
+import { db } from "@/database/db";
+import { user } from "@/database/schema";
+
 type UpdateUserInput = {
-  name?: string | null;
-  image?: string | null;
+  image?: null | string;
+  name?: null | string;
 };
 
 export async function updateUserById(id: string, data: UpdateUserInput) {

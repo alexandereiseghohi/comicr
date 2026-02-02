@@ -1,9 +1,12 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/comic-mutations";
 import { comic } from "@/database/schema";
-import type { DbMutationResult } from "@/types";
-import { eq } from "drizzle-orm";
+
 import { BaseDAL } from "./base-dal";
+
+import type { DbMutationResult } from "@/types";
 
 /**
  * Data Access Layer for Comic entities
@@ -58,8 +61,7 @@ export class ComicDAL extends BaseDAL<typeof comic> {
   ): Promise<DbMutationResult<typeof comic.$inferSelect>> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await mutations.createComic(data as any);
-      return result;
+      return await mutations.createComic(data as any);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
@@ -85,8 +87,7 @@ export class ComicDAL extends BaseDAL<typeof comic> {
   ): Promise<DbMutationResult<typeof comic.$inferSelect>> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await mutations.updateComic(id, data as any);
-      return result;
+      return await mutations.updateComic(id, data as any);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };
     }

@@ -3,24 +3,24 @@
  * @description Backup audit logs to files under logs/audit/
  */
 
-import { appendFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { appendFile, mkdir } from "node:fs/promises";
+import { join } from "node:path";
 
 const LOGS_DIR = join(process.cwd(), "logs", "audit");
 
 interface AuditFileEntry {
-  id: string;
-  userId: string | null;
   action: string;
+  details: null | string;
+  id: string;
+  ipAddress: null | string;
+  newValues: null | string;
+  oldValues: null | string;
   resource: string;
-  resourceId: string | null;
-  details: string | null;
-  oldValues: string | null;
-  newValues: string | null;
-  ipAddress: string | null;
-  userAgent: string | null;
-  sessionId: string | null;
+  resourceId: null | string;
+  sessionId: null | string;
   timestamp: string;
+  userAgent: null | string;
+  userId: null | string;
 }
 
 /**

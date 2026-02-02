@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function NewAuthorPage() {
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="mx-auto max-w-2xl space-y-6">
       <div>
         <h1 className="text-3xl font-bold">New Author</h1>
         <p className="text-muted-foreground">Create a new author profile</p>

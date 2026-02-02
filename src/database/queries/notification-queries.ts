@@ -1,7 +1,9 @@
+import { desc, eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { notification } from "@/database/schema";
+
 import type { Notification } from "@/types";
-import { desc, eq } from "drizzle-orm";
 
 export async function getUserNotifications(userId: string): Promise<Notification[]> {
   const rows = await db
@@ -12,6 +14,6 @@ export async function getUserNotifications(userId: string): Promise<Notification
 
   return rows.map((r) => ({
     ...r,
-    id: String((r as { id: string | number | bigint }).id),
+    id: String((r as { id: bigint | number | string }).id),
   })) as Notification[];
 }

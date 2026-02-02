@@ -1,17 +1,17 @@
 import { ComicCard } from './comic-card';
 
 interface Comic {
-  id: number;
-  title: string;
-  slug: string;
-  coverImage: string;
-  description: string;
-  status: string;
-  views: number;
-  rating: number | string;
   author?: {
     name: string;
   };
+  coverImage: string;
+  description: string;
+  id: number;
+  rating: number | string;
+  slug: string;
+  status: string;
+  title: string;
+  views: number;
 }
 
 interface ComicListProps {
@@ -22,9 +22,9 @@ interface ComicListProps {
 export function ComicList({ comics, isLoading }: ComicListProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {Array.from({ length: 12 }).map((_, i) => (
-          <div key={i} className="bg-slate-200 rounded-lg h-72 animate-pulse" />
+          <div className="h-72 animate-pulse rounded-lg bg-slate-200" key={i} />
         ))}
       </div>
     );
@@ -32,10 +32,10 @@ export function ComicList({ comics, isLoading }: ComicListProps) {
 
   if (!comics || comics.length === 0) {
     return (
-      <div className="flex items-center justify-center h-96">
+      <div className="flex h-96 items-center justify-center">
         <div className="text-center">
           <h3 className="text-lg font-semibold text-slate-900">No comics found</h3>
-          <p className="text-sm text-slate-600 mt-2">
+          <p className="mt-2 text-sm text-slate-600">
             Try adjusting your search parameters or browse all comics
           </p>
         </div>
@@ -44,19 +44,19 @@ export function ComicList({ comics, isLoading }: ComicListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {comics.map((comic) => (
         <ComicCard
-          key={comic.id}
-          id={comic.id}
-          title={comic.title}
-          slug={comic.slug}
+          authorName={comic.author?.name}
           coverImage={comic.coverImage}
           description={comic.description}
-          status={comic.status}
-          views={comic.views}
+          id={comic.id}
+          key={comic.id}
           rating={Number(comic.rating) || 0}
-          authorName={comic.author?.name}
+          slug={comic.slug}
+          status={comic.status}
+          title={comic.title}
+          views={comic.views}
         />
       ))}
     </div>

@@ -4,23 +4,28 @@
  */
 
 import { seedTableBatched } from "@/lib/seed-helpers";
-import { TypeSeedSchema, type TypeSeed } from "@/lib/validations/seed";
+import { type TypeSeed, TypeSeedSchema } from "@/lib/validations/seed";
+
+import { db } from "../../db";
 import { type } from "../../schema";
+import { BATCH_SIZE } from "../seed-config";
 
 export interface TypeSeederOptions {
-  /** Array of types to seed */
-  types: unknown[];
   /** Skip database writes if true */
   dryRun?: boolean;
   /** Progress callback */
   onProgress?: (current: number, total: number) => void;
+  /** Array of types to seed */
+  types: unknown[];
 }
 
 export interface TypeSeederResult {
-  success: boolean;
+  errors: Array<{ error: string; type: unknown }>;
+  /** Map of type name (lowercase) to database ID */
+  idMap: Map<string, number>;
   seeded: number;
   skipped: number;
-  errors: Array<{ type: unknown; error: string }>;
+  success: boolean;
 }
 
 /**
@@ -28,7 +33,7 @@ export interface TypeSeederResult {
  */
 export async function seedTypes(options: TypeSeederOptions): Promise<TypeSeederResult> {
   const { types: rawTypes, dryRun = false, onProgress } = options;
-  const errors: Array<{ type: unknown; error: string }> = [];
+  const errors: Array<{ error: string; type: unknown }> = [];
   const validTypes: TypeSeed[] = [];
 
   // Validate all types
@@ -50,6 +55,7 @@ export async function seedTypes(options: TypeSeederOptions): Promise<TypeSeederR
       seeded: 0,
       skipped: rawTypes.length,
       errors,
+      idMap: new Map(),
     };
   }
 
@@ -69,8 +75,25 @@ export async function seedTypes(options: TypeSeederOptions): Promise<TypeSeederR
       { name: "description", value: undefined },
       { name: "isActive", value: undefined },
     ],
+    batchSize: BATCH_SIZE,
     dryRun,
   });
+
+  // Build ID map by querying inserted records
+  const idMap = new Map<string, number>();
+  if (!dryRun) {
+    const seededTypes = await db.query.type.findMany({
+      columns: { id: true, name: true },
+      where: (table, { inArray }) =>
+        inArray(
+          table.name,
+          validTypes.map((t) => t.name)
+        ),
+    });
+    for (const item of seededTypes) {
+      idMap.set(item.name.toLowerCase(), item.id);
+    }
+  }
 
   // Report completion
   onProgress?.(validTypes.length, validTypes.length);
@@ -80,6 +103,7 @@ export async function seedTypes(options: TypeSeederOptions): Promise<TypeSeederR
     seeded: result.inserted,
     skipped: errors.length,
     errors,
+    idMap,
   };
 }
 

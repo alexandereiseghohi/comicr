@@ -3,58 +3,60 @@
  * @description Database queries for audit log retrieval
  */
 
-import { db } from "@/database/db";
-import { auditLog, user } from "@/database/schema";
-import type { AuditAction, AuditResource } from "@/lib/audit/audit-logger";
 import { and, desc, eq, gte, like, lte, or, sql } from "drizzle-orm";
 
+import { db } from "@/database/db";
+import { auditLog, user } from "@/database/schema";
+
+import type { AuditAction, AuditResource } from "@/lib/audit/audit-logger";
+
 export interface AuditLogQueryOptions {
-  /** Filter by user ID */
-  userId?: string;
   /** Filter by action type */
   action?: AuditAction;
+  /** End date filter */
+  endDate?: Date;
+  /** Pagination: items per page */
+  limit?: number;
+  /** Pagination: page number (1-based) */
+  page?: number;
   /** Filter by resource type */
   resource?: AuditResource;
   /** Filter by resource ID */
   resourceId?: string;
-  /** Start date filter */
-  startDate?: Date;
-  /** End date filter */
-  endDate?: Date;
   /** Search in details */
   search?: string;
-  /** Pagination: page number (1-based) */
-  page?: number;
-  /** Pagination: items per page */
-  limit?: number;
+  /** Start date filter */
+  startDate?: Date;
+  /** Filter by user ID */
+  userId?: string;
 }
 
 export interface AuditLogEntry {
-  id: string;
-  userId: string | null;
-  userName: string | null;
-  userEmail: string | null;
   action: string;
-  resource: string;
-  resourceId: string | null;
-  details: Record<string, unknown> | null;
-  oldValues: Record<string, unknown> | null;
-  newValues: Record<string, unknown> | null;
-  ipAddress: string | null;
-  userAgent: string | null;
-  sessionId: string | null;
   createdAt: Date;
+  details: null | Record<string, unknown>;
+  id: string;
+  ipAddress: null | string;
+  newValues: null | Record<string, unknown>;
+  oldValues: null | Record<string, unknown>;
+  resource: string;
+  resourceId: null | string;
+  sessionId: null | string;
+  userAgent: null | string;
+  userEmail: null | string;
+  userId: null | string;
+  userName: null | string;
 }
 
 export interface PaginatedAuditLogs {
   data: AuditLogEntry[];
   meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
     hasNextPage: boolean;
     hasPrevPage: boolean;
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
   };
 }
 
@@ -189,10 +191,10 @@ export async function getResourceAuditLogs(
  * Get recent audit activity summary
  */
 export async function getAuditSummary(days: number = 7): Promise<{
-  totalActions: number;
   actionBreakdown: Record<string, number>;
   resourceBreakdown: Record<string, number>;
-  topUsers: Array<{ userId: string; name: string | null; count: number }>;
+  topUsers: Array<{ count: number; name: null | string; userId: string; }>;
+  totalActions: number;
 }> {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);

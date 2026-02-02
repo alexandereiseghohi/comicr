@@ -1,11 +1,11 @@
 export type MockChain<T = unknown> = {
-  limit: (n?: number) => Promise<T[]>;
-  where: (..._args: unknown[]) => MockChain<T>;
   from: (..._args: unknown[]) => MockChain<T>;
-  select: (..._args: unknown[]) => MockChain<T>;
   leftJoin?: (..._args: unknown[]) => MockChain<T>;
-  rightJoin?: (..._args: unknown[]) => MockChain<T>;
+  limit: (n?: number) => Promise<T[]>;
   offset?: (n?: number) => Promise<T[]>;
+  rightJoin?: (..._args: unknown[]) => MockChain<T>;
+  select: (..._args: unknown[]) => MockChain<T>;
+  where: (..._args: unknown[]) => MockChain<T>;
 };
 
 export function createMockChain<T = unknown>(data: T[]): MockChain<T> {

@@ -1,3 +1,5 @@
+import { type NextRequest, NextResponse } from "next/server";
+
 import { auth } from "@/auth";
 import {
   createNotification,
@@ -6,7 +8,6 @@ import {
   markAsRead,
 } from "@/database/mutations/notification-mutations";
 import { getUserNotifications } from "@/database/queries/notification-queries";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {

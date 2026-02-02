@@ -1,15 +1,16 @@
 "use client";
-import { useOptimisticAction } from "@/hooks/use-optimistic-action";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { useOptimisticAction } from "@/hooks/use-optimistic-action";
+
 export interface BookmarkButtonProps {
-  userId: string;
   comicId: number;
   initialBookmarked?: boolean;
+  userId: string;
 }
 
-async function postAdd(payload: { userId: string; comicId: number }) {
+async function postAdd(payload: { comicId: number; userId: string; }) {
   const resp = await fetch("/api/bookmarks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -18,7 +19,7 @@ async function postAdd(payload: { userId: string; comicId: number }) {
   return resp.json();
 }
 
-async function postRemove(payload: { userId: string; comicId: number }) {
+async function postRemove(payload: { comicId: number; userId: string; }) {
   const resp = await fetch("/api/bookmarks", {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
@@ -65,8 +66,8 @@ export default function BookmarkButton({
   if (!userId) {
     return (
       <button
+        className="rounded-md border bg-white px-3 py-1 text-slate-800"
         onClick={() => router.push("/auth/sign-in")}
-        className="px-3 py-1 rounded-md border bg-white text-slate-800"
       >
         Sign in to bookmark
       </button>
@@ -76,11 +77,11 @@ export default function BookmarkButton({
   return (
     <button
       aria-pressed={bookmarked}
-      onClick={toggle}
-      className={`px-3 py-1 rounded-md border ${
+      className={`rounded-md border px-3 py-1 ${
         bookmarked ? "bg-blue-600 text-white" : "bg-white text-slate-800"
       }`}
       disabled={adding || removing}
+      onClick={toggle}
     >
       {bookmarked ? "Bookmarked" : "Add Bookmark"}
     </button>

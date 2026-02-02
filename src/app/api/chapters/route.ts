@@ -1,9 +1,11 @@
+import { type NextRequest, NextResponse } from "next/server";
+
 import * as chapterMutations from "@/database/mutations/chapter.mutations";
 import * as chapterQueries from "@/database/queries/chapter.queries";
 import { auth } from "@/lib/auth-config";
 import { createChapterSchema } from "@/schemas/chapter-schema";
+
 import type { AuthUser } from "@/types/auth";
-import { NextRequest, NextResponse } from "next/server";
 
 /**
  * GET /api/chapters

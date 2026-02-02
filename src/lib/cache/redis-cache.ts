@@ -3,8 +3,12 @@
  * @description Local Redis caching via ioredis for development
  */
 
-import { getEnv } from "@/lib/env";
 import Redis from "ioredis";
+
+import { getEnv } from "@/lib/env";
+
+import { DEFAULT_CACHE_CONFIG } from "./types";
+
 import type {
   CacheDeleteResult,
   CacheOptions,
@@ -12,9 +16,9 @@ import type {
   CacheResult,
   CacheSetResult,
 } from "./types";
-import { DEFAULT_CACHE_CONFIG } from "./types";
 
-let redisClient: Redis | null = null;
+
+let redisClient: null | Redis = null;
 
 /**
  * Get or create ioredis client

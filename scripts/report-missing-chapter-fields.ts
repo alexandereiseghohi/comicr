@@ -1,5 +1,5 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 const chapterFiles = ["chapters.json", "chaptersdata1.json", "chaptersdata2.json"];
 const requiredFields = ["id", "comicId", "title", "slug", "images"];
@@ -8,12 +8,12 @@ async function main() {
   let totalRecords = 0;
   let totalMissing = 0;
   type Chapter = {
-    id: string;
-    comicId: string;
-    title: string;
-    slug: string;
-    images: string[];
     [key: string]: unknown;
+    comicId: string;
+    id: string;
+    images: string[];
+    slug: string;
+    title: string;
   };
   type MissingEntry = { index: number; missingFields: string[]; record: Chapter };
   const missingByFile: Record<string, MissingEntry[]> = {};

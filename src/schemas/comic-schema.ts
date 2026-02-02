@@ -3,8 +3,9 @@
  * @description Type-safe validation for comic operations
  */
 
-import { slugValidator } from "@/types/validation";
 import { z } from "zod";
+
+import { slugValidator } from "@/types/validation";
 
 /**
  * Create Comic Schema

@@ -5,13 +5,13 @@
  * @usage pnpm tsx scripts/verify-dal-usage.ts
  */
 
-import { promises as fs } from "fs";
-import path from "path";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 
 interface Violation {
+  code: string;
   file: string;
   line: number;
-  code: string;
 }
 
 const DIRECT_DB_PATTERNS = [
@@ -34,14 +34,14 @@ async function scanFile(filePath: string): Promise<void> {
   const content = await fs.readFile(filePath, "utf-8");
   const lines = content.split("\n");
 
-  lines.forEach((line, index) => {
+  for (const [index, line] of lines.entries()) {
     // Skip import statements and comments
     if (
       line.trim().startsWith("import") ||
       line.trim().startsWith("//") ||
       line.trim().startsWith("*")
     ) {
-      return;
+      continue;
     }
 
     // Check for direct database queries
@@ -54,7 +54,7 @@ async function scanFile(filePath: string): Promise<void> {
         });
       }
     }
-  });
+  }
 
   filesScanned++;
 }
@@ -104,10 +104,10 @@ async function main() {
     console.log("======================\n");
     console.log("Server actions should use DAL classes instead of direct database queries.\n");
 
-    violations.forEach((violation, index) => {
+    for (const [index, violation] of violations.entries()) {
       console.log(`${index + 1}. ${violation.file}:${violation.line}`);
       console.log(`   ${violation.code}\n`);
-    });
+    }
 
     console.log("\n💡 Recommendation:");
     console.log("   - Use DAL classes from '@/dal' for database operations");

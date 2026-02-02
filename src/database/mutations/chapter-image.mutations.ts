@@ -1,6 +1,7 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { chapterImage } from "@/database/schema";
-import { eq } from "drizzle-orm";
 
 export async function createChapterImage(data: {
   chapterId: number;

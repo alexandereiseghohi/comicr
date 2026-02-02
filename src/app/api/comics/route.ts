@@ -3,12 +3,14 @@
  * POST /api/comics - Create new comic
  */
 
+import { type NextRequest, NextResponse } from "next/server";
+
 import * as comicMutations from "@/database/mutations/comic-mutations";
 import * as comicQueries from "@/database/queries/comic-queries";
 import { auth } from "@/lib/auth-config";
 import { createComicSchema } from "@/schemas/comic-schema";
+
 import type { AuthUser } from "@/types/auth";
-import { NextRequest, NextResponse } from "next/server";
 
 /**
  * GET /api/comics

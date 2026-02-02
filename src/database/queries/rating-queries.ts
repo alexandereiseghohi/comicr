@@ -1,6 +1,7 @@
+import { and, count, eq, sql } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { rating } from "@/database/schema";
-import { and, count, eq, sql } from "drizzle-orm";
 
 export async function getRatingById(id: number) {
   try {

@@ -4,9 +4,10 @@ import { auth } from "@/auth";
 import * as mutations from "@/database/mutations/reader-settings-mutations";
 import * as progressMutations from "@/database/mutations/reading-progress-mutations";
 import {
-  updateReaderSettingsSchema,
   type UpdateReaderSettingsInput,
+  updateReaderSettingsSchema,
 } from "@/schemas/reader-settings.schema";
+
 import type { ActionResult } from "@/types";
 
 /**
@@ -15,8 +16,8 @@ import type { ActionResult } from "@/types";
 export async function getReaderSettingsAction(): Promise<
   ActionResult<{
     backgroundMode: string;
-    readingMode: string;
     defaultQuality: string;
+    readingMode: string;
   }>
 > {
   const session = await auth();
@@ -60,11 +61,11 @@ export async function updateReaderSettingsAction(
  * Save reading progress for a comic chapter
  */
 export async function saveReadingProgressAction(input: {
-  comicId: number;
   chapterId: number;
+  comicId: number;
   currentImageIndex?: number;
-  scrollPercentage?: number;
   progressPercent?: number;
+  scrollPercentage?: number;
 }): Promise<ActionResult<{ saved: boolean }>> {
   const session = await auth();
   if (!session?.user?.id) {

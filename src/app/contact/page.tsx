@@ -1,5 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Mail, MapPin, MessageSquare } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -14,11 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { sendContactEmailAction } from "@/lib/actions/contact";
-import { contactSchema, type ContactInput } from "@/schemas/contact.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, MapPin, MessageSquare } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { type ContactInput, contactSchema } from "@/schemas/contact.schema";
 
 /* eslint-disable react/no-unescaped-entities */
 
@@ -59,7 +60,7 @@ export default function ContactPage() {
       {/* Header */}
       <section className="mb-12 text-center">
         <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">Get in Touch</h1>
-        <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+        <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
           Have a question, feedback, or need support? We'd love to hear from you.
         </p>
       </section>
@@ -69,7 +70,7 @@ export default function ContactPage() {
         <div className="space-y-6 md:col-span-1">
           <Card>
             <CardHeader>
-              <Mail className="mb-2 h-8 w-8 text-primary" />
+              <Mail className="text-primary mb-2 h-8 w-8" />
               <CardTitle>Email Us</CardTitle>
             </CardHeader>
             <CardContent>
@@ -82,7 +83,7 @@ export default function ContactPage() {
 
           <Card>
             <CardHeader>
-              <MessageSquare className="mb-2 h-8 w-8 text-primary" />
+              <MessageSquare className="text-primary mb-2 h-8 w-8" />
               <CardTitle>Community</CardTitle>
             </CardHeader>
             <CardContent>
@@ -94,7 +95,7 @@ export default function ContactPage() {
 
           <Card>
             <CardHeader>
-              <MapPin className="mb-2 h-8 w-8 text-primary" />
+              <MapPin className="text-primary mb-2 h-8 w-8" />
               <CardTitle>Office</CardTitle>
             </CardHeader>
             <CardContent>
@@ -119,7 +120,7 @@ export default function ContactPage() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
                   control={form.control}
                   name="name"
@@ -141,7 +142,7 @@ export default function ContactPage() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="your.email@example.com" {...field} />
+                        <Input placeholder="your.email@example.com" type="email" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -156,8 +157,8 @@ export default function ContactPage() {
                       <FormLabel>Message</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Tell us how we can help you..."
                           className="min-h-[150px] resize-none"
+                          placeholder="Tell us how we can help you..."
                           {...field}
                         />
                       </FormControl>
@@ -166,7 +167,7 @@ export default function ContactPage() {
                   )}
                 />
 
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                <Button className="w-full" disabled={isSubmitting} type="submit">
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
               </form>
@@ -179,7 +180,7 @@ export default function ContactPage() {
       <section className="mt-16 text-center">
         <p className="text-muted-foreground">
           Looking for quick answers? Check out our{" "}
-          <a href="/help" className="text-primary underline underline-offset-4">
+          <a className="text-primary underline underline-offset-4" href="/help">
             Help Center
           </a>{" "}
           for frequently asked questions.

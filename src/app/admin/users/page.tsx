@@ -3,10 +3,11 @@
  * @description Admin page for managing all users
  */
 
+import { redirect } from "next/navigation";
+
 import { UsersTable } from "@/components/admin/users-table";
 import { getUsersForAdmin } from "@/database/queries/admin.queries";
 import { auth } from "@/lib/auth-config";
-import { redirect } from "next/navigation";
 
 export default async function UsersPage() {
   const session = await auth();

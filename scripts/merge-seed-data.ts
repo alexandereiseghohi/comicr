@@ -9,9 +9,9 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 interface MergeConfig {
-  sourceFiles: string[];
-  outputFile: string;
   description: string;
+  outputFile: string;
+  sourceFiles: string[];
 }
 
 const SEED_DIR = path.resolve("data/seed-source");
@@ -81,8 +81,8 @@ async function generateReport(configs: MergeConfig[]): Promise<void> {
   const report = {
     timestamp: new Date().toISOString(),
     merges: [] as Array<{
-      outputFile: string;
       description: string;
+      outputFile: string;
       sourceFiles: string[];
       totalEntries: number;
     }>,
@@ -133,8 +133,7 @@ async function main() {
 }
 
 // Execute if run directly
-if (require.main === module) {
-  main();
-}
+
+main();
 
 export { generateReport, mergeFiles };

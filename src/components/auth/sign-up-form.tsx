@@ -5,15 +5,15 @@
 
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { signIn } from 'next-auth/react';
+import { z } from 'zod';
+
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Form,
   FormControl,
@@ -22,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { emailValidator, passwordValidator } from '@/types/validation';
 
 /**
@@ -91,7 +92,7 @@ export function SignUpForm() {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
             name="email"
@@ -100,12 +101,12 @@ export function SignUpForm() {
                 <FormLabel className="text-slate-200">Email</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="you@example.com"
-                    type="email"
                     autoCapitalize="none"
                     autoComplete="email"
                     autoCorrect="off"
-                    className="bg-slate-800 border-slate-700 text-white"
+                    className="border-slate-700 bg-slate-800 text-white"
+                    placeholder="you@example.com"
+                    type="email"
                     {...field}
                     disabled={isPending}
                   />
@@ -123,15 +124,15 @@ export function SignUpForm() {
                 <FormLabel className="text-slate-200">Password</FormLabel>
                 <FormControl>
                   <Input
+                    autoComplete="new-password"
+                    className="border-slate-700 bg-slate-800 text-white"
                     placeholder="••••••••"
                     type="password"
-                    autoComplete="new-password"
-                    className="bg-slate-800 border-slate-700 text-white"
                     {...field}
                     disabled={isPending}
                   />
                 </FormControl>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="mt-1 text-xs text-slate-400">
                   Must be at least 8 characters with uppercase, lowercase, number, and special
                   character
                 </p>
@@ -148,10 +149,10 @@ export function SignUpForm() {
                 <FormLabel className="text-slate-200">Confirm Password</FormLabel>
                 <FormControl>
                   <Input
+                    autoComplete="new-password"
+                    className="border-slate-700 bg-slate-800 text-white"
                     placeholder="••••••••"
                     type="password"
-                    autoComplete="new-password"
-                    className="bg-slate-800 border-slate-700 text-white"
                     {...field}
                     disabled={isPending}
                   />
@@ -163,27 +164,27 @@ export function SignUpForm() {
 
           <div className="flex items-start space-x-2 pt-2">
             <input
-              type="checkbox"
-              id="terms"
-              className="w-4 h-4 rounded border-slate-700 bg-slate-800 text-blue-600 mt-1"
+              className="mt-1 h-4 w-4 rounded border-slate-700 bg-slate-800 text-blue-600"
               disabled={isPending}
+              id="terms"
+              type="checkbox"
             />
-            <label htmlFor="terms" className="text-sm text-slate-400">
+            <label className="text-sm text-slate-400" htmlFor="terms">
               I agree to the{' '}
-              <a href="#" className="text-blue-500 hover:text-blue-400">
+              <a className="text-blue-500 hover:text-blue-400" href="#">
                 Terms of Service
               </a>{' '}
               and{' '}
-              <a href="#" className="text-blue-500 hover:text-blue-400">
+              <a className="text-blue-500 hover:text-blue-400" href="#">
                 Privacy Policy
               </a>
             </label>
           </div>
 
           <Button
-            type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700"
             disabled={isPending}
+            type="submit"
           >
             {isPending ? 'Creating account...' : 'Create Account'}
           </Button>

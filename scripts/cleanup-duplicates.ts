@@ -5,8 +5,8 @@
  * @usage pnpm tsx scripts/cleanup-duplicates.ts [--dry-run]
  */
 
-import { promises as fs } from "fs";
-import path from "path";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 
 const DUPLICATE_PATTERNS = [
   /\.backup$/,
@@ -26,10 +26,10 @@ const DUPLICATE_PATTERNS = [
 const IGNORE_DIRS = ["node_modules", ".next", ".git", "dist", "build", "coverage", ".vscode"];
 
 interface CleanupResult {
-  filesFound: number;
-  filesDeleted: number;
-  spaceFreed: number;
   deletedFiles: string[];
+  filesDeleted: number;
+  filesFound: number;
+  spaceFreed: number;
 }
 
 const result: CleanupResult = {

@@ -6,6 +6,11 @@
  * in integration tests. This file focuses on schema validation and
  * imageHelper which don't require database connections.
  */
+import fs from "node:fs/promises";
+import path from "node:path";
+
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
 import { clearDownloadCache, downloadAndSaveImage } from "@/lib/image-helper";
 import {
   ArtistSeedSchema,
@@ -17,9 +22,6 @@ import {
   TypeSeedSchema,
   UserSeedSchema,
 } from "@/lib/validations/seed";
-import fs from "fs/promises";
-import path from "path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 const TEST_DIR = "./test-tmp-seed";
 

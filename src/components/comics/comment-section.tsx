@@ -1,5 +1,11 @@
 "use client";
 
+import { ChevronDown, ChevronUp, Loader2, MessageSquare, Reply, Trash2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,33 +20,28 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { ChevronDown, ChevronUp, Loader2, MessageSquare, Reply, Trash2 } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
 
 interface Comment {
-  id: number;
-  content: string;
-  userId: number;
-  userName: string;
-  userImage?: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date | null;
-  parentId: number | null;
   children?: Comment[];
+  content: string;
+  createdAt: Date;
+  deletedAt: Date | null;
+  id: number;
+  parentId: null | number;
+  updatedAt: Date;
+  userId: number;
+  userImage?: null | string;
+  userName: string;
 }
 
 interface CommentItemProps {
   comment: Comment;
   depth: number;
-  onReply: (parentId: number) => void;
-  onDelete: (commentId: number) => void;
-  replyingTo: number | null;
   onCancelReply: () => void;
+  onDelete: (commentId: number) => void;
+  onReply: (parentId: number) => void;
   onSubmitReply: (parentId: number, content: string) => Promise<void>;
+  replyingTo: null | number;
 }
 
 function CommentItem({
@@ -85,7 +86,7 @@ function CommentItem({
       className={cn(
         "border-l-2 pl-4",
         depth === 0 ? "border-transparent" : "border-slate-200",
-        depth > 0 && "ml-4 mt-3"
+        depth > 0 && "mt-3 ml-4"
       )}
     >
       {/* Comment Header */}
@@ -94,23 +95,23 @@ function CommentItem({
         <div className="shrink-0">
           {comment.userImage ? (
             <Image
-              src={comment.userImage}
               alt={comment.userName}
               className="h-8 w-8 rounded-full"
-              width={32}
               height={32}
+              src={comment.userImage}
+              width={32}
             />
           ) : (
-            <div className="h-8 w-8 rounded-full bg-slate-300 flex items-center justify-center text-slate-700 font-semibold text-sm">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-300 text-sm font-semibold text-slate-700">
               {comment.userName.charAt(0).toUpperCase()}
             </div>
           )}
         </div>
 
         {/* Comment Content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {/* Author and Date */}
-          <div className="flex items-center gap-2 mb-1">
+          <div className="mb-1 flex items-center gap-2">
             <span className="font-semibold text-slate-900">{comment.userName}</span>
             <span className="text-xs text-slate-500">
               {new Date(comment.createdAt).toLocaleDateString()}
@@ -124,16 +125,16 @@ function CommentItem({
           {isDeleted ? (
             <p className="text-slate-400 italic">[deleted]</p>
           ) : (
-            <p className="text-slate-700 whitespace-pre-wrap wrap-break-word">{comment.content}</p>
+            <p className="wrap-break-word whitespace-pre-wrap text-slate-700">{comment.content}</p>
           )}
 
           {/* Actions */}
           {!isDeleted && (
-            <div className="flex items-center gap-3 mt-2">
+            <div className="mt-2 flex items-center gap-3">
               {session && (
                 <button
+                  className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700"
                   onClick={() => onReply(comment.id)}
-                  className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1"
                 >
                   <Reply className="h-3 w-3" />
                   Reply
@@ -142,8 +143,8 @@ function CommentItem({
 
               {isOwner && (
                 <button
+                  className="flex items-center gap-1 text-sm text-red-500 hover:text-red-700"
                   onClick={() => setShowDeleteDialog(true)}
-                  className="text-sm text-red-500 hover:text-red-700 flex items-center gap-1"
                 >
                   <Trash2 className="h-3 w-3" />
                   Delete
@@ -152,8 +153,8 @@ function CommentItem({
 
               {hasChildren && (
                 <button
+                  className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700"
                   onClick={() => setCollapsed(!collapsed)}
-                  className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1"
                 >
                   {collapsed ? (
                     <>
@@ -176,29 +177,29 @@ function CommentItem({
           {isReplying && (
             <div className="mt-3 space-y-2">
               <Textarea
-                placeholder="Write a reply..."
-                value={replyContent}
-                onChange={(e) => setReplyContent(e.target.value)}
-                maxLength={2000}
-                rows={3}
                 disabled={submitting}
+                maxLength={2000}
+                onChange={(e) => setReplyContent(e.target.value)}
+                placeholder="Write a reply..."
+                rows={3}
+                value={replyContent}
               />
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">
                   {replyContent.length}/2000 characters
                 </span>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="outline" onClick={onCancelReply} disabled={submitting}>
+                  <Button disabled={submitting} onClick={onCancelReply} size="sm" variant="outline">
                     Cancel
                   </Button>
                   <Button
-                    size="sm"
-                    onClick={handleSubmitReply}
                     disabled={submitting || !replyContent.trim()}
+                    onClick={handleSubmitReply}
+                    size="sm"
                   >
                     {submitting ? (
                       <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Posting...
                       </>
                     ) : (
@@ -217,21 +218,21 @@ function CommentItem({
         <div className="mt-2">
           {comment.children!.map((child) => (
             <CommentItem
-              key={child.id}
               comment={child}
               depth={depth + 1}
-              onReply={onReply}
-              onDelete={onDelete}
-              replyingTo={replyingTo}
+              key={child.id}
               onCancelReply={onCancelReply}
+              onDelete={onDelete}
+              onReply={onReply}
               onSubmitReply={onSubmitReply}
+              replyingTo={replyingTo}
             />
           ))}
         </div>
       )}
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      <AlertDialog onOpenChange={setShowDeleteDialog} open={showDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Comment</AlertDialogTitle>
@@ -243,7 +244,7 @@ function CommentItem({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={handleDelete}>
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -263,7 +264,7 @@ export function CommentSection({ chapterId, initialComments }: CommentSectionPro
   const { toast } = useToast();
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newComment, setNewComment] = useState("");
-  const [replyingTo, setReplyingTo] = useState<number | null>(null);
+  const [replyingTo, setReplyingTo] = useState<null | number>(null);
   const [submitting, setSubmitting] = useState(false);
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
 
@@ -365,23 +366,23 @@ export function CommentSection({ chapterId, initialComments }: CommentSectionPro
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
+        <h2 className="flex items-center gap-2 text-2xl font-bold">
           <MessageSquare className="h-6 w-6" />
           Comments ({comments.length})
         </h2>
         <div className="flex items-center gap-2">
           <span className="text-sm text-slate-500">Sort by:</span>
           <Button
+            onClick={() => setSortOrder("newest")}
             size="sm"
             variant={sortOrder === "newest" ? "default" : "outline"}
-            onClick={() => setSortOrder("newest")}
           >
             Newest
           </Button>
           <Button
+            onClick={() => setSortOrder("oldest")}
             size="sm"
             variant={sortOrder === "oldest" ? "default" : "outline"}
-            onClick={() => setSortOrder("oldest")}
           >
             Oldest
           </Button>
@@ -390,21 +391,21 @@ export function CommentSection({ chapterId, initialComments }: CommentSectionPro
 
       {/* New Comment Form */}
       {session ? (
-        <div className="space-y-3 bg-white rounded-lg border p-4">
+        <div className="space-y-3 rounded-lg border bg-white p-4">
           <Textarea
-            placeholder="Write a comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            maxLength={2000}
-            rows={4}
             disabled={submitting}
+            maxLength={2000}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Write a comment..."
+            rows={4}
+            value={newComment}
           />
           <div className="flex items-center justify-between">
             <span className="text-xs text-slate-500">{newComment.length}/2000 characters</span>
-            <Button onClick={handleSubmitComment} disabled={submitting || !newComment.trim()}>
+            <Button disabled={submitting || !newComment.trim()} onClick={handleSubmitComment}>
               {submitting ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Posting...
                 </>
               ) : (
@@ -414,9 +415,9 @@ export function CommentSection({ chapterId, initialComments }: CommentSectionPro
           </div>
         </div>
       ) : (
-        <div className="bg-slate-50 rounded-lg border p-4 text-center">
+        <div className="rounded-lg border bg-slate-50 p-4 text-center">
           <p className="text-slate-600">
-            <Link href="/sign-in" className="text-blue-600 hover:underline">
+            <Link className="text-blue-600 hover:underline" href="/sign-in">
               Sign in
             </Link>{" "}
             to join the discussion
@@ -426,22 +427,22 @@ export function CommentSection({ chapterId, initialComments }: CommentSectionPro
 
       {/* Comments List */}
       {comments.length === 0 ? (
-        <div className="text-center py-12 text-slate-500">
-          <MessageSquare className="h-12 w-12 mx-auto mb-3 text-slate-300" />
+        <div className="py-12 text-center text-slate-500">
+          <MessageSquare className="mx-auto mb-3 h-12 w-12 text-slate-300" />
           <p>No comments yet. Be the first to comment!</p>
         </div>
       ) : (
         <div className="space-y-4">
           {sortedComments.map((comment) => (
             <CommentItem
-              key={comment.id}
               comment={comment}
               depth={0}
-              onReply={setReplyingTo}
-              onDelete={handleDeleteComment}
-              replyingTo={replyingTo}
+              key={comment.id}
               onCancelReply={() => setReplyingTo(null)}
+              onDelete={handleDeleteComment}
+              onReply={setReplyingTo}
               onSubmitReply={handleSubmitReply}
+              replyingTo={replyingTo}
             />
           ))}
         </div>

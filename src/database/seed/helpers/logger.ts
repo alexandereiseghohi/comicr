@@ -7,13 +7,13 @@
 
 import chalk from "chalk";
 
-export type LogLevel = "info" | "success" | "warn" | "error" | "debug";
+export type LogLevel = "debug" | "error" | "info" | "success" | "warn";
 
 export interface ProgressOptions {
   current: number;
-  total: number;
   label?: string;
   showPercentage?: boolean;
+  total: number;
 }
 
 /**
@@ -91,7 +91,7 @@ export class SeedLogger {
   /**
    * Log error message
    */
-  error(message: string, data?: Record<string, unknown> | Error): void {
+  error(message: string, data?: Error | Record<string, unknown>): void {
     const formattedData = data instanceof Error ? { error: data.message, stack: data.stack } : data;
 
     console.error(
@@ -164,7 +164,7 @@ export class SeedLogger {
   /**
    * Create table output for structured data
    */
-  table(data: Record<string, string | number>[]): void {
+  table(data: Record<string, number | string>[]): void {
     if (data.length === 0) return;
 
     console.table(data);

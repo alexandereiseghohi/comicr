@@ -119,7 +119,7 @@ test.describe("Search Functionality", () => {
       await page.keyboard.press("Escape");
 
       // Dialog should be hidden
-      await expect(searchDialog).not.toBeVisible();
+      await expect(searchDialog).toBeHidden();
     }
   });
 

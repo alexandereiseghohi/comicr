@@ -1,5 +1,11 @@
 "use client";
 
+import { type ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal, Pencil, RotateCcw, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,21 +21,17 @@ import {
   deleteAuthorAction,
   restoreAuthorAction,
 } from "@/lib/actions/author.actions";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Pencil, RotateCcw, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+
 import { DataTable } from "./data-table";
 
 export interface AuthorRow {
-  id: number;
-  name: string;
-  bio: string | null;
-  image: string | null;
-  isActive: boolean;
+  bio: null | string;
   comicsCount: number;
   createdAt: Date;
+  id: number;
+  image: null | string;
+  isActive: boolean;
+  name: string;
 }
 
 interface AuthorsTableProps {
@@ -77,7 +79,7 @@ export function AuthorsTable({ items }: AuthorsTableProps) {
       accessorKey: "bio",
       header: "Bio",
       cell: ({ row }) => (
-        <span className="max-w-[200px] truncate block">{row.original.bio || "—"}</span>
+        <span className="block max-w-[200px] truncate">{row.original.bio || "—"}</span>
       ),
     },
     {
@@ -99,14 +101,14 @@ export function AuthorsTable({ items }: AuthorsTableProps) {
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button size="icon" variant="ghost">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
               <Link href={`/admin/authors/${row.original.id}/edit`}>
-                <Pencil className="h-4 w-4 mr-2" /> Edit
+                <Pencil className="mr-2 h-4 w-4" /> Edit
               </Link>
             </DropdownMenuItem>
             {row.original.isActive ? (
@@ -116,7 +118,7 @@ export function AuthorsTable({ items }: AuthorsTableProps) {
                   router.refresh();
                 }}
               >
-                <Trash2 className="h-4 w-4 mr-2" /> Deactivate
+                <Trash2 className="mr-2 h-4 w-4" /> Deactivate
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem
@@ -125,7 +127,7 @@ export function AuthorsTable({ items }: AuthorsTableProps) {
                   router.refresh();
                 }}
               >
-                <RotateCcw className="h-4 w-4 mr-2" /> Restore
+                <RotateCcw className="mr-2 h-4 w-4" /> Restore
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>
@@ -151,12 +153,12 @@ export function AuthorsTable({ items }: AuthorsTableProps) {
   return (
     <div className="space-y-4">
       {selectedIds.length > 0 && (
-        <div className="flex items-center gap-2 p-2 bg-muted rounded">
+        <div className="bg-muted flex items-center gap-2 rounded p-2">
           <span className="text-sm">{selectedIds.length} selected</span>
-          <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
+          <Button onClick={handleBulkDelete} size="sm" variant="destructive">
             Deactivate Selected
           </Button>
-          <Button variant="outline" size="sm" onClick={handleBulkRestore}>
+          <Button onClick={handleBulkRestore} size="sm" variant="outline">
             Restore Selected
           </Button>
         </div>

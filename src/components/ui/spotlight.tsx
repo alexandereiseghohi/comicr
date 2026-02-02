@@ -1,8 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import React, { type MouseEvent as ReactMouseEvent } from "react";
+
+import { cn } from "@/lib/utils";
 
 export const Spotlight = ({
   children,
@@ -49,37 +50,37 @@ export const SpotlightNew = ({ className, fill }: { className?: string; fill?: s
   return (
     <svg
       className={cn(
-        "pointer-events-none absolute z-[1] h-[169%] w-[138%] lg:w-[84%] animate-spotlight opacity-0",
+        "animate-spotlight pointer-events-none absolute z-[1] h-[169%] w-[138%] opacity-0 lg:w-[84%]",
         className
       )}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 3787 2842"
       fill="none"
+      viewBox="0 0 3787 2842"
+      xmlns="http://www.w3.org/2000/svg"
     >
       <g filter="url(#filter)">
         <ellipse
           cx="1924.71"
           cy="273.501"
+          fill={fill || "white"}
+          fillOpacity="0.21"
           rx="1924.71"
           ry="273.501"
           transform="matrix(-0.822377 -0.568943 -0.568943 0.822377 3631.88 2291.09)"
-          fill={fill || "white"}
-          fillOpacity="0.21"
         />
       </g>
       <defs>
         <filter
+          colorInterpolationFilters="sRGB"
+          filterUnits="userSpaceOnUse"
+          height="2840.26"
           id="filter"
+          width="3785.16"
           x="0.860352"
           y="0.838989"
-          width="3785.16"
-          height="2840.26"
-          filterUnits="userSpaceOnUse"
-          colorInterpolationFilters="sRGB"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix" />
-          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-          <feGaussianBlur stdDeviation="151" result="effect1_foregroundBlur_1065_8" />
+          <feBlend in="SourceGraphic" in2="BackgroundImageFix" mode="normal" result="shape" />
+          <feGaussianBlur result="effect1_foregroundBlur_1065_8" stdDeviation="151" />
         </filter>
       </defs>
     </svg>
@@ -88,13 +89,13 @@ export const SpotlightNew = ({ className, fill }: { className?: string; fill?: s
 
 export const SpotlightPreview = () => {
   return (
-    <div className="flex h-[40rem] w-full rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center relative overflow-hidden">
-      <SpotlightNew className="-top-40 left-0 md:left-60 md:-top-20" fill="white" />
-      <div className="p-4 max-w-7xl mx-auto relative z-10 w-full pt-20 md:pt-0">
-        <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
+    <div className="relative flex h-[40rem] w-full overflow-hidden rounded-md bg-black/[0.96] antialiased md:items-center md:justify-center">
+      <SpotlightNew className="-top-40 left-0 md:-top-20 md:left-60" fill="white" />
+      <div className="relative z-10 mx-auto w-full max-w-7xl p-4 pt-20 md:pt-0">
+        <h1 className="bg-opacity-50 bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-7xl">
           Spotlight <br /> is the new trend.
         </h1>
-        <p className="mt-4 font-normal text-base text-neutral-300 max-w-lg text-center mx-auto">
+        <p className="mx-auto mt-4 max-w-lg text-center text-base font-normal text-neutral-300">
           Spotlight effect is a great way to draw attention to a specific part of the page. Here, we
           are drawing the attention towards the text section of the page. I don&apos;t know why but
           I ran out of things to write.

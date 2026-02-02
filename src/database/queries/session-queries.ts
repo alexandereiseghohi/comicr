@@ -1,6 +1,7 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { session } from "@/database/schema";
-import { eq } from "drizzle-orm";
 
 export async function getSessionByToken(sessionToken: string) {
   try {

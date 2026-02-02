@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { chapter as chapterTable } from "@/database/schema";
+
 import type { CreateChapterInput, UpdateChapterInput } from "@/schemas/chapter-schema";
 import type { Chapter, DbMutationResult } from "@/types";
-import { eq } from "drizzle-orm";
 
 /**
  * Create a single chapter

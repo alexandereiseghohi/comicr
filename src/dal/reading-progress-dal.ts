@@ -1,9 +1,12 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/reading-progress-mutations";
 import { readingProgress } from "@/database/schema";
-import type { DbMutationResult } from "@/types";
-import { eq } from "drizzle-orm";
+
 import { BaseDAL } from "./base-dal";
+
+import type { DbMutationResult } from "@/types";
 
 export class ReadingProgressDAL extends BaseDAL<typeof readingProgress> {
   constructor() {
@@ -23,16 +26,15 @@ export class ReadingProgressDAL extends BaseDAL<typeof readingProgress> {
   }
 
   async create(data: {
-    userId: string;
-    comicId: number;
     chapterId: number;
+    comicId: number;
     currentImageIndex?: number;
-    scrollPercentage?: number;
     progressPercent?: number;
+    scrollPercentage?: number;
+    userId: string;
   }): Promise<DbMutationResult<typeof readingProgress.$inferSelect>> {
     try {
-      const result = await mutations.upsertReadingProgress(data);
-      return result;
+      return await mutations.upsertReadingProgress(data);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }

@@ -1,18 +1,19 @@
-import { db } from "@/database/db";
-import { comment, user } from "@/database/schema";
 import { eq } from "drizzle-orm";
 
+import { db } from "@/database/db";
+import { comment, user } from "@/database/schema";
+
 export interface CommentWithUser {
-  id: number;
-  content: string;
-  userId: string;
-  userName: string;
-  userImage: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date | null;
-  parentId: number | null;
   chapterId: number;
+  content: string;
+  createdAt: Date;
+  deletedAt: Date | null;
+  id: number;
+  parentId: null | number;
+  updatedAt: Date;
+  userId: string;
+  userImage: null | string;
+  userName: string;
 }
 
 export interface CommentTree extends CommentWithUser {
@@ -27,12 +28,12 @@ export function buildCommentTree(comments: CommentWithUser[]): CommentTree[] {
   const rootComments: CommentTree[] = [];
 
   // First pass: create all comment objects with empty children arrays
-  comments.forEach((comment) => {
+  for (const comment of comments) {
     commentMap.set(comment.id, { ...comment, children: [] });
-  });
+  }
 
   // Second pass: build the tree structure
-  comments.forEach((comment) => {
+  for (const comment of comments) {
     const commentNode = commentMap.get(comment.id)!;
 
     if (comment.parentId === null) {
@@ -48,7 +49,7 @@ export function buildCommentTree(comments: CommentWithUser[]): CommentTree[] {
         rootComments.push(commentNode);
       }
     }
-  });
+  }
 
   return rootComments;
 }

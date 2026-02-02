@@ -1,8 +1,11 @@
+import { BookOpen, Heart, Users, Zap } from "lucide-react";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Heart, Users, Zap } from "lucide-react";
+
 import type { Metadata } from "next";
-import Link from "next/link";
+
 
 /* eslint-disable react/no-unescaped-entities */
 
@@ -25,7 +28,7 @@ export default function AboutPage() {
         <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
           About ComicWise
         </h1>
-        <p className="mx-auto max-w-2xl text-lg text-muted-foreground md:text-xl">
+        <p className="text-muted-foreground mx-auto max-w-2xl text-lg md:text-xl">
           Bringing comic enthusiasts together with the stories they love through innovative reading
           experiences and community-driven features.
         </p>
@@ -37,7 +40,7 @@ export default function AboutPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Heart className="h-6 w-6 text-primary" />
+                <Heart className="text-primary h-6 w-6" />
                 Our Mission
               </CardTitle>
             </CardHeader>
@@ -53,7 +56,7 @@ export default function AboutPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Zap className="h-6 w-6 text-primary" />
+                <Zap className="text-primary h-6 w-6" />
                 Our Vision
               </CardTitle>
             </CardHeader>
@@ -74,7 +77,7 @@ export default function AboutPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader>
-              <BookOpen className="mb-2 h-8 w-8 text-primary" />
+              <BookOpen className="text-primary mb-2 h-8 w-8" />
               <CardTitle className="text-lg">Vast Library</CardTitle>
             </CardHeader>
             <CardContent>
@@ -87,7 +90,7 @@ export default function AboutPage() {
 
           <Card>
             <CardHeader>
-              <Zap className="mb-2 h-8 w-8 text-primary" />
+              <Zap className="text-primary mb-2 h-8 w-8" />
               <CardTitle className="text-lg">Multiple Reading Modes</CardTitle>
             </CardHeader>
             <CardContent>
@@ -100,7 +103,7 @@ export default function AboutPage() {
 
           <Card>
             <CardHeader>
-              <Heart className="mb-2 h-8 w-8 text-primary" />
+              <Heart className="text-primary mb-2 h-8 w-8" />
               <CardTitle className="text-lg">Personalized Experience</CardTitle>
             </CardHeader>
             <CardContent>
@@ -113,7 +116,7 @@ export default function AboutPage() {
 
           <Card>
             <CardHeader>
-              <Users className="mb-2 h-8 w-8 text-primary" />
+              <Users className="text-primary mb-2 h-8 w-8" />
               <CardTitle className="text-lg">Active Community</CardTitle>
             </CardHeader>
             <CardContent>
@@ -129,14 +132,14 @@ export default function AboutPage() {
       {/* Team Section */}
       <section className="mb-16">
         <h2 className="mb-8 text-center text-3xl font-bold">Meet the Team</h2>
-        <p className="mb-8 text-center text-muted-foreground">
+        <p className="text-muted-foreground mb-8 text-center">
           ComicWise is built by a passionate team of developers, designers, and comic enthusiasts
           dedicated to creating the best reading experience.
         </p>
         <div className="grid gap-6 md:grid-cols-3">
           <Card>
             <CardHeader>
-              <div className="mx-auto mb-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary to-primary/60" />
+              <div className="from-primary to-primary/60 mx-auto mb-4 h-24 w-24 rounded-full bg-gradient-to-br" />
               <CardTitle className="text-center">Development Team</CardTitle>
             </CardHeader>
             <CardContent>
@@ -149,7 +152,7 @@ export default function AboutPage() {
 
           <Card>
             <CardHeader>
-              <div className="mx-auto mb-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary to-primary/60" />
+              <div className="from-primary to-primary/60 mx-auto mb-4 h-24 w-24 rounded-full bg-gradient-to-br" />
               <CardTitle className="text-center">Design Team</CardTitle>
             </CardHeader>
             <CardContent>
@@ -162,7 +165,7 @@ export default function AboutPage() {
 
           <Card>
             <CardHeader>
-              <div className="mx-auto mb-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary to-primary/60" />
+              <div className="from-primary to-primary/60 mx-auto mb-4 h-24 w-24 rounded-full bg-gradient-to-br" />
               <CardTitle className="text-center">Community Team</CardTitle>
             </CardHeader>
             <CardContent>
@@ -177,7 +180,7 @@ export default function AboutPage() {
 
       {/* Call to Action */}
       <section className="text-center">
-        <Card className="mx-auto max-w-2xl bg-gradient-to-br from-primary/10 to-primary/5">
+        <Card className="from-primary/10 to-primary/5 mx-auto max-w-2xl bg-gradient-to-br">
           <CardHeader>
             <CardTitle className="text-2xl">Start Your Reading Journey</CardTitle>
             <CardDescription className="text-base">
@@ -188,7 +191,7 @@ export default function AboutPage() {
             <Button asChild size="lg">
               <Link href="/comics">Browse Comics</Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
+            <Button asChild size="lg" variant="outline">
               <Link href="/sign-up">Create Free Account</Link>
             </Button>
           </CardContent>
@@ -199,7 +202,7 @@ export default function AboutPage() {
       <section className="mt-16 text-center">
         <p className="text-muted-foreground">
           Have questions or feedback?{" "}
-          <Link href="/contact" className="text-primary underline underline-offset-4">
+          <Link className="text-primary underline underline-offset-4" href="/contact">
             Get in touch with us
           </Link>
         </p>

@@ -3,6 +3,8 @@
  * @description Read operations for admin dashboard and management
  */
 
+import { count, desc, eq, ilike, or, sql, sum } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import {
   artist,
@@ -14,7 +16,6 @@ import {
   type as typeTable,
   user,
 } from "@/database/schema";
-import { count, desc, eq, ilike, or, sql, sum } from "drizzle-orm";
 
 /**
  * Get dashboard statistics
@@ -123,8 +124,8 @@ export async function getComicsForAdmin({
   search: _search,
   status: _status,
 }: {
-  page?: number;
   limit?: number;
+  page?: number;
   search?: string;
   status?: string;
 } = {}) {
@@ -175,8 +176,8 @@ export async function getUsersForAdmin({
   limit = 20,
   role: _role,
 }: {
-  page?: number;
   limit?: number;
+  page?: number;
   role?: string;
 } = {}) {
   try {
@@ -223,9 +224,9 @@ export async function getChaptersForAdmin({
   limit = 20,
   comicId,
 }: {
-  page?: number;
-  limit?: number;
   comicId?: number;
+  limit?: number;
+  page?: number;
 } = {}) {
   try {
     const offset = (page - 1) * limit;
@@ -288,8 +289,8 @@ export async function getAuthorsForAdmin({
   limit = 20,
   search = "",
 }: {
-  page?: number;
   limit?: number;
+  page?: number;
   search?: string;
 } = {}) {
   try {
@@ -344,8 +345,8 @@ export async function getArtistsForAdmin({
   limit = 20,
   search = "",
 }: {
-  page?: number;
   limit?: number;
+  page?: number;
   search?: string;
 } = {}) {
   try {
@@ -400,8 +401,8 @@ export async function getGenresForAdmin({
   limit = 20,
   search = "",
 }: {
-  page?: number;
   limit?: number;
+  page?: number;
   search?: string;
 } = {}) {
   try {
@@ -458,8 +459,8 @@ export async function getTypesForAdmin({
   limit = 20,
   search = "",
 }: {
-  page?: number;
   limit?: number;
+  page?: number;
   search?: string;
 } = {}) {
   try {

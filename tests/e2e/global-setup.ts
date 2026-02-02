@@ -2,7 +2,8 @@
  * Playwright Global Setup
  * Seeds test admin user before E2E tests run
  */
-import { randomBytes, scryptSync } from "crypto";
+import { randomBytes, scryptSync } from "node:crypto";
+
 import postgres from "postgres";
 
 // Test credentials (matches admin.spec.ts defaults)

@@ -1,6 +1,7 @@
+import { type NextRequest, NextResponse } from "next/server";
+
 import { searchComics } from "@/database/queries/comic-queries";
 import { QuickSearchSchema } from "@/schemas/search.schema";
-import { NextRequest, NextResponse } from "next/server";
 
 /**
  * GET /api/comics/search - Search comics

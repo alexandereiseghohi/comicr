@@ -1,5 +1,10 @@
 "use client";
 
+import { ArrowRightIcon, BookOpenIcon, SearchIcon } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import * as React from "react";
+
 import { Badge } from "@/components/ui/badge";
 import {
   CommandDialog,
@@ -10,23 +15,19 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowRightIcon, BookOpenIcon, SearchIcon } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import * as React from "react";
 
 interface SearchResult {
+  coverImage: null | string;
   id: number;
-  title: string;
-  slug: string;
-  coverImage: string | null;
-  status: string;
   rating: number;
+  slug: string;
+  status: string;
+  title: string;
 }
 
 interface SearchModalProps {
-  open: boolean;
   onOpenChange: (open: boolean) => void;
+  open: boolean;
 }
 
 export function SearchModal({ open, onOpenChange }: SearchModalProps) {
@@ -89,17 +90,17 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
 
   return (
     <CommandDialog
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Search Comics"
       description="Search for comics by title"
+      onOpenChange={onOpenChange}
+      open={open}
+      title="Search Comics"
     >
-      <CommandInput placeholder="Search comics..." value={query} onValueChange={setQuery} />
+      <CommandInput onValueChange={setQuery} placeholder="Search comics..." value={query} />
       <CommandList>
         {loading && (
-          <div className="p-4 space-y-3">
+          <div className="space-y-3 p-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="flex items-center gap-3">
+              <div className="flex items-center gap-3" key={i}>
                 <Skeleton className="h-12 w-9 rounded" />
                 <div className="flex-1 space-y-2">
                   <Skeleton className="h-4 w-3/4" />
@@ -119,30 +120,30 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
             <CommandGroup heading="Comics">
               {results.map((comic) => (
                 <CommandItem
+                  className="flex cursor-pointer items-center gap-3"
                   key={comic.id}
-                  value={comic.title}
                   onSelect={() => handleSelect(comic.slug)}
-                  className="flex items-center gap-3 cursor-pointer"
+                  value={comic.title}
                 >
                   <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded">
                     {comic.coverImage ? (
                       <Image
-                        src={comic.coverImage}
                         alt={`Cover of ${comic.title}`}
-                        fill
                         className="object-cover"
+                        fill
                         sizes="36px"
+                        src={comic.coverImage}
                       />
                     ) : (
-                      <div className="h-full w-full bg-muted flex items-center justify-center">
-                        <BookOpenIcon className="h-4 w-4 text-muted-foreground" />
+                      <div className="bg-muted flex h-full w-full items-center justify-center">
+                        <BookOpenIcon className="text-muted-foreground h-4 w-4" />
                       </div>
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{comic.title}</p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Badge variant="outline" className="text-xs px-1 py-0">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">{comic.title}</p>
+                    <div className="text-muted-foreground flex items-center gap-2 text-xs">
+                      <Badge className="px-1 py-0 text-xs" variant="outline">
                         {comic.status}
                       </Badge>
                       <span>⭐ {comic.rating?.toFixed(1) ?? "N/A"}</span>
@@ -155,8 +156,8 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
             {query.trim() && (
               <CommandGroup>
                 <CommandItem
+                  className="text-primary cursor-pointer justify-center"
                   onSelect={handleViewAll}
-                  className="justify-center text-primary cursor-pointer"
                 >
                   <span>View all results for &quot;{query}&quot;</span>
                   <ArrowRightIcon className="ml-2 h-4 w-4" />
@@ -167,8 +168,8 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
         )}
 
         {!loading && !query && (
-          <div className="py-6 text-center text-sm text-muted-foreground">
-            <SearchIcon className="mx-auto h-8 w-8 mb-2 opacity-50" />
+          <div className="text-muted-foreground py-6 text-center text-sm">
+            <SearchIcon className="mx-auto mb-2 h-8 w-8 opacity-50" />
             <p>Type to search comics...</p>
           </div>
         )}

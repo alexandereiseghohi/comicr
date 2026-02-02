@@ -132,7 +132,7 @@ const envSchema = z.object({
  * Validated environment variables
  * Safe to use throughout the application
  */
-let env: z.infer<typeof envSchema> | null = null;
+let env: null | z.infer<typeof envSchema> = null;
 
 /**
  * Get validated env object (lazy loaded)

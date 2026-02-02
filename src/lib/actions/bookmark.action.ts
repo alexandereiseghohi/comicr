@@ -1,10 +1,11 @@
-import * as mutations from "@/database/mutations/bookmark.mutations";
-import { CreateBookmarkInput, CreateBookmarkSchema } from "@/schemas/bookmark.schema";
 import { z } from "zod";
 
+import * as mutations from "@/database/mutations/bookmark.mutations";
+import { type CreateBookmarkInput, CreateBookmarkSchema } from "@/schemas/bookmark.schema";
+
 type ActionResult<T = unknown> =
-  | { ok: true; data: T }
-  | { ok: false; error: { code: string; message: string } };
+  | { data: T; ok: true; }
+  | { error: { code: string; message: string }; ok: false; };
 
 /**
  * Add a bookmark.

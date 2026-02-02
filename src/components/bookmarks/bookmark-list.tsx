@@ -1,5 +1,9 @@
 "use client";
 
+import { BookmarkIcon } from "lucide-react";
+import Link from "next/link";
+import * as React from "react";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,34 +16,32 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BookmarkIcon } from "lucide-react";
-import Link from "next/link";
-import * as React from "react";
+
 import { BookmarkCard } from "./bookmark-card";
 import { BookmarkListItem } from "./bookmark-list-item";
-import { ViewToggle, type ViewMode } from "./view-toggle";
+import { type ViewMode, ViewToggle } from "./view-toggle";
 
 export interface BookmarkData {
   bookmark: {
-    userId: string;
     comicId: number;
-    lastReadChapterId: number | null;
     createdAt: Date | null;
+    lastReadChapterId: null | number;
+    userId: string;
   };
   comic: {
+    coverImage: null | string;
+    description: null | string;
     id: number;
-    title: string;
+    rating: null | string;
     slug: string;
-    coverImage: string | null;
-    status: string | null;
-    rating: string | null;
-    views: number | null;
-    description: string | null;
+    status: null | string;
+    title: string;
+    views: null | number;
   };
   lastReadChapter: {
+    chapterNumber: null | number;
     id: number;
-    chapterNumber: number | null;
-    title: string | null;
+    title: null | string;
   } | null;
 }
 
@@ -53,8 +55,8 @@ const VIEW_MODE_KEY = "comicwise-bookmarks-view";
 export function BookmarkList({ initialBookmarks, userId }: BookmarkListProps) {
   const [bookmarks, setBookmarks] = React.useState(initialBookmarks);
   const [viewMode, setViewMode] = React.useState<ViewMode>("grid");
-  const [removing, setRemoving] = React.useState<number | null>(null);
-  const [confirmRemove, setConfirmRemove] = React.useState<number | null>(null);
+  const [removing, setRemoving] = React.useState<null | number>(null);
+  const [confirmRemove, setConfirmRemove] = React.useState<null | number>(null);
 
   // Load view preference from localStorage
   React.useEffect(() => {
@@ -100,9 +102,9 @@ export function BookmarkList({ initialBookmarks, userId }: BookmarkListProps) {
 
   if (bookmarks.length === 0) {
     return (
-      <div className="text-center py-16">
-        <BookmarkIcon className="mx-auto h-16 w-16 text-muted-foreground/30 mb-4" />
-        <h3 className="text-lg font-medium mb-2">No bookmarks yet</h3>
+      <div className="py-16 text-center">
+        <BookmarkIcon className="text-muted-foreground/30 mx-auto mb-4 h-16 w-16" />
+        <h3 className="mb-2 text-lg font-medium">No bookmarks yet</h3>
         <p className="text-muted-foreground mb-6">
           Start bookmarking your favorite comics to see them here
         </p>
@@ -116,29 +118,29 @@ export function BookmarkList({ initialBookmarks, userId }: BookmarkListProps) {
   return (
     <>
       {/* Header with view toggle */}
-      <div className="flex items-center justify-between mb-6">
-        <p className="text-sm text-muted-foreground">
+      <div className="mb-6 flex items-center justify-between">
+        <p className="text-muted-foreground text-sm">
           {bookmarks.length} bookmark{bookmarks.length !== 1 ? "s" : ""}
         </p>
-        <ViewToggle value={viewMode} onChange={handleViewChange} />
+        <ViewToggle onChange={handleViewChange} value={viewMode} />
       </div>
 
       {/* Grid view */}
       {viewMode === "grid" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {bookmarks.map(({ bookmark, comic, lastReadChapter }) => (
             <BookmarkCard
-              key={bookmark.comicId}
               comicId={comic.id}
-              comicTitle={comic.title}
               comicSlug={comic.slug}
+              comicTitle={comic.title}
               coverImage={comic.coverImage}
-              status={comic.status}
-              rating={comic.rating}
-              views={comic.views}
+              key={bookmark.comicId}
               lastReadChapter={lastReadChapter}
               onRemove={() => setConfirmRemove(bookmark.comicId)}
+              rating={comic.rating}
               removing={removing === bookmark.comicId}
+              status={comic.status}
+              views={comic.views}
             />
           ))}
         </div>
@@ -149,24 +151,24 @@ export function BookmarkList({ initialBookmarks, userId }: BookmarkListProps) {
         <div className="space-y-3">
           {bookmarks.map(({ bookmark, comic, lastReadChapter }) => (
             <BookmarkListItem
-              key={bookmark.comicId}
               comicId={comic.id}
-              comicTitle={comic.title}
               comicSlug={comic.slug}
+              comicTitle={comic.title}
               coverImage={comic.coverImage}
-              status={comic.status}
-              rating={comic.rating}
-              views={comic.views}
+              key={bookmark.comicId}
               lastReadChapter={lastReadChapter}
               onRemove={() => setConfirmRemove(bookmark.comicId)}
+              rating={comic.rating}
               removing={removing === bookmark.comicId}
+              status={comic.status}
+              views={comic.views}
             />
           ))}
         </div>
       )}
 
       {/* Confirmation dialog */}
-      <AlertDialog open={confirmRemove !== null} onOpenChange={() => setConfirmRemove(null)}>
+      <AlertDialog onOpenChange={() => setConfirmRemove(null)} open={confirmRemove !== null}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Remove Bookmark</AlertDialogTitle>
@@ -178,8 +180,8 @@ export function BookmarkList({ initialBookmarks, userId }: BookmarkListProps) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => confirmRemove && handleRemove(confirmRemove)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => confirmRemove && handleRemove(confirmRemove)}
             >
               Remove
             </AlertDialogAction>
@@ -197,9 +199,9 @@ export function BookmarkListSkeleton() {
         <Skeleton className="h-4 w-24" />
         <Skeleton className="h-9 w-20" />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="space-y-3">
+          <div className="space-y-3" key={i}>
             <Skeleton className="h-48 w-full rounded-lg" />
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-3 w-1/2" />

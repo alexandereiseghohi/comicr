@@ -1,6 +1,7 @@
+import { asc, count, desc, eq, ilike, inArray } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { artist, author, comic, comicToGenre, genre } from "@/database/schema";
-import { asc, count, desc, eq, ilike, inArray } from "drizzle-orm";
 
 /**
  * Get all comics with pagination
@@ -11,10 +12,10 @@ export async function getAllComics({
   sort: _sort = "createdAt",
   order: _order = "desc",
 }: {
-  page?: number;
   limit?: number;
-  sort?: string;
   order?: "asc" | "desc";
+  page?: number;
+  sort?: string;
 } = {}) {
   const offset = (page - 1) * limit;
 
@@ -115,7 +116,7 @@ export async function searchComics(
  * Get comics by status
  */
 export async function getComicsByStatus(
-  status: "Ongoing" | "Completed" | "Hiatus" | "Dropped" | "Season End" | "Coming Soon",
+  status: "Coming Soon" | "Completed" | "Dropped" | "Hiatus" | "Ongoing" | "Season End",
   { page = 1, limit = 20, sort: _sort = "createdAt", order = "desc" } = {}
 ) {
   try {
@@ -166,10 +167,10 @@ export async function getComicsByGenres(
     sort = "createdAt",
     order = "desc",
   }: {
-    page?: number;
     limit?: number;
-    sort?: string;
     order?: "asc" | "desc";
+    page?: number;
+    sort?: string;
   } = {}
 ) {
   try {

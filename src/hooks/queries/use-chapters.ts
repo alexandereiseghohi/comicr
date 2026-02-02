@@ -5,24 +5,25 @@
 
 "use client";
 
-import { queryKeys } from "@/lib/query-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { queryKeys } from "@/lib/query-client";
 
 // Types
 interface Chapter {
+  chapterNumber: number;
+  comicId: number;
+  content: null | string;
   id: number;
+  releaseDate: Date;
   slug: string;
   title: string;
-  chapterNumber: number;
-  releaseDate: Date;
-  comicId: number;
   views: number;
-  content: string | null;
 }
 
 interface ChapterImage {
-  id: number;
   chapterId: number;
+  id: number;
   imageUrl: string;
   pageNumber: number;
 }
@@ -30,11 +31,11 @@ interface ChapterImage {
 interface ChaptersResponse {
   data: Chapter[];
   meta: {
-    page: number;
+    hasNextPage: boolean;
     limit: number;
+    page: number;
     total: number;
     totalPages: number;
-    hasNextPage: boolean;
   };
 }
 

@@ -14,72 +14,72 @@ export type ApiHandler<T = unknown> = (request: NextRequest) => Promise<NextResp
  * API Query parameters
  */
 export interface ApiQuery {
-  page?: string;
-  limit?: string;
-  sort?: string;
-  order?: 'asc' | 'desc';
-  search?: string;
   filter?: Record<string, string>;
+  limit?: string;
+  order?: 'asc' | 'desc';
+  page?: string;
+  search?: string;
+  sort?: string;
 }
 
 /**
  * Standard API endpoint response
  */
 export interface ApiEndpointResponse<T = unknown> {
-  success: boolean;
   data?: T;
   error?: {
     code: string;
-    message: string;
     details?: Record<string, unknown>;
+    message: string;
   };
   meta?: {
     timestamp: number;
     version: string;
   };
+  success: boolean;
 }
 
 /**
  * List endpoint response with pagination
  */
 export interface ListEndpointResponse<T> {
-  success: boolean;
   data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
   meta: {
     timestamp: number;
     took: number; // milliseconds
   };
+  pagination: {
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
+  };
+  success: boolean;
 }
 
 /**
  * Error response format
  */
 export interface ErrorEndpointResponse {
-  success: false;
   error: {
     code: string;
     message: string;
     status: number;
   };
+  success: false;
 }
 
 /**
  * HTTP methods
  */
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS';
+export type HttpMethod = 'DELETE' | 'GET' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT';
 
 /**
  * Request context with user info
  */
 export interface RequestContext {
-  userId?: string;
-  userRole?: 'admin' | 'moderator' | 'user';
   ip?: string;
   userAgent?: string;
+  userId?: string;
+  userRole?: 'admin' | 'moderator' | 'user';
 }

@@ -1,12 +1,14 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import * as chapterMutations from "@/database/mutations/chapter-mutations";
 import { auth } from "@/lib/auth-config";
-import type { CreateChapterInput, UpdateChapterInput } from "@/schemas/chapter-schema";
 import { createChapterSchema, updateChapterSchema } from "@/schemas/chapter-schema";
+
+import type { CreateChapterInput, UpdateChapterInput } from "@/schemas/chapter-schema";
 import type { ActionResult } from "@/types";
 import type { AuthUser } from "@/types/auth";
-import { revalidatePath } from "next/cache";
 
 /**
  * Create a new chapter (admin only)

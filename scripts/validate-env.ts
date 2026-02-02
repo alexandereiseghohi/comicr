@@ -1,7 +1,8 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import dotenv from "dotenv";
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
 
 const envPath = ".env";
 const reportArg = process.argv.find((a) => a.startsWith("--report="));
@@ -10,8 +11,7 @@ const reportPath = reportArg ? reportArg.split("=")[1] : undefined;
 async function parseDotEnv(file: string): Promise<Record<string, string>> {
   try {
     const content = await fs.readFile(file, "utf8");
-    const parsed = dotenv.parse(content);
-    return parsed;
+    return dotenv.parse(content);
   } catch {
     return {};
   }

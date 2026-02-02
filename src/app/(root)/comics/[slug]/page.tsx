@@ -1,3 +1,7 @@
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
 import { auth } from "@/auth";
 import BookmarkButton from "@/components/bookmarks/bookmark-button";
 import { Badge } from "@/components/ui/badge";
@@ -6,9 +10,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { isBookmarked } from "@/database/mutations/bookmark-mutations";
 import * as chapterQueries from "@/database/queries/chapter-queries";
 import * as comicQueries from "@/database/queries/comic-queries";
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -61,7 +62,7 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
 
   // Determine bookmark state for current user (server-side)
   let initialBookmarked = false;
-  let session = null as null | { user?: { id?: string } };
+  let session = null as { user?: { id?: string } } | null;
   try {
     session = await auth();
     if (session?.user?.id) {
@@ -78,31 +79,31 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
         {/* Back Button */}
         <div className="mb-8">
           <Link href="/comics">
-            <Button variant="outline" className="gap-2">
+            <Button className="gap-2" variant="outline">
               ← Back to Comics
             </Button>
           </Link>
         </div>
 
         {/* Comic Header */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Cover Image */}
           <div className="md:col-span-1">
-            <div className="relative h-96 w-full rounded-lg overflow-hidden shadow-lg">
+            <div className="relative h-96 w-full overflow-hidden rounded-lg shadow-lg">
               <Image
-                src={comic.coverImage}
                 alt={comic.title}
-                fill
                 className="object-cover"
+                fill
                 priority
+                src={comic.coverImage}
               />
             </div>
           </div>
 
           {/* Comic Info */}
-          <div className="md:col-span-2 space-y-6">
+          <div className="space-y-6 md:col-span-2">
             <div>
-              <h1 className="text-4xl font-bold text-slate-950 mb-2">{comic.title}</h1>
+              <h1 className="mb-2 text-4xl font-bold text-slate-950">{comic.title}</h1>
               {author?.name ? (
                 <p className="text-lg text-slate-600">by {author.name}</p>
               ) : comic.authorId ? (
@@ -118,11 +119,11 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-slate-50 p-4 rounded-lg">
+              <div className="rounded-lg bg-slate-50 p-4">
                 <p className="text-sm text-slate-600">Views</p>
                 <p className="text-2xl font-bold text-slate-950">{comic.views.toLocaleString()}</p>
               </div>
-              <div className="bg-slate-50 p-4 rounded-lg">
+              <div className="rounded-lg bg-slate-50 p-4">
                 <p className="text-sm text-slate-600">Rating</p>
                 <p className="text-2xl font-bold text-slate-950">
                   ⭐ {Number(comic.rating || 0).toFixed(1)}
@@ -134,16 +135,16 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
               {/* Bookmark button (client) - shown for authenticated users; initial state set server-side */}
               {session?.user?.id ? (
                 <BookmarkButton
-                  userId={String(session.user?.id)}
                   comicId={Number(comic.id)}
                   initialBookmarked={initialBookmarked}
+                  userId={String(session.user?.id)}
                 />
               ) : null}
             </div>
 
             <div>
-              <p className="text-sm text-slate-600 mb-2">Description</p>
-              <p className="text-slate-700 leading-relaxed">{comic.description}</p>
+              <p className="mb-2 text-sm text-slate-600">Description</p>
+              <p className="leading-relaxed text-slate-700">{comic.description}</p>
             </div>
 
             {chapters.length > 0 && (
@@ -152,7 +153,7 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
                   (chapters[0] as { chapterNumber?: number })?.chapterNumber ?? 1
                 }`}
               >
-                <Button size="lg" className="w-full">
+                <Button className="w-full" size="lg">
                   Start Reading
                 </Button>
               </Link>
@@ -163,7 +164,7 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
         {/* Chapters List */}
         {chapters.length > 0 && (
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-slate-950 mb-6">Chapters</h2>
+            <h2 className="mb-6 text-2xl font-bold text-slate-950">Chapters</h2>
             <Card>
               <CardContent className="p-0">
                 <div className="divide-y">
@@ -172,17 +173,17 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
                     .reverse()
                     .map(
                       (chapter: {
-                        id: number;
                         chapterNumber: number;
+                        id: number;
+                        releaseDate: Date | string;
                         title: string;
-                        releaseDate: string | Date;
                         views: number;
                       }) => (
                         <Link
-                          key={chapter.id}
                           href={`/comics/${slug}/chapters/${chapter.chapterNumber}`}
+                          key={chapter.id}
                         >
-                          <div className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between">
+                          <div className="flex items-center justify-between p-4 transition-colors hover:bg-slate-50">
                             <div>
                               <h3 className="font-medium text-slate-950">
                                 Ch. {chapter.chapterNumber}: {chapter.title}
@@ -205,7 +206,7 @@ export default async function ComicPage({ params }: { params: Promise<{ slug: st
         )}
 
         {chapters.length === 0 && (
-          <div className="text-center py-12">
+          <div className="py-12 text-center">
             <p className="text-slate-600">No chapters available yet</p>
           </div>
         )}

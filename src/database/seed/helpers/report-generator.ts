@@ -7,47 +7,48 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
+
 import type { getDeduplicationStats } from "./image-deduplicator";
 
 export interface SeedReport {
-  timestamp: string;
   duration: number;
+  errors: ErrorLog[];
   mode: "dry-run" | "full";
   phases: PhaseReport[];
   summary: SeedSummary;
-  errors: ErrorLog[];
+  timestamp: string;
 }
 
 export interface PhaseReport {
-  name: string;
-  startTime: string;
-  endTime: string;
   duration: number;
-  status: "success" | "failed" | "skipped";
+  endTime: string;
+  itemsInserted: number;
   itemsProcessed: number;
   itemsSkipped: number;
-  itemsInserted: number;
   itemsUpdated: number;
+  name: string;
+  startTime: string;
+  status: "failed" | "skipped" | "success";
   warnings: string[];
 }
 
 export interface SeedSummary {
-  totalItems: number;
-  totalInserted: number;
-  totalUpdated: number;
-  totalSkipped: number;
-  totalErrors: number;
-  totalWarnings: number;
-  imagesDownloaded?: number;
   imagesDeduplicated?: number;
+  imagesDownloaded?: number;
   storageSavedMB?: string;
+  totalErrors: number;
+  totalInserted: number;
+  totalItems: number;
+  totalSkipped: number;
+  totalUpdated: number;
+  totalWarnings: number;
 }
 
 export interface ErrorLog {
+  context?: Record<string, unknown>;
+  error: string;
   phase: string;
   timestamp: string;
-  error: string;
-  context?: Record<string, unknown>;
 }
 
 /**
@@ -56,7 +57,7 @@ export interface ErrorLog {
 export class SeedReportGenerator {
   private report: SeedReport;
   private startTime: number;
-  private currentPhase: PhaseReport | null = null;
+  private currentPhase: null | PhaseReport = null;
 
   constructor(mode: "dry-run" | "full" = "full") {
     this.startTime = Date.now();
@@ -99,12 +100,12 @@ export class SeedReportGenerator {
    * End current phase and calculate stats
    */
   endPhase(
-    status: "success" | "failed" | "skipped" = "success",
+    status: "failed" | "skipped" | "success" = "success",
     stats?: {
-      processed?: number;
       inserted?: number;
-      updated?: number;
+      processed?: number;
       skipped?: number;
+      updated?: number;
     }
   ): void {
     if (!this.currentPhase) return;
@@ -236,7 +237,7 @@ export class SeedReportGenerator {
 
       if (phase.warnings.length > 0) {
         lines.push(`  Warnings (${phase.warnings.length}):`);
-        phase.warnings.forEach((w) => lines.push(`    - ${w}`));
+        for (const w of phase.warnings) lines.push(`    - ${w}`);
       }
 
       lines.push("");

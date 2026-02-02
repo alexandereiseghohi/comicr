@@ -1,2 +1,18 @@
-Install and implement "eslint" ,"eslint-config-next" ,"eslint-config-prettier" ,"eslint-formatter-compact" ,"eslint-import-resolver-next" ,"eslint-plugin-better-tailwindcss","eslint-plugin-drizzle" ,"eslint-plugin-import" ,"eslint-plugin-jsdoc" ,"eslint-plugin-jsx-a11y" ,"eslint-plugin-prettier" ,"eslint-plugin-react" , "eslint-plugin-react-hooks" ,"eslint-plugin-security","eslint-plugin-simple-import-sort" ,"eslint-plugin-sonarjs" ,"eslint-plugin-unicorn" , "eslint-plugin-unused-imports" ,"eslint-plugin-zod" with its settings,plugins,rules.
+Install and implement "eslint-config-prettier",
+"eslint-plugin-better-tailwindcss",
+"eslint-plugin-import-x",
+"eslint-plugin-jest",
+"eslint-plugin-jsx-a11y",
+"eslint-plugin-playwright",
+"eslint-plugin-react-hooks",
+"eslint-plugin-react-refresh",
+"eslint-plugin-testing-library",
+"eslint-plugin-vitest",
+"eslint-plugin-drizzle",
+"eslint-plugin-security",
+"eslint-plugin-sonarjs",
+"eslint-plugin-perfectionist",
+"@typescript-eslint/parser",
+"@typescript-eslint/eslint-plugin",
+"eslint-plugin-n", with its settings,plugins,rules.
 Then run pnpm lint:fix and fix all errors and warnings

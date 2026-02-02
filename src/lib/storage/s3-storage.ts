@@ -3,7 +3,6 @@
  * @description AWS S3 compatible storage implementation
  */
 
-import { getEnv } from "@/lib/env";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -12,6 +11,9 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl as getS3SignedUrl } from "@aws-sdk/s3-request-presigner";
+
+import { getEnv } from "@/lib/env";
+
 import type {
   DeleteOptions,
   DeleteResult,
@@ -53,7 +55,7 @@ function generateKey(filename: string, folder?: string, customName?: string): st
  */
 export class S3StorageProvider implements StorageProvider {
   readonly name = "s3" as const;
-  private client: S3Client | null = null;
+  private client: null | S3Client = null;
   private bucket: string = "";
 
   private getClient(): S3Client {
@@ -65,7 +67,7 @@ export class S3StorageProvider implements StorageProvider {
   }
 
   async upload(
-    file: Buffer | Blob | ReadableStream,
+    file: Blob | Buffer | ReadableStream,
     filename: string,
     options: UploadOptions = {}
   ): Promise<UploadResponse> {

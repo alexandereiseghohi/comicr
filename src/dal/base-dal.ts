@@ -3,9 +3,10 @@
  * @description Generic CRUD operations for all tables
  */
 
-import type { Table } from "drizzle-orm";
 import { db } from "@/database/db";
-import type { QueryOptions, PaginatedResponse, DbMutationResult } from "@/types";
+
+import type { DbMutationResult, PaginatedResponse, QueryOptions } from "@/types";
+import type { Table } from "drizzle-orm";
 
 /**
  * Generic Base DAL for type-safe database operations

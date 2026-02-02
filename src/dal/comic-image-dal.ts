@@ -1,9 +1,12 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/comic-image.mutations";
 import { comicImage } from "@/database/schema";
-import type { DbMutationResult } from "@/types";
-import { eq } from "drizzle-orm";
+
 import { BaseDAL } from "./base-dal";
+
+import type { DbMutationResult } from "@/types";
 
 export class ComicImageDAL extends BaseDAL<typeof comicImage> {
   constructor() {
@@ -26,8 +29,7 @@ export class ComicImageDAL extends BaseDAL<typeof comicImage> {
     data: typeof comicImage.$inferInsert
   ): Promise<DbMutationResult<typeof comicImage.$inferSelect>> {
     try {
-      const result = await mutations.createComicImage(data);
-      return result;
+      return await mutations.createComicImage(data);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }

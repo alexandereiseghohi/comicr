@@ -1,5 +1,6 @@
-import { ratingSchema } from "@/schemas/rating.schema";
 import { describe, expect, it } from "vitest";
+
+import { ratingSchema } from "@/schemas/rating.schema";
 
 describe("ratingSchema", () => {
   describe("valid inputs", () => {

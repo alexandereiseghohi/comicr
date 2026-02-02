@@ -3,38 +3,38 @@
  * @description Type definitions for the dual Redis caching abstraction
  */
 
-export type CacheProviderType = "upstash" | "redis" | "memory";
+export type CacheProviderType = "memory" | "redis" | "upstash";
 
 export interface CacheOptions {
-  /** Time to live in seconds */
-  ttl?: number;
   /** Cache key prefix */
   prefix?: string;
   /** Tags for cache invalidation */
   tags?: string[];
+  /** Time to live in seconds */
+  ttl?: number;
 }
 
 export interface CacheResult<T> {
-  /** Cached value or null if not found */
-  value: T | null;
   /** Whether the value was found in cache */
   hit: boolean;
   /** Cache key that was used */
   key: string;
   /** Time remaining until expiration (seconds) */
   ttl?: number;
+  /** Cached value or null if not found */
+  value: null | T;
 }
 
 export interface CacheSetResult {
-  success: boolean;
   error?: string;
+  success: boolean;
 }
 
 export interface CacheDeleteResult {
-  success: boolean;
   /** Number of keys deleted */
   count?: number;
   error?: string;
+  success: boolean;
 }
 
 /**
@@ -42,23 +42,6 @@ export interface CacheDeleteResult {
  * All cache implementations must implement this interface
  */
 export interface CacheProvider {
-  /** Provider name for identification */
-  readonly name: CacheProviderType;
-
-  /**
-   * Get a value from cache
-   * @param key - Cache key
-   */
-  get<T>(key: string): Promise<CacheResult<T>>;
-
-  /**
-   * Set a value in cache
-   * @param key - Cache key
-   * @param value - Value to cache (will be JSON serialized)
-   * @param options - Cache options
-   */
-  set<T>(key: string, value: T, options?: CacheOptions): Promise<CacheSetResult>;
-
   /**
    * Delete a value from cache
    * @param key - Cache key or pattern
@@ -78,15 +61,32 @@ export interface CacheProvider {
   exists(key: string): Promise<boolean>;
 
   /**
+   * Flush all keys (use with caution)
+   */
+  flush(): Promise<void>;
+
+  /**
+   * Get a value from cache
+   * @param key - Cache key
+   */
+  get<T>(key: string): Promise<CacheResult<T>>;
+
+  /** Provider name for identification */
+  readonly name: CacheProviderType;
+
+  /**
+   * Set a value in cache
+   * @param key - Cache key
+   * @param value - Value to cache (will be JSON serialized)
+   * @param options - Cache options
+   */
+  set<T>(key: string, value: T, options?: CacheOptions): Promise<CacheSetResult>;
+
+  /**
    * Get remaining TTL for a key
    * @param key - Cache key
    */
   ttl(key: string): Promise<number>;
-
-  /**
-   * Flush all keys (use with caution)
-   */
-  flush(): Promise<void>;
 }
 
 /**
@@ -110,7 +110,7 @@ export const cacheKeys = {
     `comics:list:${page}:${limit}${filters ? `:${filters}` : ""}`,
 
   /** Single comic cache key */
-  comic: (idOrSlug: string | number) => `comics:single:${idOrSlug}`,
+  comic: (idOrSlug: number | string) => `comics:single:${idOrSlug}`,
 
   /** Chapter list for a comic */
   chapterList: (comicId: number) => `chapters:list:${comicId}`,
@@ -131,7 +131,7 @@ export const cacheKeys = {
   authors: (page: number, limit: number) => `authors:list:${page}:${limit}`,
 
   /** Trending/popular comics */
-  trending: (period: "day" | "week" | "month") => `trending:${period}`,
+  trending: (period: "day" | "month" | "week") => `trending:${period}`,
 } as const;
 
 /**
@@ -141,10 +141,10 @@ export const cacheKeys = {
 export type WithCacheOptions<T> = CacheOptions & {
   /** Function to generate cache key from arguments */
   keyGenerator: (...args: unknown[]) => string;
-  /** Whether to return stale data while revalidating */
-  staleWhileRevalidate?: boolean;
   /** Callback when cache is hit */
   onHit?: (key: string, value: T) => void;
   /** Callback when cache is missed */
   onMiss?: (key: string) => void;
+  /** Whether to return stale data while revalidating */
+  staleWhileRevalidate?: boolean;
 };

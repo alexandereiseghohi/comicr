@@ -5,16 +5,17 @@
 
 "use server";
 
-import { db } from "@/database/db";
-import { chapter, comic, user } from "@/database/schema";
-import { auth } from "@/lib/auth-config";
 import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
+import { db } from "@/database/db";
+import { chapter, comic, user } from "@/database/schema";
+import { auth } from "@/lib/auth-config";
+
 type ActionResult<T = unknown> =
-  | { ok: true; data: T }
-  | { ok: false; error: { code: string; message: string } };
+  | { data: T; ok: true; }
+  | { error: { code: string; message: string }; ok: false; };
 
 /**
  * Verify admin role before executing action

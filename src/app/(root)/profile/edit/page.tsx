@@ -1,3 +1,6 @@
+import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
+
 import ProfileForm from "@/components/profile/profile-form";
 import { db } from "@/database/db";
 import {
@@ -8,8 +11,6 @@ import {
 import { user } from "@/database/schema";
 import { auth } from "@/lib/auth-config";
 import { hashPassword, verifyPassword } from "@/lib/password";
-import { eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
 
 export default async function EditProfilePage() {
   const session = await auth();
@@ -20,8 +21,8 @@ export default async function EditProfilePage() {
   // Server action to update profile (non-JS fallback)
   async function updateProfileAction(form: FormData) {
     "use server";
-    const name = form.get("name") as string | null;
-    const image = form.get("image") as string | null;
+    const name = form.get("name") as null | string;
+    const image = form.get("image") as null | string;
     if (!me?.id) return;
     await updateUserById(me.id, { name: name ?? null, image: image ?? null });
   }
@@ -29,8 +30,8 @@ export default async function EditProfilePage() {
   // Server action to change password
   async function changePasswordAction(form: FormData) {
     "use server";
-    const currentPassword = form.get("currentPassword") as string | null;
-    const newPassword = form.get("newPassword") as string | null;
+    const currentPassword = form.get("currentPassword") as null | string;
+    const newPassword = form.get("newPassword") as null | string;
     if (!me?.id || !currentPassword || !newPassword) return;
 
     const rows = await db.select().from(user).where(eq(user.id, me.id));
@@ -47,8 +48,8 @@ export default async function EditProfilePage() {
   // Server action to change email
   async function changeEmailAction(form: FormData) {
     "use server";
-    const currentPassword = form.get("currentPasswordForEmail") as string | null;
-    const newEmail = form.get("newEmail") as string | null;
+    const currentPassword = form.get("currentPasswordForEmail") as null | string;
+    const newEmail = form.get("newEmail") as null | string;
     if (!me?.id || !newEmail) return;
 
     const rows = await db.select().from(user).where(eq(user.id, me.id));
@@ -71,91 +72,91 @@ export default async function EditProfilePage() {
       <div>
         <h2 className="text-lg font-medium">Browser (client) form</h2>
         <ProfileForm
-          defaultName={me?.name ?? ""}
           defaultImage={(me as { image?: string })?.image ?? ""}
+          defaultName={me?.name ?? ""}
         />
       </div>
 
       <div>
         <h2 className="text-lg font-medium">Server (non-JS) form</h2>
-        <form action={updateProfileAction} className="p-4 bg-white border rounded-md space-y-3">
+        <form action={updateProfileAction} className="space-y-3 rounded-md border bg-white p-4">
           <div>
             <label className="block text-sm">Name</label>
             <input
-              name="name"
+              className="mt-1 block w-full rounded border px-3 py-2"
               defaultValue={me?.name ?? ""}
-              className="mt-1 block w-full border rounded px-3 py-2"
+              name="name"
             />
           </div>
           <div>
             <label className="block text-sm">Image URL</label>
             <input
-              name="image"
+              className="mt-1 block w-full rounded border px-3 py-2"
               defaultValue={(me as { image?: string })?.image ?? ""}
-              className="mt-1 block w-full border rounded px-3 py-2"
+              name="image"
             />
           </div>
           <div className="flex items-center space-x-2">
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+            <button className="rounded bg-blue-600 px-4 py-2 text-white" type="submit">
               Save
             </button>
-            <a href="/profile" className="text-sm text-muted-foreground">
+            <a className="text-muted-foreground text-sm" href="/profile">
               Cancel
             </a>
           </div>
         </form>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <section className="p-4 bg-white border rounded-md">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <section className="rounded-md border bg-white p-4">
           <h3 className="font-medium">Change Password</h3>
-          <form action={changePasswordAction} className="space-y-3 mt-2">
+          <form action={changePasswordAction} className="mt-2 space-y-3">
             <div>
               <label className="block text-sm">Current password</label>
               <input
+                className="mt-1 block w-full rounded border px-3 py-2"
                 name="currentPassword"
                 type="password"
-                className="mt-1 block w-full border rounded px-3 py-2"
               />
             </div>
             <div>
               <label className="block text-sm">New password</label>
               <input
+                className="mt-1 block w-full rounded border px-3 py-2"
                 name="newPassword"
                 type="password"
-                className="mt-1 block w-full border rounded px-3 py-2"
               />
             </div>
             <div>
-              <button type="submit" className="px-4 py-2 bg-red-600 text-white rounded">
+              <button className="rounded bg-red-600 px-4 py-2 text-white" type="submit">
                 Change password
               </button>
             </div>
           </form>
         </section>
 
-        <section className="p-4 bg-white border rounded-md">
+        <section className="rounded-md border bg-white p-4">
           <h3 className="font-medium">Change Email</h3>
-          <form action={changeEmailAction} className="space-y-3 mt-2">
+          <form action={changeEmailAction} className="mt-2 space-y-3">
             <div>
               <label className="block text-sm">New email</label>
               <input
+                className="mt-1 block w-full rounded border px-3 py-2"
+                defaultValue={me?.email ?? ""}
                 name="newEmail"
                 type="email"
-                defaultValue={me?.email ?? ""}
-                className="mt-1 block w-full border rounded px-3 py-2"
               />
             </div>
             <div>
               <label className="block text-sm">Current password</label>
               <input
+                className="mt-1 block w-full rounded border px-3 py-2"
                 name="currentPasswordForEmail"
                 type="password"
-                className="mt-1 block w-full border rounded px-3 py-2"
               />
             </div>
             <div>
-              <button type="submit" className="px-4 py-2 bg-yellow-600 text-white rounded">
+              <button className="rounded bg-yellow-600 px-4 py-2 text-white" type="submit">
                 Change email
               </button>
             </div>

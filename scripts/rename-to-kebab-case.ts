@@ -5,9 +5,9 @@
  * @usage pnpm tsx scripts/rename-to-kebab-case.ts [--dry-run]
  */
 
-import { execSync } from "child_process";
-import { promises as fs } from "fs";
-import path from "path";
+import { execSync } from "node:child_process";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 
 const isDryRun = process.argv.includes("--dry-run");
 
@@ -15,7 +15,7 @@ const IGNORE_DIRS = ["node_modules", ".next", ".git", "dist", "build", "coverage
 
 const PASCAL_CASE_EXCEPTIONS = [
   // React components in ui directory can be PascalCase
-  /^src[\/\\]components[\/\\]ui[\/\\]/,
+  /^src[/\\]components[/\\]ui[/\\]/,
   // Test files can match component naming
   /\.test\.tsx?$/,
   /\.spec\.tsx?$/,
@@ -23,8 +23,8 @@ const PASCAL_CASE_EXCEPTIONS = [
 
 interface RenameOperation {
   from: string;
-  to: string;
   reason: string;
+  to: string;
 }
 
 const renameOperations: RenameOperation[] = [];
@@ -34,8 +34,8 @@ const renameOperations: RenameOperation[] = [];
  */
 function toKebabCase(str: string): string {
   return str
-    .replace(/([a-z])([A-Z])/g, "$1-$2") // camelCase to kebab-case
-    .replace(/[\s_]+/g, "-") // spaces and underscores to dash
+    .replaceAll(/([a-z])([A-Z])/g, "$1-$2") // camelCase to kebab-case
+    .replaceAll(/[\s_]+/g, "-") // spaces and underscores to dash
     .toLowerCase();
 }
 
@@ -134,11 +134,11 @@ async function renameFiles() {
   console.log("Files to rename:");
   console.log("================\n");
 
-  renameOperations.forEach((op, index) => {
+  for (const [index, op] of renameOperations.entries()) {
     console.log(`${index + 1}. ${op.from}`);
     console.log(`   → ${op.to}`);
     console.log(`   (${op.reason})\n`);
-  });
+  }
 
   if (!isDryRun) {
     console.log("Executing renames with git mv...\n");

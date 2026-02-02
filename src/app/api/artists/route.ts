@@ -1,8 +1,9 @@
+import { type NextRequest, NextResponse } from "next/server";
+
 import * as artistMutations from "@/database/mutations/artist.mutations";
 import * as artistQueries from "@/database/queries/artist.queries";
 import { auth } from "@/lib/auth-config";
 import { createArtistSchema } from "@/schemas/artist-schema";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   const res = await artistQueries.getArtists();

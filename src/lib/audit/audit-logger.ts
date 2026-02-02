@@ -5,57 +5,58 @@
 
 import { db } from "@/database/db";
 import { auditLog, type resourceEnum } from "@/database/schema";
+
 import { writeAuditToFile } from "./audit-file-writer";
 
 export type AuditAction =
-  | "login"
-  | "logout"
+  | "api_access"
   | "create"
-  | "read"
-  | "update"
   | "delete"
-  | "view"
+  | "download"
+  | "email_verified"
   | "export"
   | "import"
-  | "permission_change"
-  | "role_change"
+  | "login"
+  | "logout"
   | "password_change"
   | "password_reset"
-  | "email_verified"
+  | "permission_change"
+  | "read"
+  | "role_change"
   | "settings_change"
-  | "api_access"
+  | "update"
   | "upload"
-  | "download";
+  | "view";
 
 export type AuditResource = (typeof resourceEnum.enumValues)[number];
 
 export interface AuditLogEntry {
-  /** User performing the action (null for system actions) */
-  userId?: string | null;
   /** Type of action performed */
   action: AuditAction;
+  /** Additional details (JSON serializable) */
+  details?: Record<string, unknown>;
+  /** Client IP address */
+  ipAddress?: string;
+  /** New values (for creates/updates) */
+  newValues?: Record<string, unknown>;
+  /** Previous values (for updates) */
+  oldValues?: Record<string, unknown>;
   /** Resource type being acted upon */
   resource: AuditResource;
   /** ID of the specific resource */
   resourceId?: string;
-  /** Additional details (JSON serializable) */
-  details?: Record<string, unknown>;
-  /** Previous values (for updates) */
-  oldValues?: Record<string, unknown>;
-  /** New values (for creates/updates) */
-  newValues?: Record<string, unknown>;
-  /** Client IP address */
-  ipAddress?: string;
-  /** Client user agent */
-  userAgent?: string;
   /** Associated session ID */
   sessionId?: string;
+  /** Client user agent */
+  userAgent?: string;
+  /** User performing the action (null for system actions) */
+  userId?: null | string;
 }
 
 export interface AuditLogResult {
-  success: boolean;
-  id?: string;
   error?: string;
+  id?: string;
+  success: boolean;
 }
 
 /**
@@ -125,14 +126,14 @@ export function withAuditLog<T extends Record<string, unknown>>(
   action: AuditAction,
   resource: AuditResource,
   options?: {
-    getResourceId?: (body: T) => string | undefined;
     getDetails?: (body: T, result: unknown) => Record<string, unknown>;
+    getResourceId?: (body: T) => string | undefined;
   }
 ) {
   return async (
-    handler: (body: T, context: { userId?: string; request: Request }) => Promise<unknown>,
+    handler: (body: T, context: { request: Request; userId?: string; }) => Promise<unknown>,
     body: T,
-    context: { userId?: string; request: Request }
+    context: { request: Request; userId?: string; }
   ): Promise<unknown> => {
     const startTime = Date.now();
     let result: unknown;

@@ -3,11 +3,12 @@
  * @description User registration page
  */
 
-import { SignUpForm } from "@/components/auth/sign-up-form";
-import { auth } from "@/lib/auth-config";
-import { Metadata } from "next";
+import { type Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+import { SignUpForm } from "@/components/auth/sign-up-form";
+import { auth } from "@/lib/auth-config";
 
 export const metadata: Metadata = {
   title: "Sign Up | ComicWise",
@@ -25,18 +26,18 @@ export default async function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Create Account</h1>
+        <div className="mb-8 text-center">
+          <h1 className="mb-2 text-4xl font-bold text-white">Create Account</h1>
           <p className="text-slate-400">Join ComicWise today and start reading</p>
         </div>
 
         <SignUpForm />
 
-        <p className="text-center text-slate-400 text-sm mt-6">
+        <p className="mt-6 text-center text-sm text-slate-400">
           Already have an account?{" "}
-          <Link href="/sign-in" className="text-blue-500 hover:text-blue-400">
+          <Link className="text-blue-500 hover:text-blue-400" href="/sign-in">
             Sign in
           </Link>
         </p>

@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import * as chapterQueries from "@/database/queries/chapter-queries";
 import * as comicQueries from "@/database/queries/comic-queries";
-import Link from "next/link";
-import { notFound } from "next/navigation";
 
 export const revalidate = 3600;
 
@@ -28,7 +29,7 @@ async function getAllChaptersForNavigation(comicId: number) {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string; number: string }>;
+  params: Promise<{ number: string; slug: string; }>;
 }) {
   const { slug, number } = await params;
   const comicResult = await comicQueries.getComicBySlug(slug);
@@ -53,7 +54,7 @@ export async function generateMetadata({
 export default async function ChapterReaderPage({
   params,
 }: {
-  params: Promise<{ slug: string; number: string }>;
+  params: Promise<{ number: string; slug: string; }>;
 }) {
   const { slug, number } = await params;
   const chapterNumber = parseInt(number);
@@ -118,10 +119,10 @@ export default async function ChapterReaderPage({
     <div className="min-h-screen bg-slate-950">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="mb-8 flex items-center justify-between">
           <div>
             <Link href={`/comics/${slug}`}>
-              <Button variant="outline" className="gap-2 mb-4">
+              <Button className="mb-4 gap-2" variant="outline">
                 ← Back to {comic.title}
               </Button>
             </Link>
@@ -129,21 +130,21 @@ export default async function ChapterReaderPage({
             <h1 className="text-3xl font-bold text-white">
               Ch. {chapter.chapterNumber}: {chapter.title}
             </h1>
-            <p className="text-slate-400 mt-2">
+            <p className="mt-2 text-slate-400">
               Released {new Date(chapter.releaseDate).toLocaleDateString()}
             </p>
           </div>
         </div>
 
         {/* Content */}
-        <Card className="bg-white mb-8">
+        <Card className="mb-8 bg-white">
           <CardContent className="p-8">
             {chapter.content ? (
               <div className="prose max-w-none">
-                <p className="text-slate-700 whitespace-pre-wrap">{chapter.content}</p>
+                <p className="whitespace-pre-wrap text-slate-700">{chapter.content}</p>
               </div>
             ) : (
-              <div className="text-center py-16">
+              <div className="py-16 text-center">
                 <p className="text-slate-600">Chapter content coming soon...</p>
               </div>
             )}
@@ -151,23 +152,23 @@ export default async function ChapterReaderPage({
         </Card>
 
         {/* Navigation */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="mb-8 grid grid-cols-3 gap-4">
           <div>
             {prevChapter ? (
               <Link href={`/comics/${slug}/chapters/${prevChapter.chapterNumber}`}>
-                <Button variant="outline" className="w-full gap-2">
+                <Button className="w-full gap-2" variant="outline">
                   ← Previous
                 </Button>
               </Link>
             ) : (
-              <Button variant="outline" disabled className="w-full gap-2">
+              <Button className="w-full gap-2" disabled variant="outline">
                 ← Previous
               </Button>
             )}
           </div>
 
           <Link href={`/comics/${slug}`}>
-            <Button variant="outline" className="w-full">
+            <Button className="w-full" variant="outline">
               All Chapters
             </Button>
           </Link>
@@ -175,12 +176,12 @@ export default async function ChapterReaderPage({
           <div>
             {nextChapter ? (
               <Link href={`/comics/${slug}/chapters/${nextChapter.chapterNumber}`}>
-                <Button variant="outline" className="w-full gap-2">
+                <Button className="w-full gap-2" variant="outline">
                   Next →
                 </Button>
               </Link>
             ) : (
-              <Button variant="outline" disabled className="w-full gap-2">
+              <Button className="w-full gap-2" disabled variant="outline">
                 Next →
               </Button>
             )}
@@ -188,15 +189,15 @@ export default async function ChapterReaderPage({
         </div>
 
         {/* Chapter List */}
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="border-slate-800 bg-slate-900">
           <CardContent className="p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">Jump to Chapter</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-64 overflow-y-auto">
-              {allChapters.map((ch: { id: number; chapterNumber: number }) => (
-                <Link key={ch.id} href={`/comics/${slug}/chapters/${ch.chapterNumber}`}>
+            <h2 className="mb-4 text-lg font-semibold text-white">Jump to Chapter</h2>
+            <div className="grid max-h-64 grid-cols-2 gap-2 overflow-y-auto md:grid-cols-4 lg:grid-cols-6">
+              {allChapters.map((ch: { chapterNumber: number; id: number; }) => (
+                <Link href={`/comics/${slug}/chapters/${ch.chapterNumber}`} key={ch.id}>
                   <Button
-                    variant={ch.chapterNumber === chapterNumber ? "default" : "outline"}
                     className="w-full text-sm"
+                    variant={ch.chapterNumber === chapterNumber ? "default" : "outline"}
                   >
                     Ch. {ch.chapterNumber}
                   </Button>

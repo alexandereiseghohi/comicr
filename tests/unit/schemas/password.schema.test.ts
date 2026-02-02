@@ -1,5 +1,6 @@
-import { changePasswordSchema } from "@/schemas/password-schema";
 import { describe, expect, it } from "vitest";
+
+import { changePasswordSchema } from "@/schemas/password-schema";
 
 describe("changePasswordSchema", () => {
   describe("valid inputs", () => {

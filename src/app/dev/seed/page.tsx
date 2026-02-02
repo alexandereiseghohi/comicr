@@ -2,15 +2,15 @@
 import { useCallback, useRef, useState } from "react";
 
 interface SeedLog {
-  type: string;
-  phase?: string;
   count?: number;
-  message?: string;
   error?: string;
+  message?: string;
+  phase?: string;
   timestamp?: string;
+  type: string;
 }
 
-type SeedStatus = "idle" | "running" | "success" | "error";
+type SeedStatus = "error" | "idle" | "running" | "success";
 
 export default function SeedAdminPage() {
   const [status, setStatus] = useState<SeedStatus>("idle");
@@ -183,61 +183,61 @@ export default function SeedAdminPage() {
   };
 
   return (
-    <main className="max-w-2xl mx-auto p-8">
-      <h1 className="text-2xl font-bold mb-4">Seed Database (Admin)</h1>
+    <main className="mx-auto max-w-2xl p-8">
+      <h1 className="mb-4 text-2xl font-bold">Seed Database (Admin)</h1>
 
       {/* API Key Input */}
       <div className="mb-4">
-        <label htmlFor="api-key" className="block mb-2 font-semibold">
+        <label className="mb-2 block font-semibold" htmlFor="api-key">
           API Key:
         </label>
         <input
+          aria-required="true"
+          className="w-full rounded border px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           id="api-key"
+          onChange={(e) => setApiKey(e.target.value)}
+          placeholder="Enter SEED_API_KEY"
           type="password"
           value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          className="border px-3 py-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Enter SEED_API_KEY"
-          aria-required="true"
         />
       </div>
 
       {/* Options */}
       <div className="mb-4 flex gap-6">
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className="flex cursor-pointer items-center gap-2">
           <input
-            type="checkbox"
             checked={dryRun}
+            className="h-4 w-4 rounded"
             onChange={(e) => setDryRun(e.target.checked)}
-            className="w-4 h-4 rounded"
+            type="checkbox"
           />
           <span className="text-sm">Dry Run</span>
           <span className="text-xs text-gray-500">(validate without writing)</span>
         </label>
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className="flex cursor-pointer items-center gap-2">
           <input
-            type="checkbox"
             checked={useStreaming}
+            className="h-4 w-4 rounded"
             onChange={(e) => setUseStreaming(e.target.checked)}
-            className="w-4 h-4 rounded"
+            type="checkbox"
           />
           <span className="text-sm">Real-time Progress</span>
         </label>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-2 mb-4">
+      <div className="mb-4 flex gap-2">
         <button
-          onClick={handleSeed}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           disabled={!apiKey || status === "running"}
+          onClick={handleSeed}
         >
           {status === "running" ? "Seeding..." : dryRun ? "Validate Data" : "Run Seeder"}
         </button>
         {status === "running" && useStreaming && (
           <button
+            className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
             onClick={handleCancel}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           >
             Cancel
           </button>
@@ -246,8 +246,8 @@ export default function SeedAdminPage() {
 
       {/* Status Display */}
       {status !== "idle" && (
-        <div className="mb-4 p-4 bg-gray-50 rounded-lg border">
-          <div className="flex items-center justify-between mb-2">
+        <div className="mb-4 rounded-lg border bg-gray-50 p-4">
+          <div className="mb-2 flex items-center justify-between">
             <span className={`font-semibold ${getStatusColor()}`}>
               Status: {status.charAt(0).toUpperCase() + status.slice(1)}
             </span>
@@ -261,7 +261,7 @@ export default function SeedAdminPage() {
           {/* Progress Bar */}
           {status === "running" && progress && (
             <div className="mt-2">
-              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-2 overflow-hidden rounded-full bg-gray-200">
                 <div
                   className="h-full bg-blue-600 transition-all duration-300"
                   style={{
@@ -269,7 +269,7 @@ export default function SeedAdminPage() {
                   }}
                 />
               </div>
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="mt-1 text-xs text-gray-500">
                 {progress.current} / {progress.total} items processed
               </div>
             </div>
@@ -279,23 +279,23 @@ export default function SeedAdminPage() {
 
       {/* Log Output */}
       {logs.length > 0 && (
-        <div className="border rounded-lg overflow-hidden">
-          <div className="bg-gray-100 px-4 py-2 font-semibold border-b flex justify-between items-center">
+        <div className="overflow-hidden rounded-lg border">
+          <div className="flex items-center justify-between border-b bg-gray-100 px-4 py-2 font-semibold">
             <span>Logs ({logs.length})</span>
             <button
-              onClick={() => setLogs([])}
               className="text-xs text-gray-500 hover:text-gray-700"
+              onClick={() => setLogs([])}
             >
               Clear
             </button>
           </div>
           <div
-            className="max-h-96 overflow-y-auto p-4 bg-gray-900 text-sm font-mono"
-            aria-live="polite"
             aria-atomic="false"
+            aria-live="polite"
+            className="max-h-96 overflow-y-auto bg-gray-900 p-4 font-mono text-sm"
           >
             {logs.map((log, i) => (
-              <div key={i} className={`py-1 ${getLogColor(log.type)}`}>
+              <div className={`py-1 ${getLogColor(log.type)}`} key={i}>
                 <span className="text-gray-500">[{log.type}]</span>{" "}
                 {log.phase && <span className="text-yellow-400">{log.phase}: </span>}
                 {log.message && <span className="text-gray-300">{log.message}</span>}
@@ -310,9 +310,9 @@ export default function SeedAdminPage() {
       )}
 
       {/* Info Panel */}
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200 text-sm">
-        <p className="font-semibold text-blue-800 mb-2">Instructions:</p>
-        <ul className="list-disc list-inside text-blue-700 space-y-1">
+      <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm">
+        <p className="mb-2 font-semibold text-blue-800">Instructions:</p>
+        <ul className="list-inside list-disc space-y-1 text-blue-700">
           <li>Enter your SEED_API_KEY from environment variables</li>
           <li>
             Enable <strong>Dry Run</strong> to validate data without database changes

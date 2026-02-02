@@ -1,10 +1,11 @@
+import { type NextRequest, NextResponse } from "next/server";
+
 import { auth } from "@/auth";
 import {
   createOrUpdateReadingProgress,
   deleteReadingProgress,
   getReadingProgress,
 } from "@/database/mutations/reading-progress-mutations";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {

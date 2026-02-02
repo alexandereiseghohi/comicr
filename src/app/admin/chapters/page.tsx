@@ -3,10 +3,11 @@
  * @description Admin page for managing all chapters
  */
 
+import { redirect } from "next/navigation";
+
 import { ChaptersTable } from "@/components/admin/chapters-table";
 import { getChaptersForAdmin } from "@/database/queries/admin.queries";
 import { auth } from "@/lib/auth-config";
-import { redirect } from "next/navigation";
 
 export default async function ChaptersPage() {
   const session = await auth();

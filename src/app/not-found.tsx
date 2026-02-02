@@ -1,9 +1,9 @@
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="p-6 bg-white border rounded-md text-center">
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="rounded-md border bg-white p-6 text-center">
         <h1 className="text-2xl font-semibold">Page not found</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-2 text-sm">
           We could not find the page you are looking for.
         </p>
       </div>

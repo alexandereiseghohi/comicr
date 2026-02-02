@@ -8,12 +8,12 @@
 // Default max image size: 5MB
 
 export interface ImageValidationResult {
-  valid: boolean;
-  url: string;
-  error?: string;
-  size?: number;
   contentType?: string;
+  error?: string;
   format?: string;
+  size?: number;
+  url: string;
+  valid: boolean;
 }
 
 /**
@@ -31,7 +31,7 @@ const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif
  * @param url - Image URL to validate
  * @returns Format string or null if invalid
  */
-export function validateImageFormat(url: string): string | null {
+export function validateImageFormat(url: string): null | string {
   try {
     const parsedUrl = new URL(url);
     const pathname = parsedUrl.pathname.toLowerCase();
@@ -120,7 +120,7 @@ export async function checkImageReachability(
  * @param url - Image URL
  * @returns Width and height in pixels, or null if unable to determine
  */
-export async function getImageSize(url: string): Promise<{ width: number; height: number } | null> {
+export async function getImageSize(url: string): Promise<{ height: number; width: number; } | null> {
   try {
     // For most images, we can get dimensions from a partial download
     const response = await fetch(url, {

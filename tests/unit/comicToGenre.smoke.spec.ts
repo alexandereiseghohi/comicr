@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/database/db", () => {

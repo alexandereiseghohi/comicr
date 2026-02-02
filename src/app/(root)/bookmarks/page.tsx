@@ -1,9 +1,10 @@
-import { BookmarkList, BookmarkListSkeleton } from "@/components/bookmarks/bookmark-list";
-import { getBookmarksWithComics } from "@/database/queries/bookmark.queries";
-import { auth } from "@/lib/auth-config";
 import { BookmarkIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+
+import { BookmarkList, BookmarkListSkeleton } from "@/components/bookmarks/bookmark-list";
+import { getBookmarksWithComics } from "@/database/queries/bookmark.queries";
+import { auth } from "@/lib/auth-config";
 
 export const metadata = {
   title: "Your Bookmarks | ComicWise",
@@ -15,7 +16,7 @@ async function BookmarksContent({ userId }: { userId: string }) {
 
   if (!result.success || !result.data) {
     return (
-      <div className="text-center py-12">
+      <div className="py-12 text-center">
         <p className="text-muted-foreground">Failed to load bookmarks</p>
       </div>
     );
@@ -34,7 +35,7 @@ export default async function BookmarksPage() {
   return (
     <main className="container mx-auto px-4 py-8">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="mb-8 flex items-center gap-3">
         <BookmarkIcon className="h-7 w-7" />
         <h1 className="text-2xl font-bold">Your Bookmarks</h1>
       </div>

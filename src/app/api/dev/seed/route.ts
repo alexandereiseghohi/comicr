@@ -1,6 +1,8 @@
-import { SEED_API_KEY } from "@/database/seed/seed-config";
-import { exec } from "child_process";
+import { exec } from "node:child_process";
+
 import { NextResponse } from "next/server";
+
+import { SEED_API_KEY } from "@/database/seed/seed-config";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";

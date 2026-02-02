@@ -1,10 +1,13 @@
-import type { Table } from "drizzle-orm";
-import fs from "fs/promises";
+import fs from "node:fs/promises";
+import path from "node:path";
+
 import { glob } from "glob";
 import { chunk } from "lodash-es";
-import path from "path";
-import { z } from "zod";
-import { Database, db as drizzleDb } from "../database/db";
+import { type z } from "zod";
+
+import { type Database, db as drizzleDb } from "../database/db";
+
+import type { Table } from "drizzle-orm";
 
 /**
  * Discover JSON files matching a glob pattern
@@ -49,9 +52,9 @@ export async function loadJsonRaw<T = unknown>(filePath: string): Promise<T> {
 export async function loadJsonPattern<T = unknown>(
   pattern: string,
   cwd: string = process.cwd()
-): Promise<Array<{ filePath: string; data: T }>> {
+): Promise<Array<{ data: T; filePath: string; }>> {
   const files = await glob(pattern, { cwd, absolute: true });
-  const results: Array<{ filePath: string; data: T }> = [];
+  const results: Array<{ data: T; filePath: string; }> = [];
 
   for (const filePath of files) {
     try {
@@ -83,8 +86,8 @@ export async function fileExists(filePath: string): Promise<boolean> {
 export async function loadJsonFiles<T = unknown>(
   filePaths: string[],
   basePath: string = process.cwd()
-): Promise<Array<{ filePath: string; data: T[] }>> {
-  const results: Array<{ filePath: string; data: T[] }> = [];
+): Promise<Array<{ data: T[]; filePath: string; }>> {
+  const results: Array<{ data: T[]; filePath: string; }> = [];
 
   for (const file of filePaths) {
     const fullPath = path.resolve(basePath, file);
@@ -106,7 +109,7 @@ export async function loadJsonFiles<T = unknown>(
 /**
  * Merge data arrays from multiple file loads
  */
-export function mergeLoadedData<T>(loaded: Array<{ filePath: string; data: T[] }>): T[] {
+export function mergeLoadedData<T>(loaded: Array<{ data: T[]; filePath: string; }>): T[] {
   return loaded.flatMap((l) => l.data);
 }
 
@@ -128,14 +131,14 @@ export async function seedTableBatched({
   db = drizzleDb,
   dryRun = false,
 }: {
-  table: Table;
-  items: Record<string, unknown>[];
   batchSize?: number;
   conflictKeys: import("drizzle-orm/pg-core/indexes").IndexColumn[];
-  updateFields: { name: string; value: unknown }[];
   db?: Database;
   dryRun?: boolean;
-}): Promise<{ inserted: number; batches: number }> {
+  items: Record<string, unknown>[];
+  table: Table;
+  updateFields: { name: string; value: unknown }[];
+}): Promise<{ batches: number; inserted: number; }> {
   if (!items || items.length === 0) return { inserted: 0, batches: 0 };
 
   if (dryRun) {
@@ -147,11 +150,8 @@ export async function seedTableBatched({
     return { inserted: items.length, batches: Math.ceil(items.length / batchSize) };
   }
 
-  // Always update 'updatedAt' to current timestamp for idempotent upsert
-  const upsertFields = [
-    ...updateFields.filter((col) => col.value !== undefined),
-    { name: "updatedAt", value: new Date() },
-  ];
+  // Filter out undefined values from updateFields
+  const validUpdateFields = updateFields.filter((col) => col.value !== undefined);
 
   let inserted = 0;
   let batches = 0;
@@ -159,13 +159,24 @@ export async function seedTableBatched({
   for (const batch of chunk(items, batchSize)) {
     if (!batch.length) continue;
     try {
-      await db
-        .insert(table as Table)
-        .values(batch)
-        .onConflictDoUpdate({
-          target: conflictKeys,
-          set: Object.fromEntries(upsertFields.map((col) => [col.name, col.value])),
-        });
+      if (validUpdateFields.length === 0) {
+        // No fields to update - use doNothing to skip conflicts
+        await db
+          .insert(table as Table)
+          .values(batch)
+          .onConflictDoNothing({
+            target: conflictKeys,
+          });
+      } else {
+        // Update specified fields on conflict
+        await db
+          .insert(table as Table)
+          .values(batch)
+          .onConflictDoUpdate({
+            target: conflictKeys,
+            set: Object.fromEntries(validUpdateFields.map((col) => [col.name, col.value])),
+          });
+      }
       inserted += batch.length;
       batches++;
     } catch (error) {
@@ -183,18 +194,18 @@ export async function seedTableBatched({
 export function validateItems<T>(
   items: unknown[],
   schema: z.ZodType<T>
-): { valid: T[]; errors: Array<{ index: number; error: z.ZodError }> } {
+): { errors: Array<{ error: z.ZodError; index: number; }>; valid: T[]; } {
   const valid: T[] = [];
-  const errors: Array<{ index: number; error: z.ZodError }> = [];
+  const errors: Array<{ error: z.ZodError; index: number; }> = [];
 
-  items.forEach((item, index) => {
+  for (const [index, item] of items.entries()) {
     const result = schema.safeParse(item);
     if (result.success) {
       valid.push(result.data);
     } else {
       errors.push({ index, error: result.error });
     }
-  });
+  }
 
   return { valid, errors };
 }

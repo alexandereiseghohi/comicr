@@ -1,8 +1,9 @@
+import { eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
+
 import { db } from "@/database/db";
 import { user } from "@/database/schema";
 import { auth } from "@/lib/auth-config";
-import { eq } from "drizzle-orm";
-import { NextResponse } from "next/server";
 
 export async function POST() {
   try {

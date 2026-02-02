@@ -10,36 +10,36 @@ import type { comic } from "../../schema";
 type Comic = typeof comic.$inferSelect;
 
 export interface DuplicateConflict {
-  field: "slug" | "title" | "metadata";
-  value: string;
   comics: Array<{
+    description?: string;
     id?: number;
     slug: string;
-    title: string;
-    description?: string;
     source?: string;
+    title: string;
   }>;
-  severity: "critical" | "warning" | "info";
+  field: "metadata" | "slug" | "title";
   recommendation: string;
+  severity: "critical" | "info" | "warning";
+  value: string;
 }
 
 export interface DuplicateDetectionResult {
-  hasDuplicates: boolean;
   conflicts: DuplicateConflict[];
-  uniqueComics: Array<Partial<Comic>>;
+  hasDuplicates: boolean;
   summary: {
+    conflictsByField: Record<string, number>;
+    duplicateCount: number;
     totalComics: number;
     uniqueComics: number;
-    duplicateCount: number;
-    conflictsByField: Record<string, number>;
   };
+  uniqueComics: Array<Partial<Comic>>;
 }
 
 /**
  * Normalize string for comparison (lowercase, trim, remove extra spaces)
  */
 function normalizeString(str: string): string {
-  return str.toLowerCase().trim().replace(/\s+/g, " ");
+  return str.toLowerCase().trim().replaceAll(/\s+/g, " ");
 }
 
 /**
@@ -49,7 +49,7 @@ function normalizeSlug(slug: string): string {
   return slug
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9-]/g, "");
+    .replaceAll(/[^a-z0-9-]/g, "");
 }
 
 /**
@@ -279,9 +279,9 @@ export function generateDuplicateReport(result: DuplicateDetectionResult): strin
 
   if (result.summary.conflictsByField && Object.keys(result.summary.conflictsByField).length > 0) {
     lines.push("CONFLICTS BY FIELD:");
-    Object.entries(result.summary.conflictsByField).forEach(([field, count]) => {
+    for (const [field, count] of Object.entries(result.summary.conflictsByField)) {
       lines.push(`  ${field}: ${count}`);
-    });
+    }
     lines.push("");
   }
 
@@ -295,33 +295,33 @@ export function generateDuplicateReport(result: DuplicateDetectionResult): strin
 
     if (critical.length > 0) {
       lines.push("🔴 CRITICAL (Duplicates Skipped):");
-      critical.forEach((conflict, idx) => {
+      for (const [idx, conflict] of critical.entries()) {
         lines.push(`  ${idx + 1}. ${conflict.field.toUpperCase()}: ${conflict.value}`);
         lines.push(
           `     Affected: ${conflict.comics.length} comics (kept first, skipped ${
             conflict.comics.length - 1
           })`
         );
-        conflict.comics.forEach((comic, i) => {
+        for (const [i, comic] of conflict.comics.entries()) {
           const status = i === 0 ? "✅ KEPT" : "⏭️  SKIPPED";
           lines.push(`     ${status}: ${comic.title} (${comic.slug})`);
-        });
+        }
         lines.push(`     💡 ${conflict.recommendation}`);
         lines.push("");
-      });
+      }
     }
 
     if (warnings.length > 0) {
       lines.push("🟡 WARNINGS (Review Recommended):");
-      warnings.forEach((conflict, idx) => {
+      for (const [idx, conflict] of warnings.entries()) {
         lines.push(`  ${idx + 1}. ${conflict.field.toUpperCase()}: ${conflict.value}`);
         lines.push(`     Affected: ${conflict.comics.length} comics`);
-        conflict.comics.forEach((comic) => {
+        for (const comic of conflict.comics) {
           lines.push(`     - ${comic.title} (${comic.slug})`);
-        });
+        }
         lines.push(`     💡 ${conflict.recommendation}`);
         lines.push("");
-      });
+      }
     }
   } else {
     lines.push("✅ No duplicates detected!");

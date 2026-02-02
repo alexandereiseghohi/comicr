@@ -1,3 +1,5 @@
+import { type NextRequest, NextResponse } from "next/server";
+
 import { auth } from "@/auth";
 import {
   createComment,
@@ -6,7 +8,6 @@ import {
 } from "@/database/mutations/comment-mutations";
 import { getComments } from "@/database/queries/comment-queries";
 import { commentSchema } from "@/schemas/comment.schema";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {

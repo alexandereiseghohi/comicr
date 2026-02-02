@@ -3,8 +3,10 @@
  * @description ImageKit CDN storage implementation
  */
 
-import { getEnv } from "@/lib/env";
 import ImageKit from "imagekit";
+
+import { getEnv } from "@/lib/env";
+
 import type {
   DeleteOptions,
   DeleteResult,
@@ -42,7 +44,7 @@ export class ImageKitStorageProvider implements StorageProvider {
   }
 
   async upload(
-    file: Buffer | Blob | ReadableStream,
+    file: Blob | Buffer | ReadableStream,
     filename: string,
     options: UploadOptions = {}
   ): Promise<UploadResponse> {

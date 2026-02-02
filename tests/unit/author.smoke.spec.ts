@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+
 import { createMockChain } from "./mock-db";
 
 vi.mock("@/database/db", () => {
@@ -9,7 +10,7 @@ vi.mock("@/database/db", () => {
 
 import { getAuthorById } from "@/database/queries/author.queries";
 
-type Author = { id: number; name: string; bio: string | null; image: string | null };
+type Author = { bio: null | string; id: number; image: null | string; name: string; };
 
 describe("author queries", () => {
   it("getAuthorById returns author row", async () => {

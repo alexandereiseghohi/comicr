@@ -1,8 +1,9 @@
+import { eq } from "drizzle-orm";
+import { notFound } from "next/navigation";
+
 import { ArtistForm } from "@/components/admin/artist-form";
 import { db } from "@/database/db";
 import { artist } from "@/database/schema";
-import { eq } from "drizzle-orm";
-import { notFound } from "next/navigation";
 
 export const metadata = {
   title: "Edit Artist - Admin",
@@ -28,7 +29,7 @@ export default async function EditArtistPage({ params }: PageProps) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="mx-auto max-w-2xl space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Edit Artist</h1>
         <p className="text-muted-foreground">Update artist profile for {artistData.name}</p>

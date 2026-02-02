@@ -5,12 +5,11 @@
 
 import { downloadAndSaveImage } from "@/lib/image-helper";
 import { seedTableBatched } from "@/lib/seed-helpers";
-import { ArtistSeedSchema, type ArtistSeed } from "@/lib/validations/seed";
-import path from "path";
-import { artist } from "../../schema";
+import { type ArtistSeed, ArtistSeedSchema } from "@/lib/validations/seed";
 
-const ARTISTS_IMAGE_DIR = "public/images/artists";
-const PLACEHOLDER_ARTIST = "/images/placeholder-artist.png";
+import { db } from "../../db";
+import { artist } from "../../schema";
+import { ARTISTS_IMAGE_DIR, BATCH_SIZE, PLACEHOLDER_ARTIST } from "../seed-config";
 
 export interface ArtistSeederOptions {
   /** Array of artists to seed */
@@ -22,10 +21,12 @@ export interface ArtistSeederOptions {
 }
 
 export interface ArtistSeederResult {
-  success: boolean;
+  errors: Array<{ artist: unknown; error: string }>;
+  /** Map of artist name (lowercase) to database ID */
+  idMap: Map<string, number>;
   seeded: number;
   skipped: number;
-  errors: Array<{ artist: unknown; error: string }>;
+  success: boolean;
 }
 
 /**
@@ -55,6 +56,7 @@ export async function seedArtists(options: ArtistSeederOptions): Promise<ArtistS
       seeded: 0,
       skipped: rawArtists.length,
       errors,
+      idMap: new Map(),
     };
   }
 
@@ -66,8 +68,8 @@ export async function seedArtists(options: ArtistSeederOptions): Promise<ArtistS
           try {
             artistData.image = await downloadAndSaveImage({
               url: artistData.image,
-              destDir: path.join(ARTISTS_IMAGE_DIR),
-              filename: `${artistData.name.toLowerCase().replace(/\s+/g, "-")}.jpg`,
+              destDir: ARTISTS_IMAGE_DIR,
+              filename: `${artistData.name.toLowerCase().replaceAll(/\s+/g, "-")}.jpg`,
               fallback: PLACEHOLDER_ARTIST,
             });
           } catch {
@@ -96,8 +98,25 @@ export async function seedArtists(options: ArtistSeederOptions): Promise<ArtistS
       { name: "image", value: undefined },
       { name: "isActive", value: undefined },
     ],
+    batchSize: BATCH_SIZE,
     dryRun,
   });
+
+  // Build ID map by querying inserted records (avoids separate query in orchestrator)
+  const idMap = new Map<string, number>();
+  if (!dryRun) {
+    const seededArtists = await db.query.artist.findMany({
+      columns: { id: true, name: true },
+      where: (table, { inArray }) =>
+        inArray(
+          table.name,
+          validArtists.map((a) => a.name)
+        ),
+    });
+    for (const item of seededArtists) {
+      idMap.set(item.name.toLowerCase(), item.id);
+    }
+  }
 
   // Report completion
   onProgress?.(validArtists.length, validArtists.length);
@@ -107,6 +126,7 @@ export async function seedArtists(options: ArtistSeederOptions): Promise<ArtistS
     seeded: result.inserted,
     skipped: errors.length,
     errors,
+    idMap,
   };
 }
 

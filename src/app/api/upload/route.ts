@@ -3,11 +3,12 @@
  * @description Authenticated file upload with multi-provider support
  */
 
+import { type NextRequest, NextResponse } from "next/server";
+
 import { auth } from "@/auth";
 import { createAuditContext, logAudit } from "@/lib/audit";
 import { getStorageProvider, validateFile } from "@/lib/storage";
 import { UploadRequestSchema, validateUploadFile } from "@/schemas/upload.schema";
-import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
     const rawParams = {
       folder: formData.get("folder")?.toString(),
       filename: formData.get("filename")?.toString(),
-      access: formData.get("access")?.toString() as "public" | "private" | undefined,
+      access: formData.get("access")?.toString() as "private" | "public" | undefined,
       metadata: formData.get("metadata")
         ? JSON.parse(formData.get("metadata")!.toString())
         : undefined,

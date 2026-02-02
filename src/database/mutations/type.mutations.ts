@@ -1,7 +1,9 @@
+import { eq, inArray } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { type as typeTable } from "@/database/schema";
+
 import type { CreateTypeInput, UpdateTypeInput } from "@/schemas/type-schema";
-import { eq, inArray } from "drizzle-orm";
 
 export async function createType(data: CreateTypeInput) {
   try {

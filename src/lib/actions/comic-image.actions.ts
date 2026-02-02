@@ -2,8 +2,8 @@ import * as comicImageMutations from "@/database/mutations/comic-image.mutations
 
 type CreateComicImageInput = {
   comicId: number;
-  imageUrl: string;
   imageOrder: number;
+  imageUrl: string;
 };
 
 export async function createComicImageAction(formData: unknown) {

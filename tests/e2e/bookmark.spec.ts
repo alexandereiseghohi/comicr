@@ -13,6 +13,7 @@ test.describe("Bookmark smoke", () => {
     const bookmarkBtn = page.getByRole("button", { name: /Add Bookmark|Bookmarked/ });
     await expect(bookmarkBtn).toBeVisible();
   });
+
   test("comic detail bookmark flow (sign-in + add/remove)", async ({ page, baseURL }) => {
     const TEST_EMAIL = process.env.E2E_TEST_EMAIL;
     const TEST_PASS = process.env.E2E_TEST_PASS;

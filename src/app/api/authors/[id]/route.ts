@@ -1,8 +1,9 @@
+import { type NextRequest, NextResponse } from "next/server";
+
 import * as authorMutations from "@/database/mutations/author.mutations";
 import * as authorQueries from "@/database/queries/author.queries";
 import { auth } from "@/lib/auth-config";
 import { updateAuthorSchema } from "@/schemas/author-schema";
-import { NextRequest, NextResponse } from "next/server";
 
 interface RouteParams {
   params: Promise<{ id: string }>;

@@ -1,20 +1,21 @@
+import { type Metadata } from "next";
+import { Suspense } from "react";
+
 import { ComicFilters } from "@/components/comics/comic-filters";
 import { ComicList } from "@/components/comics/comic-list";
 import { ComicPagination } from "@/components/comics/comic-pagination";
 import { GenreGrid } from "@/components/comics/genre-grid";
 import * as comicQueries from "@/database/queries/comic-queries";
 import * as genreQueries from "@/database/queries/genre.queries";
-import { Metadata } from "next";
-import { Suspense } from "react";
 
 interface SearchParams {
-  search?: string;
-  status?: string;
-  sort?: string;
+  genres?: string;
+  limit?: string;
   order?: "asc" | "desc";
   page?: string;
-  limit?: string;
-  genres?: string;
+  search?: string;
+  sort?: string;
+  status?: string;
 }
 
 async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
@@ -68,10 +69,10 @@ async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
 
   if (!result.success) {
     return (
-      <div className="flex items-center justify-center h-96">
+      <div className="flex h-96 items-center justify-center">
         <div className="text-center">
           <h3 className="text-lg font-semibold text-slate-900">Error loading comics</h3>
-          <p className="text-sm text-slate-600 mt-2">{result.error}</p>
+          <p className="mt-2 text-sm text-slate-600">{result.error}</p>
         </div>
       </div>
     );
@@ -86,13 +87,13 @@ async function ComicsContent({ searchParams }: { searchParams: SearchParams }) {
   return (
     <div className="space-y-8">
       {/* Pagination - Top */}
-      <ComicPagination currentPage={page} totalItems={total} itemsPerPage={limit} />
+      <ComicPagination currentPage={page} itemsPerPage={limit} totalItems={total} />
 
       {/* Comic List */}
       <ComicList comics={comics} />
 
       {/* Pagination - Bottom */}
-      <ComicPagination currentPage={page} totalItems={total} itemsPerPage={limit} />
+      <ComicPagination currentPage={page} itemsPerPage={limit} totalItems={total} />
     </div>
   );
 }
@@ -107,7 +108,7 @@ async function GenreDiscovery() {
   return (
     <div className="mb-12">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-950 mb-2">Browse by Genre</h2>
+        <h2 className="mb-2 text-2xl font-bold text-slate-950">Browse by Genre</h2>
         <p className="text-slate-600">Explore comics by your favorite genres</p>
       </div>
       <GenreGrid genres={genresResult.data} />
@@ -124,7 +125,7 @@ export default async function ComicsPage({ searchParams }: { searchParams: Searc
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-950 mb-2">Comics</h1>
+          <h1 className="mb-2 text-4xl font-bold text-slate-950">Comics</h1>
           <p className="text-lg text-slate-600">Discover and read amazing comics</p>
         </div>
 
@@ -134,12 +135,12 @@ export default async function ComicsPage({ searchParams }: { searchParams: Searc
             fallback={
               <div className="mb-12">
                 <div className="mb-6">
-                  <div className="h-8 w-48 bg-slate-200 rounded animate-pulse mb-2" />
-                  <div className="h-5 w-64 bg-slate-100 rounded animate-pulse" />
+                  <div className="mb-2 h-8 w-48 animate-pulse rounded bg-slate-200" />
+                  <div className="h-5 w-64 animate-pulse rounded bg-slate-100" />
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                   {Array.from({ length: 8 }).map((_, i) => (
-                    <div key={i} className="bg-slate-100 rounded-lg h-32 animate-pulse" />
+                    <div className="h-32 animate-pulse rounded-lg bg-slate-100" key={i} />
                   ))}
                 </div>
               </div>
@@ -151,7 +152,7 @@ export default async function ComicsPage({ searchParams }: { searchParams: Searc
 
         {/* Filters */}
         <div className="mb-8">
-          <Suspense fallback={<div className="h-16 bg-slate-100 rounded-lg animate-pulse" />}>
+          <Suspense fallback={<div className="h-16 animate-pulse rounded-lg bg-slate-100" />}>
             <ComicFilters />
           </Suspense>
         </div>
@@ -161,7 +162,7 @@ export default async function ComicsPage({ searchParams }: { searchParams: Searc
           fallback={
             <div className="grid grid-cols-4 gap-6">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="bg-slate-200 rounded-lg h-72 animate-pulse" />
+                <div className="h-72 animate-pulse rounded-lg bg-slate-200" key={i} />
               ))}
             </div>
           }

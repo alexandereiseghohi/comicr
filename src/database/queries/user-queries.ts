@@ -1,7 +1,9 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { user } from "@/database/schema";
+
 import type { InferSelectModel } from "drizzle-orm";
-import { eq } from "drizzle-orm";
 
 type User = InferSelectModel<typeof user>;
 
@@ -25,7 +27,7 @@ export async function getAllUsers() {
 
 export async function getUserByEmail(
   email: string
-): Promise<{ success: true; data: User | null } | { success: false; error: string }> {
+): Promise<{ data: null | User; success: true; } | { error: string; success: false; }> {
   try {
     const result = await db.select().from(user).where(eq(user.email, email)).limit(1);
     return { success: true, data: result[0] || null };

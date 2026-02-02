@@ -4,23 +4,28 @@
  */
 
 import { seedTableBatched } from "@/lib/seed-helpers";
-import { GenreSeedSchema, type GenreSeed } from "@/lib/validations/seed";
+import { type GenreSeed, GenreSeedSchema } from "@/lib/validations/seed";
+
+import { db } from "../../db";
 import { genre } from "../../schema";
+import { BATCH_SIZE } from "../seed-config";
 
 export interface GenreSeederOptions {
-  /** Array of genres to seed */
-  genres: unknown[];
   /** Skip database writes if true */
   dryRun?: boolean;
+  /** Array of genres to seed */
+  genres: unknown[];
   /** Progress callback */
   onProgress?: (current: number, total: number) => void;
 }
 
 export interface GenreSeederResult {
-  success: boolean;
+  errors: Array<{ error: string; genre: unknown }>;
+  /** Map of genre name (lowercase) to database ID */
+  idMap: Map<string, number>;
   seeded: number;
   skipped: number;
-  errors: Array<{ genre: unknown; error: string }>;
+  success: boolean;
 }
 
 /**
@@ -28,7 +33,7 @@ export interface GenreSeederResult {
  */
 export async function seedGenres(options: GenreSeederOptions): Promise<GenreSeederResult> {
   const { genres: rawGenres, dryRun = false, onProgress } = options;
-  const errors: Array<{ genre: unknown; error: string }> = [];
+  const errors: Array<{ error: string; genre: unknown }> = [];
   const validGenres: GenreSeed[] = [];
 
   // Validate all genres
@@ -50,6 +55,7 @@ export async function seedGenres(options: GenreSeederOptions): Promise<GenreSeed
       seeded: 0,
       skipped: rawGenres.length,
       errors,
+      idMap: new Map(),
     };
   }
 
@@ -61,7 +67,7 @@ export async function seedGenres(options: GenreSeederOptions): Promise<GenreSeed
     table: genre,
     items: validGenres.map((g) => ({
       name: g.name,
-      slug: g.slug || g.name.toLowerCase().replace(/\s+/g, "-"),
+      slug: g.slug || g.name.toLowerCase().replaceAll(/\s+/g, "-"),
       description: g.description || null,
       isActive: g.isActive ?? true,
     })),
@@ -71,8 +77,25 @@ export async function seedGenres(options: GenreSeederOptions): Promise<GenreSeed
       { name: "description", value: undefined },
       { name: "isActive", value: undefined },
     ],
+    batchSize: BATCH_SIZE,
     dryRun,
   });
+
+  // Build ID map by querying inserted records
+  const idMap = new Map<string, number>();
+  if (!dryRun) {
+    const seededGenres = await db.query.genre.findMany({
+      columns: { id: true, name: true },
+      where: (table, { inArray }) =>
+        inArray(
+          table.name,
+          validGenres.map((g) => g.name)
+        ),
+    });
+    for (const item of seededGenres) {
+      idMap.set(item.name.toLowerCase(), item.id);
+    }
+  }
 
   // Report completion
   onProgress?.(validGenres.length, validGenres.length);
@@ -82,6 +105,7 @@ export async function seedGenres(options: GenreSeederOptions): Promise<GenreSeed
     seeded: result.inserted,
     skipped: errors.length,
     errors,
+    idMap,
   };
 }
 

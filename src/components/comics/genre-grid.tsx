@@ -1,22 +1,24 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import type { LucideIcon } from "lucide-react";
 import { BookOpen, Drama, Heart, Laugh, Rocket, Sparkles, Star, Swords, Zap } from "lucide-react";
 import Link from "next/link";
 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+import type { LucideIcon } from "lucide-react";
+
 interface GenreWithCount {
+  comicCount: number;
+  description: null | string;
   id: number;
   name: string;
   slug: string;
-  description: string | null;
-  comicCount: number;
 }
 
 interface GenreGridProps {
-  genres: GenreWithCount[];
   className?: string;
+  genres: GenreWithCount[];
 }
 
 // Map genre names to icons
@@ -52,38 +54,38 @@ const colorSchemes = [
 export function GenreGrid({ genres, className }: GenreGridProps) {
   if (genres.length === 0) {
     return (
-      <div className="text-center py-12">
+      <div className="py-12 text-center">
         <p className="text-slate-500">No genres available</p>
       </div>
     );
   }
 
   return (
-    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-4", className)}>
+    <div className={cn("grid grid-cols-2 gap-4 md:grid-cols-4", className)}>
       {genres.map((genre, index) => {
         const Icon = getGenreIcon(genre.name);
         const colorScheme = colorSchemes[index % colorSchemes.length];
 
         return (
-          <Link key={genre.id} href={`/comics?genres=${genre.slug}`}>
+          <Link href={`/comics?genres=${genre.slug}`} key={genre.id}>
             <Card
               className={cn(
-                "transition-all duration-200 cursor-pointer border-2 h-full",
+                "h-full cursor-pointer border-2 transition-all duration-200",
                 colorScheme
               )}
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <Icon className="h-6 w-6 flex-shrink-0" />
-                  <span className="text-sm font-semibold px-2 py-1 rounded-full bg-white/50">
+                  <span className="rounded-full bg-white/50 px-2 py-1 text-sm font-semibold">
                     {genre.comicCount}
                   </span>
                 </div>
               </CardHeader>
               <CardContent className="pt-0">
-                <CardTitle className="text-lg leading-tight mb-1">{genre.name}</CardTitle>
+                <CardTitle className="mb-1 text-lg leading-tight">{genre.name}</CardTitle>
                 {genre.description && (
-                  <CardDescription className="text-sm line-clamp-2 opacity-80">
+                  <CardDescription className="line-clamp-2 text-sm opacity-80">
                     {genre.description}
                   </CardDescription>
                 )}

@@ -1,9 +1,12 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/type.mutations";
 import { type as typeTable } from "@/database/schema";
-import type { DbMutationResult } from "@/types";
-import { eq } from "drizzle-orm";
+
 import { BaseDAL } from "./base-dal";
+
+import type { DbMutationResult } from "@/types";
 
 export class TypeDAL extends BaseDAL<typeof typeTable> {
   constructor() {
@@ -27,8 +30,7 @@ export class TypeDAL extends BaseDAL<typeof typeTable> {
   ): Promise<DbMutationResult<typeof typeTable.$inferSelect>> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await mutations.createType(data as any);
-      return result;
+      return await mutations.createType(data as any);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
@@ -40,8 +42,7 @@ export class TypeDAL extends BaseDAL<typeof typeTable> {
   ): Promise<DbMutationResult<typeof typeTable.$inferSelect>> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await mutations.updateType(id, data as any);
-      return result;
+      return await mutations.updateType(id, data as any);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };
     }

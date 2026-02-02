@@ -8,14 +8,14 @@
 import { NextResponse } from "next/server";
 
 interface HealthStatus {
-  status: "healthy" | "degraded" | "unhealthy";
-  timestamp: string;
-  version: string;
-  uptime: number;
   checks: {
-    database?: "ok" | "error";
-    cache?: "ok" | "error";
+    cache?: "error" | "ok";
+    database?: "error" | "ok";
   };
+  status: "degraded" | "healthy" | "unhealthy";
+  timestamp: string;
+  uptime: number;
+  version: string;
 }
 
 export const dynamic = "force-dynamic";

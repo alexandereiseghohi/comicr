@@ -1,12 +1,13 @@
-import { db } from "@/database/db";
-import { rating } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
 
+import { db } from "@/database/db";
+import { rating } from "@/database/schema";
+
 interface UpsertRatingData {
-  userId: string;
   comicId: number;
   rating: number;
   review?: string;
+  userId: string;
 }
 
 /**

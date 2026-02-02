@@ -1,30 +1,31 @@
-import { db } from "@/database/db";
-import { readingProgress } from "@/database/schema";
 import { and, eq } from "drizzle-orm";
 
+import { db } from "@/database/db";
+import { readingProgress } from "@/database/schema";
+
 type ReadingProgress = {
-  userId: string;
-  comicId: number;
   chapterId: number;
+  comicId: number;
+  completedAt?: Date | null;
+  createdAt?: Date;
+  id?: number;
+  lastReadAt: Date;
+  pageNumber?: number;
   progress?: number;
   progressPercent?: number;
-  pageNumber?: number;
   scrollPosition?: number;
   totalPages?: number;
-  completedAt?: Date | null;
-  lastReadAt: Date;
-  createdAt?: Date;
   updatedAt?: Date;
-  id?: number;
+  userId: string;
 };
 
 interface UpsertProgressData {
-  userId: string;
-  comicId: number;
   chapterId: number;
+  comicId: number;
   currentImageIndex?: number;
-  scrollPercentage?: number;
   progressPercent?: number;
+  scrollPercentage?: number;
+  userId: string;
 }
 
 /**
@@ -104,7 +105,7 @@ export async function deleteReadingProgress(userId: string, comicId: number): Pr
 export async function getReadingProgress(
   userId: string,
   comicId: number
-): Promise<ReadingProgress | null> {
+): Promise<null | ReadingProgress> {
   const result = await db
     .select()
     .from(readingProgress)

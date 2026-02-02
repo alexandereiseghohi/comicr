@@ -1,0 +1,20 @@
+# MCP Integration Scripts
+
+This directory contains scripts that leverage existing MCP servers to provide functionality similar to unavailable MCP packages.
+
+## Scripts
+
+- `playwright-integration.ts` - Playwright test generation using filesystem-ops + sequential-thinking
+- `vitest-integration.ts` - Vitest test analysis using typescript-enhanced + git-integration
+- `sentry-integration.ts` - Sentry monitoring using filesystem-ops + context7
+- `github-integration.ts` - GitHub workflow automation using git-integration + filesystem-ops
+
+## Usage
+
+All scripts follow the pattern:
+
+```bash
+pnpm tsx scripts/mcp-integrations/<script-name>.ts [options]
+```
+
+See individual script files for specific usage instructions.

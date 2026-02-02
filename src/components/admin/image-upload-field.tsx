@@ -1,20 +1,21 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, Upload } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 interface ImageUploadFieldProps {
-  value: string;
-  onChange: (url: string) => void;
   label?: string;
+  onChange: (url: string) => void;
+  value: string;
 }
 
 export function ImageUploadField({ value, onChange, label = "Image" }: ImageUploadFieldProps) {
-  const [activeTab, setActiveTab] = useState<"url" | "upload">("url");
+  const [activeTab, setActiveTab] = useState<"upload" | "url">("url");
   const [isUploading, setIsUploading] = useState(false);
 
   const handleFileUpload = async (file: File) => {
@@ -35,44 +36,44 @@ export function ImageUploadField({ value, onChange, label = "Image" }: ImageUplo
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "url" | "upload")}>
+      <Tabs onValueChange={(v) => setActiveTab(v as "upload" | "url")} value={activeTab}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="url">
-            <Link className="h-4 w-4 mr-2" />
+            <Link className="mr-2 h-4 w-4" />
             URL
           </TabsTrigger>
           <TabsTrigger value="upload">
-            <Upload className="h-4 w-4 mr-2" />
+            <Upload className="mr-2 h-4 w-4" />
             Upload
           </TabsTrigger>
         </TabsList>
         <TabsContent value="url">
           <Input
+            onChange={(e) => onChange(e.target.value)}
             placeholder="https://example.com/image.jpg"
             value={value}
-            onChange={(e) => onChange(e.target.value)}
           />
         </TabsContent>
         <TabsContent value="upload">
           <Input
-            type="file"
             accept="image/*"
             disabled={isUploading}
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (file) handleFileUpload(file);
             }}
+            type="file"
           />
         </TabsContent>
       </Tabs>
       {value && (
         <Image
-          src={value}
           alt="Preview"
-          className="mt-2 h-20 w-20 object-cover rounded"
+          className="mt-2 h-20 w-20 rounded object-cover"
           onError={(e) => {
             e.currentTarget.style.display = "none";
           }}
+          src={value}
         />
       )}
     </div>

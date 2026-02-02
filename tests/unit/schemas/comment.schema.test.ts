@@ -1,5 +1,6 @@
-import { commentSchema } from "@/schemas/comment.schema";
 import { describe, expect, it } from "vitest";
+
+import { commentSchema } from "@/schemas/comment.schema";
 
 describe("commentSchema", () => {
   describe("valid inputs", () => {

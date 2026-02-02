@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { type z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,21 +21,16 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { createTypeAction, updateTypeAction } from "@/lib/actions/type.actions";
 import { createTypeSchema, updateTypeSchema } from "@/schemas/type-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 type CreateFormValues = z.infer<typeof createTypeSchema>;
 type UpdateFormValues = z.infer<typeof updateTypeSchema>;
 
 interface TypeFormProps {
   comicType?: {
+    description: null | string;
     id: number;
-    name: string;
-    description: string | null;
     isActive: boolean;
+    name: string;
   };
 }
 
@@ -71,7 +72,7 @@ export function TypeForm({ comicType }: TypeFormProps) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="name"
@@ -113,7 +114,7 @@ export function TypeForm({ comicType }: TypeFormProps) {
                   <FormItem className="flex items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
                       <FormLabel>Active Status</FormLabel>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Inactive types won&apos;t appear in filters
                       </p>
                     </div>
@@ -126,10 +127,10 @@ export function TypeForm({ comicType }: TypeFormProps) {
             )}
 
             <div className="flex gap-4">
-              <Button type="submit" disabled={isSubmitting}>
+              <Button disabled={isSubmitting} type="submit">
                 {isSubmitting ? "Saving..." : isEditing ? "Update Type" : "Create Type"}
               </Button>
-              <Button type="button" variant="outline" onClick={() => router.back()}>
+              <Button onClick={() => router.back()} type="button" variant="outline">
                 Cancel
               </Button>
             </div>

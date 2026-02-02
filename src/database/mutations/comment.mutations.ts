@@ -1,8 +1,9 @@
-import { db } from "@/database/db";
-import { comment } from "@/database/schema";
 import { eq } from "drizzle-orm";
 
-export async function addComment(data: { content: string; userId: string; chapterId: number }) {
+import { db } from "@/database/db";
+import { comment } from "@/database/schema";
+
+export async function addComment(data: { chapterId: number; content: string; userId: string; }) {
   try {
     const result = await db.insert(comment).values(data).returning();
     return { success: true, data: result[0] };

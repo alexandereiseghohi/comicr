@@ -3,9 +3,10 @@
  * @description Standard 3-tier RBAC seeder (Admin, Moderator, User)
  */
 
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { permission, role, rolePermission } from "@/database/schema";
-import { eq } from "drizzle-orm";
 
 /**
  * Default roles with descriptions
@@ -61,7 +62,7 @@ const PERMISSIONS = {
 /**
  * Role-permission mapping
  */
-const ROLE_PERMISSIONS: Record<string, Array<{ resource: string; action: string }>> = {
+const ROLE_PERMISSIONS: Record<string, Array<{ action: string; resource: string; }>> = {
   admin: [
     // Admin has all permissions
     ...Object.entries(PERMISSIONS).flatMap(([resource, actions]) =>
@@ -136,11 +137,11 @@ const ROLE_PERMISSIONS: Record<string, Array<{ resource: string; action: string 
 };
 
 export interface SeedResult {
-  success: boolean;
-  rolesCreated: number;
-  permissionsCreated: number;
-  mappingsCreated: number;
   error?: string;
+  mappingsCreated: number;
+  permissionsCreated: number;
+  rolesCreated: number;
+  success: boolean;
 }
 
 /**

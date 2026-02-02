@@ -1,9 +1,12 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/genre.mutations";
 import { genre } from "@/database/schema";
-import type { DbMutationResult } from "@/types";
-import { eq } from "drizzle-orm";
+
 import { BaseDAL } from "./base-dal";
+
+import type { DbMutationResult } from "@/types";
 
 export class GenreDAL extends BaseDAL<typeof genre> {
   constructor() {
@@ -27,8 +30,7 @@ export class GenreDAL extends BaseDAL<typeof genre> {
   ): Promise<DbMutationResult<typeof genre.$inferSelect>> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await mutations.createGenre(data as any);
-      return result;
+      return await mutations.createGenre(data as any);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
@@ -40,8 +42,7 @@ export class GenreDAL extends BaseDAL<typeof genre> {
   ): Promise<DbMutationResult<typeof genre.$inferSelect>> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await mutations.updateGenre(id, data as any);
-      return result;
+      return await mutations.updateGenre(id, data as any);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };
     }

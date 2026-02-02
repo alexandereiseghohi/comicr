@@ -2,23 +2,23 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 border-t mt-8">
-      <div className="container mx-auto px-4 py-6 text-sm text-muted-foreground flex items-center justify-between">
+    <footer className="mt-8 border-t bg-gray-50">
+      <div className="text-muted-foreground container mx-auto flex items-center justify-between px-4 py-6 text-sm">
         <div>© {new Date().getFullYear()} Comicr</div>
         <div className="space-x-4">
-          <Link href="/about" className="hover:text-foreground">
+          <Link className="hover:text-foreground" href="/about">
             About
           </Link>
-          <Link href="/help" className="hover:text-foreground">
+          <Link className="hover:text-foreground" href="/help">
             Help
           </Link>
-          <Link href="/contact" className="hover:text-foreground">
+          <Link className="hover:text-foreground" href="/contact">
             Contact
           </Link>
-          <Link href="/privacy" className="hover:text-foreground">
+          <Link className="hover:text-foreground" href="/privacy">
             Privacy
           </Link>
-          <Link href="/terms" className="hover:text-foreground">
+          <Link className="hover:text-foreground" href="/terms">
             Terms
           </Link>
         </div>

@@ -1,9 +1,10 @@
+import { eq } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+
 import { db } from "@/database/db";
 import { user } from "@/database/schema";
 import { auth } from "@/lib/auth-config";
 import { settingsSchema } from "@/schemas/settings.schema";
-import { eq } from "drizzle-orm";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
@@ -22,7 +23,7 @@ export async function GET() {
     const settings = dbUser.settings
       ? (dbUser.settings as {
           emailNotifications?: boolean;
-          profileVisibility?: "public" | "private";
+          profileVisibility?: "private" | "public";
           readingHistoryVisibility?: boolean;
         })
       : {};

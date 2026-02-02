@@ -3,8 +3,12 @@
  * @description Serverless-compatible Redis caching via Upstash REST API
  */
 
-import { getEnv } from "@/lib/env";
 import { Redis } from "@upstash/redis";
+
+import { getEnv } from "@/lib/env";
+
+import { DEFAULT_CACHE_CONFIG } from "./types";
+
 import type {
   CacheDeleteResult,
   CacheOptions,
@@ -12,9 +16,9 @@ import type {
   CacheResult,
   CacheSetResult,
 } from "./types";
-import { DEFAULT_CACHE_CONFIG } from "./types";
 
-let redisClient: Redis | null = null;
+
+let redisClient: null | Redis = null;
 
 /**
  * Get or create Upstash Redis client

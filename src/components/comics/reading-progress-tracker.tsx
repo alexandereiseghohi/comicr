@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,16 +13,15 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 interface ReadingProgressTrackerProps {
-  comicId: number;
   chapterId: number;
-  totalPages: number;
+  comicId: number;
   currentPage?: number;
-  scrollPercentage?: number;
-  mode: "vertical" | "horizontal";
+  mode: "horizontal" | "vertical";
   onRestore?: (pageIndex: number) => void;
+  scrollPercentage?: number;
+  totalPages: number;
 }
 
 export function ReadingProgressTracker({
@@ -165,12 +166,12 @@ export function ReadingProgressTracker({
   return (
     <>
       {/* Progress bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-1">
-        <Progress value={currentProgress} className="h-full rounded-none" />
+      <div className="fixed top-0 right-0 left-0 z-50 h-1">
+        <Progress className="h-full rounded-none" value={currentProgress} />
       </div>
 
       {/* Resume dialog */}
-      <Dialog open={showResumeDialog} onOpenChange={setShowResumeDialog}>
+      <Dialog onOpenChange={setShowResumeDialog} open={showResumeDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Resume Reading?</DialogTitle>
@@ -180,7 +181,7 @@ export function ReadingProgressTracker({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" onClick={handleStartFromBeginning}>
+            <Button onClick={handleStartFromBeginning} variant="outline">
               Start from Beginning
             </Button>
             <Button onClick={handleResume}>Resume Reading</Button>

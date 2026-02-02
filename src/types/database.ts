@@ -9,8 +9,8 @@ import type { UUID } from './validation';
  * Base database entity with common fields
  */
 export interface BaseEntity {
-  id: UUID;
   createdAt: Date;
+  id: UUID;
   updatedAt: Date;
 }
 
@@ -19,27 +19,27 @@ export interface BaseEntity {
  */
 export interface User extends BaseEntity {
   email: string;
-  name?: string;
-  image?: string;
   emailVerified?: Date;
-  role: 'admin' | 'moderator' | 'user';
+  image?: string;
   isActive: boolean;
+  name?: string;
+  role: 'admin' | 'moderator' | 'user';
 }
 
 /**
  * Comic entity
  */
 export interface Comic extends BaseEntity {
-  title: string;
-  description?: string;
-  coverImage?: string;
-  slug: string;
-  status: 'Ongoing' | 'Completed' | 'OnHold';
-  authorId: UUID;
   artistId?: UUID;
-  views: number;
-  rating: number;
+  authorId: UUID;
+  coverImage?: string;
+  description?: string;
   isPublished: boolean;
+  rating: number;
+  slug: string;
+  status: 'Completed' | 'Ongoing' | 'OnHold';
+  title: string;
+  views: number;
 }
 
 /**
@@ -47,62 +47,62 @@ export interface Comic extends BaseEntity {
  */
 export interface Chapter extends BaseEntity {
   comicId: UUID;
-  title: string;
-  description?: string;
-  number: number;
   content?: string;
+  description?: string;
   images?: string[];
   isPublished: boolean;
+  number: number;
   publishedAt?: Date;
+  title: string;
 }
 
 /**
  * Comment entity
  */
 export interface Comment extends BaseEntity {
-  userId: UUID;
-  comicId?: UUID;
   chapterId?: UUID;
+  comicId?: UUID;
   content: string;
-  likes: number;
   isApproved: boolean;
+  likes: number;
   parentCommentId?: UUID;
+  userId: UUID;
 }
 
 /**
  * Bookmark/Favorite entity
  */
 export interface Bookmark extends BaseEntity {
-  userId: UUID;
   comicId: UUID;
-  notes?: string;
   isPrivate: boolean;
+  notes?: string;
+  userId: UUID;
 }
 
 /**
  * Author entity
  */
 export interface Author extends BaseEntity {
-  name: string;
-  description?: string;
   avatar?: string;
   biography?: string;
-  website?: string;
+  description?: string;
+  name: string;
   socialMedia?: {
-    twitter?: string;
-    instagram?: string;
     discord?: string;
+    instagram?: string;
+    twitter?: string;
   };
+  website?: string;
 }
 
 /**
  * Artist entity
  */
 export interface Artist extends BaseEntity {
-  name: string;
-  description?: string;
   avatar?: string;
   biography?: string;
+  description?: string;
+  name: string;
   portfolio?: string;
   website?: string;
 }
@@ -111,47 +111,47 @@ export interface Artist extends BaseEntity {
  * Genre entity
  */
 export interface Genre extends BaseEntity {
-  name: string;
-  slug: string;
+  comicCount: number;
   description?: string;
   icon?: string;
-  comicCount: number;
+  name: string;
+  slug: string;
 }
 
 /**
  * Content Type entity
  */
 export interface ContentType extends BaseEntity {
-  name: 'Manga' | 'Manhwa' | 'Manhua' | 'Comic' | 'Light Novel';
   description?: string;
+  name: 'Comic' | 'Light Novel' | 'Manga' | 'Manhua' | 'Manhwa';
 }
 
 /**
  * Database query options
  */
 export interface DbQueryOptions {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  order?: 'asc' | 'desc';
   include?: string[];
+  limit?: number;
+  order?: 'asc' | 'desc';
+  page?: number;
+  sort?: string;
 }
 
 /**
  * Database mutation result
  */
 export interface DbMutationResult<T> {
-  success: boolean;
   data?: T;
   error?: string;
+  success: boolean;
 }
 
 /**
  * Batch operation result
  */
 export interface BatchOperationResult {
-  total: number;
-  success: number;
-  failed: number;
   errors?: string[];
+  failed: number;
+  success: number;
+  total: number;
 }

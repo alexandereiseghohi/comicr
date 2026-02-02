@@ -1,6 +1,7 @@
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { comicToGenre } from "@/database/schema";
-import { and, eq } from "drizzle-orm";
 
 export async function addGenreToComic(comicId: number, genreId: number) {
   try {

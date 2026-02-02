@@ -1,27 +1,28 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpenIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 export interface BookmarkCardProps {
   comicId: number;
-  comicTitle: string;
   comicSlug: string;
-  coverImage: string | null;
-  status: string | null;
-  rating: string | null;
-  views: number | null;
+  comicTitle: string;
+  coverImage: null | string;
   lastReadChapter?: {
+    chapterNumber: null | number;
     id: number;
-    chapterNumber: number | null;
-    title: string | null;
+    title: null | string;
   } | null;
   onRemove?: (comicId: number) => void;
+  rating: null | string;
   removing?: boolean;
+  status: null | string;
+  views: null | number;
 }
 
 export function BookmarkCard({
@@ -40,18 +41,18 @@ export function BookmarkCard({
   const imgSrc = coverImage && coverImage.trim() ? coverImage : fallback;
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full group">
+    <Card className="group h-full overflow-hidden transition-shadow hover:shadow-lg">
       <Link href={`/comics/${comicSlug}`}>
         <div className="relative h-48 w-full">
           <Image
-            src={imgSrc}
             alt={`Cover of ${comicTitle}`}
-            fill
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            fill
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = fallback;
             }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            src={imgSrc}
           />
           {/* Status badge overlay */}
           <div className="absolute top-2 left-2">
@@ -68,8 +69,8 @@ export function BookmarkCard({
 
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
-          <Link href={`/comics/${comicSlug}`} className="flex-1">
-            <CardTitle className="line-clamp-2 hover:text-primary transition-colors">
+          <Link className="flex-1" href={`/comics/${comicSlug}`}>
+            <CardTitle className="hover:text-primary line-clamp-2 transition-colors">
               {comicTitle}
             </CardTitle>
           </Link>
@@ -80,8 +81,8 @@ export function BookmarkCard({
         {/* Last read progress */}
         {lastReadChapter && (
           <Link
+            className="text-primary flex items-center gap-2 text-sm hover:underline"
             href={`/comics/${comicSlug}/chapters/${lastReadChapter.chapterNumber}`}
-            className="flex items-center gap-2 text-sm text-primary hover:underline"
           >
             <BookOpenIcon className="h-4 w-4" />
             <span>
@@ -92,7 +93,7 @@ export function BookmarkCard({
         )}
 
         {/* Stats */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <div className="text-muted-foreground flex items-center justify-between text-xs">
           <span>👁️ {(views ?? 0).toLocaleString()} views</span>
           <span>⭐ {rating ?? "N/A"}</span>
         </div>
@@ -100,16 +101,16 @@ export function BookmarkCard({
         {/* Remove button */}
         {onRemove && (
           <Button
-            variant="ghost"
-            size="sm"
-            className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10 w-full"
+            disabled={removing}
             onClick={(e) => {
               e.preventDefault();
               onRemove(comicId);
             }}
-            disabled={removing}
+            size="sm"
+            variant="ghost"
           >
-            <TrashIcon className="h-4 w-4 mr-2" />
+            <TrashIcon className="mr-2 h-4 w-4" />
             {removing ? "Removing..." : "Remove Bookmark"}
           </Button>
         )}

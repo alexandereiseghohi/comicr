@@ -4,9 +4,10 @@
  */
 
 import { RedisCacheProvider } from "./redis-cache";
-import type { CacheOptions, CacheProvider, CacheProviderType, WithCacheOptions } from "./types";
-import { DEFAULT_CACHE_CONFIG, cacheKeys } from "./types";
+import { cacheKeys, DEFAULT_CACHE_CONFIG } from "./types";
 import { UpstashCacheProvider } from "./upstash-cache";
+
+import type { CacheOptions, CacheProvider, CacheProviderType, WithCacheOptions } from "./types";
 
 // Export types and utilities
 export * from "./types";

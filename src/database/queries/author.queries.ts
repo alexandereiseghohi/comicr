@@ -1,6 +1,7 @@
+import { and, eq, ilike } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { author } from "@/database/schema";
-import { and, eq, ilike } from "drizzle-orm";
 
 export async function getAuthors() {
   try {

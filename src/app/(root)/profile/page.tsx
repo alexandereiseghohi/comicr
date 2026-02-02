@@ -1,5 +1,6 @@
-import { auth } from "@/lib/auth-config";
 import { redirect } from "next/navigation";
+
+import { auth } from "@/lib/auth-config";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -12,7 +13,7 @@ export default async function ProfilePage() {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-semibold">Profile</h1>
-      <div className="p-4 bg-white border rounded-md">
+      <div className="rounded-md border bg-white p-4">
         <p className="text-sm">
           <strong>Name:</strong> {user?.name ?? "—"}
         </p>

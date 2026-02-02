@@ -1,12 +1,13 @@
+import { BookOpenIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+
 import { ComicsTable } from "@/components/admin/comics-table";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getComicsForAdmin } from "@/database/queries/admin.queries";
 import { auth } from "@/lib/auth-config";
-import { BookOpenIcon, PlusIcon } from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { Suspense } from "react";
 
 export const metadata = {
   title: "Comics Management | Admin",
@@ -27,7 +28,7 @@ function TableSkeleton() {
       <div className="rounded-md border">
         <div className="p-4">
           {[...Array(10)].map((_, i) => (
-            <div key={i} className="flex items-center gap-4 py-3 border-b last:border-0">
+            <div className="flex items-center gap-4 border-b py-3 last:border-0" key={i}>
               <Skeleton className="h-4 w-4" />
               <Skeleton className="h-12 w-9" />
               <Skeleton className="h-4 flex-1" />
@@ -55,7 +56,7 @@ async function ComicsContent({
 
   if (!result.success || !result.data) {
     return (
-      <div className="text-center py-12">
+      <div className="py-12 text-center">
         <p className="text-destructive">Failed to load comics</p>
       </div>
     );
@@ -65,9 +66,9 @@ async function ComicsContent({
 
   if (comics.length === 0) {
     return (
-      <div className="text-center py-12">
-        <BookOpenIcon className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
-        <h3 className="text-lg font-medium mb-2">No comics found</h3>
+      <div className="py-12 text-center">
+        <BookOpenIcon className="text-muted-foreground/50 mx-auto mb-4 h-12 w-12" />
+        <h3 className="mb-2 text-lg font-medium">No comics found</h3>
         <p className="text-muted-foreground mb-4">
           {search ? `No comics match "${search}"` : "Get started by adding your first comic"}
         </p>
@@ -83,7 +84,7 @@ async function ComicsContent({
 
   return (
     <>
-      <div className="text-sm text-muted-foreground mb-4">
+      <div className="text-muted-foreground mb-4 text-sm">
         Showing {comics.length} of {total} comics
         {totalPages > 1 && ` (Page ${page} of ${totalPages})`}
       </div>

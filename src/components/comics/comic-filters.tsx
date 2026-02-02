@@ -1,5 +1,9 @@
 "use client";
 
+import { Check, ChevronsUpDown, Search } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -13,9 +17,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown, Search } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const STATUSES = ["All", "Ongoing", "Completed", "Hiatus", "Dropped", "Season End", "Coming Soon"];
 const SORT_OPTIONS = [
@@ -97,31 +98,31 @@ export function ComicFilters() {
   };
 
   return (
-    <form onSubmit={handleSearch} className="space-y-4 bg-slate-50 p-6 rounded-lg">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+    <form className="space-y-4 rounded-lg bg-slate-50 p-6" onSubmit={handleSearch}>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
         {/* Search */}
         <div className="md:col-span-5">
-          <label className="text-sm font-medium text-slate-700 block mb-2">Search</label>
+          <label className="mb-2 block text-sm font-medium text-slate-700">Search</label>
           <div className="relative">
             <Input
+              className="pl-10"
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search comics by title..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
             />
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
           </div>
         </div>
 
         {/* Genre Filter */}
         <div className="md:col-span-3">
-          <label className="text-sm font-medium text-slate-700 block mb-2">Genres</label>
-          <Popover open={genresOpen} onOpenChange={setGenresOpen}>
+          <label className="mb-2 block text-sm font-medium text-slate-700">Genres</label>
+          <Popover onOpenChange={setGenresOpen} open={genresOpen}>
             <PopoverTrigger asChild>
               <Button
-                variant="outline"
-                role="combobox"
                 className={cn("w-full justify-between", !selectedGenres.length && "text-slate-500")}
+                role="combobox"
+                variant="outline"
               >
                 {selectedGenres.length > 0
                   ? `${selectedGenres.length} selected`
@@ -131,23 +132,23 @@ export function ComicFilters() {
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[300px] p-0" align="start">
-              <div className="max-h-[300px] overflow-y-auto p-4 space-y-2">
+            <PopoverContent align="start" className="w-[300px] p-0">
+              <div className="max-h-[300px] space-y-2 overflow-y-auto p-4">
                 {loading ? (
-                  <div className="text-center text-sm text-slate-500 py-4">Loading genres...</div>
+                  <div className="py-4 text-center text-sm text-slate-500">Loading genres...</div>
                 ) : genres.length === 0 ? (
-                  <div className="text-center text-sm text-slate-500 py-4">No genres found</div>
+                  <div className="py-4 text-center text-sm text-slate-500">No genres found</div>
                 ) : (
                   genres.map((genre) => (
-                    <div key={genre.slug} className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2" key={genre.slug}>
                       <Checkbox
-                        id={`genre-${genre.slug}`}
                         checked={selectedGenres.includes(genre.slug)}
+                        id={`genre-${genre.slug}`}
                         onCheckedChange={() => toggleGenre(genre.slug)}
                       />
                       <Label
+                        className="flex-1 cursor-pointer text-sm font-normal"
                         htmlFor={`genre-${genre.slug}`}
-                        className="text-sm font-normal cursor-pointer flex-1"
                       >
                         {genre.name}
                       </Label>
@@ -164,8 +165,8 @@ export function ComicFilters() {
 
         {/* Status Filter */}
         <div className="md:col-span-2">
-          <label className="text-sm font-medium text-slate-700 block mb-2">Status</label>
-          <Select value={status} onValueChange={setStatus}>
+          <label className="mb-2 block text-sm font-medium text-slate-700">Status</label>
+          <Select onValueChange={setStatus} value={status}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -181,8 +182,8 @@ export function ComicFilters() {
 
         {/* Sort */}
         <div className="md:col-span-2">
-          <label className="text-sm font-medium text-slate-700 block mb-2">Sort By</label>
-          <Select value={sort} onValueChange={setSort}>
+          <label className="mb-2 block text-sm font-medium text-slate-700">Sort By</label>
+          <Select onValueChange={setSort} value={sort}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -197,8 +198,8 @@ export function ComicFilters() {
         </div>
       </div>
 
-      <div className="flex gap-2 justify-end">
-        <Button type="button" variant="outline" onClick={handleClear}>
+      <div className="flex justify-end gap-2">
+        <Button onClick={handleClear} type="button" variant="outline">
           Clear
         </Button>
         <Button type="submit">Search</Button>

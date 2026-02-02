@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 import {
   Pagination,
   PaginationContent,
@@ -16,12 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRouter, useSearchParams } from "next/navigation";
 
 interface ComicPaginationProps {
   currentPage: number;
-  totalItems: number;
   itemsPerPage: number;
+  totalItems: number;
 }
 
 export function ComicPagination({ currentPage, totalItems, itemsPerPage }: ComicPaginationProps) {
@@ -42,7 +43,7 @@ export function ComicPagination({ currentPage, totalItems, itemsPerPage }: Comic
 
   // Calculate page numbers to display
   const getPageNumbers = () => {
-    const pages: (number | "ellipsis")[] = [];
+    const pages: ("ellipsis" | number)[] = [];
     const showPages = 7; // Total number of page buttons to show
 
     if (totalPages <= showPages) {
@@ -86,7 +87,7 @@ export function ComicPagination({ currentPage, totalItems, itemsPerPage }: Comic
 
   if (totalItems === 0) {
     return (
-      <div className="text-center py-8 text-slate-500">
+      <div className="py-8 text-center text-slate-500">
         <p>No comics found</p>
       </div>
     );
@@ -103,7 +104,7 @@ export function ComicPagination({ currentPage, totalItems, itemsPerPage }: Comic
         </p>
         <div className="flex items-center gap-2">
           <span className="text-sm text-slate-600">Comics per page:</span>
-          <Select value={itemsPerPage.toString()} onValueChange={handleItemsPerPageChange}>
+          <Select onValueChange={handleItemsPerPageChange} value={itemsPerPage.toString()}>
             <SelectTrigger className="w-[100px]">
               <SelectValue />
             </SelectTrigger>
@@ -123,9 +124,9 @@ export function ComicPagination({ currentPage, totalItems, itemsPerPage }: Comic
             {/* Previous */}
             <PaginationItem>
               <PaginationPrevious
-                href={currentPage > 1 ? buildUrl(currentPage - 1) : undefined}
                 aria-disabled={currentPage === 1}
                 className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                href={currentPage > 1 ? buildUrl(currentPage - 1) : undefined}
               />
             </PaginationItem>
 
@@ -147,9 +148,9 @@ export function ComicPagination({ currentPage, totalItems, itemsPerPage }: Comic
             {/* Next */}
             <PaginationItem>
               <PaginationNext
-                href={currentPage < totalPages ? buildUrl(currentPage + 1) : undefined}
                 aria-disabled={currentPage === totalPages}
                 className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                href={currentPage < totalPages ? buildUrl(currentPage + 1) : undefined}
               />
             </PaginationItem>
           </PaginationContent>

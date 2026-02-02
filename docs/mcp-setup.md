@@ -985,4 +985,250 @@ SENTRY_DSN="https://..."
 
 ---
 
-_Last Updated: 2026-02-01 - Initial MCP setup documentation created_
+## Enhanced Usage Patterns
+
+Maximizing the potential of your existing 8 MCP servers:
+
+### **Advanced Combinations**
+
+#### **Test Development Workflow**
+
+Combine multiple servers for comprehensive test development:
+
+```typescript
+// Using sequential-thinking + filesystem-ops + typescript-enhanced
+// 1. @workspace analyze this component for test coverage gaps
+// 2. @workspace use sequential thinking to plan comprehensive test suite
+// 3. @workspace generate test files using filesystem operations
+// 4. @workspace validate TypeScript interfaces for test data
+```
+
+#### **Code Analysis Pipeline**
+
+```typescript
+// Using git-integration + typescript-enhanced + context7
+// 1. @workspace show recent changes using git integration
+// 2. @workspace analyze TypeScript changes for breaking changes
+// 3. @workspace look up latest best practices with context7
+// 4. @workspace suggest refactoring approaches with sequential thinking
+```
+
+#### **Database Development Cycle**
+
+```typescript
+// Using postgresql-database + filesystem-ops + nextjs-dev
+// 1. @workspace query database to understand current schema
+// 2. @workspace create migration files using filesystem operations
+// 3. @workspace generate Next.js API routes for new endpoints
+// 4. @workspace validate changes with TypeScript analysis
+```
+
+### **Server-Specific Advanced Features**
+
+#### **nextjs-dev Server - Advanced Usage**
+
+- **Dynamic Route Generation**: Create parameterized routes with proper TypeScript types
+- **Metadata Optimization**: Generate SEO-optimized metadata for comic pages
+- **Server Action Patterns**: Create type-safe server actions with error handling
+- **Image Optimization**: Generate responsive image components with ImageKit integration
+
+**Example Queries**:
+
+- "@workspace create a dynamic route for /comics/[id] with proper metadata"
+- "@workspace generate a server action for rating submission with validation"
+- "@workspace optimize this component for Next.js 16 App Router patterns"
+
+#### **typescript-enhanced Server - Advanced Usage**
+
+- **Schema Generation**: Generate TypeScript interfaces from Zod schemas
+- **Type Guards**: Create runtime type validation functions
+- **Generic Utilities**: Build reusable type-safe utility functions
+- **Performance Analysis**: Identify type-related performance bottlenecks
+
+**Example Queries**:
+
+- "@workspace generate TypeScript types from this Zod schema"
+- "@workspace create type guards for runtime validation"
+- "@workspace optimize these types for better inference"
+
+#### **filesystem-ops Server - Advanced Usage**
+
+- **Batch Operations**: Process multiple files with consistent transformations
+- **Template Generation**: Create file templates for common patterns
+- **Code Migration**: Move and refactor code across directory structures
+- **Log Analysis**: Parse and analyze log files for debugging
+
+**Example Queries**:
+
+- "@workspace move all .test.ts files to tests/unit/ maintaining structure"
+- "@workspace create component template with props interface"
+- "@workspace analyze error logs and group by error type"
+
+#### **sequential-thinking Server - Advanced Usage**
+
+- **Architecture Planning**: Break down complex feature implementations
+- **Problem Diagnosis**: Systematically debug complex issues
+- "@workspace think through the best caching strategy for comic images"
+- "@workspace analyze trade-offs between client and server state management"
+
+#### **context7 Server - Advanced Usage**
+
+- **Migration Guides**: Find upgrade paths for dependencies
+- **Best Practices**: Research latest patterns for specific use cases
+- **API Documentation**: Get up-to-date API references
+- **Example Code**: Find working examples for complex implementations
+
+**Example Queries**:
+
+- "@workspace show me the latest Next.js 16 caching patterns"
+- "@workspace find Drizzle ORM examples for complex queries"
+- "@workspace get migration guide from NextAuth v4 to v5"
+
+### **Integration Scripts**
+
+Leverage existing MCP servers through custom integration scripts:
+
+```bash
+# Playwright functionality via existing servers
+pnpm mcp:playwright generate "comic-reader-flow"
+pnpm mcp:playwright analyze tests/e2e/reader.spec.ts
+pnpm mcp:playwright suggest
+
+# Vitest functionality
+pnpm mcp:vitest generate src/schemas/comic.schema.ts
+pnpm mcp:vitest coverage
+pnpm mcp:vitest validate tests/unit/schemas/comic.test.ts
+
+# GitHub workflow automation
+pnpm mcp:github pr-description main
+pnpm mcp:github workflow-check
+pnpm mcp:github issue-create feature
+```
+
+---
+
+## Missing MCP Servers Wishlist
+
+**Status**: These packages were verified as not available in npm registry as of February 2026.
+
+### **High Priority (Requested for Development)**
+
+#### **@modelcontextprotocol/server-playwright**
+
+- **Purpose**: Playwright test generation and debugging
+- **Would Enable**:
+  - Generate E2E tests from user flow descriptions
+  - Auto-fix failing test selectors
+  - Suggest accessibility improvements (WCAG 2.1 AA)
+  - Analyze test coverage gaps
+- **Current Workaround**: Use `scripts/mcp-integrations/playwright-integration.ts`
+- **Alternatives**: Direct Playwright API integration
+
+#### **@modelcontextprotocol/server-vitest**
+
+- **Purpose**: Vitest test generation and analysis
+- **Would Enable**:
+  - Generate unit tests from TypeScript source
+  - Analyze test coverage and suggest improvements
+  - Auto-fix test structure and assertions
+  - Validate test quality and patterns
+- **Current Workaround**: Use `scripts/mcp-integrations/vitest-integration.ts`
+- **Alternatives**: Custom AST analysis with TypeScript compiler API
+
+#### **@modelcontextprotocol/server-sentry**
+
+- **Purpose**: Sentry error tracking and performance monitoring
+- **Would Enable**:
+  - Query error trends and stack traces
+  - Analyze performance metrics
+  - Create/update Sentry issues from code
+  - Link deployments to error resolution
+- **Current Workaround**: Direct Sentry API integration
+- **Alternatives**: Use `@sentry/cli` and REST API
+
+#### **@modelcontextprotocol/server-github**
+
+- **Purpose**: GitHub integration for issues, PRs, and workflows
+- **Would Enable**:
+  - Create issues and PRs from code analysis
+  - Manage GitHub Actions workflows
+  - Analyze repository metrics and insights
+  - Automate project board updates
+- **Current Workaround**: Use `scripts/mcp-integrations/github-integration.ts`
+- **Alternatives**: Use `@octokit/rest` and GitHub CLI
+
+### **Medium Priority (Nice to Have)**
+
+#### **@modelcontextprotocol/server-imagekit** or **@modelcontextprotocol/server-media**
+
+- **Purpose**: ImageKit CDN management and image optimization
+- **Would Enable**:
+  - Upload and optimize comic images
+  - Generate responsive image URLs
+  - Analyze CDN performance metrics
+  - Manage image transformations
+- **Alternatives**: Direct ImageKit API integration
+
+#### **@modelcontextprotocol/server-drizzle** or **@modelcontextprotocol/server-orm**
+
+- **Purpose**: Enhanced ORM operations and migrations
+- **Would Enable**:
+  - Generate migrations from schema changes
+  - Optimize query performance
+  - Validate database relationships
+  - Suggest indexing strategies
+- **Alternatives**: Continue using `postgresql-database` + `typescript-enhanced`
+
+### **Low Priority (Future Consideration)**
+
+#### **@modelcontextprotocol/server-vercel**
+
+- **Purpose**: Vercel deployment and monitoring integration
+- **Alternatives**: Use Vercel CLI and API directly
+
+#### **@modelcontextprotocol/server-stripe**
+
+- **Purpose**: Payment processing and subscription management
+- **Alternatives**: Direct Stripe API integration
+
+### **Community Alternatives**
+
+If official packages become available, also consider:
+
+- Community-built MCP servers
+- Organization-specific custom servers
+- Third-party integrations
+
+### **Building Custom MCP Servers**
+
+For missing functionality, consider building custom MCP servers:
+
+```typescript
+// Example: Custom Playwright MCP server structure
+// src/mcp-servers/playwright-server.ts
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+
+// Custom implementation for project-specific needs
+```
+
+**Resources for Custom Development**:
+
+- [Model Context Protocol Documentation](https://modelcontextprotocol.io)
+- [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
+- [Example MCP Servers](https://github.com/modelcontextprotocol/servers)
+
+### **Migration Plan**
+
+When missing packages become available:
+
+1. **Verify packages exist**: Run `pnpm verify:mcp` to check availability
+2. **Test integration**: Add to development environment first
+3. **Update configuration**: Add to `.vscode/mcp.json` following existing patterns
+4. **Migrate scripts**: Replace integration scripts with native MCP functionality
+5. **Update documentation**: Document new server capabilities
+6. **Validate stability**: Ensure no regressions with existing 8 servers
+
+---
+
+_Last Updated: 2026-02-02 - Added enhanced usage patterns and missing packages wishlist_

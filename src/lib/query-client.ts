@@ -66,7 +66,7 @@ export const queryKeys = {
     lists: () => [...queryKeys.comics.all, "list"] as const,
     list: (filters: Record<string, unknown>) => [...queryKeys.comics.lists(), filters] as const,
     details: () => [...queryKeys.comics.all, "detail"] as const,
-    detail: (idOrSlug: string | number) => [...queryKeys.comics.details(), idOrSlug] as const,
+    detail: (idOrSlug: number | string) => [...queryKeys.comics.details(), idOrSlug] as const,
     trending: (period: string) => [...queryKeys.comics.all, "trending", period] as const,
   },
 

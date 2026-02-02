@@ -5,6 +5,12 @@
 
 "use client";
 
+import { ArrowLeft, Loader2, Save } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,22 +24,17 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { updateComicAction } from "@/lib/actions/admin.actions";
-import { ArrowLeft, Loader2, Save } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 
 interface Comic {
-  id: number;
-  title: string;
-  slug: string;
-  description: string | null;
-  coverImage: string | null;
-  status: string | null;
-  views: number | null;
-  rating: string | null;
+  coverImage: null | string;
   createdAt: Date | null;
+  description: null | string;
+  id: number;
+  rating: null | string;
+  slug: string;
+  status: null | string;
+  title: string;
+  views: null | number;
 }
 
 interface ComicEditFormProps {
@@ -52,7 +53,7 @@ const COMIC_STATUSES = [
 export function ComicEditForm({ comic }: ComicEditFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<null | string>(null);
 
   const [formData, setFormData] = useState({
     title: comic.title,
@@ -89,7 +90,7 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
     <form onSubmit={handleSubmit}>
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Form */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           <Card>
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
@@ -102,10 +103,10 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
                 <Label htmlFor="title">Title</Label>
                 <Input
                   id="title"
-                  value={formData.title}
                   onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                   placeholder="Comic title"
                   required
+                  value={formData.title}
                 />
               </div>
 
@@ -113,12 +114,12 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
                 <Label htmlFor="slug">Slug</Label>
                 <Input
                   id="slug"
-                  value={formData.slug}
                   onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
                   placeholder="comic-slug"
                   required
+                  value={formData.slug}
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   URL-friendly identifier (e.g., my-comic-name)
                 </p>
               </div>
@@ -127,12 +128,12 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
                 <Label htmlFor="description">Description</Label>
                 <Textarea
                   id="description"
-                  value={formData.description}
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, description: e.target.value }))
                   }
                   placeholder="Comic description..."
                   rows={6}
+                  value={formData.description}
                 />
               </div>
             </CardContent>
@@ -148,24 +149,24 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
                 <Label htmlFor="coverImage">Cover Image URL</Label>
                 <Input
                   id="coverImage"
-                  type="url"
-                  value={formData.coverImage}
                   onChange={(e) => setFormData((prev) => ({ ...prev, coverImage: e.target.value }))}
                   placeholder="https://example.com/cover.jpg"
+                  type="url"
+                  value={formData.coverImage}
                 />
               </div>
 
               {formData.coverImage && (
                 <div className="relative aspect-2/3 w-32 overflow-hidden rounded-md border">
                   <Image
-                    src={formData.coverImage}
                     alt="Cover preview"
-                    fill
                     className="object-cover"
+                    fill
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = "/images/placeholder-cover.jpg";
                     }}
+                    src={formData.coverImage}
                   />
                 </div>
               )}
@@ -182,8 +183,8 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
             </CardHeader>
             <CardContent>
               <Select
-                value={formData.status}
                 onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value }))}
+                value={formData.status}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select status" />
@@ -206,15 +207,15 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Views</span>
+                <span className="text-muted-foreground text-sm">Views</span>
                 <span className="font-medium">{comic.views?.toLocaleString() ?? 0}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Rating</span>
+                <span className="text-muted-foreground text-sm">Rating</span>
                 <span className="font-medium">{comic.rating ?? "N/A"}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Created</span>
+                <span className="text-muted-foreground text-sm">Created</span>
                 <span className="font-medium">
                   {comic.createdAt ? new Date(comic.createdAt).toLocaleDateString() : "Unknown"}
                 </span>
@@ -227,8 +228,8 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
               <CardTitle>Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isPending}>
+              {error && <p className="text-destructive text-sm">{error}</p>}
+              <Button className="w-full" disabled={isPending} type="submit">
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -241,7 +242,7 @@ export function ComicEditForm({ comic }: ComicEditFormProps) {
                   </>
                 )}
               </Button>
-              <Button variant="outline" className="w-full" asChild>
+              <Button asChild className="w-full" variant="outline">
                 <Link href="/admin/comics">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to Comics

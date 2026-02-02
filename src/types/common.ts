@@ -7,10 +7,10 @@
  * Generic API Response wrapper
  */
 export interface ApiResponse<T = unknown> {
-  success: boolean;
   data?: T;
   error?: string;
   message?: string;
+  success: boolean;
   timestamp?: number;
 }
 
@@ -18,21 +18,21 @@ export interface ApiResponse<T = unknown> {
  * Generic Action Result
  */
 export interface ActionResult<T = unknown> {
-  success: boolean;
   data?: T;
   error?: string;
+  success: boolean;
 }
 
 /**
  * Pagination metadata
  */
 export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
   hasNextPage: boolean;
   hasPrevPage: boolean;
+  limit: number;
+  page: number;
+  total: number;
+  totalPages: number;
 }
 
 /**
@@ -47,10 +47,10 @@ export interface PaginatedResponse<T> {
  * Error response
  */
 export interface ErrorResponse {
-  success: false;
-  error: string;
   code?: string;
   details?: Record<string, unknown>;
+  error: string;
+  success: false;
 }
 
 /**
@@ -64,22 +64,22 @@ export interface SearchParams {
  * Query options
  */
 export interface QueryOptions {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  order?: 'asc' | 'desc';
-  search?: string;
   filter?: Record<string, unknown>;
+  limit?: number;
+  order?: 'asc' | 'desc';
+  page?: number;
+  search?: string;
+  sort?: string;
 }
 
 /**
  * Notification object
  */
 export interface Notification {
-  id: string;
-  type: 'success' | 'error' | 'warning' | 'info';
-  message: string;
   duration?: number;
+  id: string;
+  message: string;
+  type: 'error' | 'info' | 'success' | 'warning';
 }
 
 /**
@@ -89,18 +89,18 @@ export interface FileMetadata {
   name: string;
   size: number;
   type: string;
-  url: string;
   uploadedAt: Date;
+  url: string;
 }
 
 /**
  * User session data
  */
 export interface SessionUser {
-  id: string;
   email: string;
-  name?: string;
+  id: string;
   image?: string;
+  name?: string;
   role?: 'admin' | 'moderator' | 'user';
 }
 
@@ -112,7 +112,7 @@ export type Dict<T = unknown> = Record<string, T>;
 /**
  * Nullable type utility
  */
-export type Nullable<T> = T | null;
+export type Nullable<T> = null | T;
 
 /**
  * Optional type utility

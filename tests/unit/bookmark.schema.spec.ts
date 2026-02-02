@@ -1,5 +1,6 @@
-import { BookmarkSchema, CreateBookmarkSchema } from "@/schemas/bookmark.schema";
 import { describe, expect, it } from "vitest";
+
+import { BookmarkSchema, CreateBookmarkSchema } from "@/schemas/bookmark.schema";
 
 describe("bookmark schema", () => {
   it("parses valid bookmark", () => {

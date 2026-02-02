@@ -1,14 +1,3 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  getDashboardStats,
-  getPopularComics,
-  getRecentComics,
-  getRecentUsers,
-} from "@/database/queries/admin.queries";
-import { auth } from "@/lib/auth-config";
 import {
   ArrowRightIcon,
   BookOpenIcon,
@@ -21,6 +10,18 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  getDashboardStats,
+  getPopularComics,
+  getRecentComics,
+  getRecentUsers,
+} from "@/database/queries/admin.queries";
+import { auth } from "@/lib/auth-config";
 
 export const metadata = {
   title: "Admin Dashboard | ComicWise",
@@ -80,11 +81,11 @@ async function DashboardStats() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => (
-        <Link key={stat.title} href={stat.href}>
-          <Card className="hover:shadow-md transition-shadow">
+        <Link href={stat.href} key={stat.title}>
+          <Card className="transition-shadow hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
+              <stat.icon className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
@@ -111,7 +112,7 @@ async function RecentComicsCard() {
           <CardDescription>Newly added comics</CardDescription>
         </div>
         <Link href="/admin/comics">
-          <Button variant="ghost" size="sm">
+          <Button size="sm" variant="ghost">
             View all
             <ArrowRightIcon className="ml-2 h-4 w-4" />
           </Button>
@@ -120,10 +121,10 @@ async function RecentComicsCard() {
       <CardContent>
         <div className="space-y-4">
           {result.data.map((comic) => (
-            <div key={comic.id} className="flex items-center justify-between">
-              <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{comic.title}</p>
-                <p className="text-sm text-muted-foreground">
+            <div className="flex items-center justify-between" key={comic.id}>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-medium">{comic.title}</p>
+                <p className="text-muted-foreground text-sm">
                   {comic.views?.toLocaleString() ?? 0} views
                 </p>
               </div>
@@ -167,11 +168,11 @@ async function PopularComicsCard() {
       <CardContent>
         <div className="space-y-4">
           {result.data.map((comic, index) => (
-            <div key={comic.id} className="flex items-center gap-3">
-              <span className="text-sm font-medium text-muted-foreground w-6">#{index + 1}</span>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{comic.title}</p>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-3" key={comic.id}>
+              <span className="text-muted-foreground w-6 text-sm font-medium">#{index + 1}</span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-medium">{comic.title}</p>
+                <div className="text-muted-foreground flex items-center gap-2 text-sm">
                   <span>👁️ {(comic.views ?? 0).toLocaleString()}</span>
                   <span>⭐ {Number(comic.rating)?.toFixed(1) ?? "N/A"}</span>
                 </div>
@@ -199,7 +200,7 @@ async function RecentUsersCard() {
           <CardDescription>Newly registered users</CardDescription>
         </div>
         <Link href="/admin/users">
-          <Button variant="ghost" size="sm">
+          <Button size="sm" variant="ghost">
             View all
             <ArrowRightIcon className="ml-2 h-4 w-4" />
           </Button>
@@ -208,10 +209,10 @@ async function RecentUsersCard() {
       <CardContent>
         <div className="space-y-4">
           {result.data.map((user) => (
-            <div key={user.id} className="flex items-center justify-between">
-              <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{user.name ?? "No name"}</p>
-                <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+            <div className="flex items-center justify-between" key={user.id}>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-medium">{user.name ?? "No name"}</p>
+                <p className="text-muted-foreground truncate text-sm">{user.email}</p>
               </div>
               <Badge variant="outline">{user.role ?? "user"}</Badge>
             </div>
@@ -272,7 +273,7 @@ export default async function AdminDashboardPage() {
               <CardContent>
                 <div className="space-y-4">
                   {[...Array(5)].map((_, i) => (
-                    <Skeleton key={i} className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" key={i} />
                   ))}
                 </div>
               </CardContent>
@@ -291,7 +292,7 @@ export default async function AdminDashboardPage() {
               <CardContent>
                 <div className="space-y-4">
                   {[...Array(5)].map((_, i) => (
-                    <Skeleton key={i} className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" key={i} />
                   ))}
                 </div>
               </CardContent>
@@ -310,7 +311,7 @@ export default async function AdminDashboardPage() {
               <CardContent>
                 <div className="space-y-4">
                   {[...Array(5)].map((_, i) => (
-                    <Skeleton key={i} className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" key={i} />
                   ))}
                 </div>
               </CardContent>

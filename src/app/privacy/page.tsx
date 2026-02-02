@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
 import type { Metadata } from "next";
 
 /* eslint-disable react/no-unescaped-entities */
@@ -24,7 +25,7 @@ export default function PrivacyPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
       <h1 className="mb-4 text-4xl font-bold tracking-tight">Privacy Policy</h1>
-      <p className="mb-8 text-muted-foreground">
+      <p className="text-muted-foreground mb-8">
         Last updated: <time dateTime="2026-02-01">{lastUpdated}</time>
       </p>
 
@@ -35,7 +36,7 @@ export default function PrivacyPage() {
           and other applicable data protection laws.
         </p>
 
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion className="w-full" collapsible type="single">
           <AccordionItem value="information-we-collect">
             <AccordionTrigger className="text-left text-xl font-semibold">
               1. Information We Collect
@@ -256,7 +257,7 @@ export default function PrivacyPage() {
 
               <p className="mt-4">
                 To exercise your rights, email us at{" "}
-                <a href="mailto:privacy@comicwise.app" className="text-primary underline">
+                <a className="text-primary underline" href="mailto:privacy@comicwise.app">
                   privacy@comicwise.app
                 </a>{" "}
                 or use the contact form.
@@ -361,13 +362,13 @@ export default function PrivacyPage() {
               <ul className="list-none space-y-2">
                 <li>
                   <strong>Email:</strong>{" "}
-                  <a href="mailto:privacy@comicwise.app" className="text-primary underline">
+                  <a className="text-primary underline" href="mailto:privacy@comicwise.app">
                     privacy@comicwise.app
                   </a>
                 </li>
                 <li>
                   <strong>Contact Form:</strong>{" "}
-                  <a href="/contact" className="text-primary underline">
+                  <a className="text-primary underline" href="/contact">
                     comicwise.app/contact
                   </a>
                 </li>
@@ -384,8 +385,8 @@ export default function PrivacyPage() {
           </AccordionItem>
         </Accordion>
 
-        <div className="mt-12 rounded-lg border bg-muted p-6">
-          <p className="text-sm text-muted-foreground">
+        <div className="bg-muted mt-12 rounded-lg border p-6">
+          <p className="text-muted-foreground text-sm">
             <strong>Your Privacy Matters:</strong> We are committed to transparency and protecting
             your privacy. This policy explains our practices in plain language. If anything is
             unclear, please don't hesitate to contact us.

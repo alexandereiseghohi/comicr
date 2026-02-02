@@ -1,7 +1,9 @@
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { bookmark } from "@/database/schema";
+
 import type { Bookmark } from "@/types";
-import { and, eq } from "drizzle-orm";
 
 export async function createBookmark(userId: string, comicId: number): Promise<Bookmark> {
   const result = await db.insert(bookmark).values({ userId, comicId }).returning();

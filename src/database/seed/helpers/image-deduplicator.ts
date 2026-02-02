@@ -8,6 +8,7 @@
 import { existsSync } from "node:fs";
 import { readFile, stat, symlink } from "node:fs/promises";
 import path from "node:path";
+
 import xxhash from "xxhash-wasm";
 
 /**
@@ -60,7 +61,7 @@ export async function hashImageFile(filePath: string): Promise<string> {
  * @param filePath - Path to new image file
  * @returns Existing file path if duplicate found, otherwise null
  */
-export async function findDuplicateByHash(filePath: string): Promise<string | null> {
+export async function findDuplicateByHash(filePath: string): Promise<null | string> {
   if (!existsSync(filePath)) {
     return null;
   }
@@ -108,11 +109,11 @@ export async function createImageSymlink(targetPath: string, linkPath: string): 
  * @returns Stats object with counts and storage saved
  */
 export async function getDeduplicationStats(): Promise<{
-  totalImages: number;
-  uniqueImages: number;
   duplicates: number;
   storageSavedBytes: number;
   storageSavedMB: string;
+  totalImages: number;
+  uniqueImages: number;
 }> {
   const totalImages = fileHashCache.size;
   const uniqueImages = hashToFileMap.size;

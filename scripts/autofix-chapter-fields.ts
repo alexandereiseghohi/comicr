@@ -1,14 +1,14 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 const chapterFiles = ["chapters.json", "chaptersdata1.json", "chaptersdata2.json"];
 
 function slugify(str: string): string {
   return str
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .replace(/-+/g, "-");
+    .replaceAll(/[^a-z0-9]+/g, "-")
+    .replaceAll(/^-+|-+$/g, "")
+    .replaceAll(/-+/g, "-");
 }
 
 async function main() {
@@ -16,12 +16,12 @@ async function main() {
   for (const file of chapterFiles) {
     const filePath = path.resolve(file);
     type Chapter = {
-      id: string;
-      comicId: string;
-      title: string;
-      slug: string;
-      images: string[];
       [key: string]: unknown;
+      comicId: string;
+      id: string;
+      images: string[];
+      slug: string;
+      title: string;
     };
     let data: Chapter[] = [];
     try {

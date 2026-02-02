@@ -1,5 +1,8 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -22,17 +25,15 @@ import {
   getReaderSettingsAction,
   updateReaderSettingsAction,
 } from "@/lib/actions/reading-progress.actions";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
 
 interface ReaderSettingsProps {
-  open: boolean;
   onOpenChange: (open: boolean) => void;
   onSettingsChange?: (settings: {
-    backgroundMode: "white" | "dark" | "sepia";
-    readingMode: "vertical" | "horizontal";
-    defaultQuality: "low" | "medium" | "high";
+    backgroundMode: "dark" | "sepia" | "white";
+    defaultQuality: "high" | "low" | "medium";
+    readingMode: "horizontal" | "vertical";
   }) => void;
+  open: boolean;
 }
 
 export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderSettingsProps) {
@@ -40,9 +41,9 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const [backgroundMode, setBackgroundMode] = useState<"white" | "dark" | "sepia">("white");
-  const [readingMode, setReadingMode] = useState<"vertical" | "horizontal">("vertical");
-  const [defaultQuality, setDefaultQuality] = useState<"low" | "medium" | "high">("medium");
+  const [backgroundMode, setBackgroundMode] = useState<"dark" | "sepia" | "white">("white");
+  const [readingMode, setReadingMode] = useState<"horizontal" | "vertical">("vertical");
+  const [defaultQuality, setDefaultQuality] = useState<"high" | "low" | "medium">("medium");
 
   // Load settings on mount
   useEffect(() => {
@@ -105,8 +106,8 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-md">
+    <Sheet onOpenChange={onOpenChange} open={open}>
+      <SheetContent className="w-full sm:max-w-md" side="right">
         <SheetHeader>
           <SheetTitle>Reader Settings</SheetTitle>
           <SheetDescription>
@@ -116,7 +117,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
 
         {loading ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
           </div>
         ) : (
           <div className="space-y-6 py-6">
@@ -124,27 +125,27 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
             <div className="space-y-3">
               <Label>Background Color</Label>
               <RadioGroup
-                value={backgroundMode}
                 onValueChange={(value) => setBackgroundMode(value as typeof backgroundMode)}
+                value={backgroundMode}
               >
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="white" id="bg-white" />
-                  <Label htmlFor="bg-white" className="flex items-center gap-2 cursor-pointer">
-                    <div className="w-8 h-8 rounded border-2 border-border bg-white" />
+                  <RadioGroupItem id="bg-white" value="white" />
+                  <Label className="flex cursor-pointer items-center gap-2" htmlFor="bg-white">
+                    <div className="border-border h-8 w-8 rounded border-2 bg-white" />
                     White
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="dark" id="bg-dark" />
-                  <Label htmlFor="bg-dark" className="flex items-center gap-2 cursor-pointer">
-                    <div className="w-8 h-8 rounded border-2 border-border bg-gray-900" />
+                  <RadioGroupItem id="bg-dark" value="dark" />
+                  <Label className="flex cursor-pointer items-center gap-2" htmlFor="bg-dark">
+                    <div className="border-border h-8 w-8 rounded border-2 bg-gray-900" />
                     Dark
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="sepia" id="bg-sepia" />
-                  <Label htmlFor="bg-sepia" className="flex items-center gap-2 cursor-pointer">
-                    <div className="w-8 h-8 rounded border-2 border-border bg-amber-50" />
+                  <RadioGroupItem id="bg-sepia" value="sepia" />
+                  <Label className="flex cursor-pointer items-center gap-2" htmlFor="bg-sepia">
+                    <div className="border-border h-8 w-8 rounded border-2 bg-amber-50" />
                     Sepia
                   </Label>
                 </div>
@@ -155,23 +156,23 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
             <div className="space-y-3">
               <Label>Reading Mode</Label>
               <RadioGroup
-                value={readingMode}
                 onValueChange={(value) => setReadingMode(value as typeof readingMode)}
+                value={readingMode}
               >
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="vertical" id="mode-vertical" />
-                  <Label htmlFor="mode-vertical" className="cursor-pointer">
+                  <RadioGroupItem id="mode-vertical" value="vertical" />
+                  <Label className="cursor-pointer" htmlFor="mode-vertical">
                     Vertical (Infinite Scroll)
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="horizontal" id="mode-horizontal" />
-                  <Label htmlFor="mode-horizontal" className="cursor-pointer">
+                  <RadioGroupItem id="mode-horizontal" value="horizontal" />
+                  <Label className="cursor-pointer" htmlFor="mode-horizontal">
                     Horizontal (Page by Page)
                   </Label>
                 </div>
               </RadioGroup>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {readingMode === "vertical"
                   ? "Scroll continuously through all pages"
                   : "Navigate one page at a time with arrow keys or swipe"}
@@ -182,8 +183,8 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
             <div className="space-y-3">
               <Label htmlFor="quality">Default Image Quality</Label>
               <Select
-                value={defaultQuality}
                 onValueChange={(value) => setDefaultQuality(value as typeof defaultQuality)}
+                value={defaultQuality}
               >
                 <SelectTrigger id="quality">
                   <SelectValue />
@@ -194,14 +195,14 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
                   <SelectItem value="high">High (Best quality)</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Higher quality uses more bandwidth but provides better image clarity
               </p>
             </div>
 
             {/* Save Button */}
-            <div className="pt-4 flex gap-2">
-              <Button onClick={handleSave} disabled={saving} className="flex-1">
+            <div className="flex gap-2 pt-4">
+              <Button className="flex-1" disabled={saving} onClick={handleSave}>
                 {saving ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -211,7 +212,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
                   "Save Settings"
                 )}
               </Button>
-              <Button variant="outline" onClick={() => onOpenChange(false)}>
+              <Button onClick={() => onOpenChange(false)} variant="outline">
                 Cancel
               </Button>
             </div>

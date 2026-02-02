@@ -1,11 +1,12 @@
+import { eq } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+
 import { db } from "@/database/db";
 import { changeUserEmail } from "@/database/mutations/user.mutations";
 import { user } from "@/database/schema";
 import { auth } from "@/lib/auth-config";
 import { verifyPassword } from "@/lib/password";
-import { eq } from "drizzle-orm";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 const EmailSchema = z.object({ email: z.string().email(), currentPassword: z.string().min(1) });
 

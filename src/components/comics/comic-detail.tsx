@@ -1,24 +1,25 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 interface ComicDetailProps {
+  chapters?: { id: number; number?: number; slug?: string; title: string; }[];
   comic: {
-    id: number;
-    title: string;
-    slug: string;
+    artists?: { name: string }[];
+    authors?: { name: string }[];
+    chaptersCount?: number;
     coverImage: string;
     description: string;
-    authors?: { name: string }[];
-    artists?: { name: string }[];
     genres?: { name: string }[];
-    chaptersCount?: number;
-    status?: string;
+    id: number;
     rating?: number;
+    slug: string;
+    status?: string;
+    title: string;
   };
-  chapters?: { id: number; title: string; number?: number; slug?: string }[];
   isAdmin?: boolean;
 }
 
@@ -26,15 +27,15 @@ export function ComicDetail({ comic, chapters = [], isAdmin = false }: ComicDeta
   return (
     <div className="space-y-6">
       <Card>
-        <div className="md:flex gap-6 p-4 items-start">
-          <div className="relative h-64 w-full md:w-56 flex-shrink-0">
-            <Image src={comic.coverImage} alt={comic.title} fill className="object-cover" />
+        <div className="items-start gap-6 p-4 md:flex">
+          <div className="relative h-64 w-full flex-shrink-0 md:w-56">
+            <Image alt={comic.title} className="object-cover" fill src={comic.coverImage} />
           </div>
 
           <CardContent>
             <CardHeader>
               <CardTitle className="text-2xl">{comic.title}</CardTitle>
-              <div className="flex items-center gap-2 mt-2">
+              <div className="mt-2 flex items-center gap-2">
                 {comic.status && <Badge>{comic.status}</Badge>}
                 {typeof comic.rating === "number" && (
                   <span className="text-sm text-slate-600">⭐ {comic.rating.toFixed(1)}</span>
@@ -87,16 +88,16 @@ export function ComicDetail({ comic, chapters = [], isAdmin = false }: ComicDeta
           {chapters.length === 0 && <p className="text-sm text-slate-500">No chapters yet.</p>}
           {chapters.map((c) => (
             <div
+              className="flex items-center justify-between rounded-md bg-slate-50 p-3"
               key={c.id}
-              className="flex items-center justify-between p-3 rounded-md bg-slate-50"
             >
               <div>
                 <div className="font-medium">{c.title}</div>
                 <div className="text-sm text-slate-500">Chapter {c.number ?? "-"}</div>
               </div>
               <Link
-                href={`/comics/${comic.slug}/chapter/${c.slug ?? c.id}`}
                 className="text-sm text-blue-600"
+                href={`/comics/${comic.slug}/chapter/${c.slug ?? c.id}`}
               >
                 Read
               </Link>

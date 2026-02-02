@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+
 import { createMockChain } from "./mock-db";
 
 vi.mock("@/database/db", () => {
@@ -27,12 +28,12 @@ vi.mock("@/database/db", () => {
 import { getChapterById, getChaptersByComicId } from "@/database/queries/chapter.queries";
 
 type Chapter = {
-  id: number;
-  title: string;
   chapterNumber: number;
-  releaseDate: string;
   comicId: number;
   content: string;
+  id: number;
+  releaseDate: string;
+  title: string;
 };
 
 describe("chapter queries", () => {

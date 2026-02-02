@@ -5,13 +5,13 @@
 
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { toast } from 'sonner';
+import { z } from 'zod';
+
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Form,
   FormControl,
@@ -20,6 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { emailValidator } from '@/types/validation';
 
 /**
@@ -64,7 +65,7 @@ export function ForgotPasswordForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="email"
@@ -73,12 +74,12 @@ export function ForgotPasswordForm() {
               <FormLabel className="text-slate-200">Email Address</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="you@example.com"
-                  type="email"
                   autoCapitalize="none"
                   autoComplete="email"
                   autoCorrect="off"
-                  className="bg-slate-800 border-slate-700 text-white"
+                  className="border-slate-700 bg-slate-800 text-white"
+                  placeholder="you@example.com"
+                  type="email"
                   {...field}
                   disabled={isPending}
                 />
@@ -88,7 +89,7 @@ export function ForgotPasswordForm() {
           )}
         />
 
-        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isPending}>
+        <Button className="w-full bg-blue-600 hover:bg-blue-700" disabled={isPending} type="submit">
           {isPending ? 'Sending...' : 'Send Reset Link'}
         </Button>
       </form>

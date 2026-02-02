@@ -1,0 +1,100 @@
+{
+  "timestamp": "2026-02-02T08:28:32.740Z",
+  "duration": 10206,
+  "mode": "full",
+  "phases": [
+    {
+      "name": "users",
+      "startTime": "2026-02-02T08:28:32.743Z",
+      "endTime": "2026-02-02T08:28:33.071Z",
+      "duration": 328,
+      "status": "success",
+      "itemsProcessed": 4,
+      "itemsSkipped": 0,
+      "itemsInserted": 4,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "authors",
+      "startTime": "2026-02-02T08:28:33.081Z",
+      "endTime": "2026-02-02T08:28:33.095Z",
+      "duration": 14,
+      "status": "success",
+      "itemsProcessed": 25,
+      "itemsSkipped": 0,
+      "itemsInserted": 25,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "artists",
+      "startTime": "2026-02-02T08:28:33.096Z",
+      "endTime": "2026-02-02T08:28:33.106Z",
+      "duration": 10,
+      "status": "success",
+      "itemsProcessed": 22,
+      "itemsSkipped": 0,
+      "itemsInserted": 22,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "genres",
+      "startTime": "2026-02-02T08:28:33.106Z",
+      "endTime": "2026-02-02T08:28:33.118Z",
+      "duration": 12,
+      "status": "success",
+      "itemsProcessed": 36,
+      "itemsSkipped": 0,
+      "itemsInserted": 36,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "types",
+      "startTime": "2026-02-02T08:28:33.119Z",
+      "endTime": "2026-02-02T08:28:33.125Z",
+      "duration": 6,
+      "status": "success",
+      "itemsProcessed": 3,
+      "itemsSkipped": 0,
+      "itemsInserted": 3,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "comics",
+      "startTime": "2026-02-02T08:28:33.184Z",
+      "endTime": "2026-02-02T08:28:42.944Z",
+      "duration": 9760,
+      "status": "success",
+      "itemsProcessed": 627,
+      "itemsSkipped": 157,
+      "itemsInserted": 0,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "chapters",
+      "startTime": "2026-02-02T08:28:42.945Z",
+      "endTime": "2026-02-02T08:28:42.945Z",
+      "duration": 0,
+      "status": "success",
+      "itemsProcessed": 5814,
+      "itemsSkipped": 0,
+      "itemsInserted": 2369,
+      "itemsUpdated": 0,
+      "warnings": []
+    }
+  ],
+  "summary": {
+    "totalItems": 6531,
+    "totalInserted": 2459,
+    "totalUpdated": 0,
+    "totalSkipped": 157,
+    "totalErrors": 0,
+    "totalWarnings": 0
+  },
+  "errors": []
+}

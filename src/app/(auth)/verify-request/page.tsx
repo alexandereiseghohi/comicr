@@ -14,43 +14,43 @@ export const metadata = {
  */
 export default function VerifyRequestPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
       <div className="w-full max-w-md">
         <div className="text-center">
           <div className="mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500 rounded-full mb-4">
+            <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-500">
               <svg
-                className="w-8 h-8 text-white"
+                className="h-8 w-8 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
                 <path
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                 />
               </svg>
             </div>
 
-            <h1 className="text-4xl font-bold text-white mb-2">Check Your Email</h1>
-            <p className="text-slate-400 mb-4">
+            <h1 className="mb-2 text-4xl font-bold text-white">Check Your Email</h1>
+            <p className="mb-4 text-slate-400">
               We&apos;ve sent you an email with a link to verify your account. Please check your
               inbox and click the link to continue.
             </p>
           </div>
 
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 mb-6">
-            <p className="text-slate-300 text-sm">
+          <div className="mb-6 rounded-lg border border-slate-700 bg-slate-800 p-4">
+            <p className="text-sm text-slate-300">
               <strong>Didn&apos;t receive an email?</strong> Check your spam folder or try signing up
               again.
             </p>
           </div>
 
           <a
+            className="inline-block rounded-lg bg-blue-600 px-6 py-2 text-white transition hover:bg-blue-700"
             href="/auth/sign-in"
-            className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
           >
             Back to Sign In
           </a>

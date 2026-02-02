@@ -1,9 +1,12 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/user.mutations";
 import { user } from "@/database/schema";
-import type { DbMutationResult } from "@/types";
-import { eq } from "drizzle-orm";
+
 import { BaseDAL } from "./base-dal";
+
+import type { DbMutationResult } from "@/types";
 
 /**
  * Data Access Layer for User entities
@@ -67,8 +70,7 @@ export class UserDAL extends BaseDAL<typeof user> {
     data: Partial<typeof user.$inferInsert>
   ): Promise<DbMutationResult<typeof user.$inferSelect>> {
     try {
-      const result = await mutations.updateUserById(id, data);
-      return result;
+      return await mutations.updateUserById(id, data);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };
     }

@@ -3,8 +3,10 @@
  * @description Cloudinary CDN storage implementation
  */
 
-import { getEnv } from "@/lib/env";
 import { v2 as cloudinary } from "cloudinary";
+
+import { getEnv } from "@/lib/env";
+
 import type {
   DeleteOptions,
   DeleteResult,
@@ -52,7 +54,7 @@ export class CloudinaryStorageProvider implements StorageProvider {
   }
 
   async upload(
-    file: Buffer | Blob | ReadableStream,
+    file: Blob | Buffer | ReadableStream,
     filename: string,
     options: UploadOptions = {}
   ): Promise<UploadResponse> {
@@ -83,7 +85,7 @@ export class CloudinaryStorageProvider implements StorageProvider {
       const dataUri = bufferToDataUri(buffer, contentType);
 
       // Determine resource type from content type
-      let resourceType: "image" | "video" | "raw" = "raw";
+      let resourceType: "image" | "raw" | "video" = "raw";
       if (contentType.startsWith("image/")) resourceType = "image";
       else if (contentType.startsWith("video/")) resourceType = "video";
 

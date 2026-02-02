@@ -5,12 +5,11 @@
 
 import { downloadAndSaveImage } from "@/lib/image-helper";
 import { seedTableBatched } from "@/lib/seed-helpers";
-import { AuthorSeedSchema, type AuthorSeed } from "@/lib/validations/seed";
-import path from "path";
-import { author } from "../../schema";
+import { type AuthorSeed, AuthorSeedSchema } from "@/lib/validations/seed";
 
-const AUTHORS_IMAGE_DIR = "public/images/authors";
-const PLACEHOLDER_AUTHOR = "/images/placeholder-author.png";
+import { db } from "../../db";
+import { author } from "../../schema";
+import { AUTHORS_IMAGE_DIR, BATCH_SIZE, PLACEHOLDER_AUTHOR } from "../seed-config";
 
 export interface AuthorSeederOptions {
   /** Array of authors to seed */
@@ -22,10 +21,12 @@ export interface AuthorSeederOptions {
 }
 
 export interface AuthorSeederResult {
-  success: boolean;
+  errors: Array<{ author: unknown; error: string }>;
+  /** Map of author name (lowercase) to database ID */
+  idMap: Map<string, number>;
   seeded: number;
   skipped: number;
-  errors: Array<{ author: unknown; error: string }>;
+  success: boolean;
 }
 
 /**
@@ -55,6 +56,7 @@ export async function seedAuthors(options: AuthorSeederOptions): Promise<AuthorS
       seeded: 0,
       skipped: rawAuthors.length,
       errors,
+      idMap: new Map(),
     };
   }
 
@@ -66,8 +68,8 @@ export async function seedAuthors(options: AuthorSeederOptions): Promise<AuthorS
           try {
             authorData.image = await downloadAndSaveImage({
               url: authorData.image,
-              destDir: path.join(AUTHORS_IMAGE_DIR),
-              filename: `${authorData.name.toLowerCase().replace(/\s+/g, "-")}.jpg`,
+              destDir: AUTHORS_IMAGE_DIR,
+              filename: `${authorData.name.toLowerCase().replaceAll(/\s+/g, "-")}.jpg`,
               fallback: PLACEHOLDER_AUTHOR,
             });
           } catch {
@@ -96,8 +98,25 @@ export async function seedAuthors(options: AuthorSeederOptions): Promise<AuthorS
       { name: "image", value: undefined },
       { name: "isActive", value: undefined },
     ],
+    batchSize: BATCH_SIZE,
     dryRun,
   });
+
+  // Build ID map by querying inserted records (avoids separate query in orchestrator)
+  const idMap = new Map<string, number>();
+  if (!dryRun) {
+    const seededAuthors = await db.query.author.findMany({
+      columns: { id: true, name: true },
+      where: (table, { inArray }) =>
+        inArray(
+          table.name,
+          validAuthors.map((a) => a.name)
+        ),
+    });
+    for (const item of seededAuthors) {
+      idMap.set(item.name.toLowerCase(), item.id);
+    }
+  }
 
   // Report completion
   onProgress?.(validAuthors.length, validAuthors.length);
@@ -107,6 +126,7 @@ export async function seedAuthors(options: AuthorSeederOptions): Promise<AuthorS
     seeded: result.inserted,
     skipped: errors.length,
     errors,
+    idMap,
   };
 }
 

@@ -1,12 +1,13 @@
-import { db } from "@/database/db";
-import { comment, user } from "@/database/schema";
 import { and, eq, isNull } from "drizzle-orm";
 
+import { db } from "@/database/db";
+import { comment, user } from "@/database/schema";
+
 interface CreateCommentData {
-  userId: string;
   chapterId: number;
   content: string;
-  parentId?: number | null;
+  parentId?: null | number;
+  userId: string;
 }
 
 /**

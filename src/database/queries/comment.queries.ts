@@ -1,6 +1,7 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { comment } from "@/database/schema";
-import { eq } from "drizzle-orm";
 
 export async function getCommentsByChapterId(chapterId: number) {
   try {

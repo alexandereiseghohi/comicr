@@ -3,10 +3,12 @@
  * @description Create, update, delete operations for comics
  */
 
+import { eq, sql } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { comic } from "@/database/schema";
+
 import type { CreateComicInput, UpdateComicInput } from "@/schemas/comic-schema";
-import { eq, sql } from "drizzle-orm";
 
 /**
  * Create a new comic

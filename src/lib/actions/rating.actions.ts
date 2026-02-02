@@ -3,7 +3,8 @@
 import { auth } from "@/auth";
 import * as mutations from "@/database/mutations/rating-mutations";
 import * as queries from "@/database/queries/rating-queries";
-import { ratingSchema, type RatingInput } from "@/schemas/rating.schema";
+import { type RatingInput, ratingSchema } from "@/schemas/rating.schema";
+
 import type { ActionResult } from "@/types";
 
 /**
@@ -11,7 +12,7 @@ import type { ActionResult } from "@/types";
  */
 export async function getUserRatingAction(
   comicId: number
-): Promise<ActionResult<{ rating: number; review: string | null } | null>> {
+): Promise<ActionResult<{ rating: number; review: null | string } | null>> {
   try {
     const session = await auth();
     if (!session?.user?.id) {

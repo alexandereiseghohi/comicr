@@ -1,6 +1,7 @@
+import { and, eq, ilike } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { artist } from "@/database/schema";
-import { and, eq, ilike } from "drizzle-orm";
 
 export async function getArtists() {
   try {

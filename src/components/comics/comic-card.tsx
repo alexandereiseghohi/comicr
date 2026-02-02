@@ -1,20 +1,21 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 interface ComicCardProps {
-  id: number;
-  title: string;
-  slug: string;
+  authorName?: string;
   coverImage: string;
   description: string;
-  status: string;
-  views: number;
+  id: number;
   rating: number;
-  authorName?: string;
+  slug: string;
+  status: string;
+  title: string;
+  views: number;
 }
 
 export function ComicCard({
@@ -33,17 +34,17 @@ export function ComicCard({
   const altText = title ? `Cover of ${title}` : "Comic cover";
   return (
     <Link href={`/comics/${slug}`}>
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
+      <Card className="h-full overflow-hidden transition-shadow hover:shadow-lg">
         <div className="relative h-48 w-full">
           <Image
-            src={imgSrc}
             alt={altText}
-            fill
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            fill
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = fallback;
             }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            src={imgSrc}
           />
         </div>
         <CardHeader>
@@ -62,7 +63,7 @@ export function ComicCard({
           </div>
         </CardHeader>
         <CardContent className="space-y-2">
-          <p className="text-sm text-slate-600 line-clamp-2">{description}</p>
+          <p className="line-clamp-2 text-sm text-slate-600">{description}</p>
           <div className="flex items-center justify-between text-xs text-slate-500">
             <span>👁️ {views.toLocaleString()} views</span>
             <span>⭐ {rating.toFixed(1)}</span>

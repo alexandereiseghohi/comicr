@@ -1,5 +1,17 @@
 "use client";
 
+import { type ColumnDef } from "@tanstack/react-table";
+import {
+  ArrowUpDownIcon,
+  ExternalLinkIcon,
+  MoreHorizontalIcon,
+  PencilIcon,
+  TrashIcon,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import * as React from "react";
+
 import { DataTable } from "@/components/admin/data-table";
 import {
   AlertDialog,
@@ -22,27 +34,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowUpDownIcon,
-  ExternalLinkIcon,
-  MoreHorizontalIcon,
-  PencilIcon,
-  TrashIcon,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import * as React from "react";
 
 export interface ComicRow {
-  id: number;
-  title: string;
-  slug: string;
-  coverImage: string | null;
-  status: string | null;
-  views: number | null;
-  rating: string | null;
+  coverImage: null | string;
   createdAt: Date | null;
+  id: number;
+  rating: null | string;
+  slug: string;
+  status: null | string;
+  title: string;
+  views: null | number;
 }
 
 interface ComicsTableProps {
@@ -51,7 +52,7 @@ interface ComicsTableProps {
 }
 
 export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
-  const [deleteId, setDeleteId] = React.useState<number | null>(null);
+  const [deleteId, setDeleteId] = React.useState<null | number>(null);
   const [deleting, setDeleting] = React.useState(false);
 
   const handleDelete = async () => {
@@ -70,19 +71,19 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       id: "select",
       header: ({ table }) => (
         <Checkbox
+          aria-label="Select all"
           checked={
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
         />
       ),
       cell: ({ row }) => (
         <Checkbox
+          aria-label="Select row"
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
         />
       ),
       enableSorting: false,
@@ -97,20 +98,20 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       accessorKey: "coverImage",
       header: "Cover",
       cell: ({ row }) => {
-        const coverImage = row.getValue("coverImage") as string | null;
+        const coverImage = row.getValue("coverImage") as null | string;
         const title = row.original.title;
         return (
           <div className="relative h-12 w-9 overflow-hidden rounded">
             {coverImage ? (
               <Image
-                src={coverImage}
                 alt={`Cover of ${title}`}
-                fill
                 className="object-cover"
+                fill
                 sizes="36px"
+                src={coverImage}
               />
             ) : (
-              <div className="h-full w-full bg-muted" />
+              <div className="bg-muted h-full w-full" />
             )}
           </div>
         );
@@ -121,8 +122,8 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       accessorKey: "title",
       header: ({ column }) => (
         <Button
-          variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          variant="ghost"
         >
           Title
           <ArrowUpDownIcon className="ml-2 h-4 w-4" />
@@ -130,8 +131,8 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       ),
       cell: ({ row }) => (
         <div className="max-w-[200px]">
-          <p className="font-medium truncate">{row.getValue("title")}</p>
-          <p className="text-xs text-muted-foreground truncate">/{row.original.slug}</p>
+          <p className="truncate font-medium">{row.getValue("title")}</p>
+          <p className="text-muted-foreground truncate text-xs">/{row.original.slug}</p>
         </div>
       ),
     },
@@ -139,7 +140,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        const status = row.getValue("status") as string | null;
+        const status = row.getValue("status") as null | string;
         return (
           <Badge
             variant={
@@ -158,15 +159,15 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       accessorKey: "views",
       header: ({ column }) => (
         <Button
-          variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          variant="ghost"
         >
           Views
           <ArrowUpDownIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: ({ row }) => {
-        const views = row.getValue("views") as number | null;
+        const views = row.getValue("views") as null | number;
         return <span>{(views ?? 0).toLocaleString()}</span>;
       },
     },
@@ -174,15 +175,15 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       accessorKey: "rating",
       header: ({ column }) => (
         <Button
-          variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          variant="ghost"
         >
           Rating
           <ArrowUpDownIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: ({ row }) => {
-        const rating = row.getValue("rating") as string | null;
+        const rating = row.getValue("rating") as null | string;
         return <span>⭐ {rating ? parseFloat(rating).toFixed(1) : "N/A"}</span>;
       },
     },
@@ -190,8 +191,8 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       accessorKey: "createdAt",
       header: ({ column }) => (
         <Button
-          variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          variant="ghost"
         >
           Created
           <ArrowUpDownIcon className="ml-2 h-4 w-4" />
@@ -200,7 +201,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       cell: ({ row }) => {
         const date = row.getValue("createdAt") as Date | null;
         return (
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground text-sm">
             {date ? new Date(date).toLocaleDateString() : "N/A"}
           </span>
         );
@@ -213,7 +214,7 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button className="h-8 w-8 p-0" variant="ghost">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontalIcon className="h-4 w-4" />
               </Button>
@@ -253,13 +254,13 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
       <DataTable
         columns={columns}
         data={comics}
+        pageSize={20}
         searchKey="title"
         searchPlaceholder="Search comics..."
-        pageSize={20}
       />
 
       {/* Delete confirmation */}
-      <AlertDialog open={deleteId !== null} onOpenChange={() => setDeleteId(null)}>
+      <AlertDialog onOpenChange={() => setDeleteId(null)} open={deleteId !== null}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Comic</AlertDialogTitle>
@@ -271,9 +272,9 @@ export function ComicsTable({ comics, onDelete }: ComicsTableProps) {
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDelete}
-              disabled={deleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deleting}
+              onClick={handleDelete}
             >
               {deleting ? "Deleting..." : "Delete"}
             </AlertDialogAction>

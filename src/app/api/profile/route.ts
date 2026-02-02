@@ -1,6 +1,7 @@
+import { type NextRequest, NextResponse } from "next/server";
+
 import { updateUserById } from "@/database/mutations/user.mutations";
 import { auth } from "@/lib/auth-config";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {

@@ -1,6 +1,7 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { readerSettings } from "@/database/schema";
-import { eq } from "drizzle-orm";
 
 /**
  * Get reader settings for a user
@@ -34,9 +35,9 @@ export async function getUserReaderSettings(userId: string) {
 export async function upsertReaderSettings(
   userId: string,
   settings: {
-    backgroundMode?: "white" | "dark" | "sepia";
-    readingMode?: "vertical" | "horizontal";
-    defaultQuality?: "low" | "medium" | "high";
+    backgroundMode?: "dark" | "sepia" | "white";
+    defaultQuality?: "high" | "low" | "medium";
+    readingMode?: "horizontal" | "vertical";
   }
 ) {
   try {

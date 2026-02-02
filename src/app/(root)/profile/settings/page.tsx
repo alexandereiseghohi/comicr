@@ -1,6 +1,19 @@
 "use client";
 
 import {
+  AlertTriangle,
+  ArrowLeft,
+  Bell,
+  Eye,
+  Loader2,
+  Settings as SettingsIcon,
+  Trash2,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -22,22 +35,10 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import {
-  AlertTriangle,
-  ArrowLeft,
-  Bell,
-  Eye,
-  Loader2,
-  Settings as SettingsIcon,
-  Trash2,
-} from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 interface UserSettings {
   emailNotifications: boolean;
-  profileVisibility: "public" | "private";
+  profileVisibility: "private" | "public";
   readingHistoryVisibility: boolean;
 }
 
@@ -140,7 +141,7 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
       </div>
     );
@@ -148,12 +149,12 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 py-8">
-      <div className="container max-w-3xl mx-auto px-4">
+      <div className="container mx-auto max-w-3xl px-4">
         {/* Back Button */}
         <div className="mb-6">
           <Link href="/profile">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+            <Button size="sm" variant="ghost">
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Profile
             </Button>
           </Link>
@@ -161,7 +162,7 @@ export default function SettingsPage() {
 
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="mb-2 flex items-center gap-2">
             <SettingsIcon className="h-6 w-6 text-slate-700" />
             <h1 className="text-3xl font-bold text-slate-950">Settings</h1>
           </div>
@@ -181,7 +182,7 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="email-notifications" className="font-medium">
+                  <Label className="font-medium" htmlFor="email-notifications">
                     Email Notifications
                   </Label>
                   <p className="text-sm text-slate-500">
@@ -189,8 +190,8 @@ export default function SettingsPage() {
                   </p>
                 </div>
                 <Switch
-                  id="email-notifications"
                   checked={settings.emailNotifications}
+                  id="email-notifications"
                   onCheckedChange={(checked) => handleSettingChange("emailNotifications", checked)}
                 />
               </div>
@@ -208,14 +209,14 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="profile-visibility" className="font-medium">
+                <Label className="font-medium" htmlFor="profile-visibility">
                   Profile Visibility
                 </Label>
                 <Select
-                  value={settings.profileVisibility}
                   onValueChange={(value) =>
-                    handleSettingChange("profileVisibility", value as "public" | "private")
+                    handleSettingChange("profileVisibility", value as "private" | "public")
                   }
+                  value={settings.profileVisibility}
                 >
                   <SelectTrigger id="profile-visibility">
                     <SelectValue />
@@ -232,7 +233,7 @@ export default function SettingsPage() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="reading-history" className="font-medium">
+                  <Label className="font-medium" htmlFor="reading-history">
                     Reading History Visibility
                   </Label>
                   <p className="text-sm text-slate-500">
@@ -240,12 +241,12 @@ export default function SettingsPage() {
                   </p>
                 </div>
                 <Switch
-                  id="reading-history"
                   checked={settings.readingHistoryVisibility}
+                  disabled={settings.profileVisibility === "private"}
+                  id="reading-history"
                   onCheckedChange={(checked) =>
                     handleSettingChange("readingHistoryVisibility", checked)
                   }
-                  disabled={settings.profileVisibility === "private"}
                 />
               </div>
             </CardContent>
@@ -263,19 +264,19 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                  <h4 className="font-medium text-sm">Delete Account</h4>
+                  <h4 className="text-sm font-medium">Delete Account</h4>
                   <p className="text-sm text-slate-500">
                     Permanently delete your account and all associated data. This cannot be undone.
                   </p>
                 </div>
                 <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => setShowDeleteDialog(true)}
-                  disabled={deleting}
                   className="shrink-0"
+                  disabled={deleting}
+                  onClick={() => setShowDeleteDialog(true)}
+                  size="sm"
+                  variant="destructive"
                 >
-                  <Trash2 className="h-4 w-4 mr-2" />
+                  <Trash2 className="mr-2 h-4 w-4" />
                   Delete Account
                 </Button>
               </div>
@@ -283,32 +284,32 @@ export default function SettingsPage() {
           </Card>
 
           {/* Save Button */}
-          <div className="flex gap-3 sticky bottom-0 bg-slate-50 py-4 border-t border-t-slate-200">
-            <Button onClick={handleSave} disabled={!hasChanges || saving} className="flex-1">
+          <div className="sticky bottom-0 flex gap-3 border-t border-t-slate-200 bg-slate-50 py-4">
+            <Button className="flex-1" disabled={!hasChanges || saving} onClick={handleSave}>
               {saving ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Saving...
                 </>
               ) : (
                 "Save Changes"
               )}
             </Button>
-            <Button variant="outline" onClick={() => router.push("/profile")} disabled={saving}>
+            <Button disabled={saving} onClick={() => router.push("/profile")} variant="outline">
               Cancel
             </Button>
           </div>
         </div>
 
         {/* Delete Confirmation Dialog */}
-        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialog onOpenChange={setShowDeleteDialog} open={showDeleteDialog}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
                 This action cannot be undone. This will permanently delete your account and remove
                 all your data from our servers, including:
-                <ul className="list-disc list-inside mt-2 space-y-1">
+                <ul className="mt-2 list-inside list-disc space-y-1">
                   <li>Your profile information</li>
                   <li>Reading history and progress</li>
                   <li>Bookmarks and ratings</li>
@@ -319,13 +320,13 @@ export default function SettingsPage() {
             <AlertDialogFooter>
               <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={handleDeleteAccount}
-                disabled={deleting}
                 className="bg-red-600 hover:bg-red-700"
+                disabled={deleting}
+                onClick={handleDeleteAccount}
               >
                 {deleting ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Deleting...
                   </>
                 ) : (

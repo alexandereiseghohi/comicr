@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 
 type Props = {
-  defaultName?: string | null;
-  defaultImage?: string | null;
-  defaultEmail?: string | null;
+  defaultEmail?: null | string;
+  defaultImage?: null | string;
+  defaultName?: null | string;
 };
 
 export default function ProfileForm({ defaultName, defaultImage, defaultEmail }: Props) {
@@ -103,108 +103,108 @@ export default function ProfileForm({ defaultName, defaultImage, defaultEmail }:
 
   return (
     <div className="space-y-4">
-      <form onSubmit={onSubmit} className="p-4 bg-white border rounded-md space-y-3">
+      <form className="space-y-3 rounded-md border bg-white p-4" onSubmit={onSubmit}>
         <div>
           <label className="block text-sm">Name</label>
           <input
-            value={name}
+            className="mt-1 block w-full rounded border px-3 py-2"
             onChange={(e) => setName(e.target.value)}
-            className="mt-1 block w-full border rounded px-3 py-2"
+            value={name}
           />
         </div>
 
         <div>
-          <label htmlFor="profile-image-url" className="block text-sm">
+          <label className="block text-sm" htmlFor="profile-image-url">
             Image URL
           </label>
           <input
-            id="profile-image-url"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            className="mt-1 block w-full border rounded px-3 py-2"
             aria-describedby="profile-image-preview"
+            className="mt-1 block w-full rounded border px-3 py-2"
+            id="profile-image-url"
+            onChange={(e) => setImage(e.target.value)}
+            value={image}
           />
           <div className="mt-2 flex items-center gap-4">
             <Image
-              id="profile-image-preview"
-              src={image && image.trim() ? image : "/images/shadcn.jpg"}
               alt={name ? `Profile image for ${name}` : "Profile image"}
-              className="w-16 h-16 rounded-full border object-cover"
-              width={64}
+              className="h-16 w-16 rounded-full border object-cover"
               height={64}
+              id="profile-image-preview"
               onError={undefined}
+              src={image && image.trim() ? image : "/images/shadcn.jpg"}
+              width={64}
             />
-            <span className="text-xs text-muted-foreground">Preview</span>
+            <span className="text-muted-foreground text-xs">Preview</span>
           </div>
         </div>
 
         <div className="flex items-center space-x-2">
           <button
-            type="submit"
+            className="rounded bg-blue-600 px-4 py-2 text-white"
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
+            type="submit"
           >
             {loading ? "Saving..." : "Save"}
           </button>
-          <a href="/profile" className="text-sm text-muted-foreground">
+          <a className="text-muted-foreground text-sm" href="/profile">
             Cancel
           </a>
         </div>
       </form>
 
-      <form onSubmit={changePassword} className="p-4 bg-white border rounded-md space-y-3">
+      <form className="space-y-3 rounded-md border bg-white p-4" onSubmit={changePassword}>
         <h3 className="text-lg font-medium">Change password</h3>
         <div>
           <label className="block text-sm">Current password</label>
           <input
+            className="mt-1 block w-full rounded border px-3 py-2"
             name="currentPassword"
             type="password"
-            className="mt-1 block w-full border rounded px-3 py-2"
           />
         </div>
         <div>
           <label className="block text-sm">New password</label>
           <input
+            className="mt-1 block w-full rounded border px-3 py-2"
             name="newPassword"
             type="password"
-            className="mt-1 block w-full border rounded px-3 py-2"
           />
         </div>
         <div>
           <button
-            type="submit"
+            className="rounded bg-red-600 px-4 py-2 text-white"
             disabled={pwLoading}
-            className="px-4 py-2 bg-red-600 text-white rounded"
+            type="submit"
           >
             {pwLoading ? "Changing..." : "Change password"}
           </button>
         </div>
       </form>
 
-      <form onSubmit={changeEmail} className="p-4 bg-white border rounded-md space-y-3">
+      <form className="space-y-3 rounded-md border bg-white p-4" onSubmit={changeEmail}>
         <h3 className="text-lg font-medium">Change email</h3>
         <div>
           <label className="block text-sm">New email</label>
           <input
+            className="mt-1 block w-full rounded border px-3 py-2"
+            defaultValue={email}
             name="newEmail"
             type="email"
-            defaultValue={email}
-            className="mt-1 block w-full border rounded px-3 py-2"
           />
         </div>
         <div>
           <label className="block text-sm">Current password</label>
           <input
+            className="mt-1 block w-full rounded border px-3 py-2"
             name="currentPasswordForEmail"
             type="password"
-            className="mt-1 block w-full border rounded px-3 py-2"
           />
         </div>
         <div>
           <button
-            type="submit"
+            className="rounded bg-yellow-600 px-4 py-2 text-white"
             disabled={emailLoading}
-            className="px-4 py-2 bg-yellow-600 text-white rounded"
+            type="submit"
           >
             {emailLoading ? "Updating..." : "Change email"}
           </button>

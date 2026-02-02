@@ -5,7 +5,9 @@
 
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+
 import { DATABASE_URL } from '@/lib/env';
+
 import * as schema from './schema';
 
 /**
@@ -28,4 +30,4 @@ export const db = drizzle(client, {
 export type Database = typeof db;
 
 // Export drizzle utilities for advanced queries
-export { sql, eq, and, or, not, inArray } from 'drizzle-orm';
+export { and, eq, inArray, not, or, sql } from 'drizzle-orm';

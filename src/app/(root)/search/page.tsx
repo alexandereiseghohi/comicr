@@ -1,3 +1,8 @@
+import { SearchIcon, XIcon } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+
 import { ComicCard } from "@/components/comics/comic-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,10 +16,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { searchComics } from "@/database/queries/comic-queries";
 import { SearchParamsSchema } from "@/schemas/search.schema";
-import { SearchIcon, XIcon } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 export const metadata = {
   title: "Search Results | ComicWise",
@@ -27,9 +28,9 @@ interface SearchPageProps {
 
 function SearchResultsSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {[...Array(8)].map((_, i) => (
-        <div key={i} className="space-y-3">
+        <div className="space-y-3" key={i}>
           <Skeleton className="h-48 w-full rounded-lg" />
           <Skeleton className="h-4 w-3/4" />
           <Skeleton className="h-3 w-1/2" />
@@ -47,18 +48,18 @@ async function SearchResults({
   sort,
   order,
 }: {
-  query: string;
-  page: number;
   limit: number;
-  status?: string;
-  sort: string;
   order: "asc" | "desc";
+  page: number;
+  query: string;
+  sort: string;
+  status?: string;
 }) {
   const result = await searchComics(query, { page, limit, sort, order });
 
   if (!result.success || !result.data) {
     return (
-      <div className="text-center py-12">
+      <div className="py-12 text-center">
         <p className="text-muted-foreground">Error loading search results</p>
       </div>
     );
@@ -71,9 +72,9 @@ async function SearchResults({
 
   if (filteredComics.length === 0) {
     return (
-      <div className="text-center py-12">
-        <SearchIcon className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
-        <h3 className="text-lg font-medium mb-2">No comics found</h3>
+      <div className="py-12 text-center">
+        <SearchIcon className="text-muted-foreground/50 mx-auto mb-4 h-12 w-12" />
+        <h3 className="mb-2 text-lg font-medium">No comics found</h3>
         <p className="text-muted-foreground mb-4">
           No results for &quot;{query}&quot;
           {status && ` with status "${status}"`}
@@ -87,28 +88,28 @@ async function SearchResults({
 
   return (
     <>
-      <p className="text-sm text-muted-foreground mb-6">
+      <p className="text-muted-foreground mb-6 text-sm">
         Found {filteredComics.length} comics matching &quot;{query}&quot;
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredComics.map((comic) => (
           <ComicCard
-            key={comic.id}
-            id={comic.id}
-            title={comic.title}
-            slug={comic.slug}
             coverImage={comic.coverImage ?? ""}
             description={comic.description ?? ""}
+            id={comic.id}
+            key={comic.id}
+            rating={Number(comic.rating) || 0}
+            slug={comic.slug}
             status={comic.status ?? "Unknown"}
+            title={comic.title}
             views={comic.views ?? 0}
-            rating={Number(comic.rating) ?? 0}
           />
         ))}
       </div>
 
       {/* Pagination */}
       {filteredComics.length >= limit && (
-        <div className="flex justify-center gap-2 mt-8">
+        <div className="mt-8 flex justify-center gap-2">
           {page > 1 && (
             <Link href={`/search?q=${query}&page=${page - 1}&limit=${limit}`}>
               <Button variant="outline">Previous</Button>
@@ -154,21 +155,21 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     <main className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
+        <div className="mb-4 flex items-center gap-2">
           <SearchIcon className="h-6 w-6" />
           <h1 className="text-2xl font-bold">Search Results</h1>
         </div>
 
         {/* Search Info */}
-        <div className="flex flex-wrap items-center gap-2 mb-4">
+        <div className="mb-4 flex flex-wrap items-center gap-2">
           <span className="text-muted-foreground">Results for:</span>
-          <Badge variant="secondary" className="text-base">
+          <Badge className="text-base" variant="secondary">
             {q}
           </Badge>
           {status && (
             <Badge variant="outline">
               {status}
-              <Link href={`/search?q=${q}&page=1`} className="ml-1">
+              <Link className="ml-1" href={`/search?q=${q}&page=1`}>
                 <XIcon className="h-3 w-3" />
               </Link>
             </Badge>
@@ -177,7 +178,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-8">
+      <div className="mb-8 flex flex-wrap gap-4">
         {/* Status Filter */}
         <Select defaultValue={status || ""}>
           <SelectTrigger className="w-[180px]">
@@ -187,7 +188,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <SelectItem value="">All Statuses</SelectItem>
             {statuses.map((s) => (
               <SelectItem key={s} value={s}>
-                <Link href={`/search?q=${q}&status=${s}&page=1`} className="block w-full">
+                <Link className="block w-full" href={`/search?q=${q}&status=${s}&page=1`}>
                   {s}
                 </Link>
               </SelectItem>
@@ -203,7 +204,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <SelectContent>
             {sortOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
-                <Link href={`/search?q=${q}&sort=${option.value}&page=1`} className="block w-full">
+                <Link className="block w-full" href={`/search?q=${q}&sort=${option.value}&page=1`}>
                   {option.label}
                 </Link>
               </SelectItem>
@@ -215,12 +216,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       {/* Results */}
       <Suspense fallback={<SearchResultsSkeleton />}>
         <SearchResults
-          query={q}
-          page={page}
           limit={limit}
-          status={status}
-          sort={sort}
           order={order}
+          page={page}
+          query={q}
+          sort={sort}
+          status={status}
         />
       </Suspense>
     </main>

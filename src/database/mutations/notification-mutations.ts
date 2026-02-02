@@ -1,7 +1,9 @@
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { notification } from "@/database/schema";
+
 import type { Notification } from "@/types";
-import { and, eq } from "drizzle-orm";
 
 export async function createNotification(
   userId: string,

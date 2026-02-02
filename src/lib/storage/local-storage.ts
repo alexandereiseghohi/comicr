@@ -3,8 +3,9 @@
  * @description Saves files to public/uploads/ for development
  */
 
-import { access, constants, mkdir, stat, unlink, writeFile } from "fs/promises";
-import { extname, join } from "path";
+import { access, constants, mkdir, stat, unlink, writeFile } from "node:fs/promises";
+import { extname, join } from "node:path";
+
 import type {
   DeleteOptions,
   DeleteResult,
@@ -51,7 +52,7 @@ export class LocalStorageProvider implements StorageProvider {
   readonly name = "local" as const;
 
   async upload(
-    file: Buffer | Blob | ReadableStream,
+    file: Blob | Buffer | ReadableStream,
     filename: string,
     options: UploadOptions = {}
   ): Promise<UploadResponse> {

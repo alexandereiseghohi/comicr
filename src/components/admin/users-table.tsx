@@ -5,6 +5,11 @@
 
 "use client";
 
+import { type ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal, Shield, ShieldAlert, UserCheck, UserX } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+
 import { DataTable } from "@/components/admin/data-table";
 import {
   AlertDialog,
@@ -32,19 +37,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { banUserAction, unbanUserAction, updateUserRoleAction } from "@/lib/actions/admin.actions";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Shield, ShieldAlert, UserCheck, UserX } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 
 interface User {
-  id: string;
-  name: string | null;
-  email: string | null;
-  image: string | null;
-  role: string | null;
-  emailVerified: Date | null;
   createdAt: Date | null;
+  email: null | string;
+  emailVerified: Date | null;
+  id: string;
+  image: null | string;
+  name: null | string;
+  role: null | string;
 }
 
 interface UsersTableProps {
@@ -60,8 +61,8 @@ const ROLES = [
 export function UsersTable({ users }: UsersTableProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [banUserId, setBanUserId] = useState<string | null>(null);
-  const [unbanUserId, setUnbanUserId] = useState<string | null>(null);
+  const [banUserId, setBanUserId] = useState<null | string>(null);
+  const [unbanUserId, setUnbanUserId] = useState<null | string>(null);
 
   const handleRoleChange = (userId: string, role: string) => {
     startTransition(async () => {
@@ -97,19 +98,19 @@ export function UsersTable({ users }: UsersTableProps) {
       id: "select",
       header: ({ table }) => (
         <Checkbox
+          aria-label="Select all"
           checked={
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
         />
       ),
       cell: ({ row }) => (
         <Checkbox
+          aria-label="Select row"
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
         />
       ),
       enableSorting: false,
@@ -130,12 +131,12 @@ export function UsersTable({ users }: UsersTableProps) {
         return (
           <div className="flex items-center gap-3">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user.image ?? undefined} alt={user.name ?? "User"} />
+              <AvatarImage alt={user.name ?? "User"} src={user.image ?? undefined} />
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
             <div>
               <p className="font-medium">{user.name ?? "Unknown"}</p>
-              <p className="text-sm text-muted-foreground">{user.email}</p>
+              <p className="text-muted-foreground text-sm">{user.email}</p>
             </div>
           </div>
         );
@@ -145,7 +146,7 @@ export function UsersTable({ users }: UsersTableProps) {
       accessorKey: "role",
       header: "Role",
       cell: ({ row }) => {
-        const role = row.getValue("role") as string | null;
+        const role = row.getValue("role") as null | string;
         const roleConfig = ROLES.find((r) => r.value === role) ?? ROLES[2];
 
         return (
@@ -188,7 +189,7 @@ export function UsersTable({ users }: UsersTableProps) {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button size="icon" variant="ghost">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -204,9 +205,9 @@ export function UsersTable({ users }: UsersTableProps) {
                 <DropdownMenuSubContent>
                   {ROLES.map((role) => (
                     <DropdownMenuItem
+                      disabled={isPending || user.role === role.value}
                       key={role.value}
                       onClick={() => handleRoleChange(user.id, role.value)}
-                      disabled={isPending || user.role === role.value}
                     >
                       {role.icon && <role.icon className="mr-2 h-4 w-4" />}
                       {role.label}
@@ -246,7 +247,7 @@ export function UsersTable({ users }: UsersTableProps) {
       />
 
       {/* Ban Confirmation Dialog */}
-      <AlertDialog open={banUserId !== null} onOpenChange={() => setBanUserId(null)}>
+      <AlertDialog onOpenChange={() => setBanUserId(null)} open={banUserId !== null}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Ban User</AlertDialogTitle>
@@ -258,9 +259,9 @@ export function UsersTable({ users }: UsersTableProps) {
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => banUserId && handleBan(banUserId)}
-              disabled={isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={isPending}
+              onClick={() => banUserId && handleBan(banUserId)}
             >
               {isPending ? "Banning..." : "Ban User"}
             </AlertDialogAction>
@@ -269,7 +270,7 @@ export function UsersTable({ users }: UsersTableProps) {
       </AlertDialog>
 
       {/* Unban Confirmation Dialog */}
-      <AlertDialog open={unbanUserId !== null} onOpenChange={() => setUnbanUserId(null)}>
+      <AlertDialog onOpenChange={() => setUnbanUserId(null)} open={unbanUserId !== null}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Unban User</AlertDialogTitle>
@@ -280,8 +281,8 @@ export function UsersTable({ users }: UsersTableProps) {
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => unbanUserId && handleUnban(unbanUserId)}
               disabled={isPending}
+              onClick={() => unbanUserId && handleUnban(unbanUserId)}
             >
               {isPending ? "Unbanning..." : "Unban User"}
             </AlertDialogAction>

@@ -1,6 +1,7 @@
+import { asc, desc, eq, ilike } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { chapter as chapterTable } from "@/database/schema";
-import { asc, desc, eq, ilike } from "drizzle-orm";
 
 /**
  * Get all chapters with pagination
@@ -11,10 +12,10 @@ export async function getAllChapters({
   sort: _sort = "createdAt",
   order = "desc",
 }: {
-  page?: number;
   limit?: number;
-  sort?: string;
   order?: "asc" | "desc";
+  page?: number;
+  sort?: string;
 } = {}) {
   const offset = (page - 1) * limit;
   const orderDirection = order === "asc" ? asc : desc;
@@ -81,10 +82,10 @@ export async function getChaptersByComicId(
     sort: _sort = "chapterNumber",
     order = "asc",
   }: {
-    page?: number;
     limit?: number;
-    sort?: string;
     order?: "asc" | "desc";
+    page?: number;
+    sort?: string;
   } = {}
 ) {
   const offset = (page - 1) * limit;
@@ -116,7 +117,7 @@ export async function getChaptersByComicId(
  */
 export async function searchChapters(
   query: string,
-  { page = 1, limit = 20 }: { page?: number; limit?: number } = {}
+  { page = 1, limit = 20 }: { limit?: number; page?: number; } = {}
 ) {
   const offset = (page - 1) * limit;
 
@@ -147,7 +148,7 @@ export async function searchChapters(
 export async function getChaptersByDateRange(
   _startDate: Date,
   _endDate: Date,
-  { page = 1, limit = 20 }: { page?: number; limit?: number } = {}
+  { page = 1, limit = 20 }: { limit?: number; page?: number; } = {}
 ) {
   const offset = (page - 1) * limit;
 

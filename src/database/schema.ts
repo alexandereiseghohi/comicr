@@ -1,4 +1,3 @@
-import type { SQL } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import {
   boolean,
@@ -13,8 +12,11 @@ import {
   text,
   timestamp,
   unique,
+  uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
+
+import type { SQL } from "drizzle-orm";
 import type { AdapterAccountType } from "next-auth/adapters";
 
 // ═══════════════════════════════════════════════════
@@ -60,7 +62,7 @@ export const user = pgTable(
     status: boolean("status").notNull().default(false),
     settings: jsonb("settings").$type<{
       emailNotifications?: boolean;
-      profileVisibility?: "public" | "private";
+      profileVisibility?: "private" | "public";
       readingHistoryVisibility?: boolean;
     }>(),
     deletedAt: timestamp("deletedAt", { mode: "date" }),
@@ -154,7 +156,7 @@ export const type = pgTable("type", {
 
 export const author = pgTable("author", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   bio: text("bio"),
   image: text("image"),
   isActive: boolean("is_active").default(true).notNull(),
@@ -164,7 +166,7 @@ export const author = pgTable("author", {
 
 export const artist = pgTable("artist", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   bio: text("bio"),
   image: text("image"),
   isActive: boolean("is_active").default(true).notNull(),
@@ -267,6 +269,7 @@ export const chapterImage = pgTable(
   (table) => [
     index("chapterImageChapterIdIdx").on(table.chapterId),
     index("chapterImagePageNumberIdx").on(table.pageNumber),
+    uniqueIndex("chapterImageChapterPageUniqueIdx").on(table.chapterId, table.pageNumber),
   ]
 );
 

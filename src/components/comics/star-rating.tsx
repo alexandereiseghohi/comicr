@@ -1,5 +1,8 @@
 "use client";
 
+import { Loader2, Star, X } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,17 +16,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { Loader2, Star, X } from "lucide-react";
-import { useState } from "react";
 
 interface StarRatingProps {
   comicId: number;
   initialRating?: number;
   initialReview?: string;
-  showReview?: boolean;
-  size?: "sm" | "md" | "lg";
   interactive?: boolean;
   onRatingChange?: (rating: number, review?: string) => void;
+  showReview?: boolean;
+  size?: "lg" | "md" | "sm";
 }
 
 const sizeClasses = {
@@ -121,18 +122,18 @@ export function StarRating({
           const isFilled = value <= displayRating;
           return (
             <button
-              key={value}
-              type="button"
-              onClick={() => handleStarClick(value)}
-              onMouseEnter={() => interactive && setHoverRating(value)}
-              onMouseLeave={() => interactive && setHoverRating(0)}
-              disabled={!interactive || loading}
+              aria-label={`Rate ${value} stars`}
               className={cn(
                 "transition-all duration-150",
                 interactive && "cursor-pointer hover:scale-110",
                 !interactive && "cursor-default"
               )}
-              aria-label={`Rate ${value} stars`}
+              disabled={!interactive || loading}
+              key={value}
+              onClick={() => handleStarClick(value)}
+              onMouseEnter={() => interactive && setHoverRating(value)}
+              onMouseLeave={() => interactive && setHoverRating(0)}
+              type="button"
             >
               <Star
                 className={cn(
@@ -146,11 +147,11 @@ export function StarRating({
         })}
         {rating > 0 && interactive && (
           <button
-            type="button"
-            onClick={() => handleStarClick(0)}
-            className="ml-1 text-slate-400 hover:text-slate-600 transition-colors"
             aria-label="Remove rating"
+            className="ml-1 text-slate-400 transition-colors hover:text-slate-600"
             disabled={loading}
+            onClick={() => handleStarClick(0)}
+            type="button"
           >
             <X className="h-4 w-4" />
           </button>
@@ -159,7 +160,7 @@ export function StarRating({
 
       {/* Review Dialog */}
       {showReview && (
-        <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <Dialog onOpenChange={setShowDialog} open={showDialog}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Rate This Comic</DialogTitle>
@@ -174,13 +175,13 @@ export function StarRating({
               <div className="flex justify-center gap-2">
                 {[1, 2, 3, 4, 5].map((value) => (
                   <Star
-                    key={value}
                     className={cn(
                       "h-8 w-8",
                       value <= rating
                         ? "fill-yellow-400 text-yellow-400"
                         : "fill-transparent text-slate-300"
                     )}
+                    key={value}
                   />
                 ))}
               </div>
@@ -189,31 +190,31 @@ export function StarRating({
               <div className="space-y-2">
                 <Label htmlFor="review">Review (Optional)</Label>
                 <Textarea
-                  id="review"
-                  placeholder="Share your thoughts about this comic..."
-                  value={review}
-                  onChange={(e) => setReview(e.target.value)}
-                  maxLength={1000}
-                  rows={4}
                   disabled={loading}
+                  id="review"
+                  maxLength={1000}
+                  onChange={(e) => setReview(e.target.value)}
+                  placeholder="Share your thoughts about this comic..."
+                  rows={4}
+                  value={review}
                 />
-                <p className="text-xs text-slate-500 text-right">{review.length}/1000 characters</p>
+                <p className="text-right text-xs text-slate-500">{review.length}/1000 characters</p>
               </div>
             </div>
 
             <DialogFooter>
               <Button
+                disabled={loading}
+                onClick={handleDialogCancel}
                 type="button"
                 variant="outline"
-                onClick={handleDialogCancel}
-                disabled={loading}
               >
                 Cancel
               </Button>
-              <Button onClick={handleDialogSave} disabled={loading}>
+              <Button disabled={loading} onClick={handleDialogSave}>
                 {loading ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Saving...
                   </>
                 ) : (

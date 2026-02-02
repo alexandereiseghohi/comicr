@@ -1,15 +1,16 @@
-import { db } from "@/database/db";
-import { readingProgress } from "@/database/schema";
 import { eq } from "drizzle-orm";
 
+import { db } from "@/database/db";
+import { readingProgress } from "@/database/schema";
+
 export async function upsertProgress(data: {
-  userId: string;
-  comicId: number;
   chapterId: number;
+  comicId: number;
   pageNumber?: number;
+  progressPercent?: number;
   scrollPosition?: number;
   totalPages?: number;
-  progressPercent?: number;
+  userId: string;
 }) {
   try {
     // Simplified upsert: insert for now

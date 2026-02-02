@@ -5,41 +5,42 @@
 
 "use client";
 
-import { queryKeys } from "@/lib/query-client";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { queryKeys } from "@/lib/query-client";
 
 // Types
 interface Comic {
-  id: number;
-  title: string;
-  slug: string;
-  description: string;
   coverImage: string;
-  status: string;
-  rating: string | null;
-  views: number;
   createdAt: Date;
+  description: string;
+  id: number;
+  rating: null | string;
+  slug: string;
+  status: string;
+  title: string;
+  views: number;
 }
 
 interface ComicsResponse {
   data: Comic[];
   meta: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
     hasNextPage: boolean;
     hasPrevPage: boolean;
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
   };
 }
 
 interface ComicFilters {
-  status?: string;
   genre?: string;
+  limit?: number;
+  page?: number;
   search?: string;
   sortBy?: string;
-  page?: number;
-  limit?: number;
+  status?: string;
 }
 
 // Fetch functions
@@ -68,7 +69,7 @@ async function fetchComicBySlug(slug: string): Promise<Comic> {
   return data.data;
 }
 
-async function fetchTrendingComics(period: "day" | "week" | "month" = "week"): Promise<Comic[]> {
+async function fetchTrendingComics(period: "day" | "month" | "week" = "week"): Promise<Comic[]> {
   const response = await fetch(`/api/comics/trending?period=${period}`);
   if (!response.ok) {
     throw new Error("Failed to fetch trending comics");
@@ -119,7 +120,7 @@ export function useComic(slug: string) {
 /**
  * Fetch trending comics
  */
-export function useTrendingComics(period: "day" | "week" | "month" = "week") {
+export function useTrendingComics(period: "day" | "month" | "week" = "week") {
   return useQuery({
     queryKey: queryKeys.comics.trending(period),
     queryFn: () => fetchTrendingComics(period),

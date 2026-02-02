@@ -1,8 +1,9 @@
 // Ensure NODE_ENV is set before anything else
 
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
 import { vi } from "vitest";
 
 // Support running from any directory

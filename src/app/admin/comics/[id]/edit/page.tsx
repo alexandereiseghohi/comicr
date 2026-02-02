@@ -3,22 +3,22 @@
  * @description Admin page for editing comic details
  */
 
+import { eq } from "drizzle-orm";
+import { notFound, redirect } from "next/navigation";
+
 import { ComicEditForm } from "@/components/admin/comic-edit-form";
 import { db } from "@/database/db";
 import { comic } from "@/database/schema";
 import { auth } from "@/lib/auth-config";
-import { eq } from "drizzle-orm";
-import { notFound, redirect } from "next/navigation";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
 async function getComic(id: number) {
-  const result = await db.query.comic.findFirst({
+  return await db.query.comic.findFirst({
     where: eq(comic.id, id),
   });
-  return result;
 }
 
 export default async function ComicEditPage({ params }: PageProps) {

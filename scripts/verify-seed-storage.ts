@@ -1,6 +1,6 @@
-import fs from "fs/promises";
+import fs from "node:fs/promises";
 
-type Result = { url: string; ok: boolean; status?: number; error?: string };
+type Result = { error?: string; ok: boolean; status?: number; url: string; };
 
 async function checkUrl(url: string): Promise<Result> {
   try {

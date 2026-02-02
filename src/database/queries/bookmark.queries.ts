@@ -1,6 +1,7 @@
+import { and, desc, eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { bookmark, chapter, comic } from "@/database/schema";
-import { and, desc, eq } from "drizzle-orm";
 
 /**
  * Get bookmarks by user ID (simple)

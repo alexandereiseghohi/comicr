@@ -1,14 +1,15 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { Star } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+
 interface AverageRatingProps {
-  rating: number;
-  totalRatings: number;
-  size?: "sm" | "md" | "lg";
-  showCount?: boolean;
   className?: string;
+  rating: number;
+  showCount?: boolean;
+  size?: "lg" | "md" | "sm";
+  totalRatings: number;
 }
 
 const sizeClasses = {
@@ -42,8 +43,8 @@ export function AverageRating({
         {/* Full stars */}
         {Array.from({ length: fullStars }).map((_, i) => (
           <Star
-            key={`full-${i}`}
             className={cn(sizeClasses[size], "fill-yellow-400 text-yellow-400")}
+            key={`full-${i}`}
           />
         ))}
 
@@ -51,7 +52,7 @@ export function AverageRating({
         {hasHalfStar && (
           <div className="relative">
             <Star className={cn(sizeClasses[size], "fill-transparent text-yellow-400")} />
-            <div className="absolute inset-0 overflow-hidden w-1/2">
+            <div className="absolute inset-0 w-1/2 overflow-hidden">
               <Star className={cn(sizeClasses[size], "fill-yellow-400 text-yellow-400")} />
             </div>
           </div>
@@ -60,8 +61,8 @@ export function AverageRating({
         {/* Empty stars */}
         {Array.from({ length: emptyStars }).map((_, i) => (
           <Star
-            key={`empty-${i}`}
             className={cn(sizeClasses[size], "fill-transparent text-slate-300")}
+            key={`empty-${i}`}
           />
         ))}
       </div>

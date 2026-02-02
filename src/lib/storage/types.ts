@@ -3,43 +3,43 @@
  * @description Type definitions for the multi-provider storage abstraction
  */
 
-export type StorageProviderType = "local" | "s3" | "imagekit" | "cloudinary";
+export type StorageProviderType = "cloudinary" | "imagekit" | "local" | "s3";
 
 export interface UploadOptions {
-  /** Target folder/path within the storage */
-  folder?: string;
-  /** Custom filename (without extension) */
-  filename?: string;
   /** File access level */
-  access?: "public" | "private";
-  /** Custom metadata */
-  metadata?: Record<string, string>;
+  access?: "private" | "public";
   /** Content type override */
   contentType?: string;
+  /** Custom filename (without extension) */
+  filename?: string;
+  /** Target folder/path within the storage */
+  folder?: string;
+  /** Custom metadata */
+  metadata?: Record<string, string>;
 }
 
 export interface UploadResult {
+  /** Content type */
+  contentType: string;
+  /** Unique file key/path for future operations */
+  key: string;
+  /** Provider-specific metadata */
+  metadata?: Record<string, unknown>;
+  /** File size in bytes */
+  size: number;
   /** Success indicator */
   success: true;
   /** Public URL of the uploaded file */
   url: string;
-  /** Unique file key/path for future operations */
-  key: string;
-  /** File size in bytes */
-  size: number;
-  /** Content type */
-  contentType: string;
-  /** Provider-specific metadata */
-  metadata?: Record<string, unknown>;
 }
 
 export interface UploadError {
-  success: false;
-  error: string;
   code?: string;
+  error: string;
+  success: false;
 }
 
-export type UploadResponse = UploadResult | UploadError;
+export type UploadResponse = UploadError | UploadResult;
 
 export interface DeleteOptions {
   /** Delete file permanently (no recovery) */
@@ -47,23 +47,23 @@ export interface DeleteOptions {
 }
 
 export interface DeleteResult {
-  success: boolean;
   error?: string;
+  success: boolean;
 }
 
 export interface GetUrlOptions {
-  /** URL expiration time in seconds (for signed URLs) */
-  expiresIn?: number;
   /** Force download instead of inline display */
   download?: boolean;
   /** Custom filename for download */
   downloadFilename?: string;
+  /** URL expiration time in seconds (for signed URLs) */
+  expiresIn?: number;
 }
 
 export interface ExistsResult {
   exists: boolean;
-  size?: number;
   lastModified?: Date;
+  size?: number;
 }
 
 /**
@@ -71,6 +71,33 @@ export interface ExistsResult {
  * All storage implementations must implement this interface
  */
 export interface StorageProvider {
+  /**
+   * Delete a file from storage
+   * @param key - File key/path returned from upload
+   * @param options - Delete options
+   */
+  delete(key: string, options?: DeleteOptions): Promise<DeleteResult>;
+
+  /**
+   * Check if a file exists
+   * @param key - File key/path
+   */
+  exists(key: string): Promise<ExistsResult>;
+
+  /**
+   * Get a signed/presigned URL for private file access
+   * @param key - File key/path
+   * @param expiresIn - Expiration time in seconds
+   */
+  getSignedUrl(key: string, expiresIn?: number): Promise<string>;
+
+  /**
+   * Get the public URL for a file
+   * @param key - File key/path
+   * @param options - URL options
+   */
+  getUrl(key: string, options?: GetUrlOptions): Promise<string>;
+
   /** Provider name for identification */
   readonly name: StorageProviderType;
 
@@ -81,37 +108,10 @@ export interface StorageProvider {
    * @param options - Upload options
    */
   upload(
-    file: Buffer | Blob | ReadableStream,
+    file: Blob | Buffer | ReadableStream,
     filename: string,
     options?: UploadOptions
   ): Promise<UploadResponse>;
-
-  /**
-   * Delete a file from storage
-   * @param key - File key/path returned from upload
-   * @param options - Delete options
-   */
-  delete(key: string, options?: DeleteOptions): Promise<DeleteResult>;
-
-  /**
-   * Get the public URL for a file
-   * @param key - File key/path
-   * @param options - URL options
-   */
-  getUrl(key: string, options?: GetUrlOptions): Promise<string>;
-
-  /**
-   * Get a signed/presigned URL for private file access
-   * @param key - File key/path
-   * @param expiresIn - Expiration time in seconds
-   */
-  getSignedUrl(key: string, expiresIn?: number): Promise<string>;
-
-  /**
-   * Check if a file exists
-   * @param key - File key/path
-   */
-  exists(key: string): Promise<ExistsResult>;
 }
 
 /**
@@ -150,7 +150,7 @@ export function getFileCategory(contentType: string): keyof typeof FILE_SIZE_LIM
 export function validateFile(
   size: number,
   contentType: string
-): { valid: true } | { valid: false; error: string } {
+): { error: string; valid: false; } | { valid: true } {
   const category = getFileCategory(contentType);
   const maxSize = FILE_SIZE_LIMITS[category];
 

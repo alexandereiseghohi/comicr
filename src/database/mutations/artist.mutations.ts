@@ -1,7 +1,9 @@
+import { eq, inArray } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { artist } from "@/database/schema";
+
 import type { CreateArtistInput, UpdateArtistInput } from "@/schemas/artist-schema";
-import { eq, inArray } from "drizzle-orm";
 
 export async function createArtist(data: CreateArtistInput) {
   try {

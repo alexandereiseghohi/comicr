@@ -3,8 +3,9 @@
  * @description Zod validation for file uploads
  */
 
-import { ALLOWED_FILE_TYPES, FILE_SIZE_LIMITS } from "@/lib/storage/types";
 import { z } from "zod";
+
+import { ALLOWED_FILE_TYPES, FILE_SIZE_LIMITS } from "@/lib/storage/types";
 
 /**
  * Upload request schema
@@ -94,7 +95,7 @@ export type UploadError = z.infer<typeof UploadErrorSchema>;
 export function validateUploadFile(
   file: { name: string; size: number; type: string },
   requireImage: boolean = false
-): { valid: true } | { valid: false; error: string } {
+): { error: string; valid: false; } | { valid: true } {
   try {
     if (requireImage) {
       ImageFileSchema.parse(file);

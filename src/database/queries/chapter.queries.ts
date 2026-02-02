@@ -1,6 +1,7 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { chapter } from "@/database/schema";
-import { eq } from "drizzle-orm";
 
 export async function getChaptersByComicId(comicId: number, { limit = 20, offset = 0 } = {}) {
   try {

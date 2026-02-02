@@ -5,17 +5,19 @@
 
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import * as comicMutations from "@/database/mutations/comic-mutations";
 import { auth } from "@/lib/auth-config";
 import {
-  createComicSchema,
-  updateComicSchema,
   type CreateComicInput,
+  createComicSchema,
   type UpdateComicInput,
+  updateComicSchema,
 } from "@/schemas/comic-schema";
+
 import type { ActionResult } from "@/types";
 import type { AuthUser } from "@/types/auth";
-import { revalidatePath } from "next/cache";
 
 /**
  * Create Comic Server Action

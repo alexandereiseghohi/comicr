@@ -5,16 +5,17 @@
  * @usage pnpm tsx scripts/ast-refactor.ts
  */
 
-import path from "path";
-import { ImportDeclarationStructure, OptionalKind, Project, SyntaxKind } from "ts-morph";
+import path from "node:path";
+
+import { type ImportDeclarationStructure, type OptionalKind, Project, SyntaxKind } from "ts-morph";
 
 const project = new Project({
   tsConfigFilePath: "./tsconfig.json",
 });
 
 interface RefactoringStats {
-  filesProcessed: number;
   anyTypesReplaced: number;
+  filesProcessed: number;
   importsOrganized: number;
   unusedVarsRemoved: number;
 }
@@ -36,7 +37,7 @@ function replaceAnyTypes(fileP: string) {
   let replacements = 0;
 
   // Find all 'any' type annotations
-  sourceFile.getDescendantsOfKind(SyntaxKind.AnyKeyword).forEach((anyNode) => {
+  for (const anyNode of sourceFile.getDescendantsOfKind(SyntaxKind.AnyKeyword)) {
     // Skip if it's in a comment or disabled explicitly
     const parent = anyNode.getParent();
     const text = parent?.getText() || "";
@@ -54,7 +55,7 @@ function replaceAnyTypes(fileP: string) {
         // Skip if replacement fails
       }
     }
-  });
+  }
 
   if (replacements > 0) {
     stats.anyTypesReplaced += replacements;
@@ -80,7 +81,7 @@ function organizeImports(fileP: string) {
   const importStructures: OptionalKind<ImportDeclarationStructure>[] = [];
   const seen = new Set<string>();
 
-  imports.forEach((imp) => {
+  for (const imp of imports) {
     const moduleSpecifier = imp.getModuleSpecifierValue();
     const key = `${moduleSpecifier}:${imp
       .getNamedImports()
@@ -96,7 +97,7 @@ function organizeImports(fileP: string) {
         namespaceImport: imp.getNamespaceImport()?.getText(),
       });
     }
-  });
+  }
 
   // Sort imports: node modules, then @ aliases, then relative
   importStructures.sort((a, b) => {
@@ -118,7 +119,7 @@ function organizeImports(fileP: string) {
 
   // Remove existing imports and add sorted ones
   if (importStructures.length !== imports.length || importStructures.length > 0) {
-    imports.forEach((imp) => imp.remove());
+    for (const imp of imports) imp.remove();
     sourceFile.addImportDeclarations(importStructures);
     stats.importsOrganized++;
     console.log(`   Organized imports in ${path.relative(process.cwd(), fileP)}`);

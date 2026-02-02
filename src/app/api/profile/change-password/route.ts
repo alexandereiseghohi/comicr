@@ -1,10 +1,11 @@
+import { eq } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
+
 import { db } from "@/database/db";
 import { changeUserPassword } from "@/database/mutations/user.mutations";
 import { user } from "@/database/schema";
 import { auth } from "@/lib/auth-config";
 import { hashPassword, verifyPassword } from "@/lib/password";
-import { eq } from "drizzle-orm";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {

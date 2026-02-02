@@ -1,6 +1,7 @@
+import { type NextRequest, NextResponse } from "next/server";
+
 import { auth } from "@/auth";
 import { deleteRating, upsertRating } from "@/database/mutations/rating-mutations";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {

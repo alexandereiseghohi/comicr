@@ -1,15 +1,16 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import { auth } from "@/auth";
 import * as mutations from "@/database/mutations/genre.mutations";
 import { getGenreByName } from "@/database/queries/genre.queries";
 import { slugify } from "@/lib/utils";
 import { createGenreSchema, updateGenreSchema } from "@/schemas/genre-schema";
-import { revalidatePath } from "next/cache";
 
 type ActionResult<T = unknown> =
-  | { ok: true; data: T }
-  | { ok: false; error: { code: string; message: string } };
+  | { data: T; ok: true; }
+  | { error: { code: string; message: string }; ok: false; };
 
 async function verifyAdmin(): Promise<{ userId: string } | null> {
   const session = await auth();

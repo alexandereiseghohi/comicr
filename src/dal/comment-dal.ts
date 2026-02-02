@@ -1,9 +1,12 @@
+import { eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import * as mutations from "@/database/mutations/comment-mutations";
 import { comment } from "@/database/schema";
-import type { DbMutationResult } from "@/types";
-import { eq } from "drizzle-orm";
+
 import { BaseDAL } from "./base-dal";
+
+import type { DbMutationResult } from "@/types";
 
 export class CommentDAL extends BaseDAL<typeof comment> {
   constructor() {
@@ -23,14 +26,13 @@ export class CommentDAL extends BaseDAL<typeof comment> {
   }
 
   async create(data: {
-    content: string;
-    userId: string;
     chapterId: number;
-    parentId?: number | null;
+    content: string;
+    parentId?: null | number;
+    userId: string;
   }): Promise<DbMutationResult<typeof comment.$inferSelect>> {
     try {
-      const result = await mutations.createComment(data);
-      return result;
+      return await mutations.createComment(data);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Create failed" };
     }
@@ -41,14 +43,13 @@ export class CommentDAL extends BaseDAL<typeof comment> {
     content: string
   ): Promise<DbMutationResult<typeof comment.$inferSelect>> {
     try {
-      const result = await mutations.updateComment(id, content);
-      return result;
+      return await mutations.updateComment(id, content);
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : "Update failed" };
     }
   }
 
-  async delete(id: number | { id: number; userId: string }): Promise<DbMutationResult<null>> {
+  async delete(id: { id: number; userId: string } | number): Promise<DbMutationResult<null>> {
     try {
       const commentId = typeof id === "number" ? id : id.id;
       const userId = typeof id === "number" ? "" : id.userId;

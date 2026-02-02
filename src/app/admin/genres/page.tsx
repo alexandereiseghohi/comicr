@@ -1,9 +1,10 @@
+import { PlusIcon } from "lucide-react";
+import Link from "next/link";
+
 import { GenresTable } from "@/components/admin/genres-table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getGenresForAdmin } from "@/database/queries/admin.queries";
-import { PlusIcon } from "lucide-react";
-import Link from "next/link";
 
 export const metadata = {
   title: "Genres - Admin",
@@ -11,7 +12,7 @@ export const metadata = {
 };
 
 interface PageProps {
-  searchParams: Promise<{ page?: string; search?: string; inactive?: string }>;
+  searchParams: Promise<{ inactive?: string; page?: string; search?: string; }>;
 }
 
 export default async function GenresPage({ searchParams }: PageProps) {
@@ -41,7 +42,7 @@ export default async function GenresPage({ searchParams }: PageProps) {
         </div>
         <Button asChild>
           <Link href="/admin/genres/new">
-            <PlusIcon className="h-4 w-4 mr-2" /> Add Genre
+            <PlusIcon className="mr-2 h-4 w-4" /> Add Genre
           </Link>
         </Button>
       </div>
@@ -56,9 +57,9 @@ export default async function GenresPage({ searchParams }: PageProps) {
         <CardContent>
           <GenresTable items={items} />
           {totalPages > 1 && (
-            <div className="flex justify-center gap-2 mt-4">
+            <div className="mt-4 flex justify-center gap-2">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <Button key={p} variant={p === page ? "default" : "outline"} size="sm" asChild>
+                <Button asChild key={p} size="sm" variant={p === page ? "default" : "outline"}>
                   <Link
                     href={`/admin/genres?page=${p}${search ? `&search=${search}` : ""}${
                       showInactive ? "&inactive=true" : ""

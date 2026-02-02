@@ -1,11 +1,11 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 type LinkResult = {
-  sourceFile: string;
   link: string;
-  status: number | "LOCAL_OK" | "MISSING" | "ERROR";
   notes?: string;
+  sourceFile: string;
+  status: "ERROR" | "LOCAL_OK" | "MISSING" | number;
 };
 
 function extractLinks(markdown: string): string[] {
@@ -33,7 +33,7 @@ async function walkDir(dir: string): Promise<string[]> {
   return files;
 }
 
-async function checkUrl(url: string): Promise<number | "ERROR"> {
+async function checkUrl(url: string): Promise<"ERROR" | number> {
   try {
     const res = await fetch(url, { method: "HEAD" });
     if (res.status >= 400 && res.status < 500) {
@@ -100,9 +100,9 @@ async function main() {
   const csvLines = ["sourceFile,link,status,notes"];
   for (const r of results) {
     csvLines.push(
-      `${r.sourceFile.replace(/,/g, "%2C")},${r.link.replace(/,/g, "%2C")},${r.status},${(
+      `${r.sourceFile.replaceAll(',', "%2C")},${r.link.replaceAll(',', "%2C")},${r.status},${(
         r.notes ?? ""
-      ).replace(/,/g, "%2C")}`
+      ).replaceAll(',', "%2C")}`
     );
   }
   await fs.writeFile(reportPath, csvLines.join("\n"), "utf8");

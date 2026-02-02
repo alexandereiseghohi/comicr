@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+
 import { createMockChain } from "./mock-db";
 
 vi.mock("@/database/db", () => {
@@ -9,7 +10,7 @@ vi.mock("@/database/db", () => {
 
 import { getBookmarksByUser } from "@/database/queries/bookmark.queries";
 
-type Bookmark = { userId: string; comicId: number };
+type Bookmark = { comicId: number; userId: string; };
 
 describe("bookmark queries", () => {
   it("getBookmarksByUser returns bookmarks", async () => {

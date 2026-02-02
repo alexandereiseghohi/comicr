@@ -1,15 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { cn } from "@/lib/utils";
 import {
   AlignJustify,
   ChevronLeft,
@@ -21,17 +11,29 @@ import {
   Settings,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { cn } from "@/lib/utils";
+
 import { ImageViewer } from "./image-viewer";
 
 interface ChapterReaderProps {
-  title: string;
-  pages: string[];
-  onPageChange?: (pageIndex: number) => void;
-  onComplete?: () => void;
+  backgroundMode?: "dark" | "sepia" | "white";
   initialPage?: number;
-  quality?: "low" | "medium" | "high";
-  backgroundMode?: "white" | "dark" | "sepia";
-  readingMode?: "vertical" | "horizontal";
+  onComplete?: () => void;
+  onPageChange?: (pageIndex: number) => void;
+  pages: string[];
+  quality?: "high" | "low" | "medium";
+  readingMode?: "horizontal" | "vertical";
+  title: string;
 }
 
 export const ChapterReader: React.FC<ChapterReaderProps> = ({
@@ -48,10 +50,10 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 
   // State
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [mode, setMode] = useState<"vertical" | "horizontal">(
+  const [mode, setMode] = useState<"horizontal" | "vertical">(
     propReadingMode || (isMobile ? "vertical" : "vertical")
   );
-  const [background] = useState<"white" | "dark" | "sepia">(propBackgroundMode || "white");
+  const [background] = useState<"dark" | "sepia" | "white">(propBackgroundMode || "white");
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -286,28 +288,28 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 
   return (
     <div
-      ref={containerRef}
       className={cn("relative min-h-screen transition-colors", backgroundColors[background])}
       onMouseMove={resetAutoHideTimer}
-      onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onTouchStart={handleTouchStart}
+      ref={containerRef}
     >
       {/* Header Controls */}
       <div
         className={cn(
-          "sticky top-0 z-20 bg-background/95 backdrop-blur border-b p-4 flex items-center justify-between gap-4 transition-transform duration-300",
+          "bg-background/95 sticky top-0 z-20 flex items-center justify-between gap-4 border-b p-4 backdrop-blur transition-transform duration-300",
           isAutoHide && "-translate-y-full"
         )}
       >
-        <h2 className="text-xl font-bold truncate flex-1">{title}</h2>
+        <h2 className="flex-1 truncate text-xl font-bold">{title}</h2>
 
         <div className="flex items-center gap-2">
           {/* Mode toggle */}
           <Button
-            size="sm"
-            variant="outline"
             onClick={() => setMode(mode === "vertical" ? "horizontal" : "vertical")}
+            size="sm"
             title={`Switch to ${mode === "vertical" ? "horizontal" : "vertical"} mode`}
+            variant="outline"
           >
             {mode === "vertical" ? (
               <AlignJustify className="h-4 w-4" />
@@ -318,30 +320,30 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 
           {/* Settings */}
           <Button
-            size="sm"
-            variant="outline"
             onClick={() => setShowSettings(true)}
+            size="sm"
             title="Settings (S)"
+            variant="outline"
           >
             <Settings className="h-4 w-4" />
           </Button>
 
           {/* Help */}
           <Button
-            size="sm"
-            variant="outline"
             onClick={() => setShowHelp(true)}
+            size="sm"
             title="Keyboard shortcuts (?)"
+            variant="outline"
           >
             <HelpCircle className="h-4 w-4" />
           </Button>
 
           {/* Full screen */}
           <Button
-            size="sm"
-            variant="outline"
             onClick={toggleFullScreen}
+            size="sm"
             title="Toggle fullscreen (F)"
+            variant="outline"
           >
             {isFullScreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
           </Button>
@@ -350,14 +352,14 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 
       {/* Vertical Mode */}
       {mode === "vertical" && (
-        <div className="mx-auto max-w-4xl px-4 py-8 space-y-2">
+        <div className="mx-auto max-w-4xl space-y-2 px-4 py-8">
           {pages.map((src, idx) => (
-            <div key={idx} className="relative">
+            <div className="relative" key={idx}>
               <ImageViewer
-                src={src}
                 alt={`Page ${idx + 1} of ${title}`}
-                quality={quality}
                 className="mb-2"
+                quality={quality}
+                src={src}
               />
             </div>
           ))}
@@ -366,54 +368,54 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 
       {/* Horizontal Mode */}
       {mode === "horizontal" && (
-        <div className="flex items-center justify-center min-h-[calc(100vh-73px)] relative">
+        <div className="relative flex min-h-[calc(100vh-73px)] items-center justify-center">
           {/* Previous button */}
           <Button
-            size="icon"
-            variant="ghost"
             className={cn(
               "absolute left-4 z-10 h-12 w-12",
-              currentPage === 0 && "opacity-50 cursor-not-allowed"
+              currentPage === 0 && "cursor-not-allowed opacity-50"
             )}
-            onClick={previousPage}
             disabled={currentPage === 0}
+            onClick={previousPage}
+            size="icon"
+            variant="ghost"
           >
             <ChevronLeft className="h-8 w-8" />
           </Button>
 
           {/* Current page */}
-          <div className="flex-1 flex items-center justify-center p-8">
+          <div className="flex flex-1 items-center justify-center p-8">
             <ImageViewer
-              src={pages[currentPage] || ""}
               alt={`Page ${currentPage + 1} of ${title}`}
-              quality={quality}
               className="max-h-[calc(100vh-100px)]"
+              quality={quality}
+              src={pages[currentPage] || ""}
             />
           </div>
 
           {/* Next button */}
           <Button
-            size="icon"
-            variant="ghost"
             className={cn(
               "absolute right-4 z-10 h-12 w-12",
-              currentPage === pages.length - 1 && "opacity-50 cursor-not-allowed"
+              currentPage === pages.length - 1 && "cursor-not-allowed opacity-50"
             )}
-            onClick={nextPage}
             disabled={currentPage === pages.length - 1}
+            onClick={nextPage}
+            size="icon"
+            variant="ghost"
           >
             <ChevronRight className="h-8 w-8" />
           </Button>
 
           {/* Page indicator */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-background/95 backdrop-blur px-4 py-2 rounded-full text-sm font-medium">
+          <div className="bg-background/95 absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-4 py-2 text-sm font-medium backdrop-blur">
             {currentPage + 1} / {pages.length}
           </div>
         </div>
       )}
 
       {/* Help Dialog */}
-      <Dialog open={showHelp} onOpenChange={setShowHelp}>
+      <Dialog onOpenChange={setShowHelp} open={showHelp}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Keyboard Shortcuts</DialogTitle>
@@ -424,43 +426,43 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
           <div className="grid grid-cols-2 gap-4 py-4">
             <div>
               <p className="font-medium">← / →</p>
-              <p className="text-sm text-muted-foreground">Previous / Next page</p>
+              <p className="text-muted-foreground text-sm">Previous / Next page</p>
             </div>
             <div>
               <p className="font-medium">Space</p>
-              <p className="text-sm text-muted-foreground">Page down / Next page</p>
+              <p className="text-muted-foreground text-sm">Page down / Next page</p>
             </div>
             <div>
               <p className="font-medium">Shift + Space</p>
-              <p className="text-sm text-muted-foreground">Page up / Previous page</p>
+              <p className="text-muted-foreground text-sm">Page up / Previous page</p>
             </div>
             <div>
               <p className="font-medium">F</p>
-              <p className="text-sm text-muted-foreground">Toggle fullscreen</p>
+              <p className="text-muted-foreground text-sm">Toggle fullscreen</p>
             </div>
             <div>
               <p className="font-medium">S</p>
-              <p className="text-sm text-muted-foreground">Open settings</p>
+              <p className="text-muted-foreground text-sm">Open settings</p>
             </div>
             <div>
               <p className="font-medium">1-9</p>
-              <p className="text-sm text-muted-foreground">Jump to 10%-90%</p>
+              <p className="text-muted-foreground text-sm">Jump to 10%-90%</p>
             </div>
             <div>
               <p className="font-medium">Home / End</p>
-              <p className="text-sm text-muted-foreground">First / Last page</p>
+              <p className="text-muted-foreground text-sm">First / Last page</p>
             </div>
             <div>
               <p className="font-medium">+/-</p>
-              <p className="text-sm text-muted-foreground">Zoom in / out</p>
+              <p className="text-muted-foreground text-sm">Zoom in / out</p>
             </div>
             <div>
               <p className="font-medium">0</p>
-              <p className="text-sm text-muted-foreground">Reset zoom</p>
+              <p className="text-muted-foreground text-sm">Reset zoom</p>
             </div>
             <div>
               <p className="font-medium">ESC</p>
-              <p className="text-sm text-muted-foreground">Exit fullscreen / Close dialogs</p>
+              <p className="text-muted-foreground text-sm">Exit fullscreen / Close dialogs</p>
             </div>
           </div>
         </DialogContent>

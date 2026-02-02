@@ -1,19 +1,20 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { Maximize2, Minimize2, ZoomIn, ZoomOut } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 interface ImageViewerProps {
-  src: string;
   alt: string;
-  width?: number;
-  height?: number;
-  className?: string;
   caption?: string;
-  quality?: "low" | "medium" | "high";
+  className?: string;
+  height?: number;
+  quality?: "high" | "low" | "medium";
+  src: string;
+  width?: number;
 }
 
 const ZOOM_MIN = 50;
@@ -30,7 +31,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
   quality = "medium",
 }) => {
   const [zoom, setZoom] = useState(100);
-  const [fitMode, setFitMode] = useState<"width" | "height" | "none">("width");
+  const [fitMode, setFitMode] = useState<"height" | "none" | "width">("width");
   const [isPanning, setIsPanning] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
@@ -242,70 +243,70 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
   };
 
   return (
-    <div ref={containerRef} className={cn("relative overflow-hidden bg-background", className)}>
+    <div className={cn("bg-background relative overflow-hidden", className)} ref={containerRef}>
       {/* Zoom controls */}
       <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
-        <Button size="icon" variant="secondary" onClick={handleZoomIn} title="Zoom in (+)">
+        <Button onClick={handleZoomIn} size="icon" title="Zoom in (+)" variant="secondary">
           <ZoomIn className="h-4 w-4" />
         </Button>
-        <Button size="icon" variant="secondary" onClick={handleZoomOut} title="Zoom out (-)">
+        <Button onClick={handleZoomOut} size="icon" title="Zoom out (-)" variant="secondary">
           <ZoomOut className="h-4 w-4" />
         </Button>
-        <Button size="icon" variant="secondary" onClick={toggleFitMode} title="Toggle fit mode">
+        <Button onClick={toggleFitMode} size="icon" title="Toggle fit mode" variant="secondary">
           {fitMode === "none" ? (
             <Maximize2 className="h-4 w-4" />
           ) : (
             <Minimize2 className="h-4 w-4" />
           )}
         </Button>
-        <div className="bg-secondary px-2 py-1 rounded text-xs font-medium text-center">
+        <div className="bg-secondary rounded px-2 py-1 text-center text-xs font-medium">
           {zoom}%
         </div>
       </div>
 
       {/* Image container */}
       <div
-        ref={imageRef}
         className={cn(
-          "w-full h-full flex items-center justify-center cursor-grab min-h-100",
+          "flex h-full min-h-100 w-full cursor-grab items-center justify-center",
           isPanning && "cursor-grabbing",
           zoom > 100 && "cursor-move"
         )}
+        onDoubleClick={handleDoubleClick}
         onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseUp}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onDoubleClick={handleDoubleClick}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onTouchMove={handleTouchMove}
+        onTouchStart={handleTouchStart}
+        ref={imageRef}
       >
         <div
+          className={cn(
+            fitMode === "width" && "h-auto w-full",
+            fitMode === "height" && "h-full w-auto",
+            fitMode === "none" && "max-h-full max-w-full"
+          )}
           style={{
             transform: getImageTransform(),
             transition: isPanning ? "none" : "transform 0.2s ease-out",
           }}
-          className={cn(
-            fitMode === "width" && "w-full h-auto",
-            fitMode === "height" && "h-full w-auto",
-            fitMode === "none" && "max-w-full max-h-full"
-          )}
         >
           <Image
-            src={src}
             alt={alt}
-            width={width || 1200}
-            height={height || 1800}
-            quality={getImageQuality()}
-            className="rounded shadow max-w-full object-contain select-none"
+            className="max-w-full rounded object-contain shadow select-none"
             draggable={false}
+            height={height || 1800}
             priority
+            quality={getImageQuality()}
+            src={src}
+            width={width || 1200}
           />
         </div>
       </div>
 
       {caption && (
-        <figcaption className="text-sm text-center mt-2 text-muted-foreground">
+        <figcaption className="text-muted-foreground mt-2 text-center text-sm">
           {caption}
         </figcaption>
       )}

@@ -13,11 +13,11 @@
  *   validate    - Run validation checks (types, lint, env)
  */
 
-import { execSync, spawn } from "child_process";
-import * as fs from "fs";
-import * as path from "path";
-import * as readline from "readline";
-import { fileURLToPath } from "url";
+import { execSync, spawn } from "node:child_process";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import * as readline from "node:readline";
+import { fileURLToPath } from "node:url";
 
 // ESM __dirname equivalent
 const __filename = fileURLToPath(import.meta.url);
@@ -46,7 +46,7 @@ const log = {
 const ROOT_DIR = path.resolve(__dirname, "..");
 
 // Helper to run shell commands
-function run(cmd: string, options?: { silent?: boolean; cwd?: string }): string {
+function run(cmd: string, options?: { cwd?: string; silent?: boolean; }): string {
   try {
     const result = execSync(cmd, {
       cwd: options?.cwd || ROOT_DIR,
@@ -689,8 +689,8 @@ function camelCase(str: string): string {
 
 function kebabCase(str: string): string {
   return str
-    .replace(/([a-z])([A-Z])/g, "$1-$2")
-    .replace(/[\s_]+/g, "-")
+    .replaceAll(/([a-z])([A-Z])/g, "$1-$2")
+    .replaceAll(/[\s_]+/g, "-")
     .toLowerCase();
 }
 

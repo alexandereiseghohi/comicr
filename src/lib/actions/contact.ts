@@ -1,8 +1,10 @@
 "use server";
 
-import { contactSchema, type ContactInput } from "@/schemas/contact.schema";
-import type { ActionResult } from "@/types";
 import nodemailer from "nodemailer";
+
+import { type ContactInput, contactSchema } from "@/schemas/contact.schema";
+
+import type { ActionResult } from "@/types";
 
 /**
  * Send contact form email via SMTP

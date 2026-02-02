@@ -1,5 +1,9 @@
 "use client";
 
+import { Search } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+
 import {
   Accordion,
   AccordionContent,
@@ -8,9 +12,6 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
 
 /* eslint-disable react/no-unescaped-entities */
 
@@ -119,51 +120,51 @@ export default function HelpPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
       <h1 className="mb-4 text-4xl font-bold tracking-tight">Help & FAQ</h1>
-      <p className="mb-8 text-lg text-muted-foreground">
+      <p className="text-muted-foreground mb-8 text-lg">
         Find answers to common questions about using ComicWise
       </p>
 
       {/* Search Bar */}
       <div className="relative mb-8">
-        <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+        <Search className="text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2" />
         <Input
-          type="text"
-          placeholder="Search help articles..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10"
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search help articles..."
+          type="text"
+          value={searchQuery}
         />
       </div>
 
       {/* FAQ Accordion */}
       {filteredFaqs.length > 0 ? (
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion className="w-full" collapsible type="single">
           {filteredFaqs.map((faq) => (
             <AccordionItem key={faq.id} value={faq.id}>
               <AccordionTrigger className="text-left text-lg font-semibold">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-base text-muted-foreground">
+              <AccordionContent className="text-muted-foreground text-base">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
       ) : (
-        <div className="rounded-lg border bg-muted p-8 text-center">
+        <div className="bg-muted rounded-lg border p-8 text-center">
           <p className="text-muted-foreground">
             No results found for "<strong>{searchQuery}</strong>"
           </p>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-sm">
             Try adjusting your search or browse all questions above.
           </p>
         </div>
       )}
 
       {/* Contact Section */}
-      <div className="mt-12 rounded-lg border bg-muted p-6">
+      <div className="bg-muted mt-12 rounded-lg border p-6">
         <h2 className="mb-2 text-xl font-semibold">Still need help?</h2>
-        <p className="mb-4 text-muted-foreground">
+        <p className="text-muted-foreground mb-4">
           Can't find what you're looking for? Our support team is here to help.
         </p>
         <Button asChild>

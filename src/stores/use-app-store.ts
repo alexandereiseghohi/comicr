@@ -3,31 +3,31 @@ import * as Sentry from "@sentry/nextjs";
 import { create } from "zustand";
 
 interface AppState {
-  // Theme state
-  theme: "light" | "dark";
-  setTheme: (theme: "light" | "dark") => void;
-  toggleTheme: () => void;
+  clearSearch: () => void;
+  closeModal: () => void;
+  // Loading state
+  isLoading: boolean;
 
   // Modal state
   isModalOpen: boolean;
-  modalContent: React.ReactNode | null;
-  setModalOpen: (open: boolean) => void;
-  openModal: (content?: React.ReactNode) => void;
-  closeModal: () => void;
-
   // Sidebar state
   isSidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
-  toggleSidebar: () => void;
-
-  // Loading state
-  isLoading: boolean;
-  setLoading: (loading: boolean) => void;
-
+  modalContent: null | React.ReactNode;
+  openModal: (content?: React.ReactNode) => void;
   // Search state
   searchQuery: string;
+
+  setLoading: (loading: boolean) => void;
+  setModalOpen: (open: boolean) => void;
   setSearchQuery: (query: string) => void;
-  clearSearch: () => void;
+
+  setSidebarOpen: (open: boolean) => void;
+  setTheme: (theme: "dark" | "light") => void;
+
+  // Theme state
+  theme: "dark" | "light";
+  toggleSidebar: () => void;
+  toggleTheme: () => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({

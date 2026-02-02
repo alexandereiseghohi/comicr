@@ -1,10 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const errorMessages: Record<string, string> = {
   Configuration: "There is a problem with the server configuration.",
@@ -34,16 +35,16 @@ function AuthErrorContent() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-destructive">Authentication Error</CardTitle>
+          <CardTitle className="text-destructive text-2xl">Authentication Error</CardTitle>
           <CardDescription>Something went wrong during authentication.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-center text-sm text-muted-foreground">{errorMessage}</p>
+          <p className="text-muted-foreground text-center text-sm">{errorMessage}</p>
           <div className="flex flex-col gap-2">
             <Button asChild>
               <Link href="/sign-in">Try Again</Link>
             </Button>
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <Link href="/">Go Home</Link>
             </Button>
           </div>

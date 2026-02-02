@@ -1,6 +1,7 @@
+import { and, eq, sql } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { comicToGenre, genre } from "@/database/schema";
-import { and, eq, sql } from "drizzle-orm";
 
 export async function getGenres() {
   try {

@@ -1,5 +1,3 @@
-import { auth } from "@/lib/auth-config";
-import { cn } from "@/lib/utils";
 import {
   BookOpenIcon,
   ChevronRightIcon,
@@ -15,6 +13,9 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
+
+import { auth } from "@/lib/auth-config";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboardIcon },
@@ -37,7 +38,7 @@ interface AdminLayoutProps {
 
 export default async function AdminLayout({ children }: AdminLayoutProps) {
   const session = await auth();
-  const user = session?.user as { role?: string; name?: string; email?: string } | undefined;
+  const user = session?.user as { email?: string; name?: string; role?: string; } | undefined;
 
   // Redirect non-admins
   if (!user || user.role !== "admin") {
@@ -47,19 +48,19 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top header */}
-      <header className="bg-white border-b sticky top-0 z-40">
+      <header className="sticky top-0 z-40 border-b bg-white">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="font-semibold text-lg">
+            <Link className="text-lg font-semibold" href="/admin">
               Admin Panel
             </Link>
-            <span className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">
+            <span className="bg-primary/10 text-primary rounded px-2 py-1 text-xs">
               {user.role}
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">{user.name ?? user.email}</span>
-            <Link href="/" className="text-sm text-primary hover:underline">
+            <span className="text-muted-foreground text-sm">{user.name ?? user.email}</span>
+            <Link className="text-primary text-sm hover:underline" href="/">
               View Site
             </Link>
           </div>
@@ -68,22 +69,22 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r min-h-[calc(100vh-57px)] sticky top-[57px] hidden md:block">
-          <nav className="p-4 space-y-1">
+        <aside className="sticky top-[57px] hidden min-h-[calc(100vh-57px)] w-64 border-r bg-white md:block">
+          <nav className="space-y-1 p-4">
             {navItems.map((item) => (
-              <NavLink key={item.href} href={item.href} icon={item.icon}>
+              <NavLink href={item.href} icon={item.icon} key={item.href}>
                 {item.label}
               </NavLink>
             ))}
           </nav>
           <div className="px-4 py-2">
-            <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <h3 className="text-muted-foreground px-3 text-xs font-semibold tracking-wider uppercase">
               Metadata
             </h3>
           </div>
-          <nav className="px-4 pb-4 space-y-1">
+          <nav className="space-y-1 px-4 pb-4">
             {metadataItems.map((item) => (
-              <NavLink key={item.href} href={item.href} icon={item.icon}>
+              <NavLink href={item.href} icon={item.icon} key={item.href}>
                 {item.label}
               </NavLink>
             ))}
@@ -91,12 +92,12 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
         </aside>
 
         {/* Mobile nav */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t z-40 flex justify-around py-2">
+        <nav className="fixed right-0 bottom-0 left-0 z-40 flex justify-around border-t bg-white py-2 md:hidden">
           {navItems.slice(0, 4).map((item) => (
             <Link
-              key={item.href}
+              className="text-muted-foreground hover:text-primary flex flex-col items-center gap-1 text-xs"
               href={item.href}
-              className="flex flex-col items-center gap-1 text-xs text-muted-foreground hover:text-primary"
+              key={item.href}
             >
               <item.icon className="h-5 w-5" />
               <span>{item.label}</span>
@@ -116,18 +117,18 @@ function NavLink({
   icon: Icon,
   children,
 }: {
+  children: React.ReactNode;
   href: string;
   icon: React.ElementType;
-  children: React.ReactNode;
 }) {
   return (
     <Link
-      href={href}
       className={cn(
-        "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium",
+        "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
         "text-muted-foreground hover:text-foreground hover:bg-muted",
         "transition-colors"
       )}
+      href={href}
     >
       <Icon className="h-4 w-4" />
       <span className="flex-1">{children}</span>

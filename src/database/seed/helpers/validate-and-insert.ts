@@ -5,7 +5,7 @@
  * @date 2026-01-30
  */
 
-import { ZodSchema } from "zod";
+import { type ZodSchema } from "zod";
 
 export async function validateAndInsert<T>(
   schema: ZodSchema<T>,

@@ -1,14 +1,15 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import { auth } from "@/auth";
 import * as artistMutations from "@/database/mutations/artist.mutations";
 import { getArtistByName } from "@/database/queries/artist.queries";
 import { createArtistSchema } from "@/schemas/artist-schema";
-import { revalidatePath } from "next/cache";
 
 type ActionResult<T = unknown> =
-  | { ok: true; data: T }
-  | { ok: false; error: { code: string; message: string } };
+  | { data: T; ok: true; }
+  | { error: { code: string; message: string }; ok: false; };
 
 async function verifyAdmin(): Promise<{ userId: string } | null> {
   const session = await auth();

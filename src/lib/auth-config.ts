@@ -3,6 +3,12 @@
  * @description Complete authentication setup with OAuth providers
  */
 
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
+
 import { db } from "@/database/db";
 import { getUserByEmail } from "@/database/queries/user-queries";
 import {
@@ -13,13 +19,10 @@ import {
   GOOGLE_CLIENT_SECRET,
 } from "@/lib/env";
 import { verifyPassword } from "@/lib/password";
+
 import type { Session } from "@/types/auth";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import type { NextAuthConfig } from "next-auth";
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import GitHub from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
+
 
 /**
  * NextAuth configuration

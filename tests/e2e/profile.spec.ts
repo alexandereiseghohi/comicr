@@ -31,8 +31,8 @@ test.describe("Profile Settings", () => {
     await page.waitForTimeout(500);
 
     // State should change
-    const newState = await notificationSwitch.getAttribute("aria-checked");
-    expect(newState).not.toBe(initialState);
+    const newState = notificationSwitch;
+    await expect(newState).not.toHaveAttribute("aria-checked", initialState ?? "false");
   });
 
   test("should change profile visibility", async ({ page }) => {

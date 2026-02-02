@@ -1,6 +1,7 @@
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/database/db";
 import { type as typeTable } from "@/database/schema";
-import { and, eq } from "drizzle-orm";
 
 export async function getTypes() {
   try {

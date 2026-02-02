@@ -1,15 +1,16 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import React, {
   createContext,
+  type MouseEvent as ReactMouseEvent,
+  type ReactNode,
   useContext,
   useEffect,
   useRef,
   useState,
-  type MouseEvent as ReactMouseEvent,
-  type ReactNode,
 } from "react";
+
+import { cn } from "@/lib/utils";
 
 const MouseEnterContext = createContext<
   [boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined
@@ -48,20 +49,20 @@ export const CardContainer = ({
   return (
     <MouseEnterContext.Provider value={[isMouseEntered, setIsMouseEntered]}>
       <div
-        className={cn("py-20 flex items-center justify-center", containerClassName)}
+        className={cn("flex items-center justify-center py-20", containerClassName)}
         style={{
           perspective: "1000px",
         }}
       >
         <div
-          ref={containerRef}
-          onMouseEnter={handleMouseEnter}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
           className={cn(
-            "flex items-center justify-center relative transition-all duration-200 ease-linear",
+            "relative flex items-center justify-center transition-all duration-200 ease-linear",
             className
           )}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onMouseMove={handleMouseMove}
+          ref={containerRef}
           style={{
             transformStyle: "preserve-3d",
           }}
@@ -77,7 +78,7 @@ export const CardBody = ({ children, className }: { children: ReactNode; classNa
   return (
     <div
       className={cn(
-        "h-96 w-96 [transform-style:preserve-3d]  [&>*]:[transform-style:preserve-3d]",
+        "h-96 w-96 [transform-style:preserve-3d] [&>*]:[transform-style:preserve-3d]",
         className
       )}
     >
@@ -98,17 +99,17 @@ export const CardItem = ({
   rotateZ = 0,
   ...rest
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
   as?: React.ElementType;
   children: ReactNode;
   className?: string;
-  translateX?: number | string;
-  translateY?: number | string;
-  translateZ?: number | string;
   rotateX?: number | string;
   rotateY?: number | string;
   rotateZ?: number | string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
+  translateX?: number | string;
+  translateY?: number | string;
+  translateZ?: number | string;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isMouseEntered] = useMouseEnter();
@@ -128,7 +129,7 @@ export const CardItem = ({
   };
 
   return (
-    <Tag ref={ref} className={cn("w-fit transition duration-200 ease-linear", className)} {...rest}>
+    <Tag className={cn("w-fit transition duration-200 ease-linear", className)} ref={ref} {...rest}>
       {children}
     </Tag>
   );

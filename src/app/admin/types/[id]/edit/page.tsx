@@ -1,8 +1,9 @@
+import { eq } from "drizzle-orm";
+import { notFound } from "next/navigation";
+
 import { TypeForm } from "@/components/admin/type-form";
 import { db } from "@/database/db";
 import { type as typeTable } from "@/database/schema";
-import { eq } from "drizzle-orm";
-import { notFound } from "next/navigation";
 
 export const metadata = {
   title: "Edit Type - Admin",
@@ -28,7 +29,7 @@ export default async function EditTypePage({ params }: PageProps) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="mx-auto max-w-2xl space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Edit Type</h1>
         <p className="text-muted-foreground">Update type: {typeData.name}</p>

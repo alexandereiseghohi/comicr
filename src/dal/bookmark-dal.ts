@@ -1,7 +1,9 @@
 import * as mutations from "@/database/mutations/bookmark-mutations";
 import { bookmark } from "@/database/schema";
-import type { DbMutationResult } from "@/types";
+
 import { BaseDAL } from "./base-dal";
+
+import type { DbMutationResult } from "@/types";
 
 /**
  * Data Access Layer for Bookmark entities
@@ -29,8 +31,8 @@ export class BookmarkDAL extends BaseDAL<typeof bookmark> {
    * ```
    */
   async create(data: {
-    userId: string;
     comicId: number;
+    userId: string;
   }): Promise<DbMutationResult<typeof bookmark.$inferSelect>> {
     try {
       const result = await mutations.createBookmark(data.userId, data.comicId);
@@ -69,7 +71,7 @@ export class BookmarkDAL extends BaseDAL<typeof bookmark> {
    * });
    * ```
    */
-  async delete(data: { userId: string; comicId: number }): Promise<DbMutationResult<null>> {
+  async delete(data: { comicId: number; userId: string; }): Promise<DbMutationResult<null>> {
     try {
       await mutations.deleteBookmark(data.userId, data.comicId);
       return { success: true, data: null };

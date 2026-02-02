@@ -1,17 +1,18 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import { changePasswordSchema, type ChangePasswordInput } from "@/schemas/password-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Eye, EyeOff, Loader2, Shield } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { type ChangePasswordInput, changePasswordSchema } from "@/schemas/password-schema";
 
 export default function ChangePasswordPage() {
   const router = useRouter();
@@ -65,12 +66,12 @@ export default function ChangePasswordPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 py-8">
-      <div className="container max-w-2xl mx-auto px-4">
+      <div className="container mx-auto max-w-2xl px-4">
         {/* Back Button */}
         <div className="mb-6">
           <Link href="/profile">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+            <Button size="sm" variant="ghost">
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Profile
             </Button>
           </Link>
@@ -87,23 +88,23 @@ export default function ChangePasswordPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               {/* Current Password */}
               <div className="space-y-2">
                 <Label htmlFor="currentPassword">Current Password</Label>
                 <div className="relative">
                   <Input
                     id="currentPassword"
-                    type={showCurrentPassword ? "text" : "password"}
                     placeholder="Enter your current password"
+                    type={showCurrentPassword ? "text" : "password"}
                     {...register("currentPassword")}
                     className={errors.currentPassword ? "border-red-500" : ""}
                     disabled={loading}
                   />
                   <button
-                    type="button"
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-500 hover:text-slate-700"
                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                    type="button"
                   >
                     {showCurrentPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -123,16 +124,16 @@ export default function ChangePasswordPage() {
                 <div className="relative">
                   <Input
                     id="newPassword"
-                    type={showNewPassword ? "text" : "password"}
                     placeholder="Enter your new password"
+                    type={showNewPassword ? "text" : "password"}
                     {...register("newPassword")}
                     className={errors.newPassword ? "border-red-500" : ""}
                     disabled={loading}
                   />
                   <button
-                    type="button"
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-500 hover:text-slate-700"
                     onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                    type="button"
                   >
                     {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -151,16 +152,16 @@ export default function ChangePasswordPage() {
                 <div className="relative">
                   <Input
                     id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your new password"
+                    type={showConfirmPassword ? "text" : "password"}
                     {...register("confirmPassword")}
                     className={errors.confirmPassword ? "border-red-500" : ""}
                     disabled={loading}
                   />
                   <button
-                    type="button"
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-500 hover:text-slate-700"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                    type="button"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -176,10 +177,10 @@ export default function ChangePasswordPage() {
 
               {/* Submit Button */}
               <div className="flex gap-3 pt-4">
-                <Button type="submit" disabled={loading} className="flex-1">
+                <Button className="flex-1" disabled={loading} type="submit">
                   {loading ? (
                     <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Changing Password...
                     </>
                   ) : (
@@ -187,19 +188,19 @@ export default function ChangePasswordPage() {
                   )}
                 </Button>
                 <Button
+                  disabled={loading}
+                  onClick={() => router.push("/profile")}
                   type="button"
                   variant="outline"
-                  onClick={() => router.push("/profile")}
-                  disabled={loading}
                 >
                   Cancel
                 </Button>
               </div>
 
               {/* Security Tips */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-                <h4 className="text-sm font-semibold text-blue-900 mb-2">Password Tips</h4>
-                <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
+              <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
+                <h4 className="mb-2 text-sm font-semibold text-blue-900">Password Tips</h4>
+                <ul className="list-inside list-disc space-y-1 text-xs text-blue-800">
                   <li>Use a unique password you don&apos;t use elsewhere</li>
                   <li>Consider using a password manager</li>
                   <li>Avoid common words and personal information</li>

@@ -1,19 +1,20 @@
+import fs from "node:fs/promises";
+
 import dotenv from "dotenv";
-import fs from "fs/promises";
 
 dotenv.config({ path: process.env.ENV_FILE || ".env" });
 
 type ProviderReport = {
-  provider: string;
+  checks: { info?: string; name: string; ok: boolean; }[];
   env: Record<string, string | undefined>;
-  checks: { name: string; ok: boolean; info?: string }[];
+  provider: string;
 };
 
 type Provider = {
-  name: string;
-  envKeys: string[];
-  discovery?: string;
   apiCheck?: string;
+  discovery?: string;
+  envKeys: string[];
+  name: string;
 };
 
 const providers: Provider[] = [

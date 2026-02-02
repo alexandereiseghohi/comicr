@@ -97,6 +97,7 @@ export type ChapterSeed = z.infer<typeof ChapterSeedSchema>;
  */
 export const RawChapterSchema = z.object({
   comicslug: z.string().optional(),
+  comictitle: z.string().optional(),
   comicId: z.number().int().optional(),
   chaptername: z.string().optional(),
   title: z.string().optional(),
@@ -104,9 +105,18 @@ export const RawChapterSchema = z.object({
   slug: z.string().optional(),
   chapterNumber: z.number().int().optional(),
   image_urls: z.array(z.string()).optional(),
-  images: z.array(z.string()).optional(),
+  // Accept both string[] and {url: string}[] formats for images
+  images: z.array(z.union([z.string(), z.object({ url: z.string() })])).optional(),
   updated_at: z.string().optional(),
   releaseDate: z.string().optional(),
+  url: z.string().optional(),
+  // Support nested comic object with slug/title
+  comic: z
+    .object({
+      slug: z.string().optional(),
+      title: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type RawChapter = z.infer<typeof RawChapterSchema>;
@@ -180,7 +190,7 @@ export function filterValidImageUrls(urls: string[]): string[] {
  * Normalize a date string to ISO format
  * Returns current date if invalid
  */
-export function normalizeDateString(dateStr: string | null | undefined): string {
+export function normalizeDateString(dateStr: null | string | undefined): string {
   if (!dateStr || typeof dateStr !== "string" || dateStr.trim() === "" || dateStr === "null") {
     return new Date().toISOString();
   }
@@ -232,8 +242,8 @@ export function normalizeGenres(genres: unknown): string[] {
 export function generateSlug(title: string): string {
   return title
     .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
+    .replaceAll(/[^a-z0-9\s-]/g, "")
+    .replaceAll(/\s+/g, "-")
+    .replaceAll(/-+/g, "-")
     .trim();
 }

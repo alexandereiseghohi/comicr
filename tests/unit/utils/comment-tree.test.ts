@@ -1,5 +1,6 @@
-import { buildCommentTree, type CommentWithUser } from "@/database/queries/comment-queries";
 import { describe, expect, it } from "vitest";
+
+import { buildCommentTree, type CommentWithUser } from "@/database/queries/comment-queries";
 
 describe("buildCommentTree", () => {
   it("should build tree from flat comment list", () => {

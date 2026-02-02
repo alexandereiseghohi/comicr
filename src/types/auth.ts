@@ -3,40 +3,40 @@
  * @description Types for NextAuth and auth-related operations
  */
 
-import type { User as NextAuthUser, Session as NextAuthSession } from "next-auth";
+import type { Session as NextAuthSession, User as NextAuthUser } from "next-auth";
 
 /**
  * Extended NextAuth User
  */
 export interface AuthUser extends NextAuthUser {
-  id: string;
   email: string;
-  name?: string | null;
-  image?: string | null;
-  role?: "admin" | "moderator" | "user";
   emailVerified?: Date | null;
+  id: string;
+  image?: null | string;
   isActive?: boolean;
+  name?: null | string;
+  role?: "admin" | "moderator" | "user";
 }
 
 /**
  * Extended NextAuth Session
  */
 export interface Session extends NextAuthSession {
-  user: AuthUser;
   accessToken?: string;
-  refreshToken?: string;
   expiresAt?: number;
+  refreshToken?: string;
+  user: AuthUser;
 }
 
 /**
  * JWT Payload
  */
 export interface JWTPayload {
-  sub: string; // user ID
   email: string;
-  role: "admin" | "moderator" | "user";
-  iat: number; // issued at
   exp: number; // expiration
+  iat: number; // issued at
+  role: "admin" | "moderator" | "user";
+  sub: string; // user ID
 }
 
 /**
@@ -51,10 +51,10 @@ export interface SignInCredentials {
  * Sign-up data
  */
 export interface SignUpData {
-  email: string;
-  password: string;
   confirmPassword: string;
+  email: string;
   name?: string;
+  password: string;
 }
 
 /**
@@ -68,8 +68,8 @@ export interface PasswordResetRequest {
  * Password reset form
  */
 export interface PasswordResetForm {
-  password: string;
   confirmPassword: string;
+  password: string;
   token: string;
 }
 
@@ -77,19 +77,19 @@ export interface PasswordResetForm {
  * OAuth account info
  */
 export interface OAuthAccount {
-  provider: "google" | "github";
-  providerAccountId: string;
   email?: string;
-  name?: string;
   image?: string;
+  name?: string;
+  provider: "github" | "google";
+  providerAccountId: string;
 }
 
 /**
  * Auth callback result
  */
 export interface AuthCallbackResult {
-  success: boolean;
   error?: string;
+  success: boolean;
   user?: AuthUser;
 }
 
@@ -98,20 +98,20 @@ export interface AuthCallbackResult {
  */
 export interface EmailVerificationToken {
   email: string;
-  token: string;
   expiresAt: Date;
+  token: string;
 }
 
 /**
  * Permission level
  */
-export type PermissionLevel = "public" | "authenticated" | "moderator" | "admin";
+export type PermissionLevel = "admin" | "authenticated" | "moderator" | "public";
 
 /**
  * Auth check result
  */
 export interface AuthCheckResult {
   authenticated: boolean;
-  user?: AuthUser;
   session?: Session;
+  user?: AuthUser;
 }
