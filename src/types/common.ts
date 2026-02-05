@@ -20,7 +20,7 @@ export interface ApiResponse<T = unknown> {
 export interface ActionResult<T = unknown> {
   data?: T;
   error?: string;
-  ok: boolean;
+  success: boolean;
 }
 
 /**

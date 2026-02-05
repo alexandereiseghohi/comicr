@@ -1,4 +1,4 @@
-import { downloadAndSaveImage } from "@/lib/image-helper";
+import { downloadAndSaveImage } from "@/lib/image-helper.server";
 import { seedTableBatched } from "@/lib/seed-helpers";
 import { type ArtistSeed, ArtistSeedSchema } from "@/lib/validations/seed";
 

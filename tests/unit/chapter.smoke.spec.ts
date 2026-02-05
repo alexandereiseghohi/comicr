@@ -2,27 +2,29 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/database/db", () => {
   // Import inside factory to avoid hoisting issues
-  const { createSimpleMockChain } = require("./mock-db");
-  const mockChapters = [
-    {
-      id: 1,
-      title: "Ch 1",
-      chapterNumber: 1,
-      releaseDate: new Date().toISOString(),
-      comicId: 1,
-      content: "c1",
-    },
-    {
-      id: 2,
-      title: "Ch 2",
-      chapterNumber: 2,
-      releaseDate: new Date().toISOString(),
-      comicId: 1,
-      content: "c2",
-    },
-  ];
-  const chain = createSimpleMockChain({ success: true, data: mockChapters });
-  return { db: chain };
+  return (async () => {
+    const { createSimpleMockChain } = await import("./mock-db");
+    const mockChapters = [
+      {
+        id: 1,
+        title: "Ch 1",
+        chapterNumber: 1,
+        releaseDate: new Date().toISOString(),
+        comicId: 1,
+        content: "c1",
+      },
+      {
+        id: 2,
+        title: "Ch 2",
+        chapterNumber: 2,
+        releaseDate: new Date().toISOString(),
+        comicId: 1,
+        content: "c2",
+      },
+    ];
+    const chain = createSimpleMockChain({ success: true, data: mockChapters });
+    return { db: chain };
+  })();
 });
 
 import { getChapterById, getChaptersByComicId } from "@/database/queries/chapter.queries";

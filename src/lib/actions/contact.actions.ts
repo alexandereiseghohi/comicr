@@ -17,7 +17,7 @@ export async function sendContactEmailAction(input: ContactInput): Promise<Actio
     const validation = contactSchema.safeParse(input);
     if (!validation.success) {
       return {
-        ok: false,
+        success: false,
         error: validation.error.issues[0]?.message || "Invalid input",
       };
     }
@@ -41,7 +41,7 @@ export async function sendContactEmailAction(input: ContactInput): Promise<Actio
     } catch (error) {
       console.error("SMTP connection failed:", error);
       return {
-        ok: false,
+        success: false,
         error: "Email service is currently unavailable. Please try again later.",
       };
     }
@@ -89,13 +89,13 @@ Sent from ComicWise Contact Form
     await transporter.sendMail(mailOptions);
 
     return {
-      ok: true,
+      success: true,
       data: { sent: true },
     };
   } catch (error) {
     console.error("Contact form error:", error);
     return {
-      ok: false,
+      success: false,
       error: "Failed to send message. Please try again later.",
     };
   }

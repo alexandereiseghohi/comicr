@@ -26,8 +26,9 @@ test.describe("Admin Panel", () => {
 
     test("should display authors table", async ({ page }) => {
       await page.goto("/admin/authors");
-      // Table or empty state should be visible
-      await expect(page.getByRole("table").or(page.getByText(/no authors/i))).toBeVisible();
+      const table = page.getByRole("table");
+      const empty = page.getByText(/no authors/i);
+      await expect(table.or(empty)).toBeVisible();
     });
 
     test("should navigate to create author page", async ({ page }) => {
@@ -38,29 +39,20 @@ test.describe("Admin Panel", () => {
 
     test("should create new author", async ({ page }) => {
       await page.goto("/admin/authors/new");
-
-      await test.step("Fill author form", async () => {
-        await page.getByLabel(/name/i).fill("E2E Test Author");
-        const bioField = page.getByLabel(/bio/i);
-        if (await bioField.isVisible()) {
-          await bioField.fill("A test author created by E2E tests");
-        }
-      });
-
-      await test.step("Submit form", async () => {
-        await page.getByRole("button", { name: /create|save|submit/i }).click();
-      });
-
-      await test.step("Verify redirect to list", async () => {
-        await expect(page).toHaveURL("/admin/authors");
-      });
+      await page.getByLabel(/name/i).fill("E2E Test Author");
+      const bioField = page.getByLabel(/bio/i);
+      if ((await bioField.count()) > 0 && (await bioField.isVisible())) {
+        await bioField.fill("A test author created by E2E tests");
+      }
+      await page.getByRole("button", { name: /create|save|submit/i }).click();
+      await expect(page).toHaveURL("/admin/authors");
     });
 
     test("should show validation error for empty name", async ({ page }) => {
       await page.goto("/admin/authors/new");
       await page.getByRole("button", { name: /create|save|submit/i }).click();
-      // Should show validation error (form stays on page or shows error message)
-      await expect(page.getByText(/required|name/i).or(page.locator("[aria-invalid=true]"))).toBeVisible();
+      const error = page.getByText(/required|name/i).or(page.locator("[aria-invalid=true]"));
+      await expect(error).toBeVisible();
     });
   });
 
@@ -74,7 +66,9 @@ test.describe("Admin Panel", () => {
 
     test("should display artists table", async ({ page }) => {
       await page.goto("/admin/artists");
-      await expect(page.getByRole("table").or(page.getByText(/no artists/i))).toBeVisible();
+      const table = page.getByRole("table");
+      const empty = page.getByText(/no artists/i);
+      await expect(table.or(empty)).toBeVisible();
     });
 
     test("should navigate to create artist page", async ({ page }) => {
@@ -94,7 +88,9 @@ test.describe("Admin Panel", () => {
 
     test("should display genres table", async ({ page }) => {
       await page.goto("/admin/genres");
-      await expect(page.getByRole("table").or(page.getByText(/no genres/i))).toBeVisible();
+      const table = page.getByRole("table");
+      const empty = page.getByText(/no genres/i);
+      await expect(table.or(empty)).toBeVisible();
     });
 
     test("should create new genre", async ({ page }) => {
@@ -125,8 +121,7 @@ test.describe("Admin Panel", () => {
       await nameInput.blur();
 
       const slugInput = page.getByLabel(/slug/i);
-      if (await slugInput.isVisible()) {
-        // Slug should be auto-generated
+      if ((await slugInput.count()) > 0 && (await slugInput.isVisible())) {
         await expect(slugInput).toHaveValue(/action-adventure/i);
       }
     });
@@ -142,7 +137,9 @@ test.describe("Admin Panel", () => {
 
     test("should display types table", async ({ page }) => {
       await page.goto("/admin/types");
-      await expect(page.getByRole("table").or(page.getByText(/no types/i))).toBeVisible();
+      const table = page.getByRole("table");
+      const empty = page.getByText(/no types/i);
+      await expect(table.or(empty)).toBeVisible();
     });
 
     test("should navigate to create type page", async ({ page }) => {

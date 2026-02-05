@@ -51,7 +51,7 @@ export function ReadingProgressTracker({
     try {
       // First try to fetch from database
       const result = await getReadingProgressAction({ comicId });
-      if (result.ok && result.data) {
+      if (result.success && result.data) {
         // Check if current chapter matches and has significant progress
         if (
           result.data.chapterId === chapterId &&

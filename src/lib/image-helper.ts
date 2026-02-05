@@ -1,25 +1,20 @@
-import { createWriteStream, type WriteStream } from "node:fs";
+// NOTE: All file system and streaming logic has been moved to image-helper.server.ts.
+// This file only exports types, config, and pure helpers for use in both client and server code.
+// Only pure helpers, types, and config below. All file system and streaming logic is in image-helper.server.ts.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { Readable } from "node:stream";
-import { pipeline } from "node:stream/promises";
 
 import { z } from "zod";
-// ============================================================================
-// LOGGING UTILITY
-// ============================================================================
 
-function logError(context: string, error: unknown) {
-  if (process.env.NODE_ENV !== "production") {
-     
-    console.error(`[image-helper] ${context}:`, error);
-  }
-}
-// ============================================================================
-// ZOD SCHEMA FOR INPUT VALIDATION
-// ============================================================================
+import {
+  ALLOWED_IMAGE_FORMATS,
+  PLACEHOLDER_COMIC,
+  SEED_DOWNLOAD_CONCURRENCY_VALUE,
+  SEED_MAX_IMAGE_SIZE_BYTES_VALUE,
+  SEED_TIMEOUT_MS_VALUE,
+} from "../database/seed/seed-config";
 
-const DownloadImageOptionsSchema = z.object({
+export const DownloadImageOptionsSchema = z.object({
   destDir: z.string().min(1),
   fallback: z.string().optional(),
   filename: z.string().min(1),
@@ -27,121 +22,29 @@ const DownloadImageOptionsSchema = z.object({
   skipCache: z.boolean().optional(),
   url: z.string().url(),
 });
-// ============================================================================
-// URL VALIDATION
-// ============================================================================
-
-function isSafeUrl(urlString: string): boolean {
-  try {
-    const url = new URL(urlString);
-    if (!/^https?:$/.test(url.protocol)) return false;
-    // Block localhost and private IPs
-    const hostname = url.hostname;
-    if (
-      hostname === "localhost" ||
-      hostname === "127.0.0.1" ||
-      hostname === "::1" ||
-      /^10\./.test(hostname) ||
-      /^192\.168\./.test(hostname) ||
-      /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname)
-    ) {
-      return false;
-    }
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 // ============================================================================
-// CONFIGURATION
+// CONFIGURATION (mimics DEFAULT_CONFIG, now explicit)
 // ============================================================================
 
-/** Supported image formats */
-const ALLOWED_FORMATS = new Set(["jpeg", "jpg", "png", "webp", "avif", "gif"]);
-
-/** Default configuration values */
-const DEFAULT_CONFIG = {
-  maxSizeBytes: 5 * 1024 * 1024, // 5MB
-  concurrency: 5,
-  maxRetries: 3,
+export const CONFIG = {
+  publicDir: "public", // adjust if needed
   baseRetryDelayMs: 100,
-  requestTimeoutMs: 30_000,
-  publicDir: "public",
-  placeholderPath: "/placeholder-comic.jpg",
-} as const;
+  concurrency: SEED_DOWNLOAD_CONCURRENCY_VALUE,
+  maxSizeBytes: SEED_MAX_IMAGE_SIZE_BYTES_VALUE,
+  requestTimeoutMs: SEED_TIMEOUT_MS_VALUE,
+  placeholderPath: PLACEHOLDER_COMIC,
+};
 
-/** Runtime configuration from environment */
-const config = {
-  maxSizeBytes: parseInt(process.env.SEED_MAX_IMAGE_SIZE_BYTES || String(DEFAULT_CONFIG.maxSizeBytes), 10),
-  concurrency: parseInt(process.env.SEED_DOWNLOAD_CONCURRENCY || String(DEFAULT_CONFIG.concurrency), 10),
-  maxRetries: parseInt(process.env.SEED_MAX_RETRIES || String(DEFAULT_CONFIG.maxRetries), 10),
-  requestTimeoutMs: parseInt(process.env.SEED_REQUEST_TIMEOUT_MS || String(DEFAULT_CONFIG.requestTimeoutMs), 10),
-  publicDir: process.env.SEED_PUBLIC_DIR || DEFAULT_CONFIG.publicDir,
-  placeholderPath: DEFAULT_CONFIG.placeholderPath,
-} as const;
-
-// ============================================================================
-// TYPES
-// ============================================================================
-
-/** Options for downloading and saving an image */
-export interface DownloadImageOptions {
-  /** Destination directory relative to public/ (e.g., "images/comics") */
-  destDir: string;
-  /** Fallback path if download fails (relative to public/) */
-  fallback?: string;
-  /** Target filename with extension */
-  filename: string;
-  /** Maximum retry attempts */
-  maxRetries?: number;
-  /** Skip cache check (force re-download) */
-  skipCache?: boolean;
-  /** Source URL to download from */
-  url: string;
+// Helper: get file extension
+function getExtension(input: string): string | undefined {
+  const match = /\.([a-zA-Z0-9]+)$/.exec(input);
+  return match ? match[1].toLowerCase() : undefined;
 }
 
-/** Result of a download operation */
-export interface DownloadResult {
-  /** Whether file was retrieved from cache */
-  cached: boolean;
-  /** Error message if failed */
-  error?: string;
-  /** Relative path from public/ to saved file */
-  path: string;
-  /** Whether download succeeded */
-  success: boolean;
-}
-
-/** Batch download item */
-export interface BatchDownloadItem {
-  destDir: string;
-  fallback?: string;
-  filename: string;
-  url: string;
-}
-
-/** Progress callback for batch operations */
-export type ProgressCallback = (completed: number, total: number, current: string) => void;
-
-// ============================================================================
-// HELPER UTILITIES
-// ============================================================================
-
-/**
- * Extract file extension from URL or filename
- */
-export function getExtension(input: string): string {
-  // Handle URLs with query params
-  const cleanPath = input.split("?")[0] || input;
-  return path.extname(cleanPath).replace(".", "").toLowerCase();
-}
-
-/**
- * Check if format is allowed
- */
-export function isAllowedFormat(ext: string): boolean {
-  return ALLOWED_FORMATS.has(ext.toLowerCase());
+// Helper: check allowed formats
+function isAllowedFormat(ext: string): boolean {
+  return ALLOWED_IMAGE_FORMATS.includes(ext.toLowerCase());
 }
 
 /**
@@ -160,7 +63,7 @@ export function validateImageFormat(input: string): {
     return {
       valid: false,
       ext,
-      error: `Format '${ext}' not allowed. Allowed: ${[...ALLOWED_FORMATS].join(", ")}`,
+      error: `Format '${ext}' not allowed. Allowed: ${ALLOWED_IMAGE_FORMATS.join(", ")}`,
     };
   }
   return { valid: true, ext };
@@ -182,23 +85,25 @@ export async function fileExists(filePath: string): Promise<boolean> {
  * Ensure directory exists, creating it recursively if needed
  */
 export async function ensureDir(dirPath: string): Promise<void> {
+  if (typeof dirPath !== "string") {
+    throw new TypeError("Directory path must be a string");
+  }
   await fs.mkdir(dirPath, { recursive: true });
 }
-
 /**
  * Resolve path relative to public directory
  */
 export function resolvePublicPath(relativePath: string): string {
   // Remove leading slash if present
   const cleanPath = relativePath.replace(/^\/+/, "");
-  return path.resolve(config.publicDir, cleanPath);
+  return path.resolve(CONFIG.publicDir, cleanPath);
 }
 
 /**
  * Convert absolute path to path relative to public/
  */
 export function toPublicRelativePath(absolutePath: string): string {
-  const publicAbs = path.resolve(config.publicDir);
+  const publicAbs = path.resolve(CONFIG.publicDir);
   const relative = path.relative(publicAbs, absolutePath);
   // Always use forward slashes and leading /
   return "/" + relative.replaceAll("\\", "/");
@@ -219,106 +124,28 @@ export function sanitizeFilename(filename: string): string {
 }
 
 /**
- * Generate unique filename to avoid collisions
+ * Generate unique filename to avoid collisions (server-only, see image-helper.server.ts)
+ * @param _dirPath Directory path (unused in browser)
+ * @param _filename Filename (unused in browser)
  */
-export async function getUniqueFilename(dirPath: string, filename: string): Promise<string> {
-  const sanitized = sanitizeFilename(filename);
-  const absPath = path.join(dirPath, sanitized);
-
-  if (!(await fileExists(absPath))) {
-    return sanitized;
-  }
-
-  const ext = path.extname(sanitized);
-  const base = path.basename(sanitized, ext);
-  let counter = 1;
-  const maxAttempts = 1000;
-
-  while (counter < maxAttempts) {
-    const candidate = `${base}-${counter}${ext}`;
-    if (!(await fileExists(path.join(dirPath, candidate)))) {
-      return candidate;
-    }
-    counter++;
-  }
-
-  // Fallback: use timestamp
-  return `${base}-${Date.now()}${ext}`;
+export async function getUniqueFilename(_dirPath: string, _filename: string): Promise<string> {
+  // Implementation is server-only. See image-helper.server.ts.
+  throw new Error("getUniqueFilename is only available on the server (see image-helper.server.ts)");
 }
 
 /**
  * Calculate exponential backoff delay
  */
-export function getBackoffDelay(attempt: number, baseDelay: number = DEFAULT_CONFIG.baseRetryDelayMs): number {
+export function getBackoffDelay(attempt: number, baseDelay: number = CONFIG.baseRetryDelayMs): number {
   // Exponential backoff with jitter: 100ms, 200ms, 400ms, etc. + random 0-50ms
   const exponential = baseDelay * Math.pow(2, attempt);
   const jitter = Math.random() * 50;
   return Math.min(exponential + jitter, 10_000); // Cap at 10 seconds
 }
 
-// ============================================================================
-// CONCURRENCY LIMITER
-// ============================================================================
-
-/**
- * Semaphore-based concurrency limiter for parallel operations
- */
-class ConcurrencyLimiter {
-  private running = 0;
-  private readonly queue: Array<() => void> = [];
-  private readonly limit: number;
-
-  constructor(limit: number) {
-    this.limit = Math.max(1, limit);
-  }
-
-  /** Acquire a slot (waits if at capacity) */
-  async acquire(): Promise<void> {
-    if (this.running < this.limit) {
-      this.running++;
-      return;
-    }
-    return new Promise<void>((resolve) => {
-      this.queue.push(() => {
-        this.running++;
-        resolve();
-      });
-    });
-  }
-
-  /** Release a slot */
-  release(): void {
-    this.running--;
-    const next = this.queue.shift();
-    if (next) next();
-  }
-
-  /** Execute function with automatic acquire/release */
-  async run<T>(fn: () => Promise<T>): Promise<T> {
-    await this.acquire();
-    try {
-      return await fn();
-    } finally {
-      this.release();
-    }
-  }
-
-  /** Get current stats */
-  getStats(): { limit: number; queued: number; running: number } {
-    return {
-      running: this.running,
-      queued: this.queue.length,
-      limit: this.limit,
-    };
-  }
-}
-
-// Global limiter instance
-const downloadLimiter = new ConcurrencyLimiter(config.concurrency);
-
-// ============================================================================
-// DOWNLOAD CACHE
-// ============================================================================
+// (ConcurrencyLimiter and downloadLimiter moved to server file)
+// (webStreamToNodeStream and createTimeoutController moved to server file)
+// (All file system and streaming logic is in image-helper.server.ts)
 
 /** In-memory cache of downloaded URLs to their saved paths */
 const downloadCache = new Map<string, string>();
@@ -358,293 +185,6 @@ export function getCacheStats(): { size: number; urls: string[] } {
 // STREAM UTILITIES
 // ============================================================================
 
-/**
- * Convert web ReadableStream to Node.js Readable stream
- */
-function webStreamToNodeStream(webStream: ReadableStream<Uint8Array>): NodeJS.ReadableStream {
-  return Readable.fromWeb(webStream as import("stream/web").ReadableStream<Uint8Array>);
-}
+// (webStreamToNodeStream and createTimeoutController are server-only, see image-helper.server.ts)
 
-/**
- * Create abort controller with timeout
- */
-function createTimeoutController(timeoutMs: number): {
-  clear: () => void;
-  controller: AbortController;
-} {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-  return {
-    controller,
-    clear: () => clearTimeout(timeoutId),
-  };
-}
-
-// ============================================================================
-// MAIN DOWNLOAD FUNCTION
-// ============================================================================
-
-/**
- * Download and save image with deduplication, retry logic, and proper error handling.
- *
- * @param options - Download options
- * @returns Relative path from public/ to saved image (e.g., "/images/comics/cover.jpg")
- *
- * @example
- * ```ts
- * const path = await downloadAndSaveImage({
- *   url: "https://example.com/image.jpg",
- *   destDir: "images/comics",  // NOT "public/images/comics"
- *   filename: "my-comic-cover.jpg",
- * });
- * // Returns: "/images/comics/my-comic-cover.jpg"
- * ```
- */
-export async function downloadAndSaveImage(options: DownloadImageOptions): Promise<string> {
-  // Zod validation
-  const parseResult = DownloadImageOptionsSchema.safeParse(options);
-  if (!parseResult.success) {
-    logError("Invalid DownloadImageOptions", parseResult.error);
-    return config.placeholderPath;
-  }
-  const {
-    url,
-    destDir,
-    filename,
-    fallback = config.placeholderPath,
-    maxRetries = config.maxRetries,
-    skipCache = false,
-  } = parseResult.data;
-
-  // Validate URL safety
-  if (!isSafeUrl(url)) {
-    logError("Blocked unsafe URL", url);
-    return fallback;
-  }
-
-  // Validate format
-  const validation = validateImageFormat(filename);
-  if (!validation.valid) {
-    logError("Invalid image format", validation.error);
-    return fallback;
-  }
-
-  // Check cache first
-  if (!skipCache) {
-    const cachedPath = getCachedPath(url);
-    if (cachedPath && (await fileExists(resolvePublicPath(cachedPath)))) {
-      return cachedPath;
-    }
-  }
-
-  // Resolve full paths
-  const fullDestDir = resolvePublicPath(destDir);
-  const targetPath = path.join(fullDestDir, sanitizeFilename(filename));
-
-  // Check if file already exists
-  if (await fileExists(targetPath)) {
-    const relativePath = toPublicRelativePath(targetPath);
-    setCachedPath(url, relativePath);
-    return relativePath;
-  }
-
-  // Download with concurrency limiting
-  return downloadLimiter.run(async () => {
-    let lastError: Error | undefined;
-
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-      const { controller, clear } = createTimeoutController(config.requestTimeoutMs);
-      let writeStream: undefined | WriteStream;
-
-      try {
-        const response = await fetch(url, { signal: controller.signal });
-        clear();
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        // Check content length
-        const contentLength = Number(response.headers.get("content-length") || 0);
-        if (contentLength > config.maxSizeBytes) {
-          throw new Error(`Image too large: ${contentLength} bytes (max: ${config.maxSizeBytes})`);
-        }
-
-        if (!response.body) {
-          throw new Error("No response body");
-        }
-
-        // Ensure directory exists
-        await ensureDir(fullDestDir);
-
-        // Get unique filename to avoid collisions
-        const uniqueFilename = await getUniqueFilename(fullDestDir, filename);
-        const finalPath = path.join(fullDestDir, uniqueFilename);
-
-        // Stream to file
-        writeStream = createWriteStream(finalPath);
-        const nodeStream = webStreamToNodeStream(response.body);
-        await pipeline(nodeStream, writeStream);
-
-        // Success - cache and return
-        const relativePath = toPublicRelativePath(finalPath);
-        setCachedPath(url, relativePath);
-        return relativePath;
-      } catch (error) {
-        // Clean up write stream on error
-        if (writeStream) {
-          writeStream.destroy();
-        }
-        lastError = error instanceof Error ? error : new Error(String(error));
-        logError(`Download attempt ${attempt + 1} failed for ${url}`, lastError);
-
-        // Don't retry on certain errors
-        if (
-          lastError.message.includes("too large") ||
-          lastError.message.includes("HTTP 4") // 4xx errors
-        ) {
-          break;
-        }
-
-        // Wait before retry (except on last attempt)
-        if (attempt < maxRetries - 1) {
-          await new Promise((resolve) => setTimeout(resolve, getBackoffDelay(attempt)));
-        }
-      }
-    }
-
-    logError("All download attempts failed", lastError);
-    // All retries failed - return fallback
-    return fallback;
-  });
-}
-
-/**
- * Download and save image with detailed result
- */
-export async function downloadAndSaveImageWithResult(options: DownloadImageOptions): Promise<DownloadResult> {
-  // Zod validation
-  const parseResult = DownloadImageOptionsSchema.safeParse(options);
-  const fallback =
-    parseResult.success && parseResult.data.fallback ? parseResult.data.fallback : config.placeholderPath;
-  const url = parseResult.success ? parseResult.data.url : options.url;
-
-  // Check cache
-  const cachedPath = getCachedPath(url);
-  if (cachedPath && (await fileExists(resolvePublicPath(cachedPath)))) {
-    return { success: true, path: cachedPath, cached: true };
-  }
-
-  try {
-    const resultPath = await downloadAndSaveImage(options);
-    const isFallback = resultPath === fallback;
-    return {
-      success: !isFallback,
-      path: resultPath,
-      cached: false,
-      error: isFallback ? "Download failed, using fallback" : undefined,
-    };
-  } catch (error) {
-    logError("downloadAndSaveImageWithResult error", error);
-    return {
-      success: false,
-      path: fallback,
-      cached: false,
-      error: error instanceof Error ? error.message : String(error),
-    };
-  }
-}
-
-// ============================================================================
-// BATCH OPERATIONS
-// ============================================================================
-
-/**
- * Download multiple images in parallel with progress tracking
- *
- * @param items - Array of download items
- * @param onProgress - Optional progress callback
- * @returns Array of relative paths to saved images
- */
-export async function downloadImagesInBatch(
-  items: BatchDownloadItem[],
-  onProgress?: ProgressCallback
-): Promise<string[]> {
-  const total = items.length;
-  let completed = 0;
-
-  return await Promise.all(
-    items.map(async (item) => {
-      const result = await downloadAndSaveImage(item);
-      completed++;
-      onProgress?.(completed, total, item.filename);
-      return result;
-    })
-  );
-}
-
-/**
- * Download multiple images with detailed results
- */
-export async function downloadImagesInBatchWithResults(
-  items: BatchDownloadItem[],
-  onProgress?: ProgressCallback
-): Promise<DownloadResult[]> {
-  const total = items.length;
-  let completed = 0;
-
-  return await Promise.all(
-    items.map(async (item) => {
-      const result = await downloadAndSaveImageWithResult(item);
-      completed++;
-      onProgress?.(completed, total, item.filename);
-      return result;
-    })
-  );
-}
-
-/**
- * Download images sequentially (useful for rate-limited sources)
- */
-export async function downloadImagesSequentially(
-  items: BatchDownloadItem[],
-  delayMs: number = 100,
-  onProgress?: ProgressCallback
-): Promise<string[]> {
-  const results: string[] = [];
-  const total = items.length;
-
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-    if (!item) continue;
-
-    const result = await downloadAndSaveImage(item);
-    results.push(result);
-    onProgress?.(i + 1, total, item.filename);
-
-    // Delay between downloads (except last)
-    if (i < items.length - 1 && delayMs > 0) {
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
-    }
-  }
-
-  return results;
-}
-
-// ============================================================================
-// UTILITY EXPORTS
-// ============================================================================
-
-/**
- * Get current configuration
- */
-export function getConfig(): typeof config {
-  return { ...config };
-}
-
-/**
- * Get limiter statistics
- */
-export function getLimiterStats(): { limit: number; queued: number; running: number } {
-  return downloadLimiter.getStats();
-}
+// ...all file system and streaming logic has been moved to image-helper.server.ts...

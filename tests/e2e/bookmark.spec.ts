@@ -8,8 +8,6 @@ test.describe("Bookmark smoke", () => {
     const firstLink = page.locator('a[href^="/comics/"]').first();
     await expect(firstLink).toHaveCount(1);
     await firstLink.click();
-
-    // Expect the bookmark button (client component) to be present
     const bookmarkBtn = page.getByRole("button", { name: /Add Bookmark|Bookmarked/ });
     await expect(bookmarkBtn).toBeVisible();
   });
@@ -40,18 +38,15 @@ test.describe("Bookmark smoke", () => {
         await page.getByLabel("Email").fill(TEST_EMAIL);
         await page.getByLabel("Password").fill(TEST_PASS);
         await page.getByRole("button", { name: "Sign In" }).click();
-        // wait for redirect to home or comics
-        await page.waitForURL("**/comics", { timeout: 5000 }).catch(() => {});
-        // navigate back to comics and open first comic again
+        await expect(page).not.toHaveURL(/sign-in/);
         await page.goto(`${baseURL}/comics`);
         await firstLink.click();
       }
-
       // Now perform add bookmark
       const btn = page.getByRole("button", { name: /Add Bookmark|Bookmarked/ });
+      await expect(btn).toBeVisible();
       await btn.click();
       await expect(btn).toHaveText(/Bookmarked/);
-
       // Remove bookmark
       await btn.click();
       await expect(btn).toHaveText(/Add Bookmark/);

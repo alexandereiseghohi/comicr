@@ -15,7 +15,7 @@ vi.mock("@/database/queries/type.queries", () => ({
 // Mock the mutations
 vi.mock("@/database/mutations/type.mutations", () => ({
   createType: vi.fn(async (data: unknown) => ({
-    ok: true,
+    success: true,
     data: {
       id: 1,
       ...(data as Record<string, unknown>),
@@ -23,11 +23,11 @@ vi.mock("@/database/mutations/type.mutations", () => ({
     },
   })),
   updateType: vi.fn(async (id: number, data: unknown) => ({
-    ok: true,
+    success: true,
     data: { id, ...(data as Record<string, unknown>) },
   })),
-  deleteType: vi.fn(async () => ({ ok: true })),
-  setTypeActive: vi.fn(async () => ({ ok: true })),
+  deleteType: vi.fn(async () => ({ success: true })),
+  setTypeActive: vi.fn(async () => ({ success: true })),
 }));
 
 // Mock revalidatePath
@@ -52,14 +52,14 @@ describe("type actions", () => {
   describe("createTypeAction", () => {
     it("rejects invalid input - empty name", async () => {
       const res = await createTypeAction({ name: "" });
-      expect(res.ok).toBe(false);
+      expect(res.success).toBe(false);
       expect(res).toHaveProperty("error");
     });
 
     it("accepts valid input with name only", async () => {
       const res = await createTypeAction({ name: "Manga" });
-      expect(res.ok).toBe(true);
-      if (res.ok) {
+      expect(res.success).toBe(true);
+      if (res.success) {
         expect(res.data).toHaveProperty("id");
         expect(res.data).toHaveProperty("name", "Manga");
       }
@@ -70,8 +70,8 @@ describe("type actions", () => {
         name: "Manhwa",
         description: "Korean web comics",
       });
-      expect(res.ok).toBe(true);
-      if (res.ok) {
+      expect(res.success).toBe(true);
+      if (res.success) {
         expect(res.data).toHaveProperty("description", "Korean web comics");
       }
     });
@@ -81,17 +81,17 @@ describe("type actions", () => {
     // Note: updateTypeAction doesn't validate id > 0
     it("accepts id=0 (no validation)", async () => {
       const res = await updateTypeAction(0, { name: "Updated" });
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
 
     it("accepts valid update", async () => {
       const res = await updateTypeAction(1, { name: "Updated Type" });
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
 
     it("accepts partial update with isActive", async () => {
       const res = await updateTypeAction(1, { isActive: false });
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
   });
 
@@ -99,12 +99,12 @@ describe("type actions", () => {
     // Note: deleteTypeAction doesn't validate id > 0
     it("accepts id=0 (soft delete processes any id)", async () => {
       const res = await deleteTypeAction(0);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
 
     it("accepts valid id", async () => {
       const res = await deleteTypeAction(1);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
   });
 
@@ -112,12 +112,12 @@ describe("type actions", () => {
     // Note: restoreTypeAction doesn't validate id > 0
     it("accepts id=0 (restore processes any id)", async () => {
       const res = await restoreTypeAction(0);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
 
     it("accepts valid id", async () => {
       const res = await restoreTypeAction(1);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
   });
 
@@ -125,15 +125,15 @@ describe("type actions", () => {
     // Note: bulkDeleteTypesAction succeeds with empty array (count: 0)
     it("accepts empty array (processes with count: 0)", async () => {
       const res = await bulkDeleteTypesAction([]);
-      expect(res.ok).toBe(true);
-      if (res.ok) {
+      expect(res.success).toBe(true);
+      if (res.success) {
         expect(res.data).toHaveProperty("count", 0);
       }
     });
 
     it("accepts valid ids array", async () => {
       const res = await bulkDeleteTypesAction([1, 2, 3]);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
   });
 
@@ -141,15 +141,15 @@ describe("type actions", () => {
     // Note: bulkRestoreTypesAction succeeds with empty array (count: 0)
     it("accepts empty array (processes with count: 0)", async () => {
       const res = await bulkRestoreTypesAction([]);
-      expect(res.ok).toBe(true);
-      if (res.ok) {
+      expect(res.success).toBe(true);
+      if (res.success) {
         expect(res.data).toHaveProperty("count", 0);
       }
     });
 
     it("accepts valid ids array", async () => {
       const res = await bulkRestoreTypesAction([1, 2, 3]);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
   });
 });

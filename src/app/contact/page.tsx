@@ -34,7 +34,7 @@ export default function ContactPage() {
     setIsSubmitting(true);
     try {
       const result = await sendContactEmailAction(data);
-      if (result.ok) {
+      if (result.success) {
         toast.success("Message sent! Thank you for contacting us. We'll get back to you soon.");
         form.reset();
       } else {

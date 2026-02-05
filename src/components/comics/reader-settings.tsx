@@ -40,7 +40,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
     setLoading(true);
     try {
       const result = await getReaderSettingsAction();
-      if (result.ok && result.data) {
+      if (result.success && result.data) {
         // Map API values to component state types
         const bgMode = result.data.backgroundMode;
         if (bgMode === "dark" || bgMode === "white" || bgMode === "sepia") {
@@ -71,7 +71,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
         defaultQuality,
       });
 
-      if (result.ok) {
+      if (result.success) {
         toast.success("Your reader preferences have been updated");
         onSettingsChange?.({
           backgroundMode,

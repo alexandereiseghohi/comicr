@@ -58,7 +58,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   // Handler for server action result
   async function handleServerAction(formData: FormData) {
     const result = await resetPasswordServerAction(formData);
-    if (!result.ok) {
+    if (!result.success) {
       toast.error(result.error || "Failed to reset password");
       return;
     }

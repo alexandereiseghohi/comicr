@@ -31,7 +31,7 @@ export async function signUpAction(input: SignUpInput): Promise<ActionResult<{ u
     const validation = SignUpSchema.safeParse(input);
     if (!validation.success) {
       return {
-        ok: false,
+        success: false,
         error: validation.error.issues[0]?.message || "Invalid input",
       };
     }
@@ -40,7 +40,7 @@ export async function signUpAction(input: SignUpInput): Promise<ActionResult<{ u
     const existingUser = await getUserByEmail(input.email);
     if (existingUser.success && existingUser.data) {
       return {
-        ok: false,
+        success: false,
         error: "An account with this email already exists",
       };
     }
@@ -59,16 +59,16 @@ export async function signUpAction(input: SignUpInput): Promise<ActionResult<{ u
 
     if (!result.success || !result.data) {
       return {
-        ok: false,
+        success: false,
         error: result.error || "Failed to create account",
       };
     }
 
-    return { ok: true, data: { userId: result.data.id } };
+    return { success: true, data: { userId: result.data.id } };
   } catch (error) {
     console.error("Sign up error:", error);
     return {
-      ok: false,
+      success: false,
       error: "An unexpected error occurred during registration",
     };
   }
@@ -85,15 +85,15 @@ export async function signUpAction(input: SignUpInput): Promise<ActionResult<{ u
 export async function requestPasswordResetAction(email: string): Promise<ActionResult<{ message: string }>> {
   try {
     if (!email || typeof email !== "string") {
-      return { ok: false, error: "Email is required" };
+      return { success: false, error: "Email is required" };
     }
 
     // Check if user exists
     const existingUser = await getUserByEmail(email);
     if (!existingUser.success || !existingUser.data) {
-      // Return ok anyway to prevent email enumeration attacks
+      // Return success anyway to prevent email enumeration attacks
       return {
-        ok: true,
+        success: true,
         data: {
           message: "If an account exists, a password reset link will be sent",
         },
@@ -125,7 +125,7 @@ export async function requestPasswordResetAction(email: string): Promise<ActionR
     }
 
     return {
-      ok: true,
+      success: true,
       data: {
         message: "If an account exists, a password reset link will be sent",
       },
@@ -133,7 +133,7 @@ export async function requestPasswordResetAction(email: string): Promise<ActionR
   } catch (error) {
     console.error("Password reset request error:", error);
     return {
-      ok: false,
+      success: false,
       error: "Failed to process password reset request",
     };
   }
@@ -158,31 +158,31 @@ export async function resetPasswordAction(input: ResetPasswordInput): Promise<Ac
 
     // Validate passwords match
     if (newPassword !== confirmPassword) {
-      return { ok: false, error: "Passwords do not match" };
+      return { success: false, error: "Passwords do not match" };
     }
 
     // Validate password strength
     if (newPassword.length < 8) {
       return {
-        ok: false,
+        success: false,
         error: "Password must be at least 8 characters",
       };
     }
     if (!/[a-z]/.test(newPassword)) {
       return {
-        ok: false,
+        success: false,
         error: "Password must contain at least one lowercase letter",
       };
     }
     if (!/[A-Z]/.test(newPassword)) {
       return {
-        ok: false,
+        success: false,
         error: "Password must contain at least one uppercase letter",
       };
     }
     if (!/[0-9]/.test(newPassword)) {
       return {
-        ok: false,
+        success: false,
         error: "Password must contain at least one number",
       };
     }
@@ -198,7 +198,7 @@ export async function resetPasswordAction(input: ResetPasswordInput): Promise<Ac
     const tokenRecord = tokenRecords.find((record) => verifyPassword(token, record.token));
 
     if (!tokenRecord) {
-      return { ok: false, error: "Invalid or expired reset token" };
+      return { success: false, error: "Invalid or expired reset token" };
     }
 
     // Check if token has expired
@@ -206,7 +206,7 @@ export async function resetPasswordAction(input: ResetPasswordInput): Promise<Ac
       // Delete expired token
       await db.delete(passwordResetToken).where(eq(passwordResetToken.id, tokenRecord.id));
       return {
-        ok: false,
+        success: false,
         error: "Reset token has expired. Please request a new one.",
       };
     }
@@ -214,7 +214,7 @@ export async function resetPasswordAction(input: ResetPasswordInput): Promise<Ac
     // Find the user
     const existingUser = await getUserByEmail(tokenRecord.email);
     if (!existingUser.success || !existingUser.data) {
-      return { ok: false, error: "User not found" };
+      return { success: false, error: "User not found" };
     }
 
     // Hash new password
@@ -233,12 +233,12 @@ export async function resetPasswordAction(input: ResetPasswordInput): Promise<Ac
     await db.delete(passwordResetToken).where(eq(passwordResetToken.id, tokenRecord.id));
 
     return {
-      ok: true,
+      success: true,
       data: { message: "Password has been reset successfully" },
     };
   } catch (error) {
     console.error("Reset password error:", error);
-    return { ok: false, error: "Failed to reset password" };
+    return { success: false, error: "Failed to reset password" };
   }
 }
 
@@ -259,38 +259,38 @@ export async function changePasswordAction(input: ChangePasswordInput): Promise<
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return { ok: false, error: "Unauthorized - please sign in" };
+      return { success: false, error: "Unauthorized - please sign in" };
     }
 
     const { currentPassword, newPassword, confirmPassword } = input;
 
     // Validate passwords match
     if (newPassword !== confirmPassword) {
-      return { ok: false, error: "Passwords do not match" };
+      return { success: false, error: "Passwords do not match" };
     }
 
     // Validate password strength
     if (newPassword.length < 8) {
       return {
-        ok: false,
+        success: false,
         error: "Password must be at least 8 characters",
       };
     }
     if (!/[a-z]/.test(newPassword)) {
       return {
-        ok: false,
+        success: false,
         error: "Password must contain at least one lowercase letter",
       };
     }
     if (!/[A-Z]/.test(newPassword)) {
       return {
-        ok: false,
+        success: false,
         error: "Password must contain at least one uppercase letter",
       };
     }
     if (!/[0-9]/.test(newPassword)) {
       return {
-        ok: false,
+        success: false,
         error: "Password must contain at least one number",
       };
     }
@@ -300,18 +300,18 @@ export async function changePasswordAction(input: ChangePasswordInput): Promise<
     const userRecord = userResult.success && userResult.data ? userResult.data : undefined;
 
     if (!userRecord) {
-      return { ok: false, error: "User not found" };
+      return { success: false, error: "User not found" };
     }
 
     // Verify current password
     if (!userRecord.password || !verifyPassword(currentPassword, userRecord.password)) {
-      return { ok: false, error: "Current password is incorrect" };
+      return { success: false, error: "Current password is incorrect" };
     }
 
     // Ensure new password is different
     if (currentPassword === newPassword) {
       return {
-        ok: false,
+        success: false,
         error: "New password must be different from current password",
       };
     }
@@ -324,17 +324,17 @@ export async function changePasswordAction(input: ChangePasswordInput): Promise<
     });
     if (!updateResult.success) {
       return {
-        ok: false,
+        success: false,
         error: updateResult.error || "Failed to update password",
       };
     }
 
     return {
-      ok: true,
+      success: true,
       data: { message: "Password changed successfully" },
     };
   } catch (error) {
     console.error("Change password error:", error);
-    return { ok: false, error: "Failed to change password" };
+    return { success: false, error: "Failed to change password" };
   }
 }

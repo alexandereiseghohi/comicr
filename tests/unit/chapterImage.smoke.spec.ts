@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { getImagesByChapterId } from "@/database/queries/chapter-image.queries";
+
 import { createMockChain } from "./mock-db";
 
 vi.mock("@/database/db", () => {
@@ -7,8 +9,6 @@ vi.mock("@/database/db", () => {
   const chain = createMockChain(mockResult);
   return { db: chain };
 });
-
-import { getImagesByChapterId } from "@/database/queries/chapter-image.queries";
 
 type ChapterImage = { chapterId: number; id: number; imageUrl: string; pageNumber: number };
 

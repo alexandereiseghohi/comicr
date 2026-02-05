@@ -2,7 +2,7 @@
  * E2E Authentication Helpers
  * Provides reusable sign-in functionality for Playwright tests
  */
-import { type Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 
 // Test credentials (matches global-setup.ts)
 const TEST_ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL ?? "admin@comicwise.test";
@@ -13,21 +13,16 @@ const TEST_ADMIN_PASS = process.env.E2E_ADMIN_PASS ?? "TestAdmin123!";
  */
 export async function signInAsAdmin(page: Page): Promise<void> {
   await page.goto("/sign-in");
-
-  // Wait for the form to be ready
-  await page.waitForSelector('input[name="email"], input[type="email"]');
-
-  // Fill in credentials
-  await page.fill('input[name="email"], input[type="email"]', TEST_ADMIN_EMAIL);
-  await page.fill('input[name="password"], input[type="password"]', TEST_ADMIN_PASS);
-
-  // Submit the form
-  await page.click('button[type="submit"]');
-
-  // Wait for navigation away from sign-in page
-  await page.waitForURL((url) => !url.pathname.includes("/sign-in"), {
-    timeout: 10000,
-  });
+  const emailInput = page.locator('input[name="email"], input[type="email"]');
+  await expect(emailInput).toBeVisible();
+  await emailInput.fill(TEST_ADMIN_EMAIL);
+  const passwordInput = page.locator('input[name="password"], input[type="password"]');
+  await expect(passwordInput).toBeVisible();
+  await passwordInput.fill(TEST_ADMIN_PASS);
+  const submitButton = page.locator('button[type="submit"]');
+  await expect(submitButton).toBeVisible();
+  await submitButton.click();
+  await page.waitForURL((url) => !url.pathname.includes("/sign-in"), { timeout: 10000 });
 }
 
 /**
@@ -35,21 +30,16 @@ export async function signInAsAdmin(page: Page): Promise<void> {
  */
 export async function signIn(page: Page, email: string, password: string): Promise<void> {
   await page.goto("/sign-in");
-
-  // Wait for the form to be ready
-  await page.waitForSelector('input[name="email"], input[type="email"]');
-
-  // Fill in credentials
-  await page.fill('input[name="email"], input[type="email"]', email);
-  await page.fill('input[name="password"], input[type="password"]', password);
-
-  // Submit the form
-  await page.click('button[type="submit"]');
-
-  // Wait for navigation away from sign-in page
-  await page.waitForURL((url) => !url.pathname.includes("/sign-in"), {
-    timeout: 10000,
-  });
+  const emailInput = page.locator('input[name="email"], input[type="email"]');
+  await expect(emailInput).toBeVisible();
+  await emailInput.fill(email);
+  const passwordInput = page.locator('input[name="password"], input[type="password"]');
+  await expect(passwordInput).toBeVisible();
+  await passwordInput.fill(password);
+  const submitButton = page.locator('button[type="submit"]');
+  await expect(submitButton).toBeVisible();
+  await submitButton.click();
+  await page.waitForURL((url) => !url.pathname.includes("/sign-in"), { timeout: 10000 });
 }
 
 /**

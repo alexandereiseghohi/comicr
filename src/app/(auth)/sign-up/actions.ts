@@ -15,10 +15,10 @@ export async function signUpServerAction(formData: FormData) {
   const confirmPassword = formData.get("confirmPassword");
   const parsed = signUpSchema.safeParse({ email, password, confirmPassword });
   if (!parsed.success) {
-    return { ok: false, error: parsed.error.issues[0]?.message || "Invalid input" };
+    return { success: false, error: parsed.error.issues[0]?.message || "Invalid input" };
   }
   if (password !== confirmPassword) {
-    return { ok: false, error: "Passwords must match" };
+    return { success: false, error: "Passwords must match" };
   }
   return await signUpAction({
     email: email as string,

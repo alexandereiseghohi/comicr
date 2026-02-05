@@ -1,7 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -57,7 +57,7 @@ export function SignUpForm() {
   // Handler for server action result
   async function handleServerAction(formData: FormData) {
     const result = await signUpServerAction(formData);
-    if (!result.ok) {
+    if (!result.success) {
       toast.error(result.error || "Failed to create account");
       return;
     }

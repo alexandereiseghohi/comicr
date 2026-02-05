@@ -2,10 +2,12 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/database/db", () => {
   // Import inside factory to avoid hoisting issues
-  const { createSimpleMockChain } = require("./mock-db");
-  const mockResult = { id: 2, name: "Mock Author", bio: "bio", image: null };
-  const chain = createSimpleMockChain({ success: true, data: mockResult });
-  return { db: chain };
+  return (async () => {
+    const { createSimpleMockChain } = await import("./mock-db");
+    const mockResult = { id: 2, name: "Mock Author", bio: "bio", image: null };
+    const chain = createSimpleMockChain({ success: true, data: mockResult });
+    return { db: chain };
+  })();
 });
 
 import { getAuthorById } from "@/database/queries/author.queries";

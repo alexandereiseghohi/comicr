@@ -45,7 +45,7 @@ export function ForgotPasswordForm() {
   // Handler for server action result
   async function handleServerAction(formData: FormData) {
     const result = await forgotPasswordServerAction(formData);
-    if (!result.ok) {
+    if (!result.success) {
       toast.error(result.error || "Failed to send reset email");
       return;
     }

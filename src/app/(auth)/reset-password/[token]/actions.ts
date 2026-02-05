@@ -20,7 +20,7 @@ export async function resetPasswordServerAction(formData: FormData) {
   const token = formData.get("token");
   const parsed = resetPasswordSchema.safeParse({ password, confirmPassword, token });
   if (!parsed.success) {
-    return { ok: false, error: parsed.error.issues[0]?.message || "Invalid input" };
+    return { success: false, error: parsed.error.issues[0]?.message || "Invalid input" };
   }
   return await resetPasswordAction({
     newPassword: password as string,

@@ -24,10 +24,11 @@ describe("RBAC Authorization", () => {
 
       const { createGenreAction } = await import("@/lib/actions/genre.actions");
       const result = await createGenreAction({ name: "Test Genre" });
-      expect(result.ok).toBe(false);
-      expect(typeof (result as any).error).toBe("string");
-      expect((result as any).error).toContain("UNAUTHORIZED");
-      expect((result as any).error).toContain("Admin");
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(typeof result.error).toBe("string");
+      expect(result.error).toContain("UNAUTHORIZED");
+      expect(result.error).toContain("Admin");
     });
 
     it("rejects regular users", async () => {
@@ -44,9 +45,10 @@ describe("RBAC Authorization", () => {
 
       const { createGenreAction } = await import("@/lib/actions/genre.actions");
       const result = await createGenreAction({ name: "Test Genre" });
-      expect(result.ok).toBe(false);
-      expect(typeof (result as any).error).toBe("string");
-      expect((result as any).error).toContain("UNAUTHORIZED");
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(typeof result.error).toBe("string");
+      expect(result.error).toContain("UNAUTHORIZED");
     });
 
     it("rejects moderators (admin-only action)", async () => {
@@ -63,9 +65,10 @@ describe("RBAC Authorization", () => {
 
       const { createGenreAction } = await import("@/lib/actions/genre.actions");
       const result = await createGenreAction({ name: "Test Genre" });
-      expect(result.ok).toBe(false);
-      expect(typeof (result as any).error).toBe("string");
-      expect((result as any).error).toContain("UNAUTHORIZED");
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(typeof result.error).toBe("string");
+      expect(result.error).toContain("UNAUTHORIZED");
     });
 
     it("allows admin users", async () => {
@@ -88,7 +91,7 @@ describe("RBAC Authorization", () => {
 
       const { createGenreAction } = await import("@/lib/actions/genre.actions");
       const result = await createGenreAction({ name: "Test Genre" });
-      expect(result.ok).toBe(true);
+      expect(result.success).toBe(true);
     });
   });
 
@@ -105,10 +108,11 @@ describe("RBAC Authorization", () => {
 
       const { createTypeAction } = await import("@/lib/actions/type.actions");
       const result = await createTypeAction({ name: "Test Type" });
-      expect(result.ok).toBe(false);
-      expect(typeof (result as any).error).toBe("string");
-      expect((result as any).error).toContain("UNAUTHORIZED");
-      expect((result as any).error).toContain("Admin");
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(typeof result.error).toBe("string");
+      expect(result.error).toContain("UNAUTHORIZED");
+      expect(result.error).toContain("Admin");
     });
 
     it("allows admin users", async () => {
@@ -130,7 +134,7 @@ describe("RBAC Authorization", () => {
       }));
       const { createTypeAction } = await import("@/lib/actions/type.actions");
       const result = await createTypeAction({ name: "Test Type" });
-      expect(result.ok).toBe(true);
+      expect(result.success).toBe(true);
     });
   });
 
@@ -147,9 +151,11 @@ describe("RBAC Authorization", () => {
 
       const { createAuthorAction } = await import("@/lib/actions/author.actions");
       const result = await createAuthorAction({ name: "Test Author" });
-      expect(result.ok).toBe(false);
-      expect(typeof (result as any).error).toBe("string");
-      expect((result as any).error).toContain("UNAUTHORIZED");
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(typeof result.error).toBe("string");
+        expect(result.error).toContain("UNAUTHORIZED");
+      }
     });
   });
 
@@ -166,9 +172,11 @@ describe("RBAC Authorization", () => {
 
       const { createArtistAction } = await import("@/lib/actions/artist.actions");
       const result = await createArtistAction({ name: "Test Artist" });
-      expect(result.ok).toBe(false);
-      expect(typeof (result as any).error).toBe("string");
-      expect((result as any).error).toContain("UNAUTHORIZED");
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(typeof result.error).toBe("string");
+        expect(result.error).toContain("UNAUTHORIZED");
+      }
     });
   });
 
@@ -185,8 +193,10 @@ describe("RBAC Authorization", () => {
 
       const { bulkDeleteGenresAction } = await import("@/lib/actions/genre.actions");
       const result = await bulkDeleteGenresAction([1, 2, 3]);
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error).toBeDefined();
+        expect(typeof result.error).toBe("string");
         expect(result.error).toContain("UNAUTHORIZED");
       }
     });
@@ -203,8 +213,10 @@ describe("RBAC Authorization", () => {
 
       const { bulkRestoreGenresAction } = await import("@/lib/actions/genre.actions");
       const result = await bulkRestoreGenresAction([1, 2, 3]);
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error).toBeDefined();
+        expect(typeof result.error).toBe("string");
         expect(result.error).toContain("UNAUTHORIZED");
       }
     });
@@ -221,10 +233,10 @@ describe("RBAC Authorization", () => {
 
       const { createGenreAction } = await import("@/lib/actions/genre.actions");
       const result = await createGenreAction({ name: "Test" });
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.error).toContain("UNAUTHORIZED");
-      }
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(typeof result.error).toBe("string");
+      expect(result.error).toContain("UNAUTHORIZED");
     });
 
     it("rejects when user has no id", async () => {
@@ -239,10 +251,10 @@ describe("RBAC Authorization", () => {
 
       const { createGenreAction } = await import("@/lib/actions/genre.actions");
       const result = await createGenreAction({ name: "Test" });
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.error).toContain("UNAUTHORIZED");
-      }
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(typeof result.error).toBe("string");
+      expect(result.error).toContain("UNAUTHORIZED");
     });
 
     it("rejects when user has no role", async () => {
@@ -257,10 +269,10 @@ describe("RBAC Authorization", () => {
 
       const { createGenreAction } = await import("@/lib/actions/genre.actions");
       const result = await createGenreAction({ name: "Test" });
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.error).toContain("UNAUTHORIZED");
-      }
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      expect(typeof result.error).toBe("string");
+      expect(result.error).toContain("UNAUTHORIZED");
     });
   });
 });

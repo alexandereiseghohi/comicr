@@ -26,14 +26,14 @@ export async function createComicAction(input: CreateComicInput): Promise<Action
   const session = await auth();
   const user = session?.user as AuthUser | undefined;
   if (!user?.id || user.role !== "admin") {
-    return { ok: false, error: "Unauthorized" };
+    return { success: false, error: "Unauthorized" };
   }
 
   // Validate
   const validation = createComicSchema.safeParse(input);
   if (!validation.success) {
     return {
-      ok: false,
+      success: false,
       error: validation.error.issues[0]?.message || "Validation failed",
     };
   }
@@ -41,14 +41,14 @@ export async function createComicAction(input: CreateComicInput): Promise<Action
   try {
     const result = await comicMutations.createComic(validation.data);
     if (!result.success) {
-      return { ok: false, error: result.error };
+      return { success: false, error: result.error };
     }
 
     revalidatePath("/comics");
-    return { ok: true, data: { id: result.data?.id || 0 } };
+    return { success: true, data: { id: result.data?.id || 0 } };
   } catch (error) {
     return {
-      ok: false,
+      success: false,
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }
@@ -61,26 +61,26 @@ export async function updateComicAction(id: number, input: UpdateComicInput): Pr
   const session = await auth();
   const user = session?.user as AuthUser | undefined;
   if (!user?.id || user.role !== "admin") {
-    return { ok: false, error: "Unauthorized" };
+    return { success: false, error: "Unauthorized" };
   }
 
   const validation = updateComicSchema.safeParse(input);
   if (!validation.success) {
-    return { ok: false, error: validation.error.issues[0]?.message };
+    return { success: false, error: validation.error.issues[0]?.message };
   }
 
   try {
     const result = await comicMutations.updateComic(id, validation.data);
     if (!result.success) {
-      return { ok: false, error: result.error };
+      return { success: false, error: result.error };
     }
 
     revalidatePath(`/comics/${id}`);
     revalidatePath("/comics");
-    return { ok: true, data: { id } };
+    return { success: true, data: { id } };
   } catch (error) {
     return {
-      ok: false,
+      success: false,
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }
@@ -93,20 +93,20 @@ export async function deleteComicAction(id: number): Promise<ActionResult<null>>
   const session = await auth();
   const user = session?.user as AuthUser | undefined;
   if (!user?.id || user?.role !== "admin") {
-    return { ok: false, error: "Unauthorized" };
+    return { success: false, error: "Unauthorized" };
   }
 
   try {
     const result = await comicMutations.deleteComic(id);
     if (!result.success) {
-      return { ok: false, error: result.error };
+      return { success: false, error: result.error };
     }
 
     revalidatePath("/comics");
-    return { ok: true };
+    return { success: true };
   } catch (error) {
     return {
-      ok: false,
+      success: false,
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }

@@ -48,14 +48,14 @@ describe("author actions", () => {
   describe("createAuthorAction", () => {
     it("rejects invalid input - empty name", async () => {
       const res = await createAuthorAction({ name: "" });
-      expect(res.ok).toBe(false);
+      expect(res.success).toBe(false);
       expect(res).toHaveProperty("error");
     });
 
     it("accepts valid input with name only", async () => {
       const res = await createAuthorAction({ name: "John Doe" });
-      expect(res.ok).toBe(true);
-      if (res.ok) {
+      expect(res.success).toBe(true);
+      if (res.success) {
         expect(res.data).toHaveProperty("id");
         expect(res.data).toHaveProperty("name", "John Doe");
       }
@@ -67,8 +67,8 @@ describe("author actions", () => {
         bio: "Award-winning author",
         image: "https://example.com/jane.jpg",
       });
-      expect(res.ok).toBe(true);
-      if (res.ok) {
+      expect(res.success).toBe(true);
+      if (res.success) {
         expect(res.data).toHaveProperty("bio", "Award-winning author");
         expect(res.data).toHaveProperty("image", "https://example.com/jane.jpg");
       }
@@ -79,17 +79,17 @@ describe("author actions", () => {
     // Note: updateAuthorAction doesn't validate id > 0
     it("accepts id=0 (no validation)", async () => {
       const res = await updateAuthorAction(0, { name: "Updated" });
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
 
     it("accepts valid update", async () => {
       const res = await updateAuthorAction(1, { name: "Updated Author" });
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
 
     it("accepts partial update with isActive", async () => {
       const res = await updateAuthorAction(1, { isActive: false });
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
   });
 
@@ -97,12 +97,12 @@ describe("author actions", () => {
     // Note: deleteAuthorAction doesn't validate id > 0
     it("accepts id=0 (soft delete processes any id)", async () => {
       const res = await deleteAuthorAction(0);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
 
     it("accepts valid id", async () => {
       const res = await deleteAuthorAction(1);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
   });
 
@@ -110,12 +110,12 @@ describe("author actions", () => {
     // Note: restoreAuthorAction doesn't validate id > 0
     it("accepts id=0 (restore processes any id)", async () => {
       const res = await restoreAuthorAction(0);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
 
     it("accepts valid id", async () => {
       const res = await restoreAuthorAction(1);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
   });
 
@@ -123,15 +123,15 @@ describe("author actions", () => {
     // Note: bulkDeleteAuthorsAction succeeds with empty array (count: 0)
     it("accepts empty array (processes with count: 0)", async () => {
       const res = await bulkDeleteAuthorsAction([]);
-      expect(res.ok).toBe(true);
-      if (res.ok) {
+      expect(res.success).toBe(true);
+      if (res.success) {
         expect(res.data).toHaveProperty("count", 0);
       }
     });
 
     it("accepts valid ids array", async () => {
       const res = await bulkDeleteAuthorsAction([1, 2, 3]);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
   });
 
@@ -139,15 +139,15 @@ describe("author actions", () => {
     // Note: bulkRestoreAuthorsAction succeeds with empty array (count: 0)
     it("accepts empty array (processes with count: 0)", async () => {
       const res = await bulkRestoreAuthorsAction([]);
-      expect(res.ok).toBe(true);
-      if (res.ok) {
+      expect(res.success).toBe(true);
+      if (res.success) {
         expect(res.data).toHaveProperty("count", 0);
       }
     });
 
     it("accepts valid ids array", async () => {
       const res = await bulkRestoreAuthorsAction([1, 2, 3]);
-      expect(res.ok).toBe(true);
+      expect(res.success).toBe(true);
     });
   });
 });

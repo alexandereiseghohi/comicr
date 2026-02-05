@@ -11,7 +11,8 @@ import path from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { clearDownloadCache, downloadAndSaveImage } from "@/lib/image-helper";
+import { clearDownloadCache } from "@/lib/image-helper";
+import { downloadAndSaveImage } from "@/lib/image-helper.server";
 import {
   ArtistSeedSchema,
   AuthorSeedSchema,

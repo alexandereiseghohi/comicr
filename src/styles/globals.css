@@ -41,6 +41,12 @@
     "Geist Mono", "Geist Mono Fallback", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
 
+  --font-ibm-plex-sans: IBM Plex Sans, sans-serif;
+  --font-bebas-neue: var(--bebas-neue);
+  --font-schibsted-grotesk: var(--schibsted-grotesk);
+  --font-martian-mono: var(--martian-mono);
+  --font-fira-sans: var(--fira-sans);
+
   --radius: 1rem;
 
   --shadow-2xs: 0px 1px 3px 0px oklch(0 0 0 / 0.01);

@@ -20,7 +20,9 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
-  "files.associations": { "*.css": "tailwindcss" },
+  "files.associations": { "*.css": "tailwindcss","*.agent.md": "chatagent",
+    "*.instructions.md": "instructions",
+    "*.prompt.md": "prompt" },
   "search.exclude": {
     "**/node_modules": true,
     "**/.next": true,
@@ -84,5 +86,28 @@
 
   // Telemetry
   "telemetry.telemetryLevel": "off",
-  "redhat.telemetry.enabled": false
+  "redhat.telemetry.enabled": false,
+
+
+
+
+
+  "files.eol": "\n",
+
+
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.next/**": true
+  },
+
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+    }
+  },
+
+  "yaml.schemas": {
+    "./.schemas/collection.schema.json": "*.collection.yml"
+  }
 }

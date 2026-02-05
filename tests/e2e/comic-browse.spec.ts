@@ -23,11 +23,10 @@ test.describe("Comic Browse", () => {
 
     // Look for search input
     const searchInput = page.getByPlaceholder(/search/i).or(page.getByRole("searchbox"));
-    if (await searchInput.isVisible()) {
-      await searchInput.fill("test");
-      // URL should update with search param or results should filter
-      await page.waitForTimeout(500); // Debounce
-    }
+    await expect(searchInput).toBeVisible();
+    await searchInput.fill("test");
+    // Wait for results or URL update
+    await expect(page).toHaveURL(/search|q=test/);
   });
 
   test("should display genre filter if available", async ({ page }) => {
@@ -37,11 +36,9 @@ test.describe("Comic Browse", () => {
       .getByRole("button", { name: /genre/i })
       .or(page.getByLabel(/genre/i))
       .or(page.locator("[data-testid=genre-filter]"));
-
-    // Genre filter may or may not be present
-    if (await genreFilter.isVisible()) {
+    // Always assert visibility, skip if not present
+    if ((await genreFilter.count()) > 0 && (await genreFilter.isVisible())) {
       await genreFilter.click();
-      // Options should appear
       await expect(page.getByRole("option").or(page.getByRole("listbox"))).toBeVisible();
     }
   });
@@ -53,8 +50,7 @@ test.describe("Comic Browse", () => {
       .getByRole("button", { name: /type/i })
       .or(page.getByLabel(/type/i))
       .or(page.locator("[data-testid=type-filter]"));
-
-    if (await typeFilter.isVisible()) {
+    if ((await typeFilter.count()) > 0 && (await typeFilter.isVisible())) {
       await typeFilter.click();
       await expect(page.getByRole("option").or(page.getByRole("listbox"))).toBeVisible();
     }
@@ -65,10 +61,8 @@ test.describe("Comic Browse", () => {
 
     // Look for pagination controls
     const nextButton = page.getByRole("button", { name: /next|→|>/i }).or(page.getByRole("link", { name: /next/i }));
-
-    if (await nextButton.isVisible()) {
+    if ((await nextButton.count()) > 0 && (await nextButton.isVisible())) {
       await nextButton.click();
-      // URL should update with page param
       await expect(page).toHaveURL(/page=2/);
     }
   });
@@ -78,12 +72,9 @@ test.describe("Comic Browse", () => {
 
     // Click on first comic card/link
     const comicLink = page.locator("[data-testid=comic-card] a, article a, .comic-card a").first();
-
-    if (await comicLink.isVisible()) {
-      await comicLink.click();
-      // Should navigate to comic detail page
-      await expect(page).toHaveURL(/\/comics\/|\/comic\//);
-    }
+    await expect(comicLink).toBeVisible();
+    await comicLink.click();
+    await expect(page).toHaveURL(/\/comics\/|\/comic\//);
   });
 });
 
@@ -93,60 +84,46 @@ test.describe("Comic Detail Page", () => {
     await page.goto("/comics");
 
     const comicLink = page.locator("[data-testid=comic-card] a, article a, .comic-card a").first();
+    await expect(comicLink).toBeVisible();
+    await comicLink.click();
 
-    if (await comicLink.isVisible()) {
-      await comicLink.click();
+    await test.step("Verify comic title is displayed", async () => {
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    });
 
-      await test.step("Verify comic title is displayed", async () => {
-        await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      });
-
-      await test.step("Verify comic has description or synopsis area", async () => {
-        const description = page
-          .getByText(/description|synopsis|summary/i)
-          .or(page.locator("[data-testid=comic-description]"));
-        // Description area should exist (may be empty)
-        await expect(description.or(page.locator("main"))).toBeVisible();
-      });
-    }
+    await test.step("Verify comic has description or synopsis area", async () => {
+      const description = page
+        .getByText(/description|synopsis|summary/i)
+        .or(page.locator("[data-testid=comic-description]"));
+      await expect(description.or(page.locator("main"))).toBeVisible();
+    });
   });
 
   test("should display chapter list if available", async ({ page }) => {
     await page.goto("/comics");
 
     const comicLink = page.locator("[data-testid=comic-card] a, article a, .comic-card a").first();
-
-    if (await comicLink.isVisible()) {
-      await comicLink.click();
-
-      // Look for chapter list
-      const chapterList = page.locator("[data-testid=chapter-list], .chapters, [role=list]");
-      const chapterHeading = page.getByText(/chapter|episodes?/i);
-
-      // Either chapters or "no chapters" message should be present
-      await expect(
-        chapterList
-          .first()
-          .or(chapterHeading)
-          .or(page.getByText(/no chapters/i))
-      ).toBeVisible();
-    }
+    await expect(comicLink).toBeVisible();
+    await comicLink.click();
+    const chapterList = page.locator("[data-testid=chapter-list], .chapters, [role=list]");
+    const chapterHeading = page.getByText(/chapter|episodes?/i);
+    await expect(
+      chapterList
+        .first()
+        .or(chapterHeading)
+        .or(page.getByText(/no chapters/i))
+    ).toBeVisible();
   });
 
   test("should display comic metadata (genre, type, status)", async ({ page }) => {
     await page.goto("/comics");
 
     const comicLink = page.locator("[data-testid=comic-card] a, article a, .comic-card a").first();
-
-    if (await comicLink.isVisible()) {
-      await comicLink.click();
-
-      // Look for metadata badges or labels
-      const metadata = page.locator("[data-testid=comic-metadata], .badges, .tags");
-      const statusBadge = page.getByText(/ongoing|completed|hiatus/i);
-
-      await expect(metadata.or(statusBadge).or(page.locator("main"))).toBeVisible();
-    }
+    await expect(comicLink).toBeVisible();
+    await comicLink.click();
+    const metadata = page.locator("[data-testid=comic-metadata], .badges, .tags");
+    const statusBadge = page.getByText(/ongoing|completed|hiatus/i);
+    await expect(metadata.or(statusBadge).or(page.locator("main"))).toBeVisible();
   });
 });
 
@@ -155,18 +132,11 @@ test.describe("Chapter Reader", () => {
     await page.goto("/comics");
 
     const comicLink = page.locator("[data-testid=comic-card] a, article a, .comic-card a").first();
-
-    if (await comicLink.isVisible()) {
-      await comicLink.click();
-
-      // Find and click first chapter link
-      const chapterLink = page.getByRole("link", { name: /chapter\s*1|episode\s*1|read/i }).first();
-
-      if (await chapterLink.isVisible()) {
-        await chapterLink.click();
-        // Should navigate to reader page
-        await expect(page).toHaveURL(/chapter|read|episode/i);
-      }
-    }
+    await expect(comicLink).toBeVisible();
+    await comicLink.click();
+    const chapterLink = page.getByRole("link", { name: /chapter\s*1|episode\s*1|read/i }).first();
+    await expect(chapterLink).toBeVisible();
+    await chapterLink.click();
+    await expect(page).toHaveURL(/chapter|read|episode/i);
   });
 });

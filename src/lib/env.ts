@@ -6,8 +6,8 @@ import { z } from "zod";
  */
 const envSchema = z.object({
   // ========== DATABASE ==========
-  DATABASE_URL: z.string().url("DATABASE_URL must be a valid PostgreSQL URL"),
-  NEON_DATABASE_URL: z.string().url("NEON_DATABASE_URL must be a valid URL").optional(),
+  DATABASE_URL: z.string("DATABASE_URL must be a valid PostgreSQL URL"),
+  NEON_DATABASE_URL: z.string("NEON_DATABASE_URL must be a valid URL").optional(),
 
   // ========== AUTH ==========
   AUTH_SECRET: z.string().min(32, "AUTH_SECRET must be at least 32 characters"),

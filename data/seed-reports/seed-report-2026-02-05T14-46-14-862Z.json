@@ -1,0 +1,100 @@
+{
+  "timestamp": "2026-02-05T14:46:14.846Z",
+  "duration": 39311,
+  "mode": "full",
+  "phases": [
+    {
+      "name": "users",
+      "startTime": "2026-02-05T14:46:14.868Z",
+      "endTime": "2026-02-05T14:46:16.182Z",
+      "duration": 1314,
+      "status": "success",
+      "itemsProcessed": 4,
+      "itemsSkipped": 0,
+      "itemsInserted": 4,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "authors",
+      "startTime": "2026-02-05T14:46:16.202Z",
+      "endTime": "2026-02-05T14:46:16.243Z",
+      "duration": 41,
+      "status": "success",
+      "itemsProcessed": 25,
+      "itemsSkipped": 0,
+      "itemsInserted": 25,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "artists",
+      "startTime": "2026-02-05T14:46:16.244Z",
+      "endTime": "2026-02-05T14:46:16.266Z",
+      "duration": 22,
+      "status": "success",
+      "itemsProcessed": 22,
+      "itemsSkipped": 0,
+      "itemsInserted": 22,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "genres",
+      "startTime": "2026-02-05T14:46:16.267Z",
+      "endTime": "2026-02-05T14:46:16.314Z",
+      "duration": 47,
+      "status": "success",
+      "itemsProcessed": 36,
+      "itemsSkipped": 0,
+      "itemsInserted": 36,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "types",
+      "startTime": "2026-02-05T14:46:16.318Z",
+      "endTime": "2026-02-05T14:46:16.339Z",
+      "duration": 21,
+      "status": "success",
+      "itemsProcessed": 3,
+      "itemsSkipped": 0,
+      "itemsInserted": 3,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "comics",
+      "startTime": "2026-02-05T14:46:16.439Z",
+      "endTime": "2026-02-05T14:46:54.153Z",
+      "duration": 37714,
+      "status": "success",
+      "itemsProcessed": 627,
+      "itemsSkipped": 157,
+      "itemsInserted": 0,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "chapters",
+      "startTime": "2026-02-05T14:46:54.154Z",
+      "endTime": "2026-02-05T14:46:54.154Z",
+      "duration": 0,
+      "status": "success",
+      "itemsProcessed": 5814,
+      "itemsSkipped": 0,
+      "itemsInserted": 2369,
+      "itemsUpdated": 0,
+      "warnings": []
+    }
+  ],
+  "summary": {
+    "totalItems": 6531,
+    "totalInserted": 2459,
+    "totalUpdated": 0,
+    "totalSkipped": 157,
+    "totalErrors": 0,
+    "totalWarnings": 0
+  },
+  "errors": []
+}
