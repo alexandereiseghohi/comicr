@@ -1,10 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { getChapterById, getChaptersByComicId } from "@/database/queries/chapter.queries";
-
-import { createMockChain } from "./mock-db";
-
 vi.mock("@/database/db", () => {
+  // Import inside factory to avoid hoisting issues
+  const { createSimpleMockChain } = require("./mock-db");
   const mockChapters = [
     {
       id: 1,
@@ -23,9 +21,11 @@ vi.mock("@/database/db", () => {
       content: "c2",
     },
   ];
-  const chain = createMockChain(mockChapters);
+  const chain = createSimpleMockChain({ success: true, data: mockChapters });
   return { db: chain };
 });
+
+import { getChapterById, getChaptersByComicId } from "@/database/queries/chapter.queries";
 
 type Chapter = {
   chapterNumber: number;

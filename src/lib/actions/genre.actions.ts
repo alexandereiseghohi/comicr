@@ -18,7 +18,7 @@ async function verifyAdmin(): Promise<{ userId: string } | null> {
 export async function createGenreAction(input: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: "Admin access required" };
+    return { ok: false, error: "UNAUTHORIZED: Admin access required" };
   }
 
   // Handle slug auto-generation
@@ -39,8 +39,8 @@ export async function createGenreAction(input: unknown): Promise<ActionResult> {
   }
 
   const result = await mutations.createGenre(parsed.data);
-  if (!result.success) {
-    return { ok: false, error: result.error ?? "Creation failed" };
+  if (!result || result.success !== true) {
+    return { ok: false, error: result?.error ?? "Creation failed" };
   }
 
   revalidatePath("/admin/genres");
@@ -50,7 +50,7 @@ export async function createGenreAction(input: unknown): Promise<ActionResult> {
 export async function updateGenreAction(id: number, input: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: "Admin access required" };
+    return { ok: false, error: "UNAUTHORIZED: Admin access required" };
   }
 
   const parsed = updateGenreSchema.safeParse(input);
@@ -67,8 +67,8 @@ export async function updateGenreAction(id: number, input: unknown): Promise<Act
   }
 
   const result = await mutations.updateGenre(id, parsed.data);
-  if (!result.success) {
-    return { ok: false, error: result.error ?? "Update failed" };
+  if (!result || result.success !== true) {
+    return { ok: false, error: result?.error ?? "Update failed" };
   }
 
   revalidatePath("/admin/genres");
@@ -78,13 +78,13 @@ export async function updateGenreAction(id: number, input: unknown): Promise<Act
 export async function deleteGenreAction(id: number): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: "Admin access required" };
+    return { ok: false, error: "UNAUTHORIZED: Admin access required" };
   }
 
   // Soft delete: set isActive = false
   const result = await mutations.updateGenre(id, { isActive: false });
-  if (!result.success) {
-    return { ok: false, error: result.error ?? "Delete failed" };
+  if (!result || result.success !== true) {
+    return { ok: false, error: result?.error ?? "Delete failed" };
   }
 
   revalidatePath("/admin/genres");
@@ -94,12 +94,12 @@ export async function deleteGenreAction(id: number): Promise<ActionResult> {
 export async function restoreGenreAction(id: number): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: "Admin access required" };
+    return { ok: false, error: "UNAUTHORIZED: Admin access required" };
   }
 
   const result = await mutations.updateGenre(id, { isActive: true });
-  if (!result.success) {
-    return { ok: false, error: result.error ?? "Restore failed" };
+  if (!result || result.success !== true) {
+    return { ok: false, error: result?.error ?? "Restore failed" };
   }
 
   revalidatePath("/admin/genres");
@@ -109,11 +109,14 @@ export async function restoreGenreAction(id: number): Promise<ActionResult> {
 export async function bulkDeleteGenresAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: "Admin access required" };
+    return { ok: false, error: "UNAUTHORIZED: Admin access required" };
   }
-
+  if (ids.length === 0) {
+    revalidatePath("/admin/genres");
+    return { ok: true, data: { count: 0 } };
+  }
   const results = await Promise.all(ids.map((id) => mutations.updateGenre(id, { isActive: false })));
-  const failed = results.filter((r) => !r.success);
+  const failed = results.filter((r) => !r || r.success !== true);
   if (failed.length > 0) {
     return {
       ok: false,
@@ -128,11 +131,14 @@ export async function bulkDeleteGenresAction(ids: number[]): Promise<ActionResul
 export async function bulkRestoreGenresAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: "Admin access required" };
+    return { ok: false, error: "UNAUTHORIZED: Admin access required" };
   }
-
+  if (ids.length === 0) {
+    revalidatePath("/admin/genres");
+    return { ok: true, data: { count: 0 } };
+  }
   const results = await Promise.all(ids.map((id) => mutations.updateGenre(id, { isActive: true })));
-  const failed = results.filter((r) => !r.success);
+  const failed = results.filter((r) => !r || r.success !== true);
   if (failed.length > 0) {
     return {
       ok: false,

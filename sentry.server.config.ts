@@ -1,51 +1,19 @@
-/**
- * Sentry Server Configuration
- * Configures error tracking for Node.js server-side code
- *
- * This file runs on the server when your Next.js app starts.
- * @see https://docs.sentry.io/platforms/javascript/guides/nextjs/
- */
+// This file configures the initialization of Sentry on the server.
+// The config you add here will be used whenever the server handles a request.
+// https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
 
-const SENTRY_DSN = process.env.SENTRY_DSN;
+Sentry.init({
+  dsn: "https://870b13f4a2a2ea91fb7fe128d5fe5b04@o4510833603772416.ingest.de.sentry.io/4510833606066256",
 
-// Only initialize if DSN is configured
-if (SENTRY_DSN) {
-  Sentry.init({
-    dsn: SENTRY_DSN,
+  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
+  tracesSampleRate: 1,
 
-    // Environment tagging
-    environment: process.env.NODE_ENV ?? "development",
+  // Enable logs to be sent to Sentry
+  enableLogs: true,
 
-    // Performance monitoring - lower sample rate for server
-    tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1.0,
-
-    // Enable profiling for performance insights
-    profilesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 0,
-
-    // Enable debug mode in development
-    debug: process.env.NODE_ENV === "development",
-
-    // Filter out common server errors that are not actionable
-    ignoreErrors: [
-      "ECONNRESET",
-      "ECONNREFUSED",
-      "EPIPE",
-      "ETIMEDOUT",
-      // Next.js internal errors
-      "NEXT_NOT_FOUND",
-      "NEXT_REDIRECT",
-    ],
-
-    // Before sending, optionally modify the event
-    beforeSend(event, hint) {
-      // Don't send events in development unless explicitly enabled
-      if (process.env.NODE_ENV === "development" && !process.env.SENTRY_DEBUG) {
-        console.log("[Sentry Server] Event captured (dev mode):", hint.originalException);
-        return null;
-      }
-      return event;
-    },
-  });
-}
+  // Enable sending user PII (Personally Identifiable Information)
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
+  sendDefaultPii: true,
+});

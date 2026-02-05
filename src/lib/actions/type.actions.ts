@@ -17,7 +17,7 @@ async function verifyAdmin(): Promise<{ userId: string } | null> {
 export async function createTypeAction(input: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: "Admin access required" };
+    return { ok: false, error: "UNAUTHORIZED: Admin access required" };
   }
 
   const parsed = createTypeSchema.safeParse(input);
@@ -52,7 +52,7 @@ export async function createTypeAction(input: unknown): Promise<ActionResult> {
 export async function updateTypeAction(id: number, input: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: "Admin access required" };
+    return { ok: false, error: "UNAUTHORIZED: Admin access required" };
   }
 
   const parsed = updateTypeSchema.safeParse(input);
@@ -89,7 +89,7 @@ export async function updateTypeAction(id: number, input: unknown): Promise<Acti
 export async function deleteTypeAction(id: number): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: "Admin access required" };
+    return { ok: false, error: "UNAUTHORIZED: Admin access required" };
   }
 
   // Soft delete: set isActive = false
@@ -108,7 +108,7 @@ export async function deleteTypeAction(id: number): Promise<ActionResult> {
 export async function restoreTypeAction(id: number): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { ok: false, error: "Admin access required" };
+    return { ok: false, error: "UNAUTHORIZED: Admin access required" };
   }
 
   const result = await mutations.updateType(id, { isActive: true });

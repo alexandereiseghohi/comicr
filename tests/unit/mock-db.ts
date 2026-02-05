@@ -1,3 +1,14 @@
+// Simple mock chain for Vitest smoke tests (returns result for any method)
+export function createSimpleMockChain<T>(result: T): any {
+  return new Proxy(
+    {},
+    {
+      get(_target, _prop) {
+        return () => Promise.resolve(result);
+      },
+    }
+  );
+}
 export type MockChain<T = unknown> = {
   from: (..._args: unknown[]) => MockChain<T>;
   leftJoin?: (..._args: unknown[]) => MockChain<T>;

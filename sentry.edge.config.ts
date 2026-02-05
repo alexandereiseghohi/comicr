@@ -1,37 +1,20 @@
-/**
- * Sentry Edge Configuration
- * Configures error tracking for Edge Runtime (middleware, edge functions)
- *
- * This file runs in the Edge Runtime environment.
- * @see https://docs.sentry.io/platforms/javascript/guides/nextjs/
- */
+// This file configures the initialization of Sentry for edge features (middleware, edge routes, and so on).
+// The config you add here will be used whenever one of the edge features is loaded.
+// Note that this config is unrelated to the Vercel Edge Runtime and is also required when running locally.
+// https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
 
-const SENTRY_DSN = process.env.SENTRY_DSN;
+Sentry.init({
+  dsn: "https://870b13f4a2a2ea91fb7fe128d5fe5b04@o4510833603772416.ingest.de.sentry.io/4510833606066256",
 
-// Only initialize if DSN is configured
-if (SENTRY_DSN) {
-  Sentry.init({
-    dsn: SENTRY_DSN,
+  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
+  tracesSampleRate: 1,
 
-    // Environment tagging
-    environment: process.env.NODE_ENV ?? "development",
+  // Enable logs to be sent to Sentry
+  enableLogs: true,
 
-    // Performance monitoring for edge functions
-    tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1.0,
-
-    // Enable debug mode in development
-    debug: process.env.NODE_ENV === "development",
-
-    // Before sending, optionally modify the event
-    beforeSend(event, hint) {
-      // Don't send events in development unless explicitly enabled
-      if (process.env.NODE_ENV === "development" && !process.env.SENTRY_DEBUG) {
-        console.log("[Sentry Edge] Event captured (dev mode):", hint.originalException);
-        return null;
-      }
-      return event;
-    },
-  });
-}
+  // Enable sending user PII (Personally Identifiable Information)
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
+  sendDefaultPii: true,
+});

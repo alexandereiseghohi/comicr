@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { getAuthorById } from "@/database/queries/author.queries";
-
-import { createMockChain } from "./mock-db";
-
 vi.mock("@/database/db", () => {
-  const mockResult = [{ id: 2, name: "Mock Author", bio: "bio", image: null }];
-  const chain = createMockChain(mockResult);
+  // Import inside factory to avoid hoisting issues
+  const { createSimpleMockChain } = require("./mock-db");
+  const mockResult = { id: 2, name: "Mock Author", bio: "bio", image: null };
+  const chain = createSimpleMockChain({ success: true, data: mockResult });
   return { db: chain };
 });
+
+import { getAuthorById } from "@/database/queries/author.queries";
 
 type Author = { bio: null | string; id: number; image: null | string; name: string };
 

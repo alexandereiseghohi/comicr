@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { getBookmarksByUser } from "@/database/queries/bookmark.queries";
-
-import { createMockChain } from "./mock-db";
-
 vi.mock("@/database/db", () => {
-  const mockResult = [{ userId: "user1", comicId: 1 }];
-  const chain = createMockChain(mockResult);
+  // Import inside factory to avoid hoisting issues
+  const { createSimpleMockChain } = require("./mock-db");
+  const mockResult = { userId: "user1", comicId: 1 };
+  const chain = createSimpleMockChain({ success: true, data: [mockResult] });
   return { db: chain };
 });
+
+import { getBookmarksByUser } from "@/database/queries/bookmark.queries";
 
 type Bookmark = { comicId: number; userId: string };
 
