@@ -1,0 +1,1 @@
+ALTER TABLE "chapterImage" ADD CONSTRAINT "chapterImage_chapterId_pageNumber_unique" UNIQUE("chapterId","pageNumber");

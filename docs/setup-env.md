@@ -207,18 +207,15 @@ psql $NEON_DATABASE_URL -c "SELECT pg_database_size(current_database());"
 **Setup Instructions:**
 
 1. **Go to Google Cloud Console:**
-
    - Visit: https://console.cloud.google.com/
    - Create new project or select existing
 
 2. **Enable Google+ API:**
-
    - Navigation → APIs & Services → Library
    - Search "Google+ API"
    - Click "Enable"
 
 3. **Create OAuth 2.0 Credentials:**
-
    - APIs & Services → Credentials
    - Click "+ CREATE CREDENTIALS" → OAuth client ID
    - Application type: Web application
@@ -241,7 +238,6 @@ psql $NEON_DATABASE_URL -c "SELECT pg_database_size(current_database());"
    ```
 
 5. **Copy Credentials:**
-
    - Client ID: `123456789-abcdefg.apps.googleusercontent.com`
    - Client Secret: `GOCSPX-your-secret-here`
 
@@ -279,7 +275,6 @@ pnpm dev
 **Setup Instructions:**
 
 1. **Create OAuth App:**
-
    - Go to: https://github.com/settings/developers
    - Click "New OAuth App"
    - Application name: `ComicWise`
@@ -287,7 +282,6 @@ pnpm dev
    - Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
 
 2. **Get Credentials:**
-
    - Click "Generate a new client secret"
    - Copy Client ID and Client Secret
 
@@ -337,7 +331,6 @@ curl -I "http://localhost:3000/api/auth/signin/github"
 
 1. **Create Account:** https://console.upstash.com/
 2. **Create Database:**
-
    - Click "Create Database"
    - Name: `comicwise`
    - Region: Choose closest to Vercel region
@@ -345,7 +338,6 @@ curl -I "http://localhost:3000/api/auth/signin/github"
    - Eviction: `allkeys-lru` (recommended)
 
 3. **Get REST API Credentials:**
-
    - Database → REST API tab
    - Copy `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`
 
@@ -468,18 +460,15 @@ const url = imagekit.url({
 
 1. **Create Account:** https://sentry.io/signup/
 2. **Create Project:**
-
    - Platform: Next.js
    - Project name: `comicwise`
    - Alert frequency: default
 
 3. **Get DSN:**
-
    - Project Settings → Client Keys (DSN)
    - Copy DSN: `https://your-key@o123456.ingest.sentry.io/123456`
 
 4. **Generate Auth Token:**
-
    - User Settings → Auth Tokens
    - Click "Create New Token"
    - Scopes: `project:read`, `project:releases`, `org:read`
@@ -746,19 +735,16 @@ SENTRY_UPLOAD_DRY_RUN="false"
    ```
 
 2. **Use different secrets per environment**
-
    - Development: Can be simple for convenience
    - Staging: Similar to production
    - Production: Maximum complexity, rotated regularly
 
 3. **Rotate secrets regularly**
-
    - AUTH_SECRET: Quarterly
    - API keys: Annually or when team member leaves
    - Database passwords: Annually
 
 4. **Use Vercel/platform environment variables**
-
    - More secure than committing to repo
    - Can be encrypted at rest
    - Access control via team permissions

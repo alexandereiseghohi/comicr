@@ -110,11 +110,7 @@ const { data } = await client
   .limit(10);
 
 // Insert
-const { data, error } = await client
-  .from("items")
-  .insert({ name: "New Item", status: "pending" })
-  .select()
-  .single();
+const { data, error } = await client.from("items").insert({ name: "New Item", status: "pending" }).select().single();
 
 // Update
 await client.from("items").update({ status: "completed" }).eq("id", 1);
@@ -173,27 +169,16 @@ const {
 
 ```typescript
 // Main client
-import {
-  createClient,
-  SupabaseAuthAdapter,
-  BetterAuthVanillaAdapter,
-} from "@neondatabase/neon-js";
+import { createClient, SupabaseAuthAdapter, BetterAuthVanillaAdapter } from "@neondatabase/neon-js";
 
 // Next.js integration
-import {
-  authApiHandler,
-  createAuthClient,
-} from "@neondatabase/neon-js/auth/next";
+import { authApiHandler, createAuthClient } from "@neondatabase/neon-js/auth/next";
 
 // React adapter (NOT from main entry - must use subpath)
 import { BetterAuthReactAdapter } from "@neondatabase/neon-js/auth/react/adapters";
 
 // UI components
-import {
-  NeonAuthUIProvider,
-  AuthView,
-  SignInForm,
-} from "@neondatabase/neon-js/auth/react/ui";
+import { NeonAuthUIProvider, AuthView, SignInForm } from "@neondatabase/neon-js/auth/react/ui";
 import { authViewPaths } from "@neondatabase/neon-js/auth/react/ui/server";
 
 // CSS (choose one)

@@ -145,6 +145,9 @@
     "Sentry": {
       "url": "https://mcp.sentry.dev/mcp/rhixecompany-lv/javascript-nextjs",
       "type": "http"
+    },
+     "shadcn": {
+      "url": "https://www.shadcn.io/api/mcp"
     }
   },
   "securityPolicy": {

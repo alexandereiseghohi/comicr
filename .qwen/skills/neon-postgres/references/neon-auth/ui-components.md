@@ -65,10 +65,7 @@ import { NeonAuthUIProvider } from "@neondatabase/auth/react/ui";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { authClient } from "./lib/auth-client";
 
-function Link({
-  href,
-  ...props
-}: { href: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+function Link({ href, ...props }: { href: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   return <RouterLink to={href} {...props} />;
 }
 
@@ -108,11 +105,7 @@ export function generateStaticParams() {
   return Object.values(authViewPaths).map((path) => ({ path }));
 }
 
-export default async function AuthPage({
-  params,
-}: {
-  params: Promise<{ path: string }>;
-}) {
+export default async function AuthPage({ params }: { params: Promise<{ path: string }> }) {
   const { path } = await params;
   return <AuthView pathname={path} />;
 }

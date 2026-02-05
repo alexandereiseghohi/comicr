@@ -1,0 +1,71 @@
+══════════════════════════════════════════════════════════════════════
+                    SEED EXECUTION REPORT
+══════════════════════════════════════════════════════════════════════
+
+Timestamp:  2026-02-05T17:35:53.867Z
+Duration:   3.95s
+Mode:       FULL
+
+──────────────────────────────────────────────────────────────────────
+SUMMARY
+──────────────────────────────────────────────────────────────────────
+Total Items:      6531
+  • Inserted:     2591
+  • Updated:      0
+  • Skipped:      157
+Errors:           0
+Warnings:         0
+
+──────────────────────────────────────────────────────────────────────
+PHASES
+──────────────────────────────────────────────────────────────────────
+✓ USERS (0.23s)
+  Status:       success
+  Processed:    4
+  Inserted:     4
+  Updated:      0
+  Skipped:      0
+
+✓ AUTHORS (0.02s)
+  Status:       success
+  Processed:    25
+  Inserted:     25
+  Updated:      0
+  Skipped:      0
+
+✓ ARTISTS (0.02s)
+  Status:       success
+  Processed:    22
+  Inserted:     22
+  Updated:      0
+  Skipped:      0
+
+✓ GENRES (0.02s)
+  Status:       success
+  Processed:    36
+  Inserted:     36
+  Updated:      0
+  Skipped:      0
+
+✓ TYPES (0.01s)
+  Status:       success
+  Processed:    3
+  Inserted:     3
+  Updated:      0
+  Skipped:      0
+
+✓ COMICS (3.54s)
+  Status:       success
+  Processed:    627
+  Inserted:     132
+  Updated:      0
+  Skipped:      157
+
+✓ CHAPTERS (0.00s)
+  Status:       success
+  Processed:    5814
+  Inserted:     2369
+  Updated:      0
+  Skipped:      0
+
+══════════════════════════════════════════════════════════════════════

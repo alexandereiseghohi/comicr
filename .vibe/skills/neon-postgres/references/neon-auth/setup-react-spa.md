@@ -131,7 +131,7 @@ createRoot(document.getElementById("root")!).render(
     <Providers>
       <App />
     </Providers>
-  </BrowserRouter>,
+  </BrowserRouter>
 );
 ```
 
@@ -146,10 +146,7 @@ import { authClient } from "./lib/auth-client";
 import type { ReactNode } from "react";
 
 // Adapter for react-router-dom Link
-function Link({
-  href,
-  ...props
-}: { href: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+function Link({ href, ...props }: { href: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   return <RouterLink to={href} {...props} />;
 }
 
@@ -187,12 +184,7 @@ export function Providers({ children }: { children: ReactNode }) {
 
 ```tsx
 import { Routes, Route, useParams } from "react-router-dom";
-import {
-  AuthView,
-  UserButton,
-  SignedIn,
-  SignedOut,
-} from "@neondatabase/auth/react/ui";
+import { AuthView, UserButton, SignedIn, SignedOut } from "@neondatabase/auth/react/ui";
 
 // Auth page - handles /auth/sign-in, /auth/sign-up, etc.
 function AuthPage() {
