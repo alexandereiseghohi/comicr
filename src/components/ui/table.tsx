@@ -1,11 +1,5 @@
 "use client";
 
-import type { Cell, Column, ColumnDef, Header, HeaderGroup, Row, SortingState, Table } from "@tanstack/react-table";
-import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
-import { atom, useAtom } from "jotai";
-import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react";
-import type { HTMLAttributes, ReactNode } from "react";
-import { createContext, memo, useCallback, useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,6 +16,14 @@ import {
   TableRow as TableRowRaw,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import type { Cell, Column, ColumnDef, Header, HeaderGroup, Row, SortingState, Table } from "@tanstack/react-table";
+import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import { atom, useAtom } from "jotai";
+import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react";
+import type { HTMLAttributes, ReactNode } from "react";
+import { createContext, memo, useCallback, useContext, useEffect, useState } from "react";
+// Export Table as a named export for consumer compatibility
+export const Table = TableRaw;
 
 export type { ColumnDef } from "@tanstack/react-table";
 

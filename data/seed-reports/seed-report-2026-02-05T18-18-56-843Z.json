@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-02-05T18:18:56.834Z",
+  "duration": 480,
+  "mode": "dry-run",
+  "phases": [
+    {
+      "name": "users",
+      "startTime": "2026-02-05T18:18:56.847Z",
+      "endTime": "2026-02-05T18:18:57.060Z",
+      "duration": 213,
+      "status": "success",
+      "itemsProcessed": 4,
+      "itemsSkipped": 0,
+      "itemsInserted": 4,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "authors",
+      "startTime": "2026-02-05T18:18:57.079Z",
+      "endTime": "2026-02-05T18:18:57.082Z",
+      "duration": 3,
+      "status": "success",
+      "itemsProcessed": 25,
+      "itemsSkipped": 0,
+      "itemsInserted": 25,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "artists",
+      "startTime": "2026-02-05T18:18:57.084Z",
+      "endTime": "2026-02-05T18:18:57.086Z",
+      "duration": 2,
+      "status": "success",
+      "itemsProcessed": 22,
+      "itemsSkipped": 0,
+      "itemsInserted": 22,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "genres",
+      "startTime": "2026-02-05T18:18:57.089Z",
+      "endTime": "2026-02-05T18:18:57.093Z",
+      "duration": 4,
+      "status": "success",
+      "itemsProcessed": 36,
+      "itemsSkipped": 0,
+      "itemsInserted": 36,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "types",
+      "startTime": "2026-02-05T18:18:57.096Z",
+      "endTime": "2026-02-05T18:18:57.099Z",
+      "duration": 3,
+      "status": "success",
+      "itemsProcessed": 3,
+      "itemsSkipped": 0,
+      "itemsInserted": 3,
+      "itemsUpdated": 0,
+      "warnings": []
+    },
+    {
+      "name": "comics",
+      "startTime": "2026-02-05T18:18:57.288Z",
+      "endTime": "2026-02-05T18:18:57.309Z",
+      "duration": 21,
+      "status": "success",
+      "itemsProcessed": 627,
+      "itemsSkipped": 627,
+      "itemsInserted": 0,
+      "itemsUpdated": 0,
+      "warnings": []
+    }
+  ],
+  "summary": {
+    "totalItems": 717,
+    "totalInserted": 90,
+    "totalUpdated": 0,
+    "totalSkipped": 627,
+    "totalErrors": 0,
+    "totalWarnings": 0
+  },
+  "errors": []
+}

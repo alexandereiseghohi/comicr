@@ -137,7 +137,7 @@ const eslintConfig = defineConfig([
           },
         },
       ],
-      "import-x/no-unresolved": "off", // TypeScript handles this
+      "import-x/no-unresolved": "error", // TypeScript handles this
       "import-x/no-duplicates": "warn",
       "import-x/no-named-as-default": "warn",
       "import-x/no-named-as-default-member": "warn",
@@ -202,7 +202,7 @@ const eslintConfig = defineConfig([
       "security/detect-eval-with-expression": "warn",
       "security/detect-non-literal-fs-filename": "warn",
       "security/detect-non-literal-regexp": "warn",
-      "security/detect-object-injection": "off", // Too many false positives
+      "security/detect-object-injection": "warn", // Too many false positives
       "security/detect-possible-timing-attacks": "warn",
       "security/detect-unsafe-regex": "warn",
 
@@ -261,8 +261,8 @@ const eslintConfig = defineConfig([
 
       // ----- Node.js (n) -----
       "n/no-deprecated-api": "warn",
-      "n/no-missing-import": "off", // TypeScript handles this
-      "n/no-unsupported-features/es-syntax": "off", // Bundled by Next.js
+      "n/no-missing-import": "error", // TypeScript handles this
+      "n/no-unsupported-features/es-syntax": "error", // Bundled by Next.js
       "n/prefer-promises/fs": "warn",
       "n/prefer-promises/dns": "warn",
 
@@ -404,9 +404,9 @@ const eslintConfig = defineConfig([
       "testing-library/prefer-screen-queries": "warn",
 
       // Relax some rules for tests
-      "@typescript-eslint/no-explicit-any": "off",
-      "security/detect-non-literal-fs-filename": "off",
-      "sonarjs/no-duplicate-string": "off",
+      "@typescript-eslint/no-explicit-any": "error",
+      "security/detect-non-literal-fs-filename": "error",
+      "sonarjs/no-duplicate-string": "error",
     },
   },
 
@@ -432,9 +432,9 @@ const eslintConfig = defineConfig([
       "playwright/no-conditional-expect": "warn",
 
       // Relax some rules for E2E tests
-      "@typescript-eslint/no-explicit-any": "off",
-      "security/detect-non-literal-fs-filename": "off",
-      "sonarjs/no-duplicate-string": "off",
+      "@typescript-eslint/no-explicit-any": "error",
+      "security/detect-non-literal-fs-filename": "error",
+      "sonarjs/no-duplicate-string": "error",
       "no-console": "off",
     },
   },
@@ -446,10 +446,10 @@ const eslintConfig = defineConfig([
     files: ["scripts/**/*.ts", "scripts/**/*.mts"],
     rules: {
       "no-console": "off",
-      "no-useless-escape": "off", // Template literals for config generation
-      "@typescript-eslint/no-explicit-any": "warn",
-      "security/detect-non-literal-fs-filename": "off",
-      "n/no-process-exit": "off",
+      "no-useless-escape": "error", // Template literals for config generation
+      "@typescript-eslint/no-explicit-any": "error",
+      "security/detect-non-literal-fs-filename": "warn",
+      "n/no-process-exit": "error",
     },
   },
 
@@ -460,7 +460,7 @@ const eslintConfig = defineConfig([
     files: ["*.config.ts", "*.config.mjs", "*.config.js"],
     rules: {
       "no-console": "off",
-      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
       "import-x/no-default-export": "off",
     },
   },

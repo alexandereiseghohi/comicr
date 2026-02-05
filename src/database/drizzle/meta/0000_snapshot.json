@@ -1,5 +1,5 @@
 {
-  "id": "c45170c3-727c-4b34-b7b9-3ad2376c54d9",
+  "id": "cc8716df-3f04-49b0-bc5c-cb888e7934fc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -81,8 +81,12 @@
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -90,7 +94,10 @@
       "compositePrimaryKeys": {
         "account_provider_providerAccountId_pk": {
           "name": "account_provider_providerAccountId_pk",
-          "columns": ["provider", "providerAccountId"]
+          "columns": [
+            "provider",
+            "providerAccountId"
+          ]
         }
       },
       "uniqueConstraints": {},
@@ -154,7 +161,9 @@
         "artist_name_unique": {
           "name": "artist_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         }
       },
       "policies": {},
@@ -364,8 +373,12 @@
           "name": "auditLog_userId_user_id_fk",
           "tableFrom": "auditLog",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -435,8 +448,12 @@
           "name": "authenticator_userId_user_id_fk",
           "tableFrom": "authenticator",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -444,14 +461,19 @@
       "compositePrimaryKeys": {
         "authenticator_userId_credentialID_pk": {
           "name": "authenticator_userId_credentialID_pk",
-          "columns": ["userId", "credentialID"]
+          "columns": [
+            "userId",
+            "credentialID"
+          ]
         }
       },
       "uniqueConstraints": {
         "authenticator_credentialID_unique": {
           "name": "authenticator_credentialID_unique",
           "nullsNotDistinct": false,
-          "columns": ["credentialID"]
+          "columns": [
+            "credentialID"
+          ]
         }
       },
       "policies": {},
@@ -514,7 +536,9 @@
         "author_name_unique": {
           "name": "author_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         }
       },
       "policies": {},
@@ -608,8 +632,12 @@
           "name": "bookmark_userId_user_id_fk",
           "tableFrom": "bookmark",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -617,8 +645,12 @@
           "name": "bookmark_comicId_comic_id_fk",
           "tableFrom": "bookmark",
           "tableTo": "comic",
-          "columnsFrom": ["comicId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "comicId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -626,8 +658,12 @@
           "name": "bookmark_lastReadChapterId_chapter_id_fk",
           "tableFrom": "bookmark",
           "tableTo": "chapter",
-          "columnsFrom": ["lastReadChapterId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "lastReadChapterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -635,7 +671,10 @@
       "compositePrimaryKeys": {
         "bookmark_userId_comicId_pk": {
           "name": "bookmark_userId_comicId_pk",
-          "columns": ["userId", "comicId"]
+          "columns": [
+            "userId",
+            "comicId"
+          ]
         }
       },
       "uniqueConstraints": {},
@@ -805,8 +844,12 @@
           "name": "chapter_comicId_comic_id_fk",
           "tableFrom": "chapter",
           "tableTo": "comic",
-          "columnsFrom": ["comicId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "comicId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -816,7 +859,10 @@
         "chapter_comic_number_unique": {
           "name": "chapter_comic_number_unique",
           "nullsNotDistinct": false,
-          "columns": ["comicId", "chapterNumber"]
+          "columns": [
+            "comicId",
+            "chapterNumber"
+          ]
         }
       },
       "policies": {},
@@ -896,14 +942,27 @@
           "name": "chapterImage_chapterId_chapter_id_fk",
           "tableFrom": "chapterImage",
           "tableTo": "chapter",
-          "columnsFrom": ["chapterId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "chapterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "chapterImage_chapterId_pageNumber_unique": {
+          "name": "chapterImage_chapterId_pageNumber_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "chapterId",
+            "pageNumber"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1163,8 +1222,12 @@
           "name": "comic_authorId_author_id_fk",
           "tableFrom": "comic",
           "tableTo": "author",
-          "columnsFrom": ["authorId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "authorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1172,8 +1235,12 @@
           "name": "comic_artistId_artist_id_fk",
           "tableFrom": "comic",
           "tableTo": "artist",
-          "columnsFrom": ["artistId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "artistId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1181,8 +1248,12 @@
           "name": "comic_typeId_type_id_fk",
           "tableFrom": "comic",
           "tableTo": "type",
-          "columnsFrom": ["typeId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "typeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1192,12 +1263,16 @@
         "comic_title_unique": {
           "name": "comic_title_unique",
           "nullsNotDistinct": false,
-          "columns": ["title"]
+          "columns": [
+            "title"
+          ]
         },
         "comic_slug_unique": {
           "name": "comic_slug_unique",
           "nullsNotDistinct": false,
-          "columns": ["slug"]
+          "columns": [
+            "slug"
+          ]
         }
       },
       "policies": {},
@@ -1246,8 +1321,12 @@
           "name": "comicImage_comicId_comic_id_fk",
           "tableFrom": "comicImage",
           "tableTo": "comic",
-          "columnsFrom": ["comicId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "comicId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1281,8 +1360,12 @@
           "name": "comicToGenre_comicId_comic_id_fk",
           "tableFrom": "comicToGenre",
           "tableTo": "comic",
-          "columnsFrom": ["comicId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "comicId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1290,8 +1373,12 @@
           "name": "comicToGenre_genreId_genre_id_fk",
           "tableFrom": "comicToGenre",
           "tableTo": "genre",
-          "columnsFrom": ["genreId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "genreId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1299,7 +1386,10 @@
       "compositePrimaryKeys": {
         "comicToGenre_comicId_genreId_pk": {
           "name": "comicToGenre_comicId_genreId_pk",
-          "columns": ["comicId", "genreId"]
+          "columns": [
+            "comicId",
+            "genreId"
+          ]
         }
       },
       "uniqueConstraints": {},
@@ -1429,8 +1519,12 @@
           "name": "comment_userId_user_id_fk",
           "tableFrom": "comment",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1438,8 +1532,12 @@
           "name": "comment_chapterId_chapter_id_fk",
           "tableFrom": "comment",
           "tableTo": "chapter",
-          "columnsFrom": ["chapterId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "chapterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1500,12 +1598,16 @@
         "genre_name_unique": {
           "name": "genre_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         },
         "genre_slug_unique": {
           "name": "genre_slug_unique",
           "nullsNotDistinct": false,
-          "columns": ["slug"]
+          "columns": [
+            "slug"
+          ]
         }
       },
       "policies": {},
@@ -1667,8 +1769,12 @@
           "name": "notification_userId_user_id_fk",
           "tableFrom": "notification",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1676,8 +1782,12 @@
           "name": "notification_comicId_comic_id_fk",
           "tableFrom": "notification",
           "tableTo": "comic",
-          "columnsFrom": ["comicId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "comicId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1685,8 +1795,12 @@
           "name": "notification_chapterId_chapter_id_fk",
           "tableFrom": "notification",
           "tableTo": "chapter",
-          "columnsFrom": ["chapterId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "chapterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1733,7 +1847,9 @@
         "passwordResetToken_token_unique": {
           "name": "passwordResetToken_token_unique",
           "nullsNotDistinct": false,
-          "columns": ["token"]
+          "columns": [
+            "token"
+          ]
         }
       },
       "policies": {},
@@ -1837,12 +1953,17 @@
         "permission_name_unique": {
           "name": "permission_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         },
         "permissionResourceActionUnique": {
           "name": "permissionResourceActionUnique",
           "nullsNotDistinct": false,
-          "columns": ["resource", "action"]
+          "columns": [
+            "resource",
+            "action"
+          ]
         }
       },
       "policies": {},
@@ -1965,8 +2086,12 @@
           "name": "rating_userId_user_id_fk",
           "tableFrom": "rating",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1974,8 +2099,12 @@
           "name": "rating_comicId_comic_id_fk",
           "tableFrom": "rating",
           "tableTo": "comic",
-          "columnsFrom": ["comicId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "comicId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1985,7 +2114,10 @@
         "userComicRatingUnique": {
           "name": "userComicRatingUnique",
           "nullsNotDistinct": false,
-          "columns": ["userId", "comicId"]
+          "columns": [
+            "userId",
+            "comicId"
+          ]
         }
       },
       "policies": {},
@@ -2066,8 +2198,12 @@
           "name": "readerSettings_userId_user_id_fk",
           "tableFrom": "readerSettings",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2077,7 +2213,9 @@
         "readerSettings_userId_unique": {
           "name": "readerSettings_userId_unique",
           "nullsNotDistinct": false,
-          "columns": ["userId"]
+          "columns": [
+            "userId"
+          ]
         }
       },
       "policies": {},
@@ -2270,8 +2408,12 @@
           "name": "readingProgress_userId_user_id_fk",
           "tableFrom": "readingProgress",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2279,8 +2421,12 @@
           "name": "readingProgress_comicId_comic_id_fk",
           "tableFrom": "readingProgress",
           "tableTo": "comic",
-          "columnsFrom": ["comicId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "comicId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2288,8 +2434,12 @@
           "name": "readingProgress_chapterId_chapter_id_fk",
           "tableFrom": "readingProgress",
           "tableTo": "chapter",
-          "columnsFrom": ["chapterId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "chapterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2382,7 +2532,9 @@
         "role_name_unique": {
           "name": "role_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         }
       },
       "policies": {},
@@ -2450,8 +2602,12 @@
           "name": "rolePermission_roleId_role_id_fk",
           "tableFrom": "rolePermission",
           "tableTo": "role",
-          "columnsFrom": ["roleId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "roleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2459,8 +2615,12 @@
           "name": "rolePermission_permissionId_permission_id_fk",
           "tableFrom": "rolePermission",
           "tableTo": "permission",
-          "columnsFrom": ["permissionId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "permissionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2468,7 +2628,10 @@
       "compositePrimaryKeys": {
         "rolePermission_roleId_permissionId_pk": {
           "name": "rolePermission_roleId_permissionId_pk",
-          "columns": ["roleId", "permissionId"]
+          "columns": [
+            "roleId",
+            "permissionId"
+          ]
         }
       },
       "uniqueConstraints": {},
@@ -2505,8 +2668,12 @@
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2561,7 +2728,9 @@
         "type_name_unique": {
           "name": "type_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         }
       },
       "policies": {},
@@ -2688,7 +2857,9 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -2762,8 +2933,12 @@
           "name": "userRole_userId_user_id_fk",
           "tableFrom": "userRole",
           "tableTo": "user",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2771,8 +2946,12 @@
           "name": "userRole_roleId_role_id_fk",
           "tableFrom": "userRole",
           "tableTo": "role",
-          "columnsFrom": ["roleId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "roleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2780,8 +2959,12 @@
           "name": "userRole_assignedBy_user_id_fk",
           "tableFrom": "userRole",
           "tableTo": "user",
-          "columnsFrom": ["assignedBy"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "assignedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2789,7 +2972,10 @@
       "compositePrimaryKeys": {
         "userRole_userId_roleId_pk": {
           "name": "userRole_userId_roleId_pk",
-          "columns": ["userId", "roleId"]
+          "columns": [
+            "userId",
+            "roleId"
+          ]
         }
       },
       "uniqueConstraints": {},
@@ -2825,7 +3011,10 @@
       "compositePrimaryKeys": {
         "verificationToken_identifier_token_pk": {
           "name": "verificationToken_identifier_token_pk",
-          "columns": ["identifier", "token"]
+          "columns": [
+            "identifier",
+            "token"
+          ]
         }
       },
       "uniqueConstraints": {},
@@ -2838,12 +3027,25 @@
     "public.action_type": {
       "name": "action_type",
       "schema": "public",
-      "values": ["create", "read", "update", "delete", "manage"]
+      "values": [
+        "create",
+        "read",
+        "update",
+        "delete",
+        "manage"
+      ]
     },
     "public.comic_status": {
       "name": "comic_status",
       "schema": "public",
-      "values": ["Ongoing", "Hiatus", "Completed", "Dropped", "Season End", "Coming Soon"]
+      "values": [
+        "Ongoing",
+        "Hiatus",
+        "Completed",
+        "Dropped",
+        "Season End",
+        "Coming Soon"
+      ]
     },
     "public.resource_type": {
       "name": "resource_type",
@@ -2866,7 +3068,11 @@
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
-      "values": ["user", "admin", "moderator"]
+      "values": [
+        "user",
+        "admin",
+        "moderator"
+      ]
     }
   },
   "schemas": {},
