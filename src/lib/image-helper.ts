@@ -3,6 +3,54 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
+import { z } from "zod";
+// ============================================================================
+// LOGGING UTILITY
+// ============================================================================
+
+function logError(context: string, error: unknown) {
+  if (process.env.NODE_ENV !== "production") {
+    // eslint-disable-next-line no-console
+    console.error(`[image-helper] ${context}:`, error);
+  }
+}
+// ============================================================================
+// ZOD SCHEMA FOR INPUT VALIDATION
+// ============================================================================
+
+const DownloadImageOptionsSchema = z.object({
+  destDir: z.string().min(1),
+  fallback: z.string().optional(),
+  filename: z.string().min(1),
+  maxRetries: z.number().int().positive().optional(),
+  skipCache: z.boolean().optional(),
+  url: z.string().url(),
+});
+// ============================================================================
+// URL VALIDATION
+// ============================================================================
+
+function isSafeUrl(urlString: string): boolean {
+  try {
+    const url = new URL(urlString);
+    if (!/^https?:$/.test(url.protocol)) return false;
+    // Block localhost and private IPs
+    const hostname = url.hostname;
+    if (
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "::1" ||
+      /^10\./.test(hostname) ||
+      /^192\.168\./.test(hostname) ||
+      /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname)
+    ) {
+      return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 // ============================================================================
 // CONFIGURATION
@@ -352,6 +400,12 @@ function createTimeoutController(timeoutMs: number): {
  * ```
  */
 export async function downloadAndSaveImage(options: DownloadImageOptions): Promise<string> {
+  // Zod validation
+  const parseResult = DownloadImageOptionsSchema.safeParse(options);
+  if (!parseResult.success) {
+    logError("Invalid DownloadImageOptions", parseResult.error);
+    return config.placeholderPath;
+  }
   const {
     url,
     destDir,
@@ -359,11 +413,18 @@ export async function downloadAndSaveImage(options: DownloadImageOptions): Promi
     fallback = config.placeholderPath,
     maxRetries = config.maxRetries,
     skipCache = false,
-  } = options;
+  } = parseResult.data;
+
+  // Validate URL safety
+  if (!isSafeUrl(url)) {
+    logError("Blocked unsafe URL", url);
+    return fallback;
+  }
 
   // Validate format
   const validation = validateImageFormat(filename);
   if (!validation.valid) {
+    logError("Invalid image format", validation.error);
     return fallback;
   }
 
@@ -434,6 +495,7 @@ export async function downloadAndSaveImage(options: DownloadImageOptions): Promi
           writeStream.destroy();
         }
         lastError = error instanceof Error ? error : new Error(String(error));
+        logError(`Download attempt ${attempt + 1} failed for ${url}`, lastError);
 
         // Don't retry on certain errors
         if (
@@ -450,6 +512,7 @@ export async function downloadAndSaveImage(options: DownloadImageOptions): Promi
       }
     }
 
+    logError("All download attempts failed", lastError);
     // All retries failed - return fallback
     return fallback;
   });
@@ -459,7 +522,11 @@ export async function downloadAndSaveImage(options: DownloadImageOptions): Promi
  * Download and save image with detailed result
  */
 export async function downloadAndSaveImageWithResult(options: DownloadImageOptions): Promise<DownloadResult> {
-  const { url, fallback = config.placeholderPath } = options;
+  // Zod validation
+  const parseResult = DownloadImageOptionsSchema.safeParse(options);
+  const fallback =
+    parseResult.success && parseResult.data.fallback ? parseResult.data.fallback : config.placeholderPath;
+  const url = parseResult.success ? parseResult.data.url : options.url;
 
   // Check cache
   const cachedPath = getCachedPath(url);
@@ -477,6 +544,7 @@ export async function downloadAndSaveImageWithResult(options: DownloadImageOptio
       error: isFallback ? "Download failed, using fallback" : undefined,
     };
   } catch (error) {
+    logError("downloadAndSaveImageWithResult error", error);
     return {
       success: false,
       path: fallback,

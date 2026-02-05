@@ -29,6 +29,6 @@ $extensions = @(
 
 foreach ($ext in $extensions) {
   Write-Host "Installing $ext..."
-  code --install-extension $ext --force
+  code-insiders --install-extension $ext --force
 }
 Write-Host "✅ All recommended extensions processed."
