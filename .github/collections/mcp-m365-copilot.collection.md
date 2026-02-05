@@ -44,6 +44,7 @@ For Microsoft 365 Copilot, this means you can create agents that connect to any 
 ### Instructions
 
 **MCP M365 Copilot Development Guidelines** ([mcp-m365-copilot.instructions.md](../instructions/mcp-m365-copilot.instructions.md))
+
 - Best practices for MCP server design and tool selection
 - File organization and project structure
 - Response semantics configuration patterns
@@ -56,6 +57,7 @@ For Microsoft 365 Copilot, this means you can create agents that connect to any 
 ### Declarative Agents
 
 Declarative agents are defined through configuration files rather than code:
+
 - **declarativeAgent.json**: Agent instructions, capabilities, conversation starters
 - **ai-plugin.json**: MCP server tools, response semantics, adaptive card templates
 - **mcp.json**: MCP server URL, authentication configuration
@@ -64,6 +66,7 @@ Declarative agents are defined through configuration files rather than code:
 ### MCP Server Integration
 
 The Microsoft 365 Agents Toolkit provides a visual interface for:
+
 1. **Scaffold** a new agent project
 2. **Add MCP action** to connect to a server
 3. **Choose tools** from the server's available functions
@@ -74,12 +77,14 @@ The Microsoft 365 Agents Toolkit provides a visual interface for:
 ### Authentication Patterns
 
 **OAuth 2.0 Static Registration:**
+
 - Pre-register OAuth app with service provider
 - Store credentials in .env.local (never commit)
 - Reference in ai-plugin.json authentication config
 - Users consent once, tokens stored in plugin vault
 
 **Single Sign-On (SSO):**
+
 - Use Microsoft Entra ID for authentication
 - Seamless experience for M365 users
 - No separate login required
@@ -113,16 +118,19 @@ Extract and format data from MCP server responses:
 Rich visual responses for agent outputs:
 
 **Static Templates:**
+
 - Defined once in ai-plugin.json
 - Used for all responses with same structure
 - Better performance and easier maintenance
 
 **Dynamic Templates:**
+
 - Returned in API response body
 - Selected via template_selector JSONPath
 - Useful for varied response structures
 
 **Template Language:**
+
 - `${property}`: Data binding
 - `${if(condition, true, false)}`: Conditionals
 - `${formatNumber(value, decimals)}`: Formatting
@@ -131,12 +139,14 @@ Rich visual responses for agent outputs:
 ## Deployment Options
 
 ### Organization Deployment
+
 - IT admin deploys to all users or specific groups
 - Requires approval in Microsoft 365 admin center
 - Best for internal business agents
 - Full governance and compliance controls
 
 ### Agent Store
+
 - Submit to Partner Center for validation
 - Public availability to all Copilot users
 - Rigorous security and compliance review
@@ -145,21 +155,27 @@ Rich visual responses for agent outputs:
 ## Partner Examples
 
 ### monday.com
+
 Task and project management integration:
+
 - Create tasks directly from Copilot
 - Query project status and updates
 - Assign work items to team members
 - View deadlines and milestones
 
 ### Canva
+
 Design automation capabilities:
+
 - Generate branded content
 - Create social media graphics
 - Access design templates
 - Export in multiple formats
 
 ### Sitecore
+
 Content management integration:
+
 - Search content repository
 - Create and update content items
 - Manage workflows and approvals
@@ -168,13 +184,16 @@ Content management integration:
 ## Getting Started
 
 ### Prerequisites
+
             return results
+
 - Microsoft 365 Agents Toolkit extension (v6.3.x or later)
 - GitHub account (for OAuth examples)
 - Microsoft 365 Copilot license
 - Access to an MCP-compatible server
 
 ### Quick Start
+
 1. Install Microsoft 365 Agents Toolkit in VS Code
 2. Use **Create Declarative Agent** prompt to scaffold project
 3. Add MCP server URL and choose tools
@@ -184,6 +203,7 @@ Content management integration:
 7. Use **Deploy and Manage Agents** prompt for distribution
 
 ### Development Workflow
+
 ```
 1. Scaffold agent project
    ↓
@@ -205,6 +225,7 @@ Content management integration:
 ## Best Practices
 
 ### MCP Server Design
+
 - Import only necessary tools (avoid over-scoping)
 - Use secure authentication (OAuth 2.0, SSO)
 - Test each tool individually
@@ -212,18 +233,21 @@ Content management integration:
 - Consider token limits when selecting tools
 
 ### Agent Instructions
+
 - Be specific and clear about agent capabilities
 - Provide examples of how to interact
 - Set boundaries for what agent can/cannot do
 - Use conversation starters to guide users
 
 ### Response Formatting
+
 - Use JSONPath to extract relevant data
 - Map properties clearly (title, subtitle, url)
 - Design adaptive cards for readability
 - Test cards across Copilot surfaces (Chat, Teams, Outlook)
 
 ### Security and Governance
+
 - Never commit credentials to source control
 - Use environment variables for secrets
 - Follow principle of least privilege
@@ -233,24 +257,28 @@ Content management integration:
 ## Common Use Cases
 
 ### Data Retrieval
+
 - Search external systems
 - Fetch user-specific information
 - Query databases or APIs
 - Aggregate data from multiple sources
 
 ### Task Automation
+
 - Create tickets or tasks
 - Update records or statuses
 - Trigger workflows
 - Schedule actions
 
 ### Content Generation
+
 - Create documents or designs
 - Generate reports or summaries
 - Format data into templates
 - Export in various formats
 
 ### Integration Scenarios
+
 - Connect CRM systems
 - Integrate project management tools
 - Access knowledge bases
@@ -259,24 +287,28 @@ Content management integration:
 ## Troubleshooting
 
 ### Agent Not Appearing in Copilot
+
 - Verify agent is deployed in admin center
 - Check user is in assigned group
 - Confirm agent is not blocked
 - Refresh Copilot interface
 
 ### Authentication Errors
+
 - Validate OAuth credentials in .env.local
 - Check scopes match required permissions
 - Test auth flow independently
 - Verify MCP server is accessible
 
 ### Response Formatting Issues
+
 - Test JSONPath expressions with sample data
 - Validate data_path extracts expected array/object
 - Check property mappings are correct
 - Test adaptive card with various response structures
 
 ### Performance Problems
+
 - Monitor MCP server response times
 - Reduce number of imported tools
 - Optimize response data size
@@ -285,22 +317,26 @@ Content management integration:
 ## Resources
 
 ### Official Documentation
+
 - [Build Declarative Agents with MCP (DevBlogs)](https://devblogs.microsoft.com/microsoft365dev/build-declarative-agents-for-microsoft-365-copilot-with-mcp/)
 - [Build MCP Plugins (Microsoft Learn)](https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/build-mcp-plugins)
 - [API Plugin Adaptive Cards (Microsoft Learn)](https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/api-plugin-adaptive-cards)
 - [Manage Copilot Agents (Microsoft Learn)](https://learn.microsoft.com/en-us/microsoft-365/admin/manage/manage-copilot-agents-integrated-apps)
 
 ### Tools and Extensions
+
 - [Microsoft 365 Agents Toolkit](https://marketplace.visualstudio.com/items?itemName=TeamsDevApp.ms-teams-vscode-extension)
 - [Adaptive Cards Designer](https://adaptivecards.io/designer/)
 - [Teams Toolkit](https://learn.microsoft.com/en-us/microsoftteams/platform/toolkit/teams-toolkit-fundamentals)
 
 ### MCP Resources
+
 - [Model Context Protocol Specification](https://modelcontextprotocol.io/)
 - [MCP Server Directory](https://github.com/modelcontextprotocol/servers)
 - Community MCP servers and examples
 
 ### Admin and Governance
+
 - [Microsoft 365 Admin Center](https://admin.microsoft.com/)
 - [Power Platform Admin Center](https://admin.powerplatform.microsoft.com/)
 - [Partner Center](https://partner.microsoft.com/) for agent submissions
@@ -314,6 +350,7 @@ Content management integration:
 ## What's Next?
 
 After mastering MCP-based agents, explore:
+
 - **Advanced tool composition**: Combine multiple MCP servers
 - **Custom authentication flows**: Implement custom OAuth providers
 - **Complex adaptive cards**: Multi-action cards with dynamic data
@@ -322,4 +359,4 @@ After mastering MCP-based agents, explore:
 
 ---
 
-*This collection is maintained by the community and reflects current best practices for MCP-based M365 Copilot agent development. Contributions and feedback welcome!*
+_This collection is maintained by the community and reflects current best practices for MCP-based M365 Copilot agent development. Contributions and feedback welcome!_

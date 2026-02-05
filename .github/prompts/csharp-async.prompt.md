@@ -1,7 +1,7 @@
 ---
-agent: 'agent'
-tools: ['changes', 'search/codebase', 'edit/editFiles', 'problems']
-description: 'Get best practices for C# async programming'
+agent: "agent"
+tools: ["changes", "search/codebase", "edit/editFiles", "problems"]
+description: "Get best practices for C# async programming"
 ---
 
 # C# Async Programming Best Practices

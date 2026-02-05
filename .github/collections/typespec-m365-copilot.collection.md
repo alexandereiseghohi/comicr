@@ -19,6 +19,7 @@ TypeSpec for Microsoft 365 Copilot is a powerful domain-specific language (DSL) 
 A declarative agent is a customized version of Microsoft 365 Copilot that allows users to create personalized experiences by declaring specific instructions, actions, and knowledge.
 
 **Basic Agent Example:**
+
 ```typescript
 @agent(
   "Customer Support Assistant",
@@ -43,6 +44,7 @@ namespace CustomerSupportAgent {
 API plugins extend Microsoft 365 Copilot with custom API operations, enabling integration with external services and data sources.
 
 **Basic API Plugin Example:**
+
 ```typescript
 import "@typespec/http";
 import "@microsoft/typespec-m365-copilot";
@@ -104,6 +106,7 @@ TypeSpec provides built-in capabilities for accessing Microsoft 365 services and
 ### Knowledge Sources
 
 **Web Search**
+
 ```typescript
 op webSearch is AgentCapabilities.WebSearch<Sites = [
   {
@@ -113,6 +116,7 @@ op webSearch is AgentCapabilities.WebSearch<Sites = [
 ```
 
 **OneDrive and SharePoint**
+
 ```typescript
 op oneDriveAndSharePoint is AgentCapabilities.OneDriveAndSharePoint<
   ItemsByUrl = [
@@ -122,6 +126,7 @@ op oneDriveAndSharePoint is AgentCapabilities.OneDriveAndSharePoint<
 ```
 
 **Teams Messages**
+
 ```typescript
 op teamsMessages is AgentCapabilities.TeamsMessages<Urls = [
   {
@@ -131,6 +136,7 @@ op teamsMessages is AgentCapabilities.TeamsMessages<Urls = [
 ```
 
 **Email**
+
 ```typescript
 op email is AgentCapabilities.Email<Folders = [
   {
@@ -140,11 +146,13 @@ op email is AgentCapabilities.Email<Folders = [
 ```
 
 **People**
+
 ```typescript
 op people is AgentCapabilities.People;
 ```
 
 **Copilot Connectors**
+
 ```typescript
 op copilotConnectors is AgentCapabilities.GraphConnectors<Connections = [
   {
@@ -154,6 +162,7 @@ op copilotConnectors is AgentCapabilities.GraphConnectors<Connections = [
 ```
 
 **Dataverse**
+
 ```typescript
 op dataverse is AgentCapabilities.Dataverse<KnowledgeSources = [
   {
@@ -169,21 +178,25 @@ op dataverse is AgentCapabilities.Dataverse<KnowledgeSources = [
 ### Productivity Tools
 
 **Code Interpreter**
+
 ```typescript
 op codeInterpreter is AgentCapabilities.CodeInterpreter;
 ```
 
 **Image Generator**
+
 ```typescript
 op graphicArt is AgentCapabilities.GraphicArt;
 ```
 
 **Meetings**
+
 ```typescript
 op meetings is AgentCapabilities.Meetings;
 ```
 
 **Scenario Models**
+
 ```typescript
 op scenarioModels is AgentCapabilities.ScenarioModels<ModelsById = [
   { id: "financial-forecasting-model-v3" }
@@ -195,6 +208,7 @@ op scenarioModels is AgentCapabilities.ScenarioModels<ModelsById = [
 TypeSpec supports multiple authentication methods for securing API plugins:
 
 ### No Authentication (Anonymous)
+
 ```typescript
 @service
 @actions(ACTIONS_METADATA)
@@ -205,6 +219,7 @@ namespace API {
 ```
 
 ### API Key Authentication
+
 ```typescript
 @service
 @actions(ACTIONS_METADATA)
@@ -216,6 +231,7 @@ namespace API {
 ```
 
 ### OAuth2 Authorization Code Flow
+
 ```typescript
 @service
 @actions(ACTIONS_METADATA)
@@ -233,6 +249,7 @@ namespace API {
 ```
 
 ### Using Registered Authentication
+
 ```typescript
 @authReferenceId("NzFmOTg4YmYtODZmMS00MWFmLTkxYWItMmQ3Y2QwMTFkYjQ3IyM5NzQ5Njc3Yi04NDk2LTRlODYtOTdmZS1kNDUzODllZjUxYjM=")
 model Auth is OAuth2Auth<[{
@@ -247,6 +264,7 @@ model Auth is OAuth2Auth<[{
 ## Common Scenarios
 
 ### Multi-Capability Knowledge Worker Agent
+
 ```typescript
 import "@typespec/http";
 import "@typespec/openapi3";
@@ -283,6 +301,7 @@ namespace KnowledgeWorkerAgent {
 ```
 
 ### API Plugin with Authentication
+
 ```typescript
 import "@typespec/http";
 import "@microsoft/typespec-m365-copilot";
@@ -345,6 +364,7 @@ namespace RepairsHub {
 ## Getting Started
 
 ### Prerequisites
+
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Microsoft 365 Agents Toolkit Visual Studio Code extension](https://aka.ms/M365AgentsToolkit)
 - Microsoft 365 Copilot license
@@ -362,28 +382,33 @@ namespace RepairsHub {
 ## Best Practices
 
 ### Instructions
+
 - Be specific and clear about the agent's role and expertise
 - Define behaviors to avoid as well as desired behaviors
 - Keep instructions under 8,000 characters
 - Use triple-quoted strings for multi-line instructions
 
 ### Conversation Starters
+
 - Provide 2-4 diverse examples of how to interact with the agent
 - Make them specific to your agent's capabilities
 - Keep titles concise (under 100 characters)
 
 ### Capabilities
+
 - Only include capabilities your agent actually needs
 - Scope capabilities to specific resources when possible
 - Use URLs and IDs to limit access to relevant content
 
 ### API Operations
+
 - Use descriptive operation names and clear parameter names
 - Provide detailed descriptions for model and human consumers
 - Use confirmation dialogs for destructive operations
 - Implement proper error handling with meaningful error messages
 
 ### Authentication
+
 - Use registered authentication configurations for production
 - Follow the principle of least privilege for scopes
 - Store sensitive credentials in environment variables
@@ -403,6 +428,7 @@ namespace RepairsHub {
 ## Common Patterns
 
 ### File Structure
+
 ```
 project/
 ├── appPackage/
@@ -419,6 +445,7 @@ project/
 ```
 
 ### Multi-File TypeSpec
+
 ```typescript
 // main.tsp
 import "@typespec/http";
@@ -451,6 +478,7 @@ namespace MyAPI {
 ```
 
 ### Adaptive Cards
+
 ```json
 {
   "type": "AdaptiveCard",

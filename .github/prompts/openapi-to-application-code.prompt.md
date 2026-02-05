@@ -1,8 +1,8 @@
 ---
-agent: 'agent'
-description: 'Generate a complete, production-ready application from an OpenAPI specification'
-model: 'GPT-4.1'
-tools: ['codebase', 'edit/editFiles', 'search/codebase']
+agent: "agent"
+description: "Generate a complete, production-ready application from an OpenAPI specification"
+model: "GPT-4.1"
+tools: ["codebase", "edit/editFiles", "search/codebase"]
 ---
 
 # Generate Application from OpenAPI Spec
@@ -25,6 +25,7 @@ Your goal is to generate a complete, working application from an OpenAPI specifi
 ## Generation Process
 
 ### Step 1: Analyze the OpenAPI Specification
+
 - Validate the OpenAPI spec for completeness and correctness
 - Identify all endpoints, HTTP methods, request/response schemas
 - Extract authentication requirements and security schemes
@@ -32,6 +33,7 @@ Your goal is to generate a complete, working application from an OpenAPI specifi
 - Flag any ambiguities or incomplete definitions
 
 ### Step 2: Design Application Architecture
+
 - Plan directory structure appropriate for the framework
 - Identify controller/handler grouping by resource or domain
 - Design service layer organization for business logic
@@ -39,6 +41,7 @@ Your goal is to generate a complete, working application from an OpenAPI specifi
 - Design configuration and initialization strategy
 
 ### Step 3: Generate Application Code
+
 - Create project structure with build/package configuration files
 - Generate models/DTOs from OpenAPI schemas
 - Generate controllers/handlers with route mappings
@@ -48,6 +51,7 @@ Your goal is to generate a complete, working application from an OpenAPI specifi
 - Generate configuration and startup code
 
 ### Step 4: Add Supporting Files
+
 - Generate appropriate unit tests for services and controllers
 - Create README with setup and running instructions
 - Add .gitignore and environment configuration templates

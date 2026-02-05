@@ -1,7 +1,7 @@
 ---
-agent: 'agent'
-description: 'Create a tldr page from documentation URLs and command examples, requiring both URL and command name.'
-tools: ['edit/createFile', 'web/fetch']
+agent: "agent"
+description: "Create a tldr page from documentation URLs and command examples, requiring both URL and command name."
+tools: ["edit/createFile", "web/fetch"]
 ---
 
 # Create TLDR Page
@@ -23,25 +23,25 @@ clear, example-driven command references.
 
 ### Required
 
-* **Command** - The name of the command or tool (e.g., `git`, `nmcli`, `distrobox-create`)
-* **URL** - Link to authoritative upstream documentation
+- **Command** - The name of the command or tool (e.g., `git`, `nmcli`, `distrobox-create`)
+- **URL** - Link to authoritative upstream documentation
   - If one or more URLs are passed without a preceding `#fetch`, apply #tool:fetch to the first URL
   - If ${file} is provided in lieu of a URL, and ${file} has a relevant URL to **command**, then use
-  the data from the file as if fetched from the URL; use the URL extracted from the file when
-  creating the `tldr` page
+    the data from the file as if fetched from the URL; use the URL extracted from the file when
+    creating the `tldr` page
     - If more than one URL is in the file, prompt for which URL should be used for the `tldr` page
 
 ### Optional
 
-* **Context files** - Additional documentation or examples
-* **Search data** - Results from documentation searches
-* **Text data** - Raw text from manual pages or help output
-* **Help output** - Raw data matching `-h`, `--help`, `/?`, `--tldr`, `--man`, etc.
+- **Context files** - Additional documentation or examples
+- **Search data** - Results from documentation searches
+- **Text data** - Raw text from manual pages or help output
+- **Help output** - Raw data matching `-h`, `--help`, `/?`, `--tldr`, `--man`, etc.
 
 > [!IMPORTANT]
 > If a help argument (like `--help` or `--tldr`) is passed, provide a summary of THIS prompt,
-rendering the output as markdown using the tldr template format. Do NOT create a new tldr page for
-the command.
+> rendering the output as markdown using the tldr template format. Do NOT create a new tldr page for
+> the command.
 
 ## Usage
 
@@ -125,9 +125,9 @@ Use this template structure when creating tldr pages:
 
 You MAY fetch these example tldr pages to understand the proper format and style:
 
-* [git](https://raw.githubusercontent.com/jhauga/tldr/refs/heads/main/pages/common/git.md)
-* [distrobox-create](https://raw.githubusercontent.com/jhauga/tldr/refs/heads/main/pages/linux/distrobox-create.md)
-* [nmcli](https://raw.githubusercontent.com/jhauga/tldr/refs/heads/main/pages/linux/nmcli.md)
+- [git](https://raw.githubusercontent.com/jhauga/tldr/refs/heads/main/pages/common/git.md)
+- [distrobox-create](https://raw.githubusercontent.com/jhauga/tldr/refs/heads/main/pages/linux/distrobox-create.md)
+- [nmcli](https://raw.githubusercontent.com/jhauga/tldr/refs/heads/main/pages/linux/nmcli.md)
 
 ### Expected Output Using Example
 
@@ -139,7 +139,7 @@ You MAY fetch these example tldr pages to understand the proper format and style
 
 **Agent**
 
-````markdown
+```markdown
 # git
 
 > Distributed version control system.
@@ -177,7 +177,7 @@ You MAY fetch these example tldr pages to understand the proper format and style
 - Reset everything the way it was in the latest commit:
 
 `git reset --hard; git clean {{[-f|--force]}}`
-````
+```
 
 ### Output Formatting Rules
 

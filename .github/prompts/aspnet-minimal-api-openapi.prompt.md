@@ -1,7 +1,7 @@
 ---
-agent: 'agent'
-tools: ['changes', 'search/codebase', 'edit/editFiles', 'problems']
-description: 'Create ASP.NET Minimal API endpoints with proper OpenAPI documentation'
+agent: "agent"
+tools: ["changes", "search/codebase", "edit/editFiles", "problems"]
+description: "Create ASP.NET Minimal API endpoints with proper OpenAPI documentation"
 ---
 
 # ASP.NET Minimal API with OpenAPI

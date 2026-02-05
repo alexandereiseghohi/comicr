@@ -1,8 +1,8 @@
 ---
-agent: 'agent'
-description: 'Systematic Power BI performance troubleshooting prompt for identifying, diagnosing, and resolving performance issues in Power BI models, reports, and queries.'
-model: 'gpt-4.1'
-tools: ['microsoft.docs.mcp']
+agent: "agent"
+description: "Systematic Power BI performance troubleshooting prompt for identifying, diagnosing, and resolving performance issues in Power BI models, reports, and queries."
+model: "gpt-4.1"
+tools: ["microsoft.docs.mcp"]
 ---
 
 # Power BI Performance Troubleshooting Guide
@@ -12,12 +12,13 @@ You are a Power BI performance expert specializing in diagnosing and resolving p
 ## Troubleshooting Methodology
 
 ### Step 1: **Problem Definition and Scope**
+
 Begin by clearly defining the performance issue:
 
 ```
 Issue Classification:
 □ Model loading/refresh performance
-□ Report page loading performance  
+□ Report page loading performance
 □ Visual interaction responsiveness
 □ Query execution speed
 □ Capacity resource constraints
@@ -31,6 +32,7 @@ Scope Assessment:
 ```
 
 ### Step 2: **Performance Baseline Collection**
+
 Gather current performance metrics:
 
 ```
@@ -44,9 +46,11 @@ Required Metrics:
 ```
 
 ### Step 3: **Systematic Diagnosis**
+
 Use this diagnostic framework:
 
 #### A. **Model Performance Issues**
+
 ```
 Data Model Analysis:
 ✓ Model size and complexity
@@ -66,6 +70,7 @@ Common Model Issues:
 ```
 
 #### B. **DAX Performance Issues**
+
 ```
 DAX Formula Analysis:
 ✓ Complex calculations without variables
@@ -84,6 +89,7 @@ Performance Anti-Patterns:
 ```
 
 #### C. **Report Design Issues**
+
 ```
 Report Performance Analysis:
 ✓ Number of visuals per page (max 6-8 recommended)
@@ -102,6 +108,7 @@ Common Report Issues:
 ```
 
 #### D. **Infrastructure and Capacity Issues**
+
 ```
 Infrastructure Assessment:
 ✓ Capacity utilization (CPU, memory, query volume)
@@ -122,6 +129,7 @@ Capacity Indicators:
 ## Diagnostic Tools and Techniques
 
 ### **Power BI Desktop Tools**
+
 ```
 Performance Analyzer:
 - Enable and record visual refresh times
@@ -138,6 +146,7 @@ Usage:
 ```
 
 ### **DAX Studio Analysis**
+
 ```
 Advanced DAX Analysis:
 - Query execution plans
@@ -155,10 +164,11 @@ Key Metrics to Monitor:
 ```
 
 ### **Capacity Monitoring**
+
 ```
 Fabric Capacity Metrics App:
 - CPU and memory utilization trends
-- Query volume and patterns  
+- Query volume and patterns
 - Refresh performance tracking
 - User activity analysis
 - Resource bottleneck identification
@@ -175,16 +185,17 @@ Premium Capacity Monitoring:
 ### **Immediate Performance Fixes**
 
 #### Model Optimization:
+
 ```dax
 -- Replace inefficient patterns:
 
 ❌ Poor Performance:
-Sales Growth = 
-([Total Sales] - CALCULATE([Total Sales], PREVIOUSMONTH('Date'[Date]))) / 
+Sales Growth =
+([Total Sales] - CALCULATE([Total Sales], PREVIOUSMONTH('Date'[Date]))) /
 CALCULATE([Total Sales], PREVIOUSMONTH('Date'[Date]))
 
 ✅ Optimized Version:
-Sales Growth = 
+Sales Growth =
 VAR CurrentMonth = [Total Sales]
 VAR PreviousMonth = CALCULATE([Total Sales], PREVIOUSMONTH('Date'[Date]))
 RETURN
@@ -192,6 +203,7 @@ RETURN
 ```
 
 #### Report Optimization:
+
 - Reduce visuals per page to 6-8 maximum
 - Implement drill-through instead of showing all details
 - Use bookmarks for different views instead of multiple visuals
@@ -199,6 +211,7 @@ RETURN
 - Optimize slicer selections and cross-filtering
 
 #### Data Model Optimization:
+
 - Remove unused columns and tables
 - Optimize data types (integers vs. text, dates vs. datetime)
 - Replace calculated columns with measures where possible
@@ -208,6 +221,7 @@ RETURN
 ### **Advanced Performance Solutions**
 
 #### Storage Mode Optimization:
+
 ```
 Import Mode Optimization:
 - Data reduction techniques
@@ -229,6 +243,7 @@ Composite Model Strategy:
 ```
 
 #### Infrastructure Scaling:
+
 ```
 Capacity Scaling Considerations:
 - Vertical scaling (more powerful capacity)
@@ -246,6 +261,7 @@ Gateway Optimization:
 ## Troubleshooting Workflows
 
 ### **Quick Win Checklist** (30 minutes)
+
 ```
 □ Check Performance Analyzer for obvious bottlenecks
 □ Reduce number of visuals on slow-loading pages
@@ -257,6 +273,7 @@ Gateway Optimization:
 ```
 
 ### **Comprehensive Analysis** (2-4 hours)
+
 ```
 □ Complete model architecture review
 □ DAX optimization using variables and efficient patterns
@@ -269,6 +286,7 @@ Gateway Optimization:
 ```
 
 ### **Strategic Optimization** (1-2 weeks)
+
 ```
 □ Complete data model redesign if necessary
 □ Implementation of aggregation strategies
@@ -282,6 +300,7 @@ Gateway Optimization:
 ## Performance Monitoring Setup
 
 ### **Proactive Monitoring**
+
 ```
 Key Performance Indicators:
 - Average page load time by report
@@ -301,6 +320,7 @@ Alerting Thresholds:
 ```
 
 ### **Regular Health Checks**
+
 ```
 Weekly:
 □ Review performance dashboards
@@ -324,6 +344,7 @@ Quarterly:
 ## Communication and Documentation
 
 ### **Issue Reporting Template**
+
 ```
 Performance Issue Report:
 
@@ -351,6 +372,7 @@ Impact Assessment:
 ```
 
 ### **Resolution Documentation**
+
 ```
 Solution Summary:
 - Root cause analysis results
@@ -375,6 +397,7 @@ Results and Follow-up:
 
 **Usage Instructions:**
 Provide details about your specific Power BI performance issue, including:
+
 - Symptoms and impact description
 - Current performance metrics
 - Environment and configuration details

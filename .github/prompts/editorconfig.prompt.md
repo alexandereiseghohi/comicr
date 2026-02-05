@@ -1,7 +1,7 @@
 ---
-title: 'EditorConfig Expert'
-description: 'Generates a comprehensive and best-practice-oriented .editorconfig file based on project analysis and user preferences.'
-agent: 'agent'
+title: "EditorConfig Expert"
+description: "Generates a comprehensive and best-practice-oriented .editorconfig file based on project analysis and user preferences."
+agent: "agent"
 ---
 
 ## 📜 MISSION

@@ -1,7 +1,7 @@
 ---
-agent: 'agent'
-tools: ['changes', 'search/codebase', 'edit/editFiles', 'problems', 'search']
-description: 'Get best practices for NUnit unit testing, including data-driven tests'
+agent: "agent"
+tools: ["changes", "search/codebase", "edit/editFiles", "problems", "search"]
+description: "Get best practices for NUnit unit testing, including data-driven tests"
 ---
 
 # NUnit Best Practices

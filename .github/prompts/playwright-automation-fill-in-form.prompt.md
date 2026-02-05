@@ -1,8 +1,8 @@
 ---
-description: 'Automate filling in a form using Playwright MCP'
+description: "Automate filling in a form using Playwright MCP"
 agent: agent
-tools: ['playwright']
-model: 'Claude Sonnet 4'
+tools: ["playwright"]
+model: "Claude Sonnet 4"
 ---
 
 # Automating Filling in a Form with Playwright MCP
@@ -25,6 +25,6 @@ Navigate to https://forms.microsoft.com/url-of-my-form
 
 5. Upload image: /Users/myuserName/Downloads/my-image.png
 
-DO NOT SUBMIT THE FORM. 
+DO NOT SUBMIT THE FORM.
 
 Ask for a review of the form before submitting it.

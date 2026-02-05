@@ -1,7 +1,7 @@
 ---
-agent: 'agent'
-tools: ['changes', 'search/codebase', 'edit/editFiles', 'problems', 'runCommands']
-description: 'Get best practices for Entity Framework Core'
+agent: "agent"
+tools: ["changes", "search/codebase", "edit/editFiles", "problems", "runCommands"]
+description: "Get best practices for Entity Framework Core"
 ---
 
 # Entity Framework Core Best Practices

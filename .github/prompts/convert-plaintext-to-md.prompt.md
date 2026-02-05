@@ -1,7 +1,7 @@
 ---
 agent: agent
-description: 'Convert a text-based document to markdown following instructions from prompt, or if a documented option is passed, follow the instructions for that option.'
-tools: ['edit', 'edit/editFiles', 'web/fetch', 'runCommands', 'search', 'search/readFile', 'search/textSearch']
+description: "Convert a text-based document to markdown following instructions from prompt, or if a documented option is passed, follow the instructions for that option."
+tools: ["edit", "edit/editFiles", "web/fetch", "runCommands", "search", "search/readFile", "search/textSearch"]
 ---
 
 # Convert Plaintext Documentation to Markdown
@@ -17,9 +17,9 @@ You can perform conversions using one of three approaches:
 
 1. **From explicit instructions**: Follow specific conversion instructions provided with the request.
 2. **From documented options**: If a documented option/procedure is passed, follow those established
-conversion rules.
+   conversion rules.
 3. **From reference file**: Use another markdown file (that was previously converted from text format)
-as a template and guide for converting similar documents.
+   as a template and guide for converting similar documents.
 
 ## When Using a Reference File
 
@@ -27,9 +27,9 @@ When provided with a converted markdown file as a guide:
 
 - Apply the same formatting patterns, structure, and conventions
 - Follow any additional instructions that specify what to exclude or handle differently for the
-current file compared to the reference
+  current file compared to the reference
 - Maintain consistency with the reference while adapting to the specific content of the file being
-converted
+  converted
 
 ## Usage
 
@@ -45,18 +45,18 @@ retrieve the URLs in the **Reference** section.
 ### Parameters
 
 - **#file:{{file}}** (required) - The plain or generic text documentation file to convert to markdown.
-If a corresponding `{{file}}.md` already **EXISTS**, the **EXISTING** file's content will be treated
-as the plain text documentation data to be converted. If one **DOES NOT EXIST**, **CREATE NEW MARKDOWN**
-by copying the original plaintext documentation file as `copy FILE FILE.md` in the same directory as
-the plain text documentation file.
+  If a corresponding `{{file}}.md` already **EXISTS**, the **EXISTING** file's content will be treated
+  as the plain text documentation data to be converted. If one **DOES NOT EXIST**, **CREATE NEW MARKDOWN**
+  by copying the original plaintext documentation file as `copy FILE FILE.md` in the same directory as
+  the plain text documentation file.
 - **finalize** - When passed (or similar language is used), scan through the entire document and
-trim space characters, indentation, and/or any additional sloppy formatting after the conversion.
+  trim space characters, indentation, and/or any additional sloppy formatting after the conversion.
 - **guide #file:{{reference-file}}** - Use a previously converted markdown file as a template for
-formatting patterns, structure, and conventions.
+  formatting patterns, structure, and conventions.
 - **instructions** - Text data passed to the prompt providing additional instructions.
 - **platform={{name}}** - Specify the target platform for markdown rendering to ensure compatibility:
   - **GitHub** (default) - GitHub-flavored markdown (GFM) with tables, task lists, strikethrough,
-  and alerts
+    and alerts
   - **StackOverflow** - CommonMark with StackOverflow-specific extensions
   - **VS Code** - Optimized for VS Code's markdown preview renderer
   - **GitLab** - GitLab-flavored markdown with platform-specific features
@@ -102,11 +102,11 @@ input, then use it as the instruction for the current prompt.
 #### Predefined
 
 - **rm-head-digits** - Remove any prepending numbers from the headers when updating or converting the
-plaintext to markdown.
+  plaintext to markdown.
 - **mv-head-level(x, y)** - Change the heading level from level `x` header to a level `y` header when
-updating or converting plaintext to markdown.
+  updating or converting plaintext to markdown.
 - **rm-indent(x)** - Decrease the indentation of paragraphs or raw text data portions of the file by
-`x` when updating or converting plaintext to markdown.
+  `x` when updating or converting plaintext to markdown.
 
 > [!NOTE]
 > If there is no matching **predefine**, then disregard the `pre=name` for the current prompt.
@@ -123,7 +123,7 @@ updating or converting plaintext to markdown.
 
 **Agent**
 
-```
+````
 I see there is no corresponding `file.md`. Let me copy the plaintext document:
 
     ```bash
@@ -131,7 +131,7 @@ I see there is no corresponding `file.md`. Let me copy the plaintext document:
     ```
 
 Now I'll apply markdown best practices to convert the plaintext documentation to a markdown document.
-```
+````
 
 #### Using a Guide to Convert to Markdown
 
@@ -143,7 +143,7 @@ Now I'll apply markdown best practices to convert the plaintext documentation to
 
 **Agent**
 
-```
+````
 I see that both the file and CODE markdown files have corresponding plaintext documentation. Let me
 check CODE and compare it to CODE.md, and identify patterns to help with conversion.
 
@@ -218,7 +218,7 @@ OK, after analyzing the guide file, I've updated file.md to:
     ### 1.10.0 Option With Text Subheading
     Info on the commands' options.
     ```
-```
+````
 
 #### Finalize is Clearly Triggered
 
@@ -232,7 +232,7 @@ OK, after analyzing the guide file, I've updated file.md to:
 
 **Agent**
 
-```
+````
 I'll finalize file.md. I see the current converted markdown file has:
 
     ```markdown
@@ -284,7 +284,7 @@ Let me trim a few things:
     circumference = 2 * math.pi * radius
     print(f"Area: {area:.2f}, Circumference: {circumference:.2f}")
     ```
-```
+````
 
 #### No Existing Markdown File and Inline shorthand Instructions
 
@@ -296,7 +296,7 @@ Let me trim a few things:
 
 **Agent**
 
-```
+````
 I see that there is no `BUGS.md` file. Let me copy the current plaintext BUGS documentation:
 
     ```bash
@@ -323,7 +323,7 @@ OK, I've matched the shorthand regular expression pattern and updated the BUGS.m
     ### ...
     ### 1.12 Section Item
     ```
-```
+````
 
 ## Considerations
 
@@ -351,7 +351,7 @@ OK, I've matched the shorthand regular expression pattern and updated the BUGS.m
 - Ensure headers, lists, code blocks, and other elements are correctly structured
 - Keep the document readable and well-organized
 - Assemble a unified set of instructions or script to convert text to markdown using all parameters
-and options provided
+  and options provided
 
 ### Reference
 

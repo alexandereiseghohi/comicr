@@ -1,7 +1,7 @@
 ---
 agent: agent
-description: 'GraalVM Native Image expert that adds native image support to Java applications, builds the project, analyzes build errors, applies fixes, and iterates until successful compilation using Oracle best practices.'
-model: 'Claude Sonnet 4.5'
+description: "GraalVM Native Image expert that adds native image support to Java applications, builds the project, analyzes build errors, applies fixes, and iterates until successful compilation using Oracle best practices."
+model: "Claude Sonnet 4.5"
 tools:
   - read_file
   - replace_string_in_file
@@ -130,26 +130,31 @@ graalvmNative {
 Run the appropriate build command:
 
 **Maven:**
+
 ```sh
 mvn -Pnative native:compile
 ```
 
 **Gradle:**
+
 ```sh
 ./gradlew nativeCompile
 ```
 
 **Spring Boot (Maven):**
+
 ```sh
 mvn -Pnative spring-boot:build-image
 ```
 
 **Quarkus (Maven):**
+
 ```sh
 ./mvnw package -Pnative
 ```
 
 **Micronaut (Maven):**
+
 ```sh
 ./mvnw package -Dpackaging=native-image
 ```
@@ -159,6 +164,7 @@ mvn -Pnative spring-boot:build-image
 Common issues and solutions:
 
 #### Reflection Issues
+
 If you see errors about missing reflection configuration, create or update `src/main/resources/META-INF/native-image/reflect-config.json`:
 
 ```json
@@ -173,41 +179,36 @@ If you see errors about missing reflection configuration, create or update `src/
 ```
 
 #### Resource Access Issues
+
 For missing resources, create `src/main/resources/META-INF/native-image/resource-config.json`:
 
 ```json
 {
   "resources": {
-    "includes": [
-      {"pattern": "application.properties"},
-      {"pattern": ".*\\.yml"},
-      {"pattern": ".*\\.yaml"}
-    ]
+    "includes": [{ "pattern": "application.properties" }, { "pattern": ".*\\.yml" }, { "pattern": ".*\\.yaml" }]
   }
 }
 ```
 
 #### JNI Issues
+
 For JNI-related errors, create `src/main/resources/META-INF/native-image/jni-config.json`:
 
 ```json
 [
   {
     "name": "com.example.NativeClass",
-    "methods": [
-      {"name": "nativeMethod", "parameterTypes": ["java.lang.String"]}
-    ]
+    "methods": [{ "name": "nativeMethod", "parameterTypes": ["java.lang.String"] }]
   }
 ]
 ```
 
 #### Dynamic Proxy Issues
+
 For dynamic proxy errors, create `src/main/resources/META-INF/native-image/proxy-config.json`:
 
 ```json
-[
-  ["com.example.Interface1", "com.example.Interface2"]
-]
+[["com.example.Interface1", "com.example.Interface2"]]
 ```
 
 ### Step 5: Iterate Until Success
@@ -223,6 +224,7 @@ For dynamic proxy errors, create `src/main/resources/META-INF/native-image/proxy
 ### Step 6: Verify the Native Image
 
 Once built successfully:
+
 - Test the native executable to ensure it runs correctly
 - Verify startup time improvements
 - Check memory footprint
@@ -231,6 +233,7 @@ Once built successfully:
 ## Framework-Specific Considerations
 
 ### Spring Boot
+
 - Spring Boot 3.0+ has excellent native image support
 - Ensure you're using compatible Spring Boot version (3.0+)
 - Most Spring libraries provide GraalVM hints automatically
@@ -278,18 +281,21 @@ public class Application {
 **Common Spring Boot Native Image Issues:**
 
 1. **Logback Configuration**: Add to `application.properties`:
+
    ```properties
    # Disable Logback's shutdown hook in native images
    logging.register-shutdown-hook=false
    ```
 
    If using custom Logback configuration, ensure `logback-spring.xml` is in resources and add to `RuntimeHints`:
+
    ```java
    hints.resources().registerPattern("logback-spring.xml");
    hints.resources().registerPattern("org/springframework/boot/logging/logback/*.xml");
    ```
 
 2. **Jackson Serialization**: For custom Jackson modules or types, register them:
+
    ```java
    hints.serialization().registerType(MyDto.class);
    hints.reflection().registerType(
@@ -302,6 +308,7 @@ public class Application {
    ```
 
    Add Jackson mix-ins to reflection hints if used:
+
    ```java
    hints.reflection().registerType(MyMixIn.class);
    ```
@@ -315,6 +322,7 @@ public class Application {
    ```
 
 ### Quarkus
+
 - Quarkus is designed for native images with zero configuration in most cases
 - Use `@RegisterForReflection` annotation for reflection needs
 - Quarkus extensions handle GraalVM configuration automatically
@@ -322,6 +330,7 @@ public class Application {
 **Common Quarkus Native Image Tips:**
 
 1. **Reflection Registration**: Use annotations instead of manual configuration:
+
    ```java
    @RegisterForReflection(targets = {MyClass.class, MyDto.class})
    public class ReflectionConfiguration {
@@ -329,17 +338,20 @@ public class Application {
    ```
 
    Or register entire packages:
+
    ```java
    @RegisterForReflection(classNames = {"com.example.package.*"})
    ```
 
 2. **Resource Inclusion**: Add to `application.properties`:
+
    ```properties
    quarkus.native.resources.includes=config/*.json,templates/**
    quarkus.native.additional-build-args=--initialize-at-run-time=com.example.RuntimeClass
    ```
 
 3. **Database Drivers**: Ensure you're using Quarkus-supported JDBC extensions:
+
    ```xml
    <dependency>
        <groupId>io.quarkus</groupId>
@@ -348,6 +360,7 @@ public class Application {
    ```
 
 4. **Build-Time vs Runtime Initialization**: Control initialization with:
+
    ```properties
    quarkus.native.additional-build-args=--initialize-at-build-time=com.example.BuildTimeClass
    quarkus.native.additional-build-args=--initialize-at-run-time=com.example.RuntimeClass
@@ -360,6 +373,7 @@ public class Application {
    ```
 
 ### Micronaut
+
 - Micronaut has built-in GraalVM support with minimal configuration
 - Use `@ReflectionConfig` and `@Introspected` annotations as needed
 - Micronaut's ahead-of-time compilation reduces reflection requirements
@@ -367,6 +381,7 @@ public class Application {
 **Common Micronaut Native Image Tips:**
 
 1. **Bean Introspection**: Use `@Introspected` for POJOs to avoid reflection:
+
    ```java
    @Introspected
    public class MyDto {
@@ -377,6 +392,7 @@ public class Application {
    ```
 
    Or enable package-wide introspection in `application.yml`:
+
    ```yaml
    micronaut:
      introspection:
@@ -385,6 +401,7 @@ public class Application {
    ```
 
 2. **Reflection Configuration**: Use declarative annotations:
+
    ```java
    @ReflectionConfig(
        type = MyClass.class,
@@ -395,6 +412,7 @@ public class Application {
    ```
 
 3. **Resource Configuration**: Add resources to native image:
+
    ```java
    @ResourceConfig(
        includes = {"application.yml", "logback.xml"}
@@ -404,6 +422,7 @@ public class Application {
    ```
 
 4. **Native Image Configuration**: In `build.gradle`:
+
    ```groovy
    graalvmNative {
        binaries {

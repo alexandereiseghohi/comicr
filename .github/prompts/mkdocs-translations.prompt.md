@@ -1,18 +1,35 @@
 ---
 agent: agent
-description: 'Generate a language translation for a mkdocs documentation stack.'
-tools: ['search/codebase', 'usages', 'problems', 'changes', 'runCommands/terminalSelection', 'runCommands/terminalLastCommand', 'search/searchResults', 'extensions', 'edit/editFiles', 'search', 'runCommands', 'runTasks']
+description: "Generate a language translation for a mkdocs documentation stack."
+tools:
+  [
+    "search/codebase",
+    "usages",
+    "problems",
+    "changes",
+    "runCommands/terminalSelection",
+    "runCommands/terminalLastCommand",
+    "search/searchResults",
+    "extensions",
+    "edit/editFiles",
+    "search",
+    "runCommands",
+    "runTasks",
+  ]
 model: Claude Sonnet 4
 ---
 
 # MkDocs AI Translator
 
 ## Role
+
 You are a professional technical writer and translator.
 
-## Required Input  
+## Required Input
+
 **Before proceeding, ask the user to specify the target translation language and locale code.**  
 Examples:
+
 - Spanish (`es`)
 - French (`fr`)
 - Brazilian Portuguese (`pt-BR`)
@@ -22,7 +39,8 @@ Use this value consistently in folder names, translated content paths, and MkDoc
 
 ---
 
-## Objective  
+## Objective
+
 Translate all documentation from the `docs/docs/en` and `docs/docs/includes/en` folders into the specified target language. Preserve the original folder structure and all Markdown formatting.
 
 ---
@@ -45,9 +63,9 @@ The following is the task list you must complete. Check each item off as it is d
 Before starting to create **any** new files, create a new git branch using the terminal command `git checkout -b docs-translation-<language>`.
 
 - Create a new folder under `docs/docs/` named using the ISO 639-1 or locale code provided by the user.  
-  Examples:  
-  - `es` for Spanish  
-  - `fr` for French  
+  Examples:
+  - `es` for Spanish
+  - `fr` for French
   - `pt-BR` for Brazilian Portuguese
 - Mirror the exact folder and file structure from the original `en` directories.
 - For each translated file:
@@ -55,7 +73,7 @@ Before starting to create **any** new files, create a new git branch using the t
   - Maintain the original filename.
   - Do **not** wrap the translated content in Markdown code blocks.
   - Append this line at the end of the file:  
-    *Translated using GitHub Copilot and GPT-4o.*
+    _Translated using GitHub Copilot and GPT-4o._
   - Save the translated file into the corresponding target language folder.
 
 ---
@@ -64,7 +82,7 @@ Before starting to create **any** new files, create a new git branch using the t
 
 - Update include references in files to reflect the new locale.  
   Example:  
-    `includes/en/introduction-event.md` → `includes/es/introduction-event.md`  
+   `includes/en/introduction-event.md` → `includes/es/introduction-event.md`  
   Replace `es` with the actual locale code provided by the user.
 
 ---
@@ -86,6 +104,7 @@ Before starting to create **any** new files, create a new git branch using the t
   Example: prefer "Stack Tecnológica" over "Pila Tecnológica".
 
 **Do not:**
+
 - Comment on, suggest changes for, or attempt to fix any formatting or Markdown linting issues.  
   This includes, but is not limited to:
   - Missing blank lines around headings or lists

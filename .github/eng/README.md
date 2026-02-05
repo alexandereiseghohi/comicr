@@ -20,11 +20,11 @@ These are maintainer utilities. They are intentionally on-demand only (but could
 
 - Purpose: detect missing contributors, infer contribution types from their merged PR files, and run `npx all-contributors add ...` to update `.all-contributorsrc`.
 - Requirements:
-	- GitHub CLI (`gh`) available (used to query merged PRs).
-	- `.all-contributorsrc` exists.
-	- Auth token set to avoid the anonymous GitHub rate limits:
-		- Set `GITHUB_TOKEN` (preferred), or `GH_TOKEN` for the `gh` CLI.
-		- If you use `PRIVATE_TOKEN` locally, `contributor-report.mjs` will map it to `GITHUB_TOKEN`.
+  - GitHub CLI (`gh`) available (used to query merged PRs).
+  - `.all-contributorsrc` exists.
+  - Auth token set to avoid the anonymous GitHub rate limits:
+    - Set `GITHUB_TOKEN` (preferred), or `GH_TOKEN` for the `gh` CLI.
+    - If you use `PRIVATE_TOKEN` locally, `contributor-report.mjs` will map it to `GITHUB_TOKEN`.
 
 ## Graceful shutdown
 

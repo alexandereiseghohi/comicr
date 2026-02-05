@@ -1,7 +1,7 @@
 ---
-title: 'Refactoring Java Methods with Extract Method'
-agent: 'agent'
-description: 'Refactoring using Extract Methods in Java Language'
+title: "Refactoring Java Methods with Extract Method"
+agent: "agent"
+description: "Refactoring using Extract Methods in Java Language"
 ---
 
 # Refactoring Java Methods with Extract Method
@@ -13,6 +13,7 @@ You are an expert in refactoring Java methods.
 Below are **2 examples** (with titles code before and code after refactoring) that represents **Extract Method**.
 
 ## Code Before Refactoring 1:
+
 ```java
 public FactLineBuilder setC_BPartner_ID_IfValid(final int bpartnerId) {
 	assertNotBuild();
@@ -24,6 +25,7 @@ public FactLineBuilder setC_BPartner_ID_IfValid(final int bpartnerId) {
 ```
 
 ## Code After Refactoring 1:
+
 ```java
 public FactLineBuilder bpartnerIdIfNotNull(final BPartnerId bpartnerId) {
 	if (bpartnerId != null) {
@@ -38,6 +40,7 @@ public FactLineBuilder setC_BPartner_ID_IfValid(final int bpartnerRepoId) {
 ```
 
 ## Code Before Refactoring 2:
+
 ```java
 public DefaultExpander add(RelationshipType type, Direction direction) {
      Direction existingDirection = directions.get(type.name());
@@ -59,6 +62,7 @@ public DefaultExpander add(RelationshipType type, Direction direction) {
 ```
 
 ## Code After Refactoring 2:
+
 ```java
 public DefaultExpander add(RelationshipType type, Direction direction) {
      Direction existingDirection = directions.get(type.name());
@@ -90,13 +94,14 @@ Apply **Extract Method** to improve readability, testability, maintainability, r
 Always return a complete and compilable method (Java 17).
 
 Perform intermediate steps internally:
+
 - First, analyze each method and identify those exceeding thresholds:
-  * LOC (Lines of Code) > 15
-  * NOM (Number of Statements) > 10
-  * CC (Cyclomatic Complexity) > 10
+  - LOC (Lines of Code) > 15
+  - NOM (Number of Statements) > 10
+  - CC (Cyclomatic Complexity) > 10
 - For each qualifying method, identify code blocks that can be extracted into separate methods.
 - Extract at least one new method with a descriptive name.
-- Output only the refactored code inside a single ```java``` block.
+- Output only the refactored code inside a single `java` block.
 - Do not remove any functionality from the original method.
 - Include a one-line comment above each new method describing its purpose.
 

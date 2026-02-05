@@ -1,8 +1,8 @@
 ---
-mode: 'agent'
-tools: ['changes', 'search/codebase', 'edit/editFiles', 'problems']
-description: 'Generate a complete TypeSpec declarative agent with instructions, capabilities, and conversation starters for Microsoft 365 Copilot'
-model: 'gpt-4.1'
+mode: "agent"
+tools: ["changes", "search/codebase", "edit/editFiles", "problems"]
+description: "Generate a complete TypeSpec declarative agent with instructions, capabilities, and conversation starters for Microsoft 365 Copilot"
+model: "gpt-4.1"
 tags: [typespec, m365-copilot, declarative-agent, agent-development]
 ---
 
@@ -86,6 +86,7 @@ namespace [AgentName] {
 ## Examples
 
 Ask the user:
+
 1. What is the agent's purpose and role?
 2. What capabilities does it need?
 3. What knowledge sources should it access?

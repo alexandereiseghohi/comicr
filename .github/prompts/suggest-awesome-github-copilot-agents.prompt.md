@@ -1,7 +1,19 @@
 ---
 agent: "agent"
 description: "Suggest relevant GitHub Copilot Custom Agents files from the awesome-copilot repository based on current repository context and chat history, avoiding duplicates with existing custom agents in this repository, and identifying outdated agents that need updates."
-tools: ["edit", "search", "runCommands", "runTasks", "changes", "testFailure", "openSimpleBrowser", "fetch", "githubRepo", "todos"]
+tools:
+  [
+    "edit",
+    "search",
+    "runCommands",
+    "runTasks",
+    "changes",
+    "testFailure",
+    "openSimpleBrowser",
+    "fetch",
+    "githubRepo",
+    "todos",
+  ]
 ---
 
 # Suggest Awesome GitHub Copilot Custom Agents
@@ -51,10 +63,10 @@ Analyze current repository context and suggest relevant Custom Agents files from
 
 Display analysis results in structured table comparing awesome-copilot custom agents with existing repository custom agents:
 
-| Awesome-Copilot Custom Agent                                                                                                                            | Description                                                                                                                                                                | Already Installed | Similar Local Custom Agent         | Suggestion Rationale                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ---------------------------------- | ------------------------------------------------------------- |
-| [amplitude-experiment-implementation.agent.md](https://github.com/github/awesome-copilot/blob/main/agents/amplitude-experiment-implementation.agent.md) | This custom agent uses Amplitude's MCP tools to deploy new experiments inside of Amplitude, enabling seamless variant testing capabilities and rollout of product features | ❌ No             | None                               | Would enhance experimentation capabilities within the product |
-| [launchdarkly-flag-cleanup.agent.md](https://github.com/github/awesome-copilot/blob/main/agents/launchdarkly-flag-cleanup.agent.md)                     | Feature flag cleanup agent for LaunchDarkly                                                                                                                                | ✅ Yes            | launchdarkly-flag-cleanup.agent.md | Already covered by existing LaunchDarkly custom agents        |
+| Awesome-Copilot Custom Agent                                                                                                                            | Description                                                                                                                                                                | Already Installed | Similar Local Custom Agent           | Suggestion Rationale                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| [amplitude-experiment-implementation.agent.md](https://github.com/github/awesome-copilot/blob/main/agents/amplitude-experiment-implementation.agent.md) | This custom agent uses Amplitude's MCP tools to deploy new experiments inside of Amplitude, enabling seamless variant testing capabilities and rollout of product features | ❌ No             | None                                 | Would enhance experimentation capabilities within the product                                  |
+| [launchdarkly-flag-cleanup.agent.md](https://github.com/github/awesome-copilot/blob/main/agents/launchdarkly-flag-cleanup.agent.md)                     | Feature flag cleanup agent for LaunchDarkly                                                                                                                                | ✅ Yes            | launchdarkly-flag-cleanup.agent.md   | Already covered by existing LaunchDarkly custom agents                                         |
 | [principal-software-engineer.agent.md](https://github.com/github/awesome-copilot/blob/main/agents/principal-software-engineer.agent.md)                 | Provide principal-level software engineering guidance with focus on engineering excellence, technical leadership, and pragmatic implementation.                            | ⚠️ Outdated       | principal-software-engineer.agent.md | Tools configuration differs: remote uses `'web/fetch'` vs local `'fetch'` - Update recommended |
 
 ## Local Agent Discovery Process
@@ -100,6 +112,7 @@ Display analysis results in structured table comparing awesome-copilot custom ag
 ## Update Handling
 
 When outdated agents are identified:
+
 1. Include them in the output table with ⚠️ status
 2. Document specific differences in the "Suggestion Rationale" column
 3. Provide recommendation to update with key changes noted

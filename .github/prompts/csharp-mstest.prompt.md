@@ -1,7 +1,7 @@
 ---
-agent: 'agent'
-tools: ['changes', 'search/codebase', 'edit/editFiles', 'problems', 'search']
-description: 'Get best practices for MSTest unit testing, including data-driven tests'
+agent: "agent"
+tools: ["changes", "search/codebase", "edit/editFiles", "problems", "search"]
+description: "Get best practices for MSTest unit testing, including data-driven tests"
 ---
 
 # MSTest Best Practices

@@ -1,6 +1,6 @@
 ---
-agent: 'agent'
-description: 'Create a README.md file for the project'
+agent: "agent"
+description: "Create a README.md file for the project"
 ---
 
 ## Role
