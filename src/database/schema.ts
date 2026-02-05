@@ -12,7 +12,6 @@ import {
   text,
   timestamp,
   unique,
-  uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccountType } from "next-auth/adapters";
@@ -267,7 +266,7 @@ export const chapterImage = pgTable(
   (table) => [
     index("chapterImageChapterIdIdx").on(table.chapterId),
     index("chapterImagePageNumberIdx").on(table.pageNumber),
-    uniqueIndex("chapterImageChapterPageUniqueIdx").on(table.chapterId, table.pageNumber),
+    unique("chapterImage_chapterId_pageNumber_unique").on(table.chapterId, table.pageNumber),
   ]
 );
 

@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { getAuthorById } from "@/database/queries/author.queries";
+
 import { createMockChain } from "./mock-db";
 
 vi.mock("@/database/db", () => {
@@ -7,8 +9,6 @@ vi.mock("@/database/db", () => {
   const chain = createMockChain(mockResult);
   return { db: chain };
 });
-
-import { getAuthorById } from "@/database/queries/author.queries";
 
 type Author = { bio: null | string; id: number; image: null | string; name: string };
 

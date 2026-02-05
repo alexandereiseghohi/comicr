@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { getChapterById, getChaptersByComicId } from "@/database/queries/chapter.queries";
+
 import { createMockChain } from "./mock-db";
 
 vi.mock("@/database/db", () => {
@@ -24,8 +26,6 @@ vi.mock("@/database/db", () => {
   const chain = createMockChain(mockChapters);
   return { db: chain };
 });
-
-import { getChapterById, getChaptersByComicId } from "@/database/queries/chapter.queries";
 
 type Chapter = {
   chapterNumber: number;

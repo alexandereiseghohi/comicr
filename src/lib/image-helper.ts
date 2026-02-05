@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
+
 import { z } from "zod";
 // ============================================================================
 // LOGGING UTILITY
@@ -10,7 +11,7 @@ import { z } from "zod";
 
 function logError(context: string, error: unknown) {
   if (process.env.NODE_ENV !== "production") {
-    // eslint-disable-next-line no-console
+     
     console.error(`[image-helper] ${context}:`, error);
   }
 }

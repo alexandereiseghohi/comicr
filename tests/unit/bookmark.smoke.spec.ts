@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { getBookmarksByUser } from "@/database/queries/bookmark.queries";
+
 import { createMockChain } from "./mock-db";
 
 vi.mock("@/database/db", () => {
@@ -7,8 +9,6 @@ vi.mock("@/database/db", () => {
   const chain = createMockChain(mockResult);
   return { db: chain };
 });
-
-import { getBookmarksByUser } from "@/database/queries/bookmark.queries";
 
 type Bookmark = { comicId: number; userId: string };
 

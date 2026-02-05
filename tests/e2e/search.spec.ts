@@ -23,10 +23,14 @@ test.describe("Search Functionality", () => {
     const searchDialog = page.getByRole("dialog");
     const searchInput = page.getByPlaceholder(/search/i).or(page.getByRole("searchbox"));
 
-    // Either dialog should be visible or search input should be focused
+    // Wait for either dialog or search input to be visible
+    await Promise.race([
+      await searchDialog.waitFor({ state: "visible", timeout: 2000 }),
+      await searchInput.waitFor({ state: "visible", timeout: 2000 }),
+    ]);
+    // Assertion: at least one is visible
     const dialogVisible = await searchDialog.isVisible();
     const inputVisible = await searchInput.isVisible();
-
     expect(dialogVisible || inputVisible).toBeTruthy();
   });
 
@@ -35,14 +39,11 @@ test.describe("Search Functionality", () => {
 
     const searchButton = page.getByRole("button", { name: /search/i });
 
-    if (await searchButton.isVisible()) {
-      await searchButton.click();
-
-      // Search dialog or input should appear
-      const searchInput = page.getByPlaceholder(/search/i).or(page.getByRole("searchbox"));
-
-      await expect(searchInput).toBeVisible();
-    }
+    await expect(searchButton).toBeVisible();
+    await searchButton.click();
+    // Search dialog or input should appear
+    const searchInput = page.getByPlaceholder(/search/i).or(page.getByRole("searchbox"));
+    await expect(searchInput).toBeVisible();
   });
 
   test("should search for comics by title", async ({ page }) => {
@@ -50,6 +51,7 @@ test.describe("Search Functionality", () => {
 
     await test.step("Open search", async () => {
       const searchButton = page.getByRole("button", { name: /search/i });
+      await expect(searchButton.or(page.locator("body"))).toBeVisible();
       if (await searchButton.isVisible()) {
         await searchButton.click();
       } else {
@@ -60,11 +62,10 @@ test.describe("Search Functionality", () => {
     await test.step("Type search query", async () => {
       const searchInput = page.getByPlaceholder(/search/i).or(page.getByRole("searchbox"));
 
-      if (await searchInput.isVisible()) {
-        await searchInput.fill("test");
-        // Wait for search results
-        await page.waitForTimeout(500);
-      }
+      await expect(searchInput).toBeVisible();
+      await searchInput.fill("test");
+      // Wait for results to appear
+      await page.waitForSelector("[role=option], [role=listitem], text=/no results|not found/i", { timeout: 5000 });
     });
 
     // Results should appear (either in dropdown or page)
@@ -80,6 +81,7 @@ test.describe("Search Functionality", () => {
 
     await test.step("Open search and type query", async () => {
       const searchButton = page.getByRole("button", { name: /search/i });
+      await expect(searchButton.or(page.locator("body"))).toBeVisible();
       if (await searchButton.isVisible()) {
         await searchButton.click();
       } else {
@@ -88,21 +90,18 @@ test.describe("Search Functionality", () => {
 
       const searchInput = page.getByPlaceholder(/search/i).or(page.getByRole("searchbox"));
 
-      if (await searchInput.isVisible()) {
-        await searchInput.fill("comic");
-        await page.waitForTimeout(500);
-      }
+      await expect(searchInput).toBeVisible();
+      await searchInput.fill("comic");
+      await page.waitForSelector("[role=option], [role=link]", { timeout: 5000 });
     });
 
     await test.step("Click on first result", async () => {
       const firstResult = page.getByRole("option").first().or(page.getByRole("link").first());
 
-      if (await firstResult.isVisible()) {
-        await firstResult.click();
-
-        // Should navigate away from home page
-        await expect(page).not.toHaveURL(/^\/$/);
-      }
+      await expect(firstResult).toBeVisible();
+      await firstResult.click();
+      // Should navigate away from home page
+      await expect(page).not.toHaveURL(/^\/$/);
     });
   });
 
@@ -114,33 +113,27 @@ test.describe("Search Functionality", () => {
 
     const searchDialog = page.getByRole("dialog");
 
-    if (await searchDialog.isVisible()) {
-      // Press escape to close
-      await page.keyboard.press("Escape");
-
-      // Dialog should be hidden
-      await expect(searchDialog).toBeHidden();
-    }
+    await expect(searchDialog).toBeVisible();
+    // Press escape to close
+    await page.keyboard.press("Escape");
+    // Dialog should be hidden
+    await expect(searchDialog).toBeHidden();
   });
 
   test("should handle empty search query", async ({ page }) => {
     await page.goto("/");
 
     const searchButton = page.getByRole("button", { name: /search/i });
-    if (await searchButton.isVisible()) {
-      await searchButton.click();
-
-      const searchInput = page.getByPlaceholder(/search/i).or(page.getByRole("searchbox"));
-
-      if (await searchInput.isVisible()) {
-        // Clear any existing text and submit
-        await searchInput.clear();
-        await searchInput.press("Enter");
-
-        // Should not navigate or should show empty state
-        await page.waitForTimeout(300);
-      }
-    }
+    await expect(searchButton).toBeVisible();
+    await searchButton.click();
+    const searchInput = page.getByPlaceholder(/search/i).or(page.getByRole("searchbox"));
+    await expect(searchInput).toBeVisible();
+    // Clear any existing text and submit
+    await searchInput.clear();
+    await searchInput.press("Enter");
+    // Should not navigate or should show empty state
+    // Wait for possible UI update
+    await page.waitForSelector("[role=dialog], [role=searchbox]", { timeout: 1000 });
   });
 
   test("should display search page with query parameter", async ({ page }) => {
@@ -195,7 +188,11 @@ test.describe("Search Results Page", () => {
 
     // Look for result count or summary text - this may or may not be present
     // depending on implementation
-    await page.waitForTimeout(1000);
+    // Wait for result count or summary to appear (if implemented)
+    // This is a no-op if not present, but ensures test waits for UI
+    await page
+      .waitForSelector("[data-testid=result-count], [data-testid=summary], [role=main]", { timeout: 2000 })
+      .catch(() => {});
   });
 
   test("should paginate search results if available", async ({ page }) => {
@@ -206,9 +203,12 @@ test.describe("Search Results Page", () => {
 
     if (await nextButton.isVisible()) {
       await nextButton.click();
-
       // URL should update with page param
       await expect(page).toHaveURL(/page=2/);
+    } else {
+      // If no pagination, assert at least one result is visible
+      const results = page.locator("[data-testid=search-results] [role=listitem], [role=option]");
+      await expect(results.first()).toBeVisible();
     }
   });
 });
