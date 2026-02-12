@@ -20,6 +20,8 @@
   `.vscode/mcp.json`, `.vscode/extensions.json`, `.vscode/launch.json`, `.vscode/tasks.json`, `.vscode/settings.json`
 - **Backup:**
   Copy each config file to `.backup` before changes.
+- **Backup/rollback:**
+  Ensure all config/code changes are backed up before modification. For rollback, restore from `.backup` or use `git reset --hard` as needed.
 - **Verification script:**
   `scripts/verify-vscode-config.ps1`
 
@@ -179,6 +181,8 @@
 - **Commands:**
   - `pnpm cleanup`
   - `pnpm cleanup:deep`
+- **Backup/rollback:**
+  Ensure all cleanup operations are safe by backing up before deletion. For rollback, restore from `.backup` or use version control.
 
 ---
 
@@ -194,6 +198,8 @@
   - `pnpm test`
   - `pnpm test:unit:run`
   - `pnpm test:coverage`
+- **Coverage:**
+  - Review and document test coverage results in the completion report.
 
 ### 17. E2E Testing
 
@@ -211,6 +217,8 @@
   - E2E test files for accessibility/security
 - **Commands:**
   - Run Lighthouse/axe, add E2E security tests.
+- **Validation:**
+  - Explicitly run accessibility checks (Lighthouse/axe) and security E2E tests after every major change.
 
 ### 19. CI/CD Integration
 
@@ -218,6 +226,8 @@
   - `.github/workflows/ci.yml`
 - **Steps:**
   - Install, type-check, lint, test, build, coverage upload, Lighthouse CI.
+- **Validation:**
+  - Ensure all validation steps are automated in CI/CD and results are reviewed after each run.
 
 ---
 
@@ -242,6 +252,12 @@
   - `pnpm validate`
 - **Checks:**
   - 0 TypeScript errors, 0 ESLint errors, all tests passing, bundle <500KB, accessibility/security checks pass.
+- **Manual QA:**
+  - Perform manual QA for all user flows, including edge cases and error states.
+- **Accessibility/Security:**
+  - Run Lighthouse/axe accessibility checks and security E2E tests as final gate.
+- **CI/CD:**
+  - Review `.github/workflows/ci.yml` results for all automated checks.
 
 ### 22. Production Build
 
@@ -266,6 +282,16 @@
 - Periodically review and update all prompts and documentation.
 - Monitor for performance, accessibility, and security regressions.
 - Encourage team to contribute improvements and report issues.
+
+---
+
+**Success Criteria:**
+
+- ✅ All setup, features, and optimizations complete
+- ✅ 0 type/lint errors, high test coverage
+- ✅ All accessibility and security checks pass
+- ✅ Production build is performant and stable
+- ✅ Documentation and prompts are up-to-date
 
 ---
 
