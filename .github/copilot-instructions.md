@@ -68,3 +68,49 @@
 ---
 
 **If any section is unclear, incomplete, or missing a key project-specific pattern, please specify so it can be improved for future AI agents.**
+[//]
+
+## Troubleshooting: Copilot Chat Session Error (Context Length Exceeded)
+
+### Error Message Example
+
+> Sorry, your request failed. Please try again.
+> Copilot Request id: 2cc6bcde-22a5-4c5e-aab8-aa3f4e68388f
+> GH Request Id: 1B66:1D3A:8FA7092:A342E79:698DC64A
+> Reason: Request Failed: 400 {"error":{"message":"This model's maximum context length is 128000 tokens. However, you requested 132577 tokens (92320 in the messages, 23873 in the functions, and 16384 in the completion). Please reduce the length of the messages, functions, or completion.","code":"invalid_request_body"}}
+
+### Cause
+
+This error occurs when the total context (messages, function calls, and completion) sent to the Copilot model exceeds its maximum allowed token limit (128,000 tokens for GPT-4.1). The request is rejected with a 400 error.
+
+### Resolution Steps
+
+1. **Reduce Conversation Length:**
+
+- Clear or shorten the chat history before retrying.
+- Remove unnecessary messages or context from the session.
+
+2. **Limit Function Calls:**
+
+- Avoid sending large function payloads or excessive tool calls in a single request.
+
+3. **Shorten Completion Requests:**
+
+- If requesting code generation, ask for smaller, more focused outputs.
+
+4. **Restart Session:**
+
+- If the error persists, restart the Copilot chat session to reset context.
+
+5. **Monitor Token Usage:**
+
+- Be aware of the token limits when working with large files, long conversations, or complex tasks.
+
+### Best Practices
+
+- Keep chat sessions concise and focused.
+- Split large tasks into smaller steps.
+- Use summary prompts when context is large.
+- If you see this error, retry after reducing context or restarting the session.
+
+---

@@ -1,0 +1,149 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/mcp.schema.json",
+  "featureFlags": {
+    "enableAutoComplete": true,
+    "enableCallHierarchy": true,
+    "enableCodeActions": true,
+    "enableCodeLens": true,
+    "enableDefinition": true,
+    "enableDiagnostics": true,
+    "enableDocumentSymbols": true,
+    "enableHover": true,
+    "enableInlayHints": true,
+    "enableReferences": true,
+    "enableSemanticTokens": true,
+    "enableSignatureHelp": true,
+    "enableTypeHierarchy": true,
+    "enableWorkspaceSymbols": true
+  },
+  "globalSettings": {
+    "cache": {
+      "enabled": true,
+      "maxSize": "100MB",
+      "ttl": 300000
+    },
+    "logging": {
+      "console": false,
+      "file": "${workspaceFolder}/.logs/mcp.log",
+      "level": "info",
+      "maxFiles": 5,
+      "maxSize": "10MB"
+    },
+    "retry": {
+      "backoffMs": 1000,
+      "exponential": true,
+      "maxAttempts": 3
+    },
+    "timeout": {
+      "database": 60000,
+      "default": 30000,
+      "longRunning": 120000
+    }
+  },
+  "securityPolicy": {
+    "allowedCommands": ["npx", "pnpm", "node"],
+    "blockedPaths": ["**/node_modules/**", "**/.git/**", "**/.env", "**/.env.local"],
+    "requireEnvironmentValidation": true,
+    "sandboxMode": false
+  },
+  "servers": {
+    "context7": {
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "command": "npx"
+    },
+    "filesystem-ops": {
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"],
+      "command": "npx",
+      "description": "Secure filesystem operations",
+      "enabledByDefault": true,
+      "priority": 80
+    },
+    "git-integration": {
+      "args": ["-y", "@modelcontextprotocol/server-git", "${workspaceFolder}"],
+      "command": "npx",
+      "description": "Git repository operations",
+      "enabledByDefault": true,
+      "priority": 75
+    },
+    "MCP_DOCKER": {
+      "args": ["mcp", "gateway", "run"],
+      "command": "docker",
+      "env": {
+        "LOCALAPPDATA": "C:\\Users\\Alexa\\AppData\\Local",
+        "ProgramData": "C:\\ProgramData",
+        "ProgramFiles": "C:\\Program Files"
+      },
+      "type": "stdio"
+    },
+    "nextjs-dev": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-nextjs",
+        "--workspace",
+        "${workspaceFolder}",
+        "--framework",
+        "nextjs-16"
+      ],
+      "command": "npx",
+      "description": "Next.js 16 development server with App Router support",
+      "enabledByDefault": true,
+      "env": {
+        "NEXT_TELEMETRY_DISABLED": "1",
+        "NODE_ENV": "development"
+      },
+      "priority": 100
+    },
+    "postgresql-database": {
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "--connection-string", "${env:DATABASE_URL}"],
+      "command": "npx",
+      "description": "PostgreSQL database access with Drizzle ORM integration",
+      "enabledByDefault": true,
+      "env": {
+        "PGDATABASE": "comicwise",
+        "PGSCHEMA": "public"
+      },
+      "priority": 90,
+      "requiresEnvironment": ["DATABASE_URL"]
+    },
+    "redis-cache": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-redis",
+        "--url",
+        "${env:UPSTASH_REDIS_REST_URL}",
+        "--token",
+        "${env:UPSTASH_REDIS_REST_TOKEN}"
+      ],
+      "command": "npx",
+      "description": "Redis cache management (Upstash)",
+      "enabledByDefault": true,
+      "priority": 85,
+      "requiresEnvironment": ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"]
+    },
+    "Sentry": {
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp/rhixecompany-lv/javascript-nextjs"
+    },
+    "sequential-thinking": {
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "command": "npx",
+      "description": "AI-powered sequential reasoning",
+      "enabledByDefault": false,
+      "priority": 50
+    },
+    "shadcn": {
+      "url": "https://www.shadcn.io/api/mcp"
+    },
+    "typescript-enhanced": {
+      "args": ["-y", "@modelcontextprotocol/server-typescript", "--strict", "--workspace", "${workspaceFolder}"],
+      "command": "npx",
+      "description": "TypeScript IntelliSense with strict mode validation",
+      "enabledByDefault": true,
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json"
+      },
+      "priority": 95
+    }
+  },
+  "version": "4.0.0"
+}

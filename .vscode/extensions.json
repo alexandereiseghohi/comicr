@@ -17,7 +17,7 @@
     "christian-kohler.path-intellisense",
     "streetsidesoftware.code-spell-checker",
     "formulahendry.auto-rename-tag",
-        "editorconfig.editorconfig",
+    "editorconfig.editorconfig",
     "davidanson.vscode-markdownlint",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
@@ -78,7 +78,7 @@
   ],
   "unwantedRecommendations": [
     "ms-vscode.vscode-typescript-tslint-plugin",
-     "stateful.runme",
+    "stateful.runme",
     "hookyqr.beautify",
     "dbaeumer.jshint",
     "eg2.tslint",

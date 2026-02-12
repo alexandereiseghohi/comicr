@@ -5,7 +5,6 @@ out
 build
 coverage
 .DS_Store
-.vscode
 .idea
 *.tsbuildinfo
 *.log
