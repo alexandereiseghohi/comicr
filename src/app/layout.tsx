@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 
-import { Geist, Geist_Mono } from "next/font/google";
-
 import Footer from "@/components/navigation/footer";
 import Header from "@/components/navigation/header";
 
@@ -106,15 +104,6 @@ const firaMono = localFont({
   variable: "--font-fira-mono",
   display: "swap",
 });
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "ComicWise - Modern Comic Reading Platform",
@@ -147,7 +136,7 @@ export default function RootLayout({
         <link href="https://res.cloudinary.com" rel="dns-prefetch" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${ibmPlexSans.variable}
+        className={` ${ibmPlexSans.variable}
           ${bebasNeue.variable}
           ${schibstedGrotesk.variable}
           ${martianMono.variable}

@@ -125,6 +125,7 @@ Instructions for generating high-quality Power Apps Code Apps using TypeScript, 
 #### AI Builder Integration
 
 - **Cognitive services integration**: Use AI Builder models for form processing, object detection
+
   ```typescript
   // Example: Document processing with AI Builder
   const processDocument = async (file: File) => {
@@ -139,6 +140,7 @@ Instructions for generating high-quality Power Apps Code Apps using TypeScript, 
     return result.extractedFields;
   };
   ```
+
 - **Prediction models**: Integrate custom AI models for business predictions
 - **Sentiment analysis**: Analyze text sentiment using AI Builder
 - **Object detection**: Implement image analysis and object recognition
@@ -263,6 +265,7 @@ Instructions for generating high-quality Power Apps Code Apps using TypeScript, 
   }
   ```
 - **Local data storage**: Use IndexedDB for offline data persistence
+
   ```typescript
   // Example: IndexedDB wrapper for offline storage
   class OfflineDataStore {
@@ -279,6 +282,7 @@ Instructions for generating high-quality Power Apps Code Apps using TypeScript, 
     }
   }
   ```
+
 - **Sync conflict resolution**: Handle data conflicts when coming back online
 - **Background sync**: Implement periodic data synchronization
 - **Progressive Web App (PWA)**: Enable app installation and offline capabilities
@@ -506,6 +510,7 @@ Instructions for generating high-quality Power Apps Code Apps using TypeScript, 
 ##### Accessibility Automation and Testing
 
 - **ARIA implementation**: Proper semantic markup and ARIA attributes
+
   ```typescript
   // Example: Accessible modal component
   const Modal: React.FC<{isOpen: boolean, onClose: () => void, children: ReactNode}> = ({
@@ -532,6 +537,7 @@ Instructions for generating high-quality Power Apps Code Apps using TypeScript, 
     );
   };
   ```
+
 - **Automated accessibility testing**: Integrate axe-core for accessibility testing
 - **Keyboard navigation**: Implement full keyboard accessibility
 - **Screen reader optimization**: Test with NVDA, JAWS, and VoiceOver

@@ -261,7 +261,7 @@ const eslintConfig = defineConfig([
 
       // ----- Node.js (n) -----
       "n/no-deprecated-api": "warn",
-      "n/no-missing-import": "error", // TypeScript handles this
+      "n/no-missing-import": "off", // TypeScript handles this
       "n/no-unsupported-features/es-syntax": "error", // Bundled by Next.js
       "n/prefer-promises/fs": "warn",
       "n/prefer-promises/dns": "warn",

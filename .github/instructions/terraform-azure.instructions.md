@@ -245,7 +245,7 @@ Follow AVM specifications TFNFR1, TFNFR2, TFNFR3, and TFNFR4 for consistent file
 
 - Do an inventory of existing resources and offer to remove unused resource blocks.
 - Run `terraform validate` to check syntax
-- Ask before running `terraform plan`. Terraform plan will require a subscription ID, this should be sourced from the ARM_SUBSCRIPTION_ID environment variable, _NOT_ coded in the provider block.
+- Ask before running `terraform plan`. Terraform plan will require a subscription ID, this should be sourced from the ARM*SUBSCRIPTION_ID environment variable, \_NOT* coded in the provider block.
 - Test configurations in non-production environments first
 - Ensure idempotency (multiple applies produce same result)
 

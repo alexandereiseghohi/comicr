@@ -1,7 +1,7 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { cn } from "~/lib/utils";
 
 export interface InteractiveGridPatternProps {
   className?: string;

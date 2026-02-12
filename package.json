@@ -187,6 +187,7 @@
     "@types/bcryptjs": "^3.0.0",
     "@types/jsdom": "^27.0.0",
     "@types/lodash-es": "^4.17.12",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^25.2.0",
     "@types/nodemailer": "^7.0.9",
     "@types/react": "^19.2.10",

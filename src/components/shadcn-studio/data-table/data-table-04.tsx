@@ -6,7 +6,6 @@ import { SearchIcon } from "lucide-react";
 
 import type { Column, ColumnDef, ColumnFiltersState, RowData, SortingState } from "@tanstack/react-table";
 import {
-  flexRender,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
@@ -239,32 +238,16 @@ const DataTableWithColumnFilterDemo = () => {
         </div>
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="bg-muted/50">
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} className="relative h-10 border-t select-none">
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  );
-                })}
+            {({ headerGroup }) => (
+              <TableRow row={headerGroup} className="bg-muted/50">
+                {({ cell: header }) => <TableHead header={header} className="relative h-10 border-t select-none" />}
               </TableRow>
-            ))}
+            )}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
-                </TableCell>
+            {({ row }) => (
+              <TableRow row={row} data-state={row.getIsSelected() && "selected"}>
+                {({ cell }) => <TableCell cell={cell} />}
               </TableRow>
             )}
           </TableBody>
@@ -306,7 +289,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         <div className="flex">
           <Input
             id={`${id}-range-1`}
-            className="flex-1 rounded-r-none [-moz-appearance:_textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+            className="flex-1 rounded-r-none [-moz-appearance:textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
             value={(columnFilterValue as [number, number])?.[0] ?? ""}
             onChange={(e) =>
               column.setFilterValue((old: [number, number]) => [
@@ -320,7 +303,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           />
           <Input
             id={`${id}-range-2`}
-            className="-ms-px flex-1 rounded-l-none [-moz-appearance:_textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+            className="-ms-px flex-1 rounded-l-none [-moz-appearance:textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
             value={(columnFilterValue as [number, number])?.[1] ?? ""}
             onChange={(e) =>
               column.setFilterValue((old: [number, number]) => [
