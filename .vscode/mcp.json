@@ -1,56 +1,26 @@
 {
   "servers": {
-    "context7": { "args": ["-y", "@upstash/context7-mcp@latest"], "command": "npx" },
+    "context7": {
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "command": "npx"
+    },
     "filesystem-ops": {
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"],
       "command": "npx"
     },
-    "git-integration": { "args": ["-y", "@modelcontextprotocol/server-git", "${workspaceFolder}"], "command": "npx" },
-    "nextjs-dev": {
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-nextjs",
-        "--workspace",
-        "${workspaceFolder}",
-        "--framework",
-        "nextjs-16"
-      ],
-      "command": "npx",
-      "env": { "NEXT_TELEMETRY_DISABLED": "1", "NODE_ENV": "development" }
-    },
-    "postgresql-database": {
-      "args": ["-y", "@modelcontextprotocol/server-postgres", "--connection-string", "${env:DATABASE_URL}"],
-      "command": "npx",
-      "env": { "PGDATABASE": "comicr", "PGSCHEMA": "public" }
-    },
-    "redis-cache": {
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-redis",
-        "--url",
-        "${env:UPSTASH_REDIS_REST_URL}",
-        "--token",
-        "${env:UPSTASH_REDIS_REST_TOKEN}"
-      ],
-      "command": "npx"
-    },
-    "Sentry": { "type": "http", "url": "https://mcp.sentry.dev/mcp/rhixecompany-lv/javascript-nextjs" },
-    "sequential-thinking": { "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"], "command": "npx" },
-    "shadcn": { "url": "https://www.shadcn.io/api/mcp" },
-    "typescript-enhanced": {
-      "args": ["-y", "@modelcontextprotocol/server-typescript", "--strict", "--workspace", "${workspaceFolder}"],
-      "command": "npx",
-      "env": { "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json" }
-    },
     "MCP_DOCKER": {
-      "command": "docker",
       "args": ["mcp", "gateway", "run"],
+      "command": "docker",
       "env": {
         "LOCALAPPDATA": "C:\\Users\\Alexa\\AppData\\Local",
         "ProgramData": "C:\\ProgramData",
         "ProgramFiles": "C:\\Program Files"
       },
       "type": "stdio"
+    },
+    "sequential-thinking": {
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "command": "npx"
     }
   }
 }
