@@ -1,4 +1,5 @@
 import { createWriteStream, type WriteStream } from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
@@ -9,13 +10,34 @@ import {
   fileExists,
   getBackoffDelay,
   getCachedPath,
-  getUniqueFilename,
   resolvePublicPath,
   sanitizeFilename,
   setCachedPath,
   toPublicRelativePath,
   validateImageFormat,
 } from "./image-helper";
+
+// Server-only implementation of getUniqueFilename
+export async function getUniqueFilename(dirPath: string, filename: string): Promise<string> {
+  let base = filename;
+  let ext = "";
+  const dotIdx = filename.lastIndexOf(".");
+  if (dotIdx !== -1) {
+    base = filename.slice(0, dotIdx);
+    ext = filename.slice(dotIdx);
+  }
+  let candidate = filename;
+  let i = 1;
+  while (true) {
+    try {
+      await fs.access(path.join(dirPath, candidate));
+      candidate = `${base}-${i}${ext}`;
+      i++;
+    } catch {
+      return candidate;
+    }
+  }
+}
 // Convert web ReadableStream to Node.js Readable stream
 export function webStreamToNodeStream(webStream: ReadableStream<Uint8Array>): NodeJS.ReadableStream {
   const reader = webStream.getReader();
