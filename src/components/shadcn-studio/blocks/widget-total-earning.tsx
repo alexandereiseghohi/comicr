@@ -1,34 +1,34 @@
-import { ChevronDownIcon, ChevronUpIcon, EllipsisVerticalIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, EllipsisVerticalIcon } from 'lucide-react'
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Progress } from "@/components/ui/progress";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { Progress } from '@/components/ui/progress'
 
-const listItems = ["Share", "Update", "Refresh"];
+const listItems = ['Share', 'Update', 'Refresh']
 
 type Props = {
-  title: string;
-  earning: number;
-  trend: "up" | "down";
-  percentage: number;
-  comparisonText: string;
+  title: string
+  earning: number
+  trend: 'up' | 'down'
+  percentage: number
+  comparisonText: string
   earningData: {
-    img: string;
-    platform: string;
-    technologies: string;
-    earnings: string;
-    progressPercentage: number;
-  }[];
-  className?: string;
-};
+    img: string
+    platform: string
+    technologies: string
+    earnings: string
+    progressPercentage: number
+  }[]
+  className?: string
+}
 
 const TotalEarningCard = ({ earningData, title, earning, trend, percentage, comparisonText, className }: Props) => {
   return (
@@ -37,12 +37,12 @@ const TotalEarningCard = ({ earningData, title, earning, trend, percentage, comp
         <span className="text-lg font-semibold">{title}</span>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-muted-foreground size-6 rounded-full">
+            <Button variant='ghost' size='icon' className="text-muted-foreground size-6 rounded-full">
               <EllipsisVerticalIcon />
               <span className="sr-only">Menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align='end'>
             <DropdownMenuGroup>
               {listItems.map((item, index) => (
                 <DropdownMenuItem key={index}>{item}</DropdownMenuItem>
@@ -56,7 +56,7 @@ const TotalEarningCard = ({ earningData, title, earning, trend, percentage, comp
           <div className="flex items-center gap-2">
             <span className="text-2xl font-semibold">${earning}</span>
             <span className="flex items-center gap-1">
-              {trend === "up" ? <ChevronUpIcon className="size-4" /> : <ChevronDownIcon className="size-4" />}
+              {trend === 'up' ? <ChevronUpIcon className="size-4" /> : <ChevronDownIcon className="size-4" />}
               <span className="text-sm">{percentage}%</span>
             </span>
           </div>
@@ -85,7 +85,7 @@ const TotalEarningCard = ({ earningData, title, earning, trend, percentage, comp
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default TotalEarningCard;
+export default TotalEarningCard

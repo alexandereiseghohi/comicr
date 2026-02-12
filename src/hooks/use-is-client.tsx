@@ -1,16 +1,16 @@
-// ...existing code...
-import * as React from "react";
+import { Monitor, Server } from "lucide-react"
+import * as React from "react"
 
 // ============================================================================
 
 export function useIsClient(): boolean {
-  const [isClient, setIsClient] = React.useState(false);
+  const [isClient, setIsClient] = React.useState(false)
 
   React.useEffect(() => {
-    setIsClient(true);
-  }, []);
+    setIsClient(true)
+  }, [])
 
-  return isClient;
+  return isClient
 }
 
 // ============================================================================

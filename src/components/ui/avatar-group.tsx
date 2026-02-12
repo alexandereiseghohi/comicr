@@ -1,23 +1,23 @@
-"use client";
+"use client"
 
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { motion, type Transition } from "motion/react";
-import * as React from "react";
-import { Children } from "react";
-import { TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+import { motion, type Transition } from "motion/react"
+import * as React from "react"
+import { Children } from "react"
+import { TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { cn } from "@/lib/utils"
 
 // Define types based on components
-type TooltipContentProps = React.ComponentProps<typeof TooltipContent>;
+type TooltipContentProps = React.ComponentProps<typeof TooltipContent>
 
 // Avatar Container for motion-based interactions
 interface AvatarMotionProps {
-  children: React.ReactNode;
-  zIndex: number;
-  translate: string | number;
-  transition: Transition;
-  tooltipContent?: React.ReactNode;
-  tooltipProps?: Partial<TooltipContentProps>;
+  children: React.ReactNode
+  zIndex: number
+  translate: string | number
+  transition: Transition
+  tooltipContent?: React.ReactNode
+  tooltipProps?: Partial<TooltipContentProps>
 }
 
 function AvatarMotionContainer({
@@ -43,17 +43,19 @@ function AvatarMotionContainer({
           {children}
         </motion.div>
       </TooltipTrigger>
-      {tooltipContent && <AvatarGroupTooltip {...tooltipProps}>{tooltipContent}</AvatarGroupTooltip>}
+      {tooltipContent && (
+        <AvatarGroupTooltip {...tooltipProps}>{tooltipContent}</AvatarGroupTooltip>
+      )}
     </TooltipPrimitive.Root>
-  );
+  )
 }
 
 // Avatar Container for CSS-based interactions
 interface AvatarCSSProps {
-  children: React.ReactNode;
-  zIndex: number;
-  tooltipContent?: React.ReactNode;
-  tooltipProps?: Partial<TooltipContentProps>;
+  children: React.ReactNode
+  zIndex: number
+  tooltipContent?: React.ReactNode
+  tooltipProps?: Partial<TooltipContentProps>
 }
 
 function AvatarCSSContainer({ children, zIndex, tooltipContent, tooltipProps }: AvatarCSSProps) {
@@ -68,23 +70,29 @@ function AvatarCSSContainer({ children, zIndex, tooltipContent, tooltipProps }: 
           {children}
         </div>
       </TooltipTrigger>
-      {tooltipContent && <AvatarGroupTooltip {...tooltipProps}>{tooltipContent}</AvatarGroupTooltip>}
+      {tooltipContent && (
+        <AvatarGroupTooltip {...tooltipProps}>{tooltipContent}</AvatarGroupTooltip>
+      )}
     </TooltipPrimitive.Root>
-  );
+  )
 }
 
 // Avatar Container for stack variant with mask
 interface AvatarStackItemProps {
-  children: React.ReactNode;
-  index: number;
-  size: number;
-  className?: string;
+  children: React.ReactNode
+  index: number
+  size: number
+  className?: string
 }
 
 function AvatarStackItem({ children, index, size, className }: AvatarStackItemProps) {
   return (
     <div
-      className={cn("size-full shrink-0 overflow-hidden rounded-full", '[&_[data-slot="avatar"]]:size-full', className)}
+      className={cn(
+        "size-full shrink-0 overflow-hidden rounded-full",
+        "[&_[data-slot="avatar"]]:size-full",
+        className,
+      )}
       style={{
         width: size,
         height: size,
@@ -95,28 +103,28 @@ function AvatarStackItem({ children, index, size, className }: AvatarStackItemPr
     >
       {children}
     </div>
-  );
+  )
 }
 
-type AvatarGroupTooltipProps = TooltipContentProps;
+type AvatarGroupTooltipProps = TooltipContentProps
 
 function AvatarGroupTooltip(props: AvatarGroupTooltipProps) {
-  return <TooltipContent {...(props as any)} />;
+  return <TooltipContent {...(props as any)} />
 }
 
-type AvatarGroupVariant = "motion" | "css" | "stack";
+type AvatarGroupVariant = "motion" | "css" | "stack"
 
 type AvatarGroupProps = Omit<React.ComponentProps<"div">, "translate"> & {
-  children: React.ReactElement[];
-  variant?: AvatarGroupVariant;
-  transition?: Transition;
-  invertOverlap?: boolean;
-  translate?: string | number;
-  tooltipProps?: Partial<TooltipContentProps>;
+  children: React.ReactElement[]
+  variant?: AvatarGroupVariant
+  transition?: Transition
+  invertOverlap?: boolean
+  translate?: string | number
+  tooltipProps?: Partial<TooltipContentProps>
   // Stack-specific props
-  animate?: boolean;
-  size?: number;
-};
+  animate?: boolean
+  size?: number
+}
 
 function AvatarGroup({
   ref,
@@ -135,22 +143,26 @@ function AvatarGroup({
   if (variant === "stack") {
     return (
       <div
-        className={cn("-space-x-1 flex items-center", animate && "hover:space-x-0 [&>*]:transition-all", className)}
+        className={cn(
+          "-space-x-1 flex items-center",
+          animate && "hover:space-x-0 rtl:hover:space-x-reverse [&>*]:transition-all",
+          className,
+        )}
         ref={ref}
         {...(props as any)}
       >
         {Children.map(children, (child, index) => {
           if (!child) {
-            return null;
+            return null
           }
           return (
             <AvatarStackItem className={className} index={index} key={index} size={size}>
               {child}
             </AvatarStackItem>
-          );
+          )
         })}
       </div>
-    );
+    )
   }
 
   // Motion and CSS variants with tooltips
@@ -161,14 +173,14 @@ function AvatarGroup({
           "flex items-center",
           variant === "css" && "-space-x-3",
           variant === "motion" && "flex-row -space-x-2 h-8",
-          className
+          className,
         )}
         data-slot="avatar-group"
         ref={ref}
         {...(props as any)}
       >
         {children?.map((child, index) => {
-          const zIndex = invertOverlap ? React.Children.count(children) - index : index;
+          const zIndex = invertOverlap ? React.Children.count(children) - index : index
 
           if (variant === "motion") {
             return (
@@ -181,18 +193,18 @@ function AvatarGroup({
               >
                 {child}
               </AvatarMotionContainer>
-            );
+            )
           }
 
           return (
             <AvatarCSSContainer key={index} tooltipProps={tooltipProps} zIndex={zIndex}>
               {child}
             </AvatarCSSContainer>
-          );
+          )
         })}
       </div>
     </TooltipProvider>
-  );
+  )
 }
 
 export {
@@ -201,14 +213,14 @@ export {
   type AvatarGroupProps,
   type AvatarGroupTooltipProps,
   type AvatarGroupVariant,
-};
+}
 
 // Demo
 export function Demo() {
   return (
     <div className="fixed inset-0 flex items-center justify-center">
       <AvatarGroup variant="motion">
-        {[1, 2, 3, 4, 5].map((i) => (
+        {[1, 2, 3, 4, 5].map(i => (
           <img
             key={i}
             src={`https://i.pravatar.cc/64?img=${i}`}
@@ -218,5 +230,5 @@ export function Demo() {
         ))}
       </AvatarGroup>
     </div>
-  );
+  )
 }

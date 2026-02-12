@@ -1,48 +1,48 @@
-// ...existing code...
-import * as React from "react";
+import { MousePointerClick, X } from "lucide-react"
+import * as React from "react"
 
 // ============================================================================
 
-type EventType = "mousedown" | "mouseup" | "touchstart" | "touchend" | "focusin" | "focusout";
+type EventType = "mousedown" | "mouseup" | "touchstart" | "touchend" | "focusin" | "focusout"
 
 export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
   ref: React.RefObject<T | null> | React.RefObject<T | null>[],
   handler: (event: MouseEvent | TouchEvent | FocusEvent) => void,
   eventType: EventType = "mousedown",
-  eventListenerOptions: AddEventListenerOptions = {}
+  eventListenerOptions: AddEventListenerOptions = {},
 ): void {
-  const savedHandler = React.useRef(handler);
+  const savedHandler = React.useRef(handler)
 
   React.useLayoutEffect(() => {
-    savedHandler.current = handler;
-  }, [handler]);
+    savedHandler.current = handler
+  }, [handler])
 
   React.useEffect(() => {
     const listener = (event: MouseEvent | TouchEvent | FocusEvent) => {
-      const target = event.target as Node;
+      const target = event.target as Node
 
       // Do nothing if the target is not connected element with document
       if (!target?.isConnected) {
-        return;
+        return
       }
 
       const isOutside = Array.isArray(ref)
-        ? ref.filter((r) => Boolean(r.current)).every((r) => r.current && !r.current.contains(target))
-        : ref.current && !ref.current.contains(target);
+        ? ref.filter(r => Boolean(r.current)).every(r => r.current && !r.current.contains(target))
+        : ref.current && !ref.current.contains(target)
 
       if (isOutside) {
-        savedHandler.current(event);
+        savedHandler.current(event)
       }
-    };
+    }
 
-    document.addEventListener(eventType, listener as EventListener, eventListenerOptions);
+    document.addEventListener(eventType, listener as EventListener, eventListenerOptions)
 
     return () => {
-      document.removeEventListener(eventType, listener as EventListener, eventListenerOptions);
-    };
-  }, [ref, eventType, eventListenerOptions]);
+      document.removeEventListener(eventType, listener as EventListener, eventListenerOptions)
+    }
+  }, [ref, eventType, eventListenerOptions])
 }
 
-export type { EventType };
+export type { EventType }
 
 // ============================================================================

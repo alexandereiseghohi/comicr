@@ -1,7 +1,7 @@
-import Register from "@/components/shadcn-studio/blocks/register-01/register-01";
+import Register from '@/components/shadcn-studio/blocks/register-01/register-01'
 
 const RegisterPage = () => {
-  return <Register />;
-};
+  return <Register />
+}
 
-export default RegisterPage;
+export default RegisterPage

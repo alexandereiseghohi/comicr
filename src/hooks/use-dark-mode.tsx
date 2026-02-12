@@ -1,24 +1,24 @@
-// ...existing code...
-import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react"
+import { useEffect, useState } from "react"
 
 // ============================================================================
 
-const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)";
-const LOCAL_STORAGE_KEY = "usehooks-ts-dark-mode";
+const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)"
+const LOCAL_STORAGE_KEY = "usehooks-ts-dark-mode"
 
 interface DarkModeOptions {
-  defaultValue?: boolean;
-  localStorageKey?: string;
-  initializeWithValue?: boolean;
-  applyDarkClass?: boolean;
+  defaultValue?: boolean
+  localStorageKey?: string
+  initializeWithValue?: boolean
+  applyDarkClass?: boolean
 }
 
 interface DarkModeReturn {
-  isDarkMode: boolean;
-  toggle: () => void;
-  enable: () => void;
-  disable: () => void;
-  set: (value: boolean) => void;
+  isDarkMode: boolean
+  toggle: () => void
+  enable: () => void
+  disable: () => void
+  set: (value: boolean) => void
 }
 
 export function useDarkMode(options: DarkModeOptions = {}): DarkModeReturn {
@@ -27,88 +27,88 @@ export function useDarkMode(options: DarkModeOptions = {}): DarkModeReturn {
     localStorageKey = LOCAL_STORAGE_KEY,
     initializeWithValue = true,
     applyDarkClass = true,
-  } = options;
+  } = options
 
   const getOSPreference = () => {
     if (typeof window !== "undefined" && window.matchMedia) {
-      return window.matchMedia(COLOR_SCHEME_QUERY).matches;
+      return window.matchMedia(COLOR_SCHEME_QUERY).matches
     }
-    return defaultValue;
-  };
+    return defaultValue
+  }
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     if (typeof window === "undefined") {
-      return defaultValue;
+      return defaultValue
     }
 
     if (!initializeWithValue) {
-      return defaultValue;
+      return defaultValue
     }
 
     try {
-      const item = window.localStorage.getItem(localStorageKey);
+      const item = window.localStorage.getItem(localStorageKey)
       if (item !== null) {
-        return JSON.parse(item);
+        return JSON.parse(item)
       }
     } catch (error) {
-      console.error(`Error reading localStorage key "${localStorageKey}":`, error);
+      console.error(`Error reading localStorage key "${localStorageKey}":`, error)
     }
 
-    return getOSPreference();
-  });
+    return getOSPreference()
+  })
 
   useEffect(() => {
     if (typeof window === "undefined") {
-      return;
+      return
     }
 
     try {
-      window.localStorage.setItem(localStorageKey, JSON.stringify(isDarkMode));
+      window.localStorage.setItem(localStorageKey, JSON.stringify(isDarkMode))
     } catch (error) {
-      console.error(`Error setting localStorage key "${localStorageKey}":`, error);
+      console.error(`Error setting localStorage key "${localStorageKey}":`, error)
     }
-  }, [isDarkMode, localStorageKey]);
+  }, [isDarkMode, localStorageKey])
 
   useEffect(() => {
     if (typeof window === "undefined") {
-      return;
+      return
     }
 
-    const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY);
+    const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY)
 
     const handleChange = (e: MediaQueryListEvent) => {
-      const savedValue = window.localStorage.getItem(localStorageKey);
+      const savedValue = window.localStorage.getItem(localStorageKey)
       if (savedValue === null) {
-        setIsDarkMode(e.matches);
+        setIsDarkMode(e.matches)
       }
-    };
+    }
 
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [localStorageKey]);
+    mediaQuery.addEventListener("change", handleChange)
+    return () => mediaQuery.removeEventListener("change", handleChange)
+  }, [localStorageKey])
 
   useEffect(() => {
     if (typeof window === "undefined" || !applyDarkClass) {
-      return;
+      return
     }
 
-    const root = window.document.documentElement;
+    const root = window.document.documentElement
     if (isDarkMode) {
-      root.classList.add("dark");
+      root.classList.add("dark")
     } else {
-      root.classList.remove("dark");
+      root.classList.remove("dark")
     }
-  }, [isDarkMode, applyDarkClass]);
+  }, [isDarkMode, applyDarkClass])
 
   return {
     isDarkMode,
-    toggle: () => setIsDarkMode((prev) => !prev),
+    toggle: () => setIsDarkMode(prev => !prev),
     enable: () => setIsDarkMode(true),
     disable: () => setIsDarkMode(false),
     set: (value: boolean) => setIsDarkMode(value),
-  };
+  }
 }
 
-export type { DarkModeOptions, DarkModeReturn };
+export type { DarkModeOptions, DarkModeReturn }
 
 // ============================================================================

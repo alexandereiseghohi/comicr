@@ -1,12 +1,32 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
+import type {
+  Cell,
+  Column,
+  ColumnDef,
+  Header,
+  HeaderGroup,
+  Row,
+  SortingState,
+  Table,
+} from "@tanstack/react-table"
+import {
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
+import { atom, useAtom } from "jotai"
+import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react"
+import type { HTMLAttributes, ReactNode } from "react"
+import { createContext, memo, useCallback, useContext, useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   TableBody as TableBodyRaw,
   TableCell as TableCellRaw,
@@ -14,36 +34,28 @@ import {
   TableHead as TableHeadRaw,
   Table as TableRaw,
   TableRow as TableRowRaw,
-} from "@/components/ui/table";
-import { cn } from "@/lib/utils";
-import type { Cell, Column, ColumnDef, Header, HeaderGroup, Row, SortingState, Table } from "@tanstack/react-table";
-import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
-import { atom, useAtom } from "jotai";
-import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react";
-import type { HTMLAttributes, ReactNode } from "react";
-import { createContext, memo, useCallback, useContext, useEffect, useState } from "react";
-// Export Table as a named export for consumer compatibility
-export const Table = TableRaw;
+} from "@/components/ui/table"
+import { cn } from "@/lib/utils"
 
-export type { ColumnDef } from "@tanstack/react-table";
+export type { ColumnDef } from "@tanstack/react-table"
 
-const sortingAtom = atom<SortingState>([]);
+const sortingAtom = atom<SortingState>([])
 
 export const TableContext = createContext<{
-  data: unknown[];
-  columns: ColumnDef<unknown, unknown>[];
-  table: Table<unknown> | null;
+  data: unknown[]
+  columns: ColumnDef<unknown, unknown>[]
+  table: Table<unknown> | null
 }>({
   data: [],
   columns: [],
   table: null,
-});
+})
 
 export interface TableProviderProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  children: ReactNode;
-  className?: string;
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+  children: ReactNode
+  className?: string
 }
 
 export function TableProvider<TData, TValue>({
@@ -52,22 +64,22 @@ export function TableProvider<TData, TValue>({
   children,
   className,
 }: TableProviderProps<TData, TValue>) {
-  const [sorting, setSorting] = useAtom(sortingAtom);
+  const [sorting, setSorting] = useAtom(sortingAtom)
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onSortingChange: (updater) => {
+    onSortingChange: updater => {
       // @ts-expect-error updater is a function that returns a sorting object
-      const newSorting = updater(sorting);
+      const newSorting = updater(sorting)
 
-      setSorting(newSorting);
+      setSorting(newSorting)
     },
     state: {
       sorting,
     },
-  });
+  })
 
   return (
     <TableContext.Provider
@@ -79,129 +91,137 @@ export function TableProvider<TData, TValue>({
     >
       <TableRaw className={className}>{children}</TableRaw>
     </TableContext.Provider>
-  );
+  )
 }
 
 export interface TableHeadProps {
-  header: Header<unknown, unknown>;
-  className?: string;
+  header: Header<unknown, unknown>
+  className?: string
 }
 
 export const TableHead = memo(({ header, className }: TableHeadProps) => (
   <TableHeadRaw className={className} key={header.id}>
     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
   </TableHeadRaw>
-));
+))
 
-TableHead.displayName = "TableHead";
+TableHead.displayName = "TableHead"
 
 export interface TableHeaderGroupProps {
-  headerGroup: HeaderGroup<unknown>;
-  children: (props: { header: Header<unknown, unknown> }) => ReactNode;
+  headerGroup: HeaderGroup<unknown>
+  children: (props: { header: Header<unknown, unknown> }) => ReactNode
 }
 
 export const TableHeaderGroup = ({ headerGroup, children }: TableHeaderGroupProps) => (
-  <TableRowRaw key={headerGroup.id}>{headerGroup.headers.map((header) => children({ header }))}</TableRowRaw>
-);
+  <TableRowRaw key={headerGroup.id}>
+    {headerGroup.headers.map(header => children({ header }))}
+  </TableRowRaw>
+)
 
 export interface TableHeaderProps {
-  className?: string;
-  children: (props: { headerGroup: HeaderGroup<unknown> }) => ReactNode;
+  className?: string
+  children: (props: { headerGroup: HeaderGroup<unknown> }) => ReactNode
 }
 
 export const TableHeader = ({ className, children }: TableHeaderProps) => {
-  const { table } = useContext(TableContext);
+  const { table } = useContext(TableContext)
 
   return (
     <TableHeaderRaw className={className}>
-      {table?.getHeaderGroups().map((headerGroup) => children({ headerGroup }))}
+      {table?.getHeaderGroups().map(headerGroup => children({ headerGroup }))}
     </TableHeaderRaw>
-  );
-};
-
-export interface TableColumnHeaderProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
-  column: Column<TData, TValue>;
-  title: string;
+  )
 }
 
-export function TableColumnHeader<TData, TValue>({ column, title, className }: TableColumnHeaderProps<TData, TValue>) {
+export interface TableColumnHeaderProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
+  column: Column<TData, TValue>
+  title: string
+}
+
+export function TableColumnHeader<TData, TValue>({
+  column,
+  title,
+  className,
+}: TableColumnHeaderProps<TData, TValue>) {
   // Extract inline event handlers to prevent unnecessary re-renders
   const handleSortAsc = useCallback(() => {
-    column.toggleSorting(false);
-  }, [column]);
+    column.toggleSorting(false)
+  }, [column])
 
   const handleSortDesc = useCallback(() => {
-    column.toggleSorting(true);
-  }, [column]);
+    column.toggleSorting(true)
+  }, [column])
 
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>;
+    return <div className={cn(className)}>{title}</div>
   }
 
   return (
-    <div className={cn("flex items-center space-x-2", className)}>
+    <div className={cn("flex items-center space-x-2 rtl:space-x-reverse", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="-ml-3 h-8 data-[state=open]:bg-accent" size="sm" variant="ghost">
+          <Button className="-ms-3 h-8 data-[state=open]:bg-accent" size="sm" variant="ghost">
             <span>{title}</span>
             {column.getIsSorted() === "desc" ? (
-              <ArrowDownIcon className="ml-2 h-4 w-4" />
+              <ArrowDownIcon className="ms-2 h-4 w-4" />
             ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="ml-2 h-4 w-4" />
+              <ArrowUpIcon className="ms-2 h-4 w-4" />
             ) : (
-              <ChevronsUpDownIcon className="ml-2 h-4 w-4" />
+              <ChevronsUpDownIcon className="ms-2 h-4 w-4" />
             )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={handleSortAsc}>
-            <ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowUpIcon className="me-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Asc
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleSortDesc}>
-            <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowDownIcon className="me-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Desc
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
 }
 
 export interface TableCellProps {
-  cell: Cell<unknown, unknown>;
-  className?: string;
+  cell: Cell<unknown, unknown>
+  className?: string
 }
 
 export const TableCell = ({ cell, className }: TableCellProps) => (
-  <TableCellRaw className={className}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCellRaw>
-);
+  <TableCellRaw className={className}>
+    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+  </TableCellRaw>
+)
 
 export interface TableRowProps {
-  row: Row<unknown>;
-  children: (props: { cell: Cell<unknown, unknown> }) => ReactNode;
-  className?: string;
+  row: Row<unknown>
+  children: (props: { cell: Cell<unknown, unknown> }) => ReactNode
+  className?: string
 }
 
 export const TableRow = ({ row, children, className }: TableRowProps) => (
   <TableRowRaw className={className} data-state={row.getIsSelected() && "selected"} key={row.id}>
-    {row.getVisibleCells().map((cell) => children({ cell }))}
+    {row.getVisibleCells().map(cell => children({ cell }))}
   </TableRowRaw>
-);
+)
 
 export interface TableBodyProps {
-  children: (props: { row: Row<unknown> }) => ReactNode;
-  className?: string;
+  children: (props: { row: Row<unknown> }) => ReactNode
+  className?: string
 }
 
 export const TableBody = ({ children, className }: TableBodyProps) => {
-  const { columns, table } = useContext(TableContext);
-  const rows = table?.getRowModel().rows;
+  const { columns, table } = useContext(TableContext)
+  const rows = table?.getRowModel().rows
 
   return (
     <TableBodyRaw className={className}>
       {rows?.length ? (
-        rows.map((row) => children({ row }))
+        rows.map(row => children({ row }))
       ) : (
         <TableRowRaw>
           <TableCellRaw className="h-24 text-center" colSpan={columns.length}>
@@ -210,17 +230,17 @@ export const TableBody = ({ children, className }: TableBodyProps) => {
         </TableRowRaw>
       )}
     </TableBodyRaw>
-  );
-};
+  )
+}
 
 // Demo
 type DemoUser = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  status: "active" | "inactive";
-};
+  id: string
+  name: string
+  email: string
+  role: string
+  status: "active" | "inactive"
+}
 
 const demoData: DemoUser[] = [
   { id: "1", name: "Alice Johnson", email: "alice@example.com", role: "Admin", status: "active" },
@@ -249,7 +269,7 @@ const demoData: DemoUser[] = [
     status: "inactive",
   },
   { id: "8", name: "Henry Taylor", email: "henry@example.com", role: "Admin", status: "active" },
-];
+]
 
 const demoColumns: ColumnDef<DemoUser, string>[] = [
   {
@@ -271,30 +291,30 @@ const demoColumns: ColumnDef<DemoUser, string>[] = [
     accessorKey: "status",
     header: ({ column }) => <TableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => {
-      const status = row.getValue("status") as string;
+      const status = row.getValue("status") as string
       return (
         <div
           className={cn(
             "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
-            status === "active" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"
+            status === "active" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600",
           )}
         >
           {status}
         </div>
-      );
+      )
     },
   },
-];
+]
 
 export function TableDemo() {
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
   if (!mounted) {
-    return <div className="h-96 w-full max-w-4xl bg-muted/50 animate-pulse rounded-lg" />;
+    return <div className="h-96 w-full max-w-4xl bg-muted/50 animate-pulse rounded-lg" />
   }
 
   return (
@@ -318,5 +338,5 @@ export function TableDemo() {
         </TableProvider>
       </div>
     </div>
-  );
+  )
 }

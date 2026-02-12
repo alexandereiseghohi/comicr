@@ -1,7 +1,7 @@
-import Footer from "@/components/shadcn-studio/blocks/footer-component-01/footer-component-01";
+import Footer from '@/components/shadcn-studio/blocks/footer-component-01/footer-component-01'
 
 const FooterPage = () => {
-  return <Footer />;
-};
+  return <Footer />
+}
 
-export default FooterPage;
+export default FooterPage

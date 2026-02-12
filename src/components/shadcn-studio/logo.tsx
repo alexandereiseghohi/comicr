@@ -1,7 +1,7 @@
-import LogoSvg from "@/assets/svg/logo";
+import LogoSvg from '@/assets/svg/logo'
 
 // Util Imports
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils'
 
 const Logo = ({ className }: { className?: string }) => {
   return (
@@ -9,7 +9,7 @@ const Logo = ({ className }: { className?: string }) => {
       <LogoSvg className="size-8.5" />
       <span className="text-xl font-semibold">shadcn/studio</span>
     </div>
-  );
-};
+  )
+}
 
-export default Logo;
+export default Logo

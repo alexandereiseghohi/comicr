@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react'
 
 import {
   UserIcon,
@@ -7,10 +7,10 @@ import {
   UsersIcon,
   SquarePenIcon,
   CirclePlusIcon,
-  LogOutIcon,
-} from "lucide-react";
+  LogOutIcon
+} from 'lucide-react'
 
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,27 +18,27 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 
 type Props = {
-  trigger: ReactNode;
-  defaultOpen?: boolean;
-  align?: "start" | "center" | "end";
-};
+  trigger: ReactNode
+  defaultOpen?: boolean
+  align?: 'start' | 'center' | 'end'
+}
 
-const ProfileDropdown = ({ trigger, defaultOpen, align = "end" }: Props) => {
+const ProfileDropdown = ({ trigger, defaultOpen, align = 'end' }: Props) => {
   return (
     <DropdownMenu defaultOpen={defaultOpen}>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80" align={align || "end"}>
+      <DropdownMenuContent className="w-80" align={align || 'end'}>
         <DropdownMenuLabel className="flex items-center gap-4 px-4 py-2.5 font-normal">
           <div className="relative">
             <Avatar className="size-10">
-              <AvatarImage src="https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-1.png" alt="John Doe" />
+              <AvatarImage src='https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-1.png' alt='John Doe' />
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
-            <span className="ring-card absolute right-0 bottom-0 block size-2 rounded-full bg-green-600 ring-2" />
+            <span className="ring-card absolute end-0 bottom-0 block size-2 rounded-full bg-green-600 ring-2" />
           </div>
           <div className="flex flex-1 flex-col items-start">
             <span className="text-foreground text-lg font-semibold">John Doe</span>
@@ -82,13 +82,13 @@ const ProfileDropdown = ({ trigger, defaultOpen, align = "end" }: Props) => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem variant="destructive" className="px-4 py-2.5 text-base">
+        <DropdownMenuItem variant='destructive' className="px-4 py-2.5 text-base">
           <LogOutIcon className="size-5" />
           <span>Logout</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-};
+  )
+}
 
-export default ProfileDropdown;
+export default ProfileDropdown

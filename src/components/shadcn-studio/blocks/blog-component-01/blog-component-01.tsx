@@ -1,15 +1,15 @@
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon } from 'lucide-react'
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardTitle, CardDescription, CardHeader, CardFooter } from "@/components/ui/card";
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardTitle, CardDescription, CardHeader, CardFooter } from '@/components/ui/card'
 
 type BlogCard = {
-  img: string;
-  alt: string;
-  title: string;
-  description: string;
-  blogLink: string;
-}[];
+  img: string
+  alt: string
+  title: string
+  description: string
+  blogLink: string
+}[]
 
 const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
   return (
@@ -37,10 +37,10 @@ const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
                 <CardDescription className="text-base">{item.description}</CardDescription>
               </CardHeader>
               <CardFooter>
-                <Button className="group rounded-lg text-base has-[>svg]:px-6" size="lg" asChild>
+                <Button className="group rounded-lg text-base has-[>svg]:px-6" size='lg' asChild>
                   <a href={item.blogLink}>
                     Read More
-                    <ArrowRightIcon className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                    <ArrowRightIcon className="transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
                   </a>
                 </Button>
               </CardFooter>
@@ -49,7 +49,7 @@ const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog

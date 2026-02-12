@@ -2,7 +2,6 @@
 import {
   type ColumnDef,
   type ColumnFiltersState,
-  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -30,7 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeaderGroup, TableRow } from "@/components/ui/table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -122,30 +121,16 @@ export function DataTable<TData, TValue>({
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
+            {({ headerGroup }: { headerGroup: HeaderGroup<TData> }) => (
+              <TableHeaderGroup headerGroup={headerGroup}>
+                {({ header }: { header: Header<TData, TValue> }) => <TableHead header={header} key={header.id} />}
+              </TableHeaderGroup>
+            )}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow data-state={row.getIsSelected() && "selected"} key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell className="h-24 text-center" colSpan={columns.length}>
-                  No results.
-                </TableCell>
+            {({ row }: { row: Row<TData> }) => (
+              <TableRow row={row} key={row.id}>
+                {({ cell }: { cell: Cell<TData, TValue> }) => <TableCell cell={cell} key={cell.id} />}
               </TableRow>
             )}
           </TableBody>

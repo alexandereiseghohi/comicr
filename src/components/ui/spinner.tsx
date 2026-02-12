@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import { LoaderCircleIcon, LoaderIcon, LoaderPinwheelIcon, type LucideProps } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { LoaderCircleIcon, LoaderIcon, LoaderPinwheelIcon, type LucideProps } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-type SpinnerVariantProps = Omit<SpinnerProps, "variant">;
+type SpinnerVariantProps = Omit<SpinnerProps, "variant">
 
 const Default = ({ className, ...props }: SpinnerVariantProps) => (
   <LoaderIcon className={cn("animate-spin", className)} {...(props as any)} />
-);
+)
 
 const Circle = ({ className, ...props }: SpinnerVariantProps) => (
   <LoaderCircleIcon className={cn("animate-spin", className)} {...(props as any)} />
-);
+)
 
 const Pinwheel = ({ className, ...props }: SpinnerVariantProps) => (
   <LoaderPinwheelIcon className={cn("animate-spin", className)} {...(props as any)} />
-);
+)
 
 const CircleFilled = ({ className, size = 24, ...props }: SpinnerVariantProps) => (
   <div className="relative" style={{ width: size, height: size }}>
@@ -26,13 +26,23 @@ const CircleFilled = ({ className, size = 24, ...props }: SpinnerVariantProps) =
         {...(props as any)}
       />
     </div>
-    <LoaderCircleIcon className={cn("relative animate-spin", className)} size={size} {...(props as any)} />
+    <LoaderCircleIcon
+      className={cn("relative animate-spin", className)}
+      size={size}
+      {...(props as any)}
+    />
   </div>
-);
+)
 
 const Ellipsis = ({ size = 24, ...props }: SpinnerVariantProps) => {
   return (
-    <svg height={size} viewBox="0 0 24 24" width={size} xmlns="http://www.w3.org/2000/svg" {...(props as any)}>
+    <svg
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...(props as any)}
+    >
       <title>Loading...</title>
       <circle cx="4" cy="12" fill="currentColor" r="2">
         <animate
@@ -67,8 +77,8 @@ const Ellipsis = ({ size = 24, ...props }: SpinnerVariantProps) => {
         />
       </circle>
     </svg>
-  );
-};
+  )
+}
 
 const Ring = ({ size = 24, ...props }: SpinnerVariantProps) => (
   <svg
@@ -127,10 +137,16 @@ const Ring = ({ size = 24, ...props }: SpinnerVariantProps) => (
       </circle>
     </g>
   </svg>
-);
+)
 
 const Bars = ({ size = 24, ...props }: SpinnerVariantProps) => (
-  <svg height={size} viewBox="0 0 24 24" width={size} xmlns="http://www.w3.org/2000/svg" {...(props as any)}>
+  <svg
+    height={size}
+    viewBox="0 0 24 24"
+    width={size}
+    xmlns="http://www.w3.org/2000/svg"
+    {...(props as any)}
+  >
     <title>Loading...</title>
     <style>{`
       .spinner-bar {
@@ -156,10 +172,24 @@ const Bars = ({ size = 24, ...props }: SpinnerVariantProps) => (
       }
     `}</style>
     <rect className="spinner-bar" fill="currentColor" height="22" width="6" x="1" y="1" />
-    <rect className="spinner-bar spinner-bars-2" fill="currentColor" height="22" width="6" x="9" y="1" />
-    <rect className="spinner-bar spinner-bars-3" fill="currentColor" height="22" width="6" x="17" y="1" />
+    <rect
+      className="spinner-bar spinner-bars-2"
+      fill="currentColor"
+      height="22"
+      width="6"
+      x="9"
+      y="1"
+    />
+    <rect
+      className="spinner-bar spinner-bars-3"
+      fill="currentColor"
+      height="22"
+      width="6"
+      x="17"
+      y="1"
+    />
   </svg>
-);
+)
 
 const Infinite = ({ size = 24, ...props }: SpinnerVariantProps) => (
   <svg
@@ -192,32 +222,40 @@ const Infinite = ({ size = 24, ...props }: SpinnerVariantProps) => (
       />
     </path>
   </svg>
-);
+)
 
 export type SpinnerProps = LucideProps & {
-  variant?: "default" | "circle" | "pinwheel" | "circle-filled" | "ellipsis" | "ring" | "bars" | "infinite";
-};
+  variant?:
+    | "default"
+    | "circle"
+    | "pinwheel"
+    | "circle-filled"
+    | "ellipsis"
+    | "ring"
+    | "bars"
+    | "infinite"
+}
 
 export const Spinner = ({ variant, ...props }: SpinnerProps) => {
   switch (variant) {
     case "circle":
-      return <Circle {...(props as any)} />;
+      return <Circle {...(props as any)} />
     case "pinwheel":
-      return <Pinwheel {...(props as any)} />;
+      return <Pinwheel {...(props as any)} />
     case "circle-filled":
-      return <CircleFilled {...(props as any)} />;
+      return <CircleFilled {...(props as any)} />
     case "ellipsis":
-      return <Ellipsis {...(props as any)} />;
+      return <Ellipsis {...(props as any)} />
     case "ring":
-      return <Ring {...(props as any)} />;
+      return <Ring {...(props as any)} />
     case "bars":
-      return <Bars {...(props as any)} />;
+      return <Bars {...(props as any)} />
     case "infinite":
-      return <Infinite {...(props as any)} />;
+      return <Infinite {...(props as any)} />
     default:
-      return <Default {...(props as any)} />;
+      return <Default {...(props as any)} />
   }
-};
+}
 
 // Demo
 export function Demo() {
@@ -230,16 +268,16 @@ export function Demo() {
     "ring",
     "bars",
     "infinite",
-  ];
+  ]
 
   return (
     <div className="grid grid-cols-4 gap-8 p-8">
-      {variants.map((variant) => (
+      {variants.map(variant => (
         <div key={variant} className="flex flex-col items-center gap-2">
           <Spinner variant={variant} size={32} />
           <span className="text-xs text-muted-foreground">{variant}</span>
         </div>
       ))}
     </div>
-  );
+  )
 }

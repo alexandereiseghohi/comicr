@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { type ComponentProps, lazy, type ReactNode, Suspense } from "react";
 
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { getQueryClient } from "@/lib/query-client";
 
 import type { Session } from "@/types/auth";
@@ -23,7 +24,7 @@ export default function Providers({ children, attribute, defaultTheme, enableSys
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute={attribute} defaultTheme={defaultTheme} enableSystem={enableSystem}>
-          {children}
+          <TooltipProvider>{children}</TooltipProvider>
           <Suspense fallback={null}>
             <Toaster />
           </Suspense>

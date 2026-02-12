@@ -1,45 +1,50 @@
-"use client";
+"use client"
 
-import { ArrowRightIcon } from "lucide-react";
-import type { ComponentProps, HTMLAttributes } from "react";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { ArrowRightIcon } from "lucide-react"
+import type { ComponentProps, HTMLAttributes } from "react"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
 export type AnnouncementProps = ComponentProps<typeof Badge> & {
-  themed?: boolean;
-};
+  themed?: boolean
+}
 
-export const Announcement = ({ variant = "outline", themed = false, className, ...props }: AnnouncementProps) => (
+export const Announcement = ({
+  variant = "outline",
+  themed = false,
+  className,
+  ...props
+}: AnnouncementProps) => (
   <Badge
     className={cn(
       "group max-w-full gap-2 rounded-full bg-background px-3 py-0.5 font-medium shadow-sm transition-all",
       "hover:shadow-md",
       themed && "announcement-themed border-foreground/5",
-      className
+      className,
     )}
     variant={variant}
     {...(props as any)}
   />
-);
+)
 
-export type AnnouncementTagProps = HTMLAttributes<HTMLDivElement>;
+export type AnnouncementTagProps = HTMLAttributes<HTMLDivElement>
 
 export const AnnouncementTag = ({ className, ...props }: AnnouncementTagProps) => (
   <div
     className={cn(
-      "-ml-2.5 shrink-0 truncate rounded-full bg-foreground/5 px-2.5 py-1 text-xs",
+      "-ms-2.5 shrink-0 truncate rounded-full bg-foreground/5 px-2.5 py-1 text-xs",
       "group-[.announcement-themed]:bg-background/60",
-      className
+      className,
     )}
     {...(props as any)}
   />
-);
+)
 
-export type AnnouncementTitleProps = HTMLAttributes<HTMLDivElement>;
+export type AnnouncementTitleProps = HTMLAttributes<HTMLDivElement>
 
 export const AnnouncementTitle = ({ className, ...props }: AnnouncementTitleProps) => (
   <div className={cn("flex items-center gap-1 truncate py-1", className)} {...(props as any)} />
-);
+)
 
 // Demo
 export function Demo() {
@@ -49,9 +54,9 @@ export function Demo() {
         <AnnouncementTag>New</AnnouncementTag>
         <AnnouncementTitle>
           Introducing shadcn/ui 2.0
-          <ArrowRightIcon className="size-3 transition-transform group-hover:translate-x-0.5" />
+          <ArrowRightIcon className="size-3 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
         </AnnouncementTitle>
       </Announcement>
     </div>
-  );
+  )
 }
