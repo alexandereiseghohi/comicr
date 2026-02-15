@@ -29,7 +29,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeaderGroup, TableRow } from "@/components/ui/table";
+import {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableHeaderGroup,
+  TableProvider,
+  TableRow,
+} from "@/components/ui/table";
+import type { Cell, Header, HeaderGroup, Row } from "@tanstack/react-table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -119,22 +128,22 @@ export function DataTable<TData, TValue>({
 
       {/* Table */}
       <div className="rounded-md border">
-        <Table>
+        <TableProvider columns={columns as ColumnDef<unknown, unknown>[]} data={data as unknown[]}>
           <TableHeader>
-            {({ headerGroup }: { headerGroup: HeaderGroup<TData> }) => (
+            {({ headerGroup }: { headerGroup: HeaderGroup<unknown> }) => (
               <TableHeaderGroup headerGroup={headerGroup}>
-                {({ header }: { header: Header<TData, TValue> }) => <TableHead header={header} key={header.id} />}
+                {({ header }: { header: Header<unknown, unknown> }) => <TableHead header={header} key={header.id} />}
               </TableHeaderGroup>
             )}
           </TableHeader>
           <TableBody>
-            {({ row }: { row: Row<TData> }) => (
+            {({ row }: { row: Row<unknown> }) => (
               <TableRow row={row} key={row.id}>
-                {({ cell }: { cell: Cell<TData, TValue> }) => <TableCell cell={cell} key={cell.id} />}
+                {({ cell }: { cell: Cell<unknown, unknown> }) => <TableCell cell={cell} key={cell.id} />}
               </TableRow>
             )}
           </TableBody>
-        </Table>
+        </TableProvider>
       </div>
 
       {/* Pagination */}

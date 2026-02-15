@@ -1,46 +1,46 @@
-"use client"
+"use client";
 
-import React, { createContext, useContext, useEffect, useRef, useState } from "react"
-import { cn } from "@/lib/utils"
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
-const MouseEnterContext = createContext<
-  [boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined
->(undefined)
+const MouseEnterContext = createContext<[boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined>(
+  undefined
+);
 
 export interface CardContainerProps {
-  children?: React.ReactNode
-  className?: string
-  containerClassName?: string
+  children?: React.ReactNode;
+  className?: string;
+  containerClassName?: string;
 }
 
 export const CardContainer = ({ children, className, containerClassName }: CardContainerProps) => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [isMouseEntered, setIsMouseEntered] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isMouseEntered, setIsMouseEntered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) {
-      return
+      return;
     }
-    const { left, top, width, height } = containerRef.current.getBoundingClientRect()
-    const x = (e.clientX - left - width / 2) / 25
-    const y = (e.clientY - top - height / 2) / 25
-    containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`
-  }
+    const { left, top, width, height } = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - left - width / 2) / 25;
+    const y = (e.clientY - top - height / 2) / 25;
+    containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+  };
 
   const handleMouseEnter = (_e: React.MouseEvent<HTMLDivElement>) => {
-    setIsMouseEntered(true)
+    setIsMouseEntered(true);
     if (!containerRef.current) {
-      return
+      return;
     }
-  }
+  };
 
   const handleMouseLeave = (_e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) {
-      return
+      return;
     }
-    setIsMouseEntered(false)
-    containerRef.current.style.transform = "rotateY(0deg) rotateX(0deg)"
-  }
+    setIsMouseEntered(false);
+    containerRef.current.style.transform = "rotateY(0deg) rotateX(0deg)";
+  };
 
   return (
     <MouseEnterContext.Provider value={[isMouseEntered, setIsMouseEntered]}>
@@ -51,10 +51,7 @@ export const CardContainer = ({ children, className, containerClassName }: CardC
         }}
       >
         <div
-          className={cn(
-            "flex items-center justify-center relative transition-all duration-200 ease-linear",
-            className,
-          )}
+          className={cn("flex items-center justify-center relative transition-all duration-200 ease-linear", className)}
           role="button"
           tabIndex={0}
           onMouseEnter={handleMouseEnter}
@@ -69,38 +66,33 @@ export const CardContainer = ({ children, className, containerClassName }: CardC
         </div>
       </div>
     </MouseEnterContext.Provider>
-  )
-}
+  );
+};
 
 export interface CardBodyProps {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
 }
 
 export const CardBody = ({ children, className }: CardBodyProps) => {
   return (
-    <div
-      className={cn(
-        "h-96 w-96 [transform-style:preserve-3d] [&>*]:[transform-style:preserve-3d]",
-        className,
-      )}
-    >
+    <div className={cn("h-96 w-96 [transform-style:preserve-3d] [&>*]:[transform-style:preserve-3d]", className)}>
       {children}
     </div>
-  )
-}
+  );
+};
 
 export type CardItemProps = {
-  as?: React.ElementType
-  children: React.ReactNode
-  className?: string
-  translateX?: number | string
-  translateY?: number | string
-  translateZ?: number | string
-  rotateX?: number | string
-  rotateY?: number | string
-  rotateZ?: number | string
-} & Record<string, any>
+  as?: React.ElementType;
+  children: React.ReactNode;
+  className?: string;
+  translateX?: number | string;
+  translateY?: number | string;
+  translateZ?: number | string;
+  rotateX?: number | string;
+  rotateY?: number | string;
+  rotateZ?: number | string;
+} & Record<string, any>;
 
 export const CardItem = ({
   as: Tag = "div",
@@ -114,24 +106,24 @@ export const CardItem = ({
   rotateZ = 0,
   ...rest
 }: CardItemProps) => {
-  const ref = useRef<any>(null)
-  const [isMouseEntered] = useMouseEnter()
+  const ref = useRef<any>(null);
+  const [isMouseEntered] = useMouseEnter();
 
   useEffect(() => {
-    handleAnimations()
-  }, [isMouseEntered])
+    handleAnimations();
+  }, [isMouseEntered]);
 
   const handleAnimations = () => {
     if (!ref.current) {
-      return
+      return;
     }
     if (isMouseEntered) {
-      ref.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`
+      ref.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
     } else {
       ref.current.style.transform =
-        "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)"
+        "translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)";
     }
-  }
+  };
 
   return React.createElement(
     Tag,
@@ -140,17 +132,17 @@ export const CardItem = ({
       className: cn("w-fit transition duration-200 ease-linear", className),
       ...rest,
     },
-    children,
-  )
-}
+    children
+  );
+};
 
 export const useMouseEnter = () => {
-  const context = useContext(MouseEnterContext)
+  const context = useContext(MouseEnterContext);
   if (context === undefined) {
-    throw new Error("useMouseEnter must be used within a MouseEnterProvider")
+    throw new Error("useMouseEnter must be used within a MouseEnterProvider");
   }
-  return context
-}
+  return context;
+};
 
 // Demo
 export function Demo() {
@@ -165,11 +157,7 @@ export function Demo() {
             Hover over this card to see the 3D tilt effect. Elements pop out at different depths.
           </CardItem>
           <CardItem translateZ={100} className="mt-4 w-full">
-            <img
-              src="https://picsum.photos/300/200"
-              alt="Demo"
-              className="h-40 w-full rounded-lg object-cover"
-            />
+            <img src="https://picsum.photos/300/200" alt="Demo" className="h-40 w-full rounded-lg object-cover" />
           </CardItem>
           <div className="mt-4 flex justify-between">
             <CardItem
@@ -185,5 +173,5 @@ export function Demo() {
         </CardBody>
       </CardContainer>
     </div>
-  )
+  );
 }

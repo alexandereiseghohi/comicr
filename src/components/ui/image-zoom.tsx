@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import Zoom, { type ControlledProps, type UncontrolledProps } from "react-medium-image-zoom"
-import "react-medium-image-zoom/dist/styles.css"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
+import Zoom, { type ControlledProps, type UncontrolledProps } from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 
 export type ImageZoomProps = UncontrolledProps & {
-  isZoomed?: ControlledProps["isZoomed"]
-  onZoomChange?: ControlledProps["onZoomChange"]
-  className?: string
-  backdropClassName?: string
-}
+  isZoomed?: ControlledProps["isZoomed"];
+  onZoomChange?: ControlledProps["onZoomChange"];
+  className?: string;
+  backdropClassName?: string;
+};
 
 export const ImageZoom = ({ className, backdropClassName, ...props }: ImageZoomProps) => (
   <div
@@ -21,11 +21,11 @@ export const ImageZoom = ({ className, backdropClassName, ...props }: ImageZoomP
       "[&_[data-rmiz-btn-zoom]:not(:focus):not(:active)]:pointer-events-none [&_[data-rmiz-btn-zoom]:not(:focus):not(:active)]:absolute [&_[data-rmiz-btn-zoom]:not(:focus):not(:active)]:size-px [&_[data-rmiz-btn-zoom]:not(:focus):not(:active)]:overflow-hidden [&_[data-rmiz-btn-zoom]:not(:focus):not(:active)]:whitespace-nowrap [&_[data-rmiz-btn-zoom]:not(:focus):not(:active)]:[clip-path:inset(50%)] [&_[data-rmiz-btn-zoom]:not(:focus):not(:active)]:[clip:rect(0_0_0_0)]",
       "[&_[data-rmiz-btn-zoom]]:absolute [&_[data-rmiz-btn-zoom]]:top-2.5 [&_[data-rmiz-btn-zoom]]:end-2.5 [&_[data-rmiz-btn-zoom]]:bottom-auto [&_[data-rmiz-btn-zoom]]:start-auto [&_[data-rmiz-btn-zoom]]:cursor-zoom-in",
       "[&_[data-rmiz-btn-unzoom]]:absolute [&_[data-rmiz-btn-unzoom]]:top-5 [&_[data-rmiz-btn-unzoom]]:end-5 [&_[data-rmiz-btn-unzoom]]:bottom-auto [&_[data-rmiz-btn-unzoom]]:start-auto [&_[data-rmiz-btn-unzoom]]:z-[1] [&_[data-rmiz-btn-unzoom]]:cursor-zoom-out",
-      "[&_[data-rmiz-content="found"]_img]:cursor-zoom-in",
-      "[&_[data-rmiz-content="found"]_svg]:cursor-zoom-in",
-      "[&_[data-rmiz-content="found"]_[role="img"]]:cursor-zoom-in",
-      "[&_[data-rmiz-content="found"]_[data-zoom]]:cursor-zoom-in",
-      className,
+      "[&_[data-rmiz-content='found']_img]:cursor-zoom-in",
+      "[&_[data-rmiz-content='found']_svg]:cursor-zoom-in",
+      "[&_[data-rmiz-content='found']_[role='img']]:cursor-zoom-in",
+      "[&_[data-rmiz-content='found']_[data-zoom]]:cursor-zoom-in",
+      className
     )}
   >
     <Zoom
@@ -38,12 +38,12 @@ export const ImageZoom = ({ className, backdropClassName, ...props }: ImageZoomP
         "[&_[data-rmiz-modal-content]]:relative [&_[data-rmiz-modal-content]]:size-full",
         "[&_[data-rmiz-modal-img]]:absolute [&_[data-rmiz-modal-img]]:origin-top-left [&_[data-rmiz-modal-img]]:cursor-zoom-out [&_[data-rmiz-modal-img]]:transition-transform",
         "motion-reduce:[&_[data-rmiz-modal-img]]:transition-none motion-reduce:[&_[data-rmiz-modal-overlay]]:transition-none",
-        backdropClassName,
+        backdropClassName
       )}
       {...(props as any)}
     />
   </div>
-)
+);
 
 // Demo
 export function Demo() {
@@ -51,14 +51,10 @@ export function Demo() {
     <div className="fixed inset-0 flex items-center justify-center p-8">
       <div className="text-center">
         <ImageZoom>
-          <img
-            src="https://picsum.photos/1200/800"
-            alt="Sample image"
-            className="max-w-sm rounded-lg shadow-md"
-          />
+          <img src="https://picsum.photos/1200/800" alt="Sample image" className="max-w-sm rounded-lg shadow-md" />
         </ImageZoom>
         <p className="mt-4 text-sm text-muted-foreground">Click the image to zoom</p>
       </div>
     </div>
-  )
+  );
 }

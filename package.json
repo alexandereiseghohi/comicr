@@ -143,7 +143,9 @@
     "eslint-plugin-unused-imports": "^4.3.0",
     "eslint-plugin-vitest": "^0.5.4",
     "globals": "^17.3.0",
+    "husky": "^9.1.7",
     "jsdom": "^28.0.0",
+    "lint-staged": "^16.2.7",
     "next-sitemap": "^4.2.3",
     "nodemailer": "^7.0.13",
     "prettier": "^3.8.1",
@@ -158,6 +160,14 @@
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=9.0.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "pnpm run format"
+    ],
+    "*.{md,json}": [
+      "pnpm run format"
+    ]
   },
   "name": "comicr",
   "private": true,
@@ -207,6 +217,7 @@
     "plugin:migrate": "node ./scripts/eng/collection-to-plugin.mjs",
     "plugin:refresh": "PLUGIN_MODE=refresh node ./scripts/eng/collection-to-plugin.mjs",
     "postbuild": "next-sitemap --config ./next-sitemap.config.ts",
+    "prepare": "husky",
     "preview": "pnpm build && pnpm start",
     "refactor:ast": "tsx scripts/ast-refactor.ts",
     "refactor:kebab": "tsx scripts/rename-to-kebab-case.ts",
@@ -237,7 +248,7 @@
     "validate": "pnpm run type-check && pnpm run lint && pnpm run test:unit",
     "validate:ci": "pnpm validate:full && pnpm build",
     "validate:env": "tsx scripts/validate-env.ts .env.example .env.local",
-    "validate:full": "pnpm type-check && pnpm lint && pnpm test:unit && pnpm test:e2e && pnpm build",
+    "validate:full": "pnpm format && pnpm type-check && pnpm lint && pnpm test:unit && pnpm test:e2e && pnpm format:check && pnpm build",
     "verify:all": "pnpm run validate:env && pnpm run verify:providers -- --report=providers-report.json && pnpm run verify:links -- --report=link-report.csv && pnpm run verify:mcp",
     "verify:dal": "tsx scripts/verify-dal-usage.ts",
     "verify:links": "tsx scripts/verify-links.ts",

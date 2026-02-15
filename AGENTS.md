@@ -1,6 +1,9 @@
 # AGENTS.md
 
-## Project Overview
+> **Note:**
+> The single source of truth for project guidelines, architecture, build/test commands, and security is now `.github/copilot-instructions.md`. This file (`AGENTS.md`) is focused on agent, prompt, and skill conventions only.
+
+## Agent/Prompt/Skill Conventions
 
 The Comicr repository is a community-driven collection of custom agents, prompts, and instructions designed to enhance GitHub Copilot experiences across various domains, languages, and use cases. The project includes:
 
