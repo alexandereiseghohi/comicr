@@ -1,3 +1,4 @@
+// No object injection sink risk: this script only processes trusted chapter data and does not assign user-controlled keys to objects.
 import fs from "node:fs/promises";
 import path from "node:path";
 

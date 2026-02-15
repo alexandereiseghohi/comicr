@@ -4,6 +4,7 @@ import { MoreHorizontal, Shield, ShieldAlert, UserCheck, UserX } from "lucide-re
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { banUserAction, unbanUserAction, updateUserRoleAction } from "@/actions/admin.actions";
 import { DataTable } from "@/components/admin/data-table";
 import {
   AlertDialog,
@@ -30,7 +31,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { banUserAction, unbanUserAction, updateUserRoleAction } from "@/lib/actions/admin.actions";
 
 /**
  * Users Table Component

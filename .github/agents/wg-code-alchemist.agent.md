@@ -1,5 +1,6 @@
 ---
 description: "Ask WG Code Alchemist to transform your code with Clean Code principles and SOLID design"
+name: "WG Code Alchemist"
 tools:
   [
     "changes",

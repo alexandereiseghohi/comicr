@@ -3,7 +3,14 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import { BatchDownloadItem, DownloadImageOptions, DownloadResult, ProgressCallback } from "../types/image-helper.types";
+
+import {
+  type BatchDownloadItem,
+  type DownloadImageOptions,
+  type DownloadResult,
+  type ProgressCallback,
+} from "../types/image-helper.types";
+
 import {
   DownloadImageOptionsSchema,
   ensureDir,

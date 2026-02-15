@@ -1,4 +1,8 @@
 "use server";
+// Deduplicated string literals
+const ADMIN_UNAUTHORIZED = "UNAUTHORIZED: Admin access required";
+const ADMIN_ACCESS_REQUIRED = "Admin access required";
+const REVALIDATE_PATH = "/admin/types";
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
@@ -17,7 +21,7 @@ async function verifyAdmin(): Promise<{ userId: string } | null> {
 export async function createTypeAction(input: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: "UNAUTHORIZED: Admin access required" };
+    return { success: false, error: ADMIN_UNAUTHORIZED };
   }
 
   const parsed = createTypeSchema.safeParse(input);
@@ -45,14 +49,14 @@ export async function createTypeAction(input: unknown): Promise<ActionResult> {
     };
   }
 
-  revalidatePath("/admin/types");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: result.data };
 }
 
 export async function updateTypeAction(id: number, input: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: "UNAUTHORIZED: Admin access required" };
+    return { success: false, error: ADMIN_UNAUTHORIZED };
   }
 
   const parsed = updateTypeSchema.safeParse(input);
@@ -82,14 +86,14 @@ export async function updateTypeAction(id: number, input: unknown): Promise<Acti
     };
   }
 
-  revalidatePath("/admin/types");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: result.data };
 }
 
 export async function deleteTypeAction(id: number): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: "UNAUTHORIZED: Admin access required" };
+    return { success: false, error: ADMIN_UNAUTHORIZED };
   }
 
   // Soft delete: set isActive = false
@@ -101,14 +105,14 @@ export async function deleteTypeAction(id: number): Promise<ActionResult> {
     };
   }
 
-  revalidatePath("/admin/types");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { id } };
 }
 
 export async function restoreTypeAction(id: number): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: "UNAUTHORIZED: Admin access required" };
+    return { success: false, error: ADMIN_UNAUTHORIZED };
   }
 
   const result = await mutations.updateType(id, { isActive: true });
@@ -119,14 +123,14 @@ export async function restoreTypeAction(id: number): Promise<ActionResult> {
     };
   }
 
-  revalidatePath("/admin/types");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { id } };
 }
 
 export async function bulkDeleteTypesAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: "Admin access required" };
+    return { success: false, error: ADMIN_ACCESS_REQUIRED };
   }
 
   const results = await Promise.all(ids.map((id) => mutations.updateType(id, { isActive: false })));
@@ -138,14 +142,14 @@ export async function bulkDeleteTypesAction(ids: number[]): Promise<ActionResult
     };
   }
 
-  revalidatePath("/admin/types");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { count: ids.length } };
 }
 
 export async function bulkRestoreTypesAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: "Admin access required" };
+    return { success: false, error: ADMIN_ACCESS_REQUIRED };
   }
 
   const results = await Promise.all(ids.map((id) => mutations.updateType(id, { isActive: true })));
@@ -157,6 +161,6 @@ export async function bulkRestoreTypesAction(ids: number[]): Promise<ActionResul
     };
   }
 
-  revalidatePath("/admin/types");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { count: ids.length } };
 }

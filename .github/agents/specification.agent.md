@@ -1,5 +1,6 @@
 ---
 description: "Generate or update specification documents for new or existing functionality."
+name: "Specification"
 tools:
   [
     "changes",

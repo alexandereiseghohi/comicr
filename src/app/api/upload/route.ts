@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 
+import { createAuditContext, logAudit } from "@/audit";
 import { auth } from "@/auth";
-import { createAuditContext, logAudit } from "@/lib/audit";
-import { getStorageProvider, validateFile } from "@/lib/storage";
 import { UploadRequestSchema, validateUploadFile } from "@/schemas/upload.schema";
+import { getStorageProvider, validateFile } from "@/storage";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

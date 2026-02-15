@@ -15,19 +15,19 @@ import { Progress } from "@/components/ui/progress";
 const listItems = ["Share", "Update", "Refresh"];
 
 type Props = {
-  title: string;
-  earning: number;
-  trend: "up" | "down";
-  percentage: number;
+  className?: string;
   comparisonText: string;
+  earning: number;
   earningData: {
+    earnings: string;
     img: string;
     platform: string;
-    technologies: string;
-    earnings: string;
     progressPercentage: number;
+    technologies: string;
   }[];
-  className?: string;
+  percentage: number;
+  title: string;
+  trend: "down" | "up";
 };
 
 const TotalEarningCard = ({ earningData, title, earning, trend, percentage, comparisonText, className }: Props) => {
@@ -37,7 +37,7 @@ const TotalEarningCard = ({ earningData, title, earning, trend, percentage, comp
         <span className="text-lg font-semibold">{title}</span>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-muted-foreground size-6 rounded-full">
+            <Button className="text-muted-foreground size-6 rounded-full" size="icon" variant="ghost">
               <EllipsisVerticalIcon />
               <span className="sr-only">Menu</span>
             </Button>
@@ -64,11 +64,11 @@ const TotalEarningCard = ({ earningData, title, earning, trend, percentage, comp
         </div>
         <div className="flex flex-1 flex-col justify-evenly gap-4">
           {earningData.map((earning, index) => (
-            <div key={index} className="flex items-center justify-between gap-2.5">
+            <div className="flex items-center justify-between gap-2.5" key={index}>
               <div className="flex items-center justify-between gap-2.5">
                 <Avatar className="size-11 rounded-sm">
                   <AvatarFallback className="bg-primary/10 shrink-0 rounded-sm">
-                    <img src={earning.img} alt={earning.platform} className="size-6" />
+                    <img alt={earning.platform} className="size-6" src={earning.img} />
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col gap-1">
@@ -78,7 +78,7 @@ const TotalEarningCard = ({ earningData, title, earning, trend, percentage, comp
               </div>
               <div className="space-y-2">
                 <p className="text-sm">{earning.earnings}</p>
-                <Progress value={earning.progressPercentage} className="w-36" />
+                <Progress className="w-36" value={earning.progressPercentage} />
               </div>
             </div>
           ))}

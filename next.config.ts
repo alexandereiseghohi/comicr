@@ -173,10 +173,12 @@ export default sentryDSN
         deleteSourcemapsAfterUpload: true,
       },
 
-      // Disable automatic instrumentation for specific routes
-      disableLogger: true,
-
-      // Automatically tree-shake Sentry logger statements
-      automaticVercelMonitors: true,
+      // Sentry Webpack options (see deprecation warnings)
+      webpack: {
+        treeshake: {
+          removeDebugLogging: true,
+        },
+        automaticVercelMonitors: true,
+      },
     })
   : finalConfig;

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+
 import { cn } from "@/lib/utils";
 
 const MouseEnterContext = createContext<[boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined>(
@@ -45,22 +46,22 @@ export const CardContainer = ({ children, className, containerClassName }: CardC
   return (
     <MouseEnterContext.Provider value={[isMouseEntered, setIsMouseEntered]}>
       <div
-        className={cn("py-20 flex items-center justify-center", containerClassName)}
+        className={cn("flex items-center justify-center py-20", containerClassName)}
         style={{
           perspective: "1000px",
         }}
       >
         <div
-          className={cn("flex items-center justify-center relative transition-all duration-200 ease-linear", className)}
-          role="button"
-          tabIndex={0}
+          className={cn("relative flex items-center justify-center transition-all duration-200 ease-linear", className)}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           onMouseMove={handleMouseMove}
           ref={containerRef}
+          role="button"
           style={{
             transformStyle: "preserve-3d",
           }}
+          tabIndex={0}
         >
           {children}
         </div>
@@ -75,24 +76,20 @@ export interface CardBodyProps {
 }
 
 export const CardBody = ({ children, className }: CardBodyProps) => {
-  return (
-    <div className={cn("h-96 w-96 [transform-style:preserve-3d] [&>*]:[transform-style:preserve-3d]", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("h-96 w-96 transform-3d *:transform-3d", className)}>{children}</div>;
 };
 
 export type CardItemProps = {
   as?: React.ElementType;
   children: React.ReactNode;
   className?: string;
-  translateX?: number | string;
-  translateY?: number | string;
-  translateZ?: number | string;
   rotateX?: number | string;
   rotateY?: number | string;
   rotateZ?: number | string;
-} & Record<string, any>;
+  translateX?: number | string;
+  translateY?: number | string;
+  translateZ?: number | string;
+} & React.HTMLAttributes<HTMLElement>;
 
 export const CardItem = ({
   as: Tag = "div",
@@ -106,7 +103,7 @@ export const CardItem = ({
   rotateZ = 0,
   ...rest
 }: CardItemProps) => {
-  const ref = useRef<any>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [isMouseEntered] = useMouseEnter();
 
   useEffect(() => {
@@ -149,24 +146,24 @@ export function Demo() {
   return (
     <div className="fixed inset-0 flex items-center justify-center">
       <CardContainer containerClassName="py-0">
-        <CardBody className="relative h-auto w-auto rounded-xl border bg-card p-6 shadow-xl">
-          <CardItem translateZ={50} className="text-xl font-bold">
+        <CardBody className="bg-card relative h-auto w-auto rounded-xl border p-6 shadow-xl">
+          <CardItem className="text-xl font-bold" translateZ={50}>
             3D Card Effect
           </CardItem>
-          <CardItem translateZ={60} className="mt-2 max-w-sm text-sm text-muted-foreground">
+          <CardItem className="text-muted-foreground mt-2 max-w-sm text-sm" translateZ={60}>
             Hover over this card to see the 3D tilt effect. Elements pop out at different depths.
           </CardItem>
-          <CardItem translateZ={100} className="mt-4 w-full">
-            <img src="https://picsum.photos/300/200" alt="Demo" className="h-40 w-full rounded-lg object-cover" />
+          <CardItem className="mt-4 w-full" translateZ={100}>
+            <img alt="Demo" className="h-40 w-full rounded-lg object-cover" src="https://picsum.photos/300/200" />
           </CardItem>
           <div className="mt-4 flex justify-between">
             <CardItem
+              className="bg-primary text-primary-foreground rounded-lg px-4 py-2 text-sm font-medium"
               translateZ={40}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
             >
               Learn More
             </CardItem>
-            <CardItem translateZ={40} className="rounded-lg border px-4 py-2 text-sm font-medium">
+            <CardItem className="rounded-lg border px-4 py-2 text-sm font-medium" translateZ={40}>
               Sign Up
             </CardItem>
           </div>

@@ -1,5 +1,6 @@
 ---
 description: "Brainstorm and develop new application ideas through fun, interactive questioning until ready for specification creation."
+name: "Idea Generator"
 tools:
   [
     "changes",

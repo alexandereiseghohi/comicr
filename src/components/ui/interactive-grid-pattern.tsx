@@ -1,17 +1,18 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { cn } from "@/lib/utils";
+
 export interface InteractiveGridPatternProps {
-  className?: string;
-  children?: React.ReactNode;
-  /** Size of each grid cell in pixels */
-  cellSize?: number;
-  /** Glow color on hover */
-  glowColor?: string;
   /** Border color of grid lines */
   borderColor?: string;
+  /** Size of each grid cell in pixels */
+  cellSize?: number;
+  children?: React.ReactNode;
+  className?: string;
+  /** Glow color on hover */
+  glowColor?: string;
   /** Mouse proximity radius for subtle highlighting */
   proximity?: number;
 }
@@ -26,7 +27,7 @@ export function InteractiveGridPattern({
 }: InteractiveGridPatternProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [grid, setGrid] = useState({ rows: 0, cols: 0, scale: 1 });
-  const [hoveredCell, setHoveredCell] = useState<number | null>(null);
+  const [hoveredCell, setHoveredCell] = useState<null | number>(null);
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
 
   const updateGrid = useCallback(() => {
@@ -70,15 +71,15 @@ export function InteractiveGridPattern({
 
   return (
     <div
-      ref={containerRef}
       className={cn("fixed inset-0 overflow-hidden bg-neutral-950", className)}
-      onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
+      ref={containerRef}
     >
       {/* Grid */}
       <div className="absolute inset-0">
         {Array.from({ length: grid.rows }).map((_, rowIndex) => (
-          <div key={rowIndex} className="flex">
+          <div className="flex" key={rowIndex}>
             {Array.from({ length: grid.cols }).map((_, colIndex) => {
               const index = rowIndex * grid.cols + colIndex;
               const cellX = colIndex * scaledCellSize + scaledCellSize / 2;
@@ -91,8 +92,10 @@ export function InteractiveGridPattern({
 
               return (
                 <div
-                  key={index}
                   className="shrink-0 border transition-all duration-1000 ease-out"
+                  key={index}
+                  onMouseEnter={() => setHoveredCell(index)}
+                  onMouseLeave={() => setHoveredCell(null)}
                   style={{
                     width: scaledCellSize,
                     height: scaledCellSize,
@@ -107,8 +110,6 @@ export function InteractiveGridPattern({
                       : "none",
                     transitionDuration: isHovered ? "0ms" : "1000ms",
                   }}
-                  onMouseEnter={() => setHoveredCell(index)}
-                  onMouseLeave={() => setHoveredCell(null)}
                 />
               );
             })}
@@ -118,7 +119,7 @@ export function InteractiveGridPattern({
 
       {/* Center ambient glow */}
       <div
-        className="pointer-events-none absolute start-1/2 top-1/2 -translate-x-1/2 rtl:translate-x-1/2 -translate-y-1/2 rounded-full opacity-20"
+        className="pointer-events-none absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 rtl:translate-x-1/2"
         style={{
           width: "60vmin",
           height: "60vmin",

@@ -4,6 +4,7 @@ import { Mail, MapPin, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { sendContactEmailAction } from "@/actions/contact";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -11,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 // Ensure the import path and export are correct. If the file does not exist, create a stub in src/lib/actions/contact.ts
-import { sendContactEmailAction } from "@/lib/actions/contact";
 import { type ContactInput, contactSchema } from "@/schemas/contact.schema";
 
 /* eslint-disable react/no-unescaped-entities */
@@ -40,7 +40,7 @@ export default function ContactPage() {
       } else {
         toast.error(result.error || "Failed to send message. Please try again later.");
       }
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);

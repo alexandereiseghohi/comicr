@@ -38,7 +38,7 @@ import {
   deleteAuthorAction,
   restoreAuthorAction,
   updateAuthorAction,
-} from "@/lib/actions/author.actions";
+} from "@/actions/author.actions";
 
 describe("author actions", () => {
   beforeEach(() => {

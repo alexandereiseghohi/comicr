@@ -1,17 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { getAuthorById } from "@/database/queries/author.queries";
 vi.mock("@/database/db", () => {
-  // Import inside factory to avoid hoisting issues
   return (async () => {
     const { createSimpleMockChain } = await import("./mock-db");
     const mockResult = { id: 2, name: "Mock Author", bio: "bio", image: null };
-    const chain = createSimpleMockChain({ success: true, data: mockResult });
+    const chain = createSimpleMockChain(mockResult);
     return { db: chain };
   })();
 });
-
-import { getAuthorById } from "@/database/queries/author.queries";
-
 type Author = { bio: null | string; id: number; image: null | string; name: string };
 
 describe("author queries", () => {
@@ -19,7 +16,7 @@ describe("author queries", () => {
     const res = await getAuthorById(2);
     expect(res.success).toBe(true);
     expect(res.data).toBeTruthy();
-    const data = res.data as unknown as Author;
+    const data = res.data as Author;
     expect(data.id).toBe(2);
     expect(data.name).toBe("Mock Author");
   });

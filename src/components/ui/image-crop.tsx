@@ -4,8 +4,8 @@ import { CropIcon, RotateCcwIcon } from "lucide-react";
 import { Slot } from "radix-ui";
 import {
   type ComponentProps,
-  type CSSProperties,
   createContext,
+  type CSSProperties,
   type MouseEvent,
   type ReactNode,
   type RefObject,
@@ -23,6 +23,7 @@ import ReactCrop, {
   type PixelCrop,
   type ReactCropProps,
 } from "react-image-crop";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -89,18 +90,18 @@ const getCroppedPngImage = async (
 };
 
 interface ImageCropContextType {
-  file: File;
-  maxImageSize: number;
-  imgSrc: string;
+  applyCrop: () => Promise<void>;
+  completedCrop: null | PixelCrop;
   crop: PercentCrop | undefined;
-  completedCrop: PixelCrop | null;
-  imgRef: RefObject<HTMLImageElement | null>;
-  onCrop?: (croppedImage: string) => void;
-  reactCropProps: Omit<ReactCropProps, "onChange" | "onComplete" | "children">;
+  file: File;
   handleChange: (pixelCrop: PixelCrop, percentCrop: PercentCrop) => void;
   handleComplete: (pixelCrop: PixelCrop, percentCrop: PercentCrop) => Promise<void>;
+  imgRef: RefObject<HTMLImageElement | null>;
+  imgSrc: string;
+  maxImageSize: number;
+  onCrop?: (croppedImage: string) => void;
   onImageLoad: (e: SyntheticEvent<HTMLImageElement>) => void;
-  applyCrop: () => Promise<void>;
+  reactCropProps: Omit<ReactCropProps, "children" | "onChange" | "onComplete">;
   resetCrop: () => void;
 }
 
@@ -115,13 +116,13 @@ const useImageCrop = () => {
 };
 
 export type ImageCropProps = {
+  children: ReactNode;
   file: File;
   maxImageSize?: number;
-  onCrop?: (croppedImage: string) => void;
-  children: ReactNode;
   onChange?: ReactCropProps["onChange"];
   onComplete?: ReactCropProps["onComplete"];
-} & Omit<ReactCropProps, "onChange" | "onComplete" | "children">;
+  onCrop?: (croppedImage: string) => void;
+} & Omit<ReactCropProps, "children" | "onChange" | "onComplete">;
 
 export const ImageCrop = ({
   file,
@@ -135,7 +136,7 @@ export const ImageCrop = ({
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [imgSrc, setImgSrc] = useState<string>("");
   const [crop, setCrop] = useState<PercentCrop>();
-  const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
+  const [completedCrop, setCompletedCrop] = useState<null | PixelCrop>(null);
   const [initialCrop, setInitialCrop] = useState<PercentCrop>();
 
   useEffect(() => {
@@ -201,8 +202,8 @@ export const ImageCrop = ({
 };
 
 export interface ImageCropContentProps {
-  style?: CSSProperties;
   className?: string;
+  style?: CSSProperties;
 }
 
 export const ImageCropContent = ({ style, className }: ImageCropContentProps) => {
@@ -215,7 +216,7 @@ export const ImageCropContent = ({ style, className }: ImageCropContentProps) =>
 
   return (
     <ReactCrop
-      className={cn("max-h-[277px] max-w-full", className)}
+      className={cn("max-h-69.25 max-w-full", className)}
       crop={crop}
       onChange={handleChange}
       onComplete={handleComplete}
@@ -243,14 +244,14 @@ export const ImageCropApply = ({ asChild = false, children, onClick, ...props }:
 
   if (asChild) {
     return (
-      <Slot.Root onClick={handleClick} {...(props as any)}>
+      <Slot.Root onClick={handleClick} {...props}>
         {children}
       </Slot.Root>
     );
   }
 
   return (
-    <Button onClick={handleClick} size="icon" variant="ghost" {...(props as any)}>
+    <Button onClick={handleClick} size="icon" variant="ghost" {...props}>
       {children ?? <CropIcon className="size-4" />}
     </Button>
   );
@@ -270,14 +271,14 @@ export const ImageCropReset = ({ asChild = false, children, onClick, ...props }:
 
   if (asChild) {
     return (
-      <Slot.Root onClick={handleClick} {...(props as any)}>
+      <Slot.Root onClick={handleClick} {...props}>
         {children}
       </Slot.Root>
     );
   }
 
   return (
-    <Button onClick={handleClick} size="icon" variant="ghost" {...(props as any)}>
+    <Button onClick={handleClick} size="icon" variant="ghost" {...props}>
       {children ?? <RotateCcwIcon className="size-4" />}
     </Button>
   );
@@ -287,8 +288,8 @@ export const ImageCropReset = ({ asChild = false, children, onClick, ...props }:
 export type CropperProps = Omit<ReactCropProps, "onChange"> & {
   file: File;
   maxImageSize?: number;
-  onCrop?: (croppedImage: string) => void;
   onChange?: ReactCropProps["onChange"];
+  onCrop?: (croppedImage: string) => void;
 };
 
 export const Cropper = ({
@@ -307,7 +308,7 @@ export const Cropper = ({
     onChange={onChange}
     onComplete={onComplete}
     onCrop={onCrop}
-    {...(props as any)}
+    {...props}
   >
     <ImageCropContent className={className} style={style} />
   </ImageCrop>
@@ -318,7 +319,7 @@ import { UploadIcon } from "lucide-react";
 
 export function Demo() {
   const [file, setFile] = useState<File | null>(null);
-  const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const [croppedImage, setCroppedImage] = useState<null | string>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -332,14 +333,14 @@ export function Demo() {
     <div className="fixed inset-0 flex items-center justify-center p-8">
       <div className="flex flex-col items-center gap-4">
         {!file ? (
-          <label className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 p-8 transition-colors hover:border-muted-foreground/50">
-            <UploadIcon className="size-8 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Click to upload an image</span>
-            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+          <label className="border-muted-foreground/25 hover:border-muted-foreground/50 flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed p-8 transition-colors">
+            <UploadIcon className="text-muted-foreground size-8" />
+            <span className="text-muted-foreground text-sm">Click to upload an image</span>
+            <input accept="image/*" className="hidden" onChange={handleFileChange} type="file" />
           </label>
         ) : (
           <div className="flex flex-col items-center gap-4">
-            <ImageCrop file={file} aspect={1} onCrop={setCroppedImage}>
+            <ImageCrop aspect={1} file={file} onCrop={setCroppedImage}>
               <ImageCropContent className="max-w-sm" />
               <div className="mt-2 flex justify-center gap-2">
                 <ImageCropReset />
@@ -348,8 +349,8 @@ export function Demo() {
             </ImageCrop>
             {croppedImage && (
               <div className="flex flex-col items-center gap-2">
-                <span className="text-sm text-muted-foreground">Cropped result:</span>
-                <img src={croppedImage} alt="Cropped" className="max-w-32 rounded-lg" />
+                <span className="text-muted-foreground text-sm">Cropped result:</span>
+                <img alt="Cropped" className="max-w-32 rounded-lg" src={croppedImage} />
               </div>
             )}
           </div>

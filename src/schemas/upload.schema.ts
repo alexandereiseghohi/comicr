@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ALLOWED_FILE_TYPES, FILE_SIZE_LIMITS } from "@/lib/storage/types";
+import { ALLOWED_FILE_TYPES, FILE_SIZE_LIMITS } from "@/storage/types";
 
 /**
  * Upload request schema

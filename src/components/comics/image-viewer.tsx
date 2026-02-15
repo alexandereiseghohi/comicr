@@ -237,9 +237,11 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
 
   return (
     <div
+      aria-label={alt}
       className={cn("bg-background relative overflow-hidden", className)}
       data-testid="image-viewer"
       ref={containerRef}
+      role="region"
     >
       {/* Zoom controls */}
       <div className="absolute top-4 right-4 z-10 flex flex-col gap-2" data-testid="zoom-controls">
@@ -285,6 +287,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
         >
           <Image
             alt={alt}
+            aria-describedby={caption ? "image-caption" : undefined}
             className="max-w-full rounded object-contain shadow select-none"
             draggable={false}
             height={height || 1800}
@@ -296,7 +299,11 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
         </div>
       </div>
 
-      {caption && <figcaption className="text-muted-foreground mt-2 text-center text-sm">{caption}</figcaption>}
+      {caption && (
+        <figcaption className="text-muted-foreground mt-2 text-center text-sm" id="image-caption">
+          {caption}
+        </figcaption>
+      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 "use server";
 import { z } from "zod";
 
-import { signUpAction } from "@/lib/actions/auth.actions";
+import { signUpAction } from "@/actions/auth.actions";
 
 const signUpSchema = z.object({
   email: z.string().email(),

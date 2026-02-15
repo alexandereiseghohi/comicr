@@ -42,7 +42,7 @@ import {
   deleteTypeAction,
   restoreTypeAction,
   updateTypeAction,
-} from "@/lib/actions/type.actions";
+} from "@/actions/type.actions";
 
 describe("type actions", () => {
   beforeEach(() => {

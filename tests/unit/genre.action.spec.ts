@@ -42,7 +42,7 @@ import {
   deleteGenreAction,
   restoreGenreAction,
   updateGenreAction,
-} from "@/lib/actions/genre.actions";
+} from "@/actions/genre.actions";
 
 describe("genre actions", () => {
   beforeEach(() => {

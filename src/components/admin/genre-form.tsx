@@ -5,13 +5,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 
+import { createGenreAction, updateGenreAction } from "@/actions/genre.actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { createGenreAction, updateGenreAction } from "@/lib/actions/genre.actions";
 import { createGenreSchema, updateGenreSchema } from "@/schemas/genre-schema";
 
 type CreateFormValues = z.infer<typeof createGenreSchema>;

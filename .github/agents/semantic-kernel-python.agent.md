@@ -1,5 +1,6 @@
 ---
 description: "Create, update, refactor, explain or work with code using the Python version of Semantic Kernel."
+name: "Semantic Kernel Python"
 tools:
   [
     "changes",

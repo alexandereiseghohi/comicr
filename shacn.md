@@ -8,9 +8,14 @@ pnpm dlx shadcn@latest add @ss-components/data-table-04 ;
 pnpm dlx shadcn@latest add @ss-blocks/dashboard-shell-01 @ss-blocks/blog-component-01 @ss-blocks/navbar-component-01 @ss-blocks/footer-component-01 @ss-blocks/login-page-01 @ss-blocks/register-01 @ss-blocks/application-shell-01 ;
 pnpm dlx shadcn@latest add <https://www.shadcn.io/r/table.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/list.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/choicebox.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/color-picker.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/dropzone.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/video-player.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/mini-calendar.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/combobox.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/image-crop.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/image-zoom.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/announcement.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/avatar-group.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/pill.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/tags.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/relative-time.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/3d-card.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/spinner.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/interactive-grid-pattern.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/marquee.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/use-local-storage.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/use-boolean.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/use-local-storage.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/use-debounce-value.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/use-on-click-outside.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/use-media-query.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/use-dark-mode.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/use-is-client.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/use-boolean.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278> <https://www.shadcn.io/r/use-copy-to-clipboard.json?token=9df4f3065b4bd58f86d8e851a968f6e4eb117221be642521320f8cc485576278>
 
-You are working in the comicr monorepo (Next.js 16, TypeScript, pnpm). Your task is to batch fix all errors, warnings, and deprecations found during:
+You are working in the comicr monorepo (Next.js 16, TypeScript, pnpm) as a full stack developer. Your task is to batch fix all errors, warnings, and deprecations found during the build, validation, and test processes. Follow the steps outlined below to ensure a clean and error-free codebase.
 
-- pnpm db:seed
+Validate and Build commands:
+
+- pnpm lint
+- pnpm type-check
+- pnpm test
+- pnpm build
 
 Follow this process:
 
@@ -21,6 +26,15 @@ Follow this process:
 5. Document all fixes made, referencing affected files and error types.
 6. Update all relevant documentation (README, CHANGELOG, inline comments, architectural docs) if any fixes impact usage, setup, or architecture.
 7. Commit all fixes in a single batch with a clear summary.
+8. Read the full file with errors and warnings and getting the root cause of the errors and warnings.
+9. Search the web for docs on all packages giving errors and read and memorize every word in the docs to understand the root cause of the errors and warnings.
+10. Think of any improvements that can be made.
+11. Show me the full corrected code with their improvements.
+12. Make all patch in either batch or sequentially or more granularly depending on the number of errors and warnings and the complexity of the fixes.
+13. Create a detailed report of all changes made, including before-and-after code snippets for significant fixes, explanations of why the changes were necessary, and any relevant links to documentation or resources that informed the fixes.
+14. After all fixes are made, run the following commands to ensure that the codebase is clean and free of errors and warnings:
+15. cross-verify that all scripts complete successfully with zero errors and zero warnings. If any issues remain, repeat the process until the codebase is clean.
+16. Verify all fixes by repeating the process and only stopping if no errors and warnings occur after executing the following commands:
 
 **Constraints:**
 

@@ -1,37 +1,9 @@
-// Fallback table element wrappers for missing raw components
-const TableRaw = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <table className={className}>{children}</table>
-);
-const TableHeadRaw = ({ className, children, ...props }: { className?: string; children: React.ReactNode }) => (
-  <thead className={className} {...props}>
-    {children}
-  </thead>
-);
-const TableHeaderRaw = ({ className, children, ...props }: { className?: string; children: React.ReactNode }) => (
-  <thead className={className} {...props}>
-    {children}
-  </thead>
-);
-const TableRowRaw = ({ className, children, ...props }: { className?: string; children: React.ReactNode }) => (
-  <tr className={className} {...props}>
-    {children}
-  </tr>
-);
-interface TableCellRawProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
-  className?: string;
-  children: React.ReactNode;
-}
-const TableCellRaw = ({ className, children, ...props }: TableCellRawProps) => (
-  <td className={className} {...props}>
-    {children}
-  </td>
-);
-const TableBodyRaw = ({ className, children, ...props }: { className?: string; children: React.ReactNode }) => (
-  <tbody className={className} {...props}>
-    {children}
-  </tbody>
-);
-("use client");
+"use client";
+
+import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import { atom, useAtom } from "jotai";
+import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react";
+import { createContext, memo, useCallback, useContext, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -42,21 +14,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 // Removed import of aliased Table* components to avoid redeclaration conflicts
 import { cn } from "@/lib/utils";
+
 import type { Cell, Column, ColumnDef, Header, HeaderGroup, Row, SortingState, Table } from "@tanstack/react-table";
-import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
-import { atom, useAtom } from "jotai";
-import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react";
 import type { HTMLAttributes, ReactNode } from "react";
-import { createContext, memo, useCallback, useContext, useEffect, useState } from "react";
 
 export type { ColumnDef } from "@tanstack/react-table";
 
 const sortingAtom = atom<SortingState>([]);
 
 export const TableContext = createContext<{
-  data: unknown[];
   columns: ColumnDef<unknown, unknown>[];
-  table: Table<unknown> | null;
+  data: unknown[];
+  table: null | Table<unknown>;
 }>({
   data: [],
   columns: [],
@@ -64,10 +33,10 @@ export const TableContext = createContext<{
 });
 
 export interface TableProviderProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
   children: ReactNode;
   className?: string;
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
 export function TableProvider<TData, TValue>({
@@ -107,8 +76,8 @@ export function TableProvider<TData, TValue>({
 }
 
 export interface TableHeadProps {
-  header: Header<unknown, unknown>;
   className?: string;
+  header: Header<unknown, unknown>;
 }
 
 export const TableHead = memo(({ header, className }: TableHeadProps) => (
@@ -120,8 +89,8 @@ export const TableHead = memo(({ header, className }: TableHeadProps) => (
 TableHead.displayName = "TableHead";
 
 export interface TableHeaderGroupProps {
-  headerGroup: HeaderGroup<unknown>;
   children: (props: { header: Header<unknown, unknown> }) => ReactNode;
+  headerGroup: HeaderGroup<unknown>;
 }
 
 export const TableHeaderGroup = ({ headerGroup, children }: TableHeaderGroupProps) => (
@@ -129,8 +98,8 @@ export const TableHeaderGroup = ({ headerGroup, children }: TableHeaderGroupProp
 );
 
 export interface TableHeaderProps {
-  className?: string;
   children: (props: { headerGroup: HeaderGroup<unknown> }) => ReactNode;
+  className?: string;
 }
 
 export const TableHeader = ({ className, children }: TableHeaderProps) => {
@@ -166,7 +135,7 @@ export function TableColumnHeader<TData, TValue>({ column, title, className }: T
     <div className={cn("flex items-center space-x-2 rtl:space-x-reverse", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="-ms-3 h-8 data-[state=open]:bg-accent" size="sm" variant="ghost">
+          <Button className="data-[state=open]:bg-accent -ms-3 h-8" size="sm" variant="ghost">
             <span>{title}</span>
             {column.getIsSorted() === "desc" ? (
               <ArrowDownIcon className="ms-2 h-4 w-4" />
@@ -179,11 +148,11 @@ export function TableColumnHeader<TData, TValue>({ column, title, className }: T
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={handleSortAsc}>
-            <ArrowUpIcon className="me-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowUpIcon className="text-muted-foreground/70 me-2 h-3.5 w-3.5" />
             Asc
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleSortDesc}>
-            <ArrowDownIcon className="me-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowDownIcon className="text-muted-foreground/70 me-2 h-3.5 w-3.5" />
             Desc
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -202,9 +171,9 @@ export const TableCell = ({ cell, className }: TableCellProps) => (
 );
 
 export interface TableRowProps {
-  row: Row<unknown>;
   children: (props: { cell: Cell<unknown, unknown> }) => ReactNode;
   className?: string;
+  row: Row<unknown>;
 }
 
 export const TableRow = ({ row, children, className }: TableRowProps) => (
@@ -239,9 +208,9 @@ export const TableBody = ({ children, className }: TableBodyProps) => {
 
 // Demo
 type DemoUser = {
+  email: string;
   id: string;
   name: string;
-  email: string;
   role: string;
   status: "active" | "inactive";
 };
@@ -318,12 +287,12 @@ export function TableDemo() {
   }, []);
 
   if (!mounted) {
-    return <div className="h-96 w-full max-w-4xl bg-muted/50 animate-pulse rounded-lg" />;
+    return <div className="bg-muted/50 h-96 w-full max-w-4xl animate-pulse rounded-lg" />;
   }
 
   return (
-    <div className="flex items-center justify-center h-screen w-screen p-4">
-      <div className="w-full max-w-4xl border rounded-lg">
+    <div className="flex h-screen w-screen items-center justify-center p-4">
+      <div className="w-full max-w-4xl rounded-lg border">
         <TableProvider columns={demoColumns} data={demoData}>
           <TableHeader>
             {({ headerGroup }) => (
@@ -334,7 +303,7 @@ export function TableDemo() {
           </TableHeader>
           <TableBody>
             {({ row }) => (
-              <TableRow row={row} key={row.id}>
+              <TableRow key={row.id} row={row}>
                 {({ cell }) => <TableCell cell={cell} key={cell.id} />}
               </TableRow>
             )}
@@ -344,3 +313,37 @@ export function TableDemo() {
     </div>
   );
 }
+
+// Fallback table element wrappers for missing raw components
+const TableRaw = ({ className, children }: { children: React.ReactNode; className?: string }) => (
+  <table className={className}>{children}</table>
+);
+const TableHeadRaw = ({ className, children, ...props }: { children: React.ReactNode; className?: string }) => (
+  <thead className={className} {...props}>
+    {children}
+  </thead>
+);
+const TableHeaderRaw = ({ className, children, ...props }: { children: React.ReactNode; className?: string }) => (
+  <thead className={className} {...props}>
+    {children}
+  </thead>
+);
+const TableRowRaw = ({ className, children, ...props }: { children: React.ReactNode; className?: string }) => (
+  <tr className={className} {...props}>
+    {children}
+  </tr>
+);
+interface TableCellRawProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
+  children: React.ReactNode;
+  className?: string;
+}
+const TableCellRaw = ({ className, children, ...props }: TableCellRawProps) => (
+  <td className={className} {...props}>
+    {children}
+  </td>
+);
+const TableBodyRaw = ({ className, children, ...props }: { children: React.ReactNode; className?: string }) => (
+  <tbody className={className} {...props}>
+    {children}
+  </tbody>
+);

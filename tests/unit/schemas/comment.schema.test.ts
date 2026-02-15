@@ -1,3 +1,4 @@
+const GREAT_CHAPTER = "Great chapter!";
 import { describe, expect, it } from "vitest";
 
 import { commentSchema } from "@/schemas/comment.schema";
@@ -7,7 +8,7 @@ describe("commentSchema", () => {
     it("should accept valid root comment", () => {
       const input = {
         chapterId: 1,
-        content: "Great chapter!",
+        content: GREAT_CHAPTER,
       };
 
       const result = commentSchema.safeParse(input);
@@ -44,13 +45,13 @@ describe("commentSchema", () => {
     it("should trim whitespace from content", () => {
       const input = {
         chapterId: 1,
-        content: "  Great chapter!  ",
+        content: `  ${GREAT_CHAPTER}  `,
       };
 
       const result = commentSchema.safeParse(input);
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.content).toBe("Great chapter!");
+        expect(result.data.content).toBe(GREAT_CHAPTER);
       }
     });
   });
@@ -81,7 +82,7 @@ describe("commentSchema", () => {
     it("should reject negative chapterId", () => {
       const input = {
         chapterId: -1,
-        content: "Great chapter!",
+        content: GREAT_CHAPTER,
       };
 
       const result = commentSchema.safeParse(input);
@@ -91,7 +92,7 @@ describe("commentSchema", () => {
     it("should reject negative parentId", () => {
       const input = {
         chapterId: 1,
-        content: "Great chapter!",
+        content: GREAT_CHAPTER,
         parentId: -1,
       };
 

@@ -1,7 +1,7 @@
 "use server";
 import { z } from "zod";
 
-import { resetPasswordAction } from "@/lib/actions/auth.actions";
+import { resetPasswordAction } from "@/actions/auth.actions";
 
 const resetPasswordSchema = z
   .object({

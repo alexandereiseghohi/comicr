@@ -3,11 +3,11 @@ import * as React from "react";
 
 // ============================================================================
 
-type EventType = "mousedown" | "mouseup" | "touchstart" | "touchend" | "focusin" | "focusout";
+type EventType = "focusin" | "focusout" | "mousedown" | "mouseup" | "touchend" | "touchstart";
 
 export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
-  ref: React.RefObject<T | null> | React.RefObject<T | null>[],
-  handler: (event: MouseEvent | TouchEvent | FocusEvent) => void,
+  ref: React.RefObject<null | T> | React.RefObject<null | T>[],
+  handler: (event: FocusEvent | MouseEvent | TouchEvent) => void,
   eventType: EventType = "mousedown",
   eventListenerOptions: AddEventListenerOptions = {}
 ): void {
@@ -18,7 +18,7 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
   }, [handler]);
 
   React.useEffect(() => {
-    const listener = (event: MouseEvent | TouchEvent | FocusEvent) => {
+    const listener = (event: FocusEvent | MouseEvent | TouchEvent) => {
       const target = event.target as Node;
 
       // Do nothing if the target is not connected element with document

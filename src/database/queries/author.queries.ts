@@ -1,3 +1,4 @@
+const QUERY_FAILED = "Query failed";
 import { and, eq, ilike } from "drizzle-orm";
 
 import { db } from "@/database/db";
@@ -8,7 +9,7 @@ export async function getAuthors() {
     const results = await db.select().from(author).where(eq(author.isActive, true)).orderBy(author.name);
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -21,7 +22,7 @@ export async function getAuthorById(id: number) {
       .limit(1);
     return { success: true, data: results[0] || null };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -44,7 +45,7 @@ export async function getAuthorBySlug(slug: string) {
       .limit(1);
     return { success: true, data: results[0] || null };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -56,6 +57,6 @@ export async function searchAuthors(term: string) {
       .where(and(ilike(author.name, `%${term}%`), eq(author.isActive, true)));
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }

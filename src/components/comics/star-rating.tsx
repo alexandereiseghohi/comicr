@@ -117,6 +117,8 @@ export function StarRating({
       <div className="flex items-center gap-1" data-testid="rating-stars">
         {[1, 2, 3, 4, 5].map((value) => {
           const isFilled = value <= displayRating;
+
+          const safeSize = (typeof size === "string" && size in sizeClasses ? size : "md") as keyof typeof sizeClasses;
           return (
             <button
               aria-label={`Rate ${value} stars`}
@@ -135,7 +137,7 @@ export function StarRating({
             >
               <Star
                 className={cn(
-                  sizeClasses[size],
+                  sizeClasses[safeSize],
                   isFilled ? "fill-yellow-400 text-yellow-400" : "fill-transparent text-slate-300",
                   interactive && "hover:text-yellow-300"
                 )}
@@ -185,6 +187,7 @@ export function StarRating({
               <div className="space-y-2">
                 <Label htmlFor="review">Review (Optional)</Label>
                 <Textarea
+                  aria-label="Review (optional)"
                   disabled={loading}
                   id="review"
                   maxLength={1000}

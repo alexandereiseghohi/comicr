@@ -4,13 +4,12 @@ import { eq, gt } from "drizzle-orm";
 
 import { auth } from "@/auth";
 import { userDAL } from "@/dal/user-dal";
+import { db } from "@/database/db";
 import { getUserByEmail } from "@/database/queries/user-queries";
 import { passwordResetToken, user } from "@/database/schema";
 import { hashPassword, verifyPassword } from "@/lib/password";
 import { SignUpSchema } from "@/schemas/auth.schema";
 import { type ActionResult } from "@/types";
-
-import { db } from "../../database/db";
 
 // ═══════════════════════════════════════════════════
 // SIGN UP ACTION
@@ -109,7 +108,7 @@ export async function requestPasswordResetAction(email: string): Promise<ActionR
     await db.delete(passwordResetToken).where(eq(passwordResetToken.email, email));
 
     // Store the hashed token using mutation
-    await import("../../database/mutations/password-reset-token.mutations").then((m) =>
+    await import("@/database/mutations/password-reset-token.mutations").then((m) =>
       m.createPasswordResetToken({
         email,
         token: hashedToken,

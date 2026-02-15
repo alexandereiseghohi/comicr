@@ -2,6 +2,7 @@
 
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
 import { createContext, type HTMLAttributes, useContext, useEffect, useState } from "react";
+
 import { cn } from "@/lib/utils";
 
 const formatDate = (date: Date, timeZone: string, options?: Intl.DateTimeFormatOptions) =>
@@ -25,8 +26,8 @@ const formatTime = (date: Date, timeZone: string, options?: Intl.DateTimeFormatO
   ).format(date);
 
 interface RelativeTimeContextType {
-  time: Date;
   dateFormatOptions?: Intl.DateTimeFormatOptions;
+  time: Date;
   timeFormatOptions?: Intl.DateTimeFormatOptions;
 }
 
@@ -42,10 +43,10 @@ const RelativeTimeContext = createContext<RelativeTimeContextType>({
 });
 
 export type RelativeTimeProps = HTMLAttributes<HTMLDivElement> & {
-  time?: Date;
+  dateFormatOptions?: Intl.DateTimeFormatOptions;
   defaultTime?: Date;
   onTimeChange?: (time: Date) => void;
-  dateFormatOptions?: Intl.DateTimeFormatOptions;
+  time?: Date;
   timeFormatOptions?: Intl.DateTimeFormatOptions;
 };
 
@@ -90,9 +91,9 @@ export const RelativeTime = ({
 };
 
 export type RelativeTimeZoneProps = HTMLAttributes<HTMLDivElement> & {
-  zone: string;
   dateFormatOptions?: Intl.DateTimeFormatOptions;
   timeFormatOptions?: Intl.DateTimeFormatOptions;
+  zone: string;
 };
 
 export interface RelativeTimeZoneContextType {
@@ -117,7 +118,7 @@ export const RelativeTimeZoneDisplay = ({ className, ...props }: RelativeTimeZon
   const display = formatTime(time, zone, timeFormatOptions);
 
   return (
-    <div className={cn("ps-8 text-muted-foreground tabular-nums", className)} {...(props as any)}>
+    <div className={cn("text-muted-foreground ps-8 tabular-nums", className)} {...(props as any)}>
       {display}
     </div>
   );
@@ -137,7 +138,7 @@ export type RelativeTimeZoneLabelProps = HTMLAttributes<HTMLDivElement>;
 
 export const RelativeTimeZoneLabel = ({ className, ...props }: RelativeTimeZoneLabelProps) => (
   <div
-    className={cn("flex h-4 items-center justify-center rounded-xs bg-secondary px-1.5 font-mono", className)}
+    className={cn("bg-secondary flex h-4 items-center justify-center rounded-xs px-1.5 font-mono", className)}
     {...(props as any)}
   />
 );
@@ -159,13 +160,13 @@ export function RelativeTimeDemo() {
   }, []);
 
   if (!mounted) {
-    return <div className="h-64 w-80 bg-muted/50 animate-pulse rounded-lg" />;
+    return <div className="bg-muted/50 h-64 w-80 animate-pulse rounded-lg" />;
   }
 
   return (
-    <div className="flex items-center justify-center h-screen w-screen">
-      <div className="border rounded-lg p-4 bg-background">
-        <h3 className="text-sm font-medium mb-3">World Clock</h3>
+    <div className="flex h-screen w-screen items-center justify-center">
+      <div className="bg-background rounded-lg border p-4">
+        <h3 className="mb-3 text-sm font-medium">World Clock</h3>
         <RelativeTime className="gap-3">
           {demoTimezones.map(({ zone, label, flag }) => (
             <RelativeTimeZone key={zone} zone={zone}>

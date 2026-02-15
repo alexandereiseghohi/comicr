@@ -22,22 +22,25 @@ import {
   SeedConfigSchema,
   TypeSeedSchema,
   UserSeedSchema,
-} from "@/lib/validations/seed";
+} from "@/validations/seed";
 
-const TEST_DIR = "./test-tmp-seed";
+const TEST_DIR = "test-tmp-seed";
 
 describe("imageHelper", () => {
+  const PUBLIC_DIR = path.resolve("public");
+  const TEST_PUBLIC_DIR = path.join(PUBLIC_DIR, TEST_DIR);
+
   beforeEach(async () => {
-    await fs.mkdir(TEST_DIR, { recursive: true });
+    await fs.mkdir(TEST_PUBLIC_DIR, { recursive: true });
     clearDownloadCache();
   });
 
   afterEach(async () => {
-    await fs.rm(TEST_DIR, { recursive: true, force: true });
+    await fs.rm(TEST_PUBLIC_DIR, { recursive: true, force: true });
   });
 
   it("returns existing file path when file already exists", async () => {
-    const file = path.join(TEST_DIR, "existing.jpg");
+    const file = path.join(TEST_PUBLIC_DIR, "existing.jpg");
     await fs.writeFile(file, "fakeimg");
 
     const result = await downloadAndSaveImage({

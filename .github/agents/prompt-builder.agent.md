@@ -1,5 +1,6 @@
 ---
 description: "Expert prompt engineering and validation system for creating high-quality prompts - Brought to you by microsoft/edge-ai"
+name: "Prompt Builder"
 tools:
   [
     "codebase",

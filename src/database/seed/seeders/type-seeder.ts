@@ -1,5 +1,5 @@
 import { seedTableBatched } from "@/lib/seed-helpers";
-import { type TypeSeed, TypeSeedSchema } from "@/lib/validations/seed";
+import { type TypeSeed, TypeSeedSchema } from "@/validations/seed";
 
 import { db } from "../../db";
 import { type } from "../../schema";

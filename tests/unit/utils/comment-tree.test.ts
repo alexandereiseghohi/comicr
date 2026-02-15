@@ -1,3 +1,14 @@
+const ROOT_COMMENT = "Root comment";
+const REPLY_TO_ROOT = "Reply to root";
+const ANOTHER_ROOT = "Another root";
+const LEVEL_1 = "Level 1";
+const LEVEL_2 = "Level 2";
+const LEVEL_3 = "Level 3";
+const TEST_COMMENT = "Test comment";
+const DELETED = "[deleted]";
+const REPLY_TO_DELETED = "Reply to deleted comment";
+const ROOT = "Root";
+const REPLY_TO_DELETED_PARENT = "Reply to deleted parent";
 import { describe, expect, it } from "vitest";
 
 import { buildCommentTree, type CommentWithUser } from "@/database/queries/comment-queries";
@@ -7,7 +18,7 @@ describe("buildCommentTree", () => {
     const comments: CommentWithUser[] = [
       {
         id: 1,
-        content: "Root comment",
+        content: ROOT_COMMENT,
         userId: "1",
         userName: "User1",
         userImage: null,
@@ -19,7 +30,7 @@ describe("buildCommentTree", () => {
       },
       {
         id: 2,
-        content: "Reply to root",
+        content: REPLY_TO_ROOT,
         userId: "2",
         userName: "User2",
         userImage: null,
@@ -31,7 +42,7 @@ describe("buildCommentTree", () => {
       },
       {
         id: 3,
-        content: "Another root",
+        content: ANOTHER_ROOT,
         userId: "3",
         userName: "User3",
         userImage: null,
@@ -55,7 +66,7 @@ describe("buildCommentTree", () => {
     const comments: CommentWithUser[] = [
       {
         id: 1,
-        content: "Level 1",
+        content: LEVEL_1,
         userId: "1",
         userName: "User1",
         userImage: null,
@@ -67,7 +78,7 @@ describe("buildCommentTree", () => {
       },
       {
         id: 2,
-        content: "Level 2",
+        content: LEVEL_2,
         userId: "2",
         userName: "User2",
         userImage: null,
@@ -79,7 +90,7 @@ describe("buildCommentTree", () => {
       },
       {
         id: 3,
-        content: "Level 3",
+        content: LEVEL_3,
         userId: "3",
         userName: "User3",
         userImage: null,
@@ -103,7 +114,7 @@ describe("buildCommentTree", () => {
     const comments: CommentWithUser[] = [
       {
         id: 1,
-        content: "Root",
+        content: ROOT,
         userId: "1",
         userName: "User1",
         userImage: null,
@@ -115,7 +126,7 @@ describe("buildCommentTree", () => {
       },
       {
         id: 2,
-        content: "Reply to deleted parent",
+        content: REPLY_TO_DELETED_PARENT,
         userId: "2",
         userName: "User2",
         userImage: null,
@@ -143,7 +154,7 @@ describe("buildCommentTree", () => {
     const comments: CommentWithUser[] = [
       {
         id: 1,
-        content: "Test comment",
+        content: TEST_COMMENT,
         userId: "1",
         userName: "TestUser",
         userImage: "https://example.com/avatar.jpg",
@@ -174,7 +185,7 @@ describe("buildCommentTree", () => {
     const comments: CommentWithUser[] = [
       {
         id: 1,
-        content: "[deleted]",
+        content: DELETED,
         userId: "1",
         userName: "User1",
         userImage: null,
@@ -186,7 +197,7 @@ describe("buildCommentTree", () => {
       },
       {
         id: 2,
-        content: "Reply to deleted comment",
+        content: REPLY_TO_DELETED,
         userId: "2",
         userName: "User2",
         userImage: null,

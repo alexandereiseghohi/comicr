@@ -62,16 +62,23 @@ export async function logAudit(entry: AuditLogEntry): Promise<AuditLogResult> {
     const id = crypto.randomUUID();
     const now = new Date();
 
-    // Prepare the log entry
+    // Helper to sanitize object keys against prototype pollution
+    function sanitizeObject(obj: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
+      if (!obj) return obj;
+      const dangerous = ["__proto__", "constructor", "prototype"];
+      return Object.fromEntries(Object.entries(obj).filter(([k]) => !dangerous.includes(k)));
+    }
+
+    // Prepare the log entry with sanitized fields
     const logEntry = {
       id,
       userId: entry.userId || null,
       action: entry.action,
       resource: entry.resource,
       resourceId: entry.resourceId || null,
-      details: entry.details ? JSON.stringify(entry.details) : null,
-      oldValues: entry.oldValues ? JSON.stringify(entry.oldValues) : null,
-      newValues: entry.newValues ? JSON.stringify(entry.newValues) : null,
+      details: entry.details ? JSON.stringify(sanitizeObject(entry.details)) : null,
+      oldValues: entry.oldValues ? JSON.stringify(sanitizeObject(entry.oldValues)) : null,
+      newValues: entry.newValues ? JSON.stringify(sanitizeObject(entry.newValues)) : null,
       ipAddress: entry.ipAddress || null,
       userAgent: entry.userAgent || null,
       sessionId: entry.sessionId || null,

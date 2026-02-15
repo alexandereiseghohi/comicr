@@ -1,5 +1,6 @@
 ---
 description: "Perform janitorial tasks on C#/.NET code including cleanup, modernization, and tech debt remediation."
+name: "C#/.NET Janitor"
 tools:
   [
     "changes",

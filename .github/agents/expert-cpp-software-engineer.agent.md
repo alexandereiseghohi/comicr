@@ -1,5 +1,6 @@
 ---
 description: "Provide expert C++ software engineering guidance using modern C++ and industry best practices."
+name: "C++ Expert"
 tools:
   [
     "changes",

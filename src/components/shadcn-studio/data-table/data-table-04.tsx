@@ -1,10 +1,5 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
-
-import { SearchIcon } from "lucide-react";
-
-import type { Column, ColumnDef, ColumnFiltersState, RowData, SortingState } from "@tanstack/react-table";
 import {
   getCoreRowModel,
   getFacetedMinMaxValues,
@@ -14,6 +9,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { SearchIcon } from "lucide-react";
+import { useId, useMemo, useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -30,23 +27,24 @@ import {
   TableProvider,
   TableRow,
 } from "@/components/ui/table";
-
 import { cn } from "@/lib/utils";
+
+import type { Column, ColumnDef, ColumnFiltersState, RowData, SortingState } from "@tanstack/react-table";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: "text" | "range" | "select";
+    filterVariant?: "range" | "select" | "text";
   }
 }
 
 type Item = {
+  availability: "In Stock" | "Limited" | "Out of Stock";
+  fallback: string;
   id: string;
+  price: number;
   product: string;
   productImage: string;
-  fallback: string;
-  price: number;
-  availability: "In Stock" | "Out of Stock" | "Limited";
   rating: number;
 };
 
@@ -55,16 +53,16 @@ const columns: ColumnDef<Item>[] = [
     id: "select",
     header: ({ table }) => (
       <Checkbox
+        aria-label="Select all"
         checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
+        aria-label="Select row"
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
       />
     ),
   },
@@ -74,7 +72,7 @@ const columns: ColumnDef<Item>[] = [
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
         <Avatar className="rounded-sm">
-          <AvatarImage src={row.original.productImage} alt={row.original.fallback} />
+          <AvatarImage alt={row.original.fallback} src={row.original.productImage} />
           <AvatarFallback className="text-xs">{row.original.fallback}</AvatarFallback>
         </Avatar>
         <div className="font-medium">{row.getValue("product")}</div>
@@ -249,14 +247,14 @@ const DataTableWithColumnFilterDemo = () => {
             {({ headerGroup }) => (
               <TableHeaderGroup headerGroup={headerGroup} key={headerGroup.id}>
                 {({ header }) => (
-                  <TableHead header={header} key={header.id} className="relative h-10 border-t select-none" />
+                  <TableHead className="relative h-10 border-t select-none" header={header} key={header.id} />
                 )}
               </TableHeaderGroup>
             )}
           </TableHeader>
           <TableBody>
             {({ row }) => (
-              <TableRow row={row} key={row.id} data-state={row.getIsSelected() && "selected"}>
+              <TableRow data-state={row.getIsSelected() && "selected"} key={row.id} row={row}>
                 {({ cell }) => <TableCell cell={cell} key={cell.id} />}
               </TableRow>
             )}
@@ -298,9 +296,9 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         <Label>{columnHeader}</Label>
         <div className="flex">
           <Input
-            id={`${id}-range-1`}
+            aria-label={`${columnHeader} min`}
             className="flex-1 rounded-e-none [-moz-appearance:textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
-            value={(columnFilterValue as [number, number])?.[0] ?? ""}
+            id={`${id}-range-1`}
             onChange={(e) =>
               column.setFilterValue((old: [number, number]) => [
                 e.target.value ? Number(e.target.value) : undefined,
@@ -309,12 +307,12 @@ function Filter({ column }: { column: Column<any, unknown> }) {
             }
             placeholder="Min"
             type="number"
-            aria-label={`${columnHeader} min`}
+            value={(columnFilterValue as [number, number])?.[0] ?? ""}
           />
           <Input
-            id={`${id}-range-2`}
+            aria-label={`${columnHeader} max`}
             className="-ms-px flex-1 rounded-s-none [-moz-appearance:textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
-            value={(columnFilterValue as [number, number])?.[1] ?? ""}
+            id={`${id}-range-2`}
             onChange={(e) =>
               column.setFilterValue((old: [number, number]) => [
                 old?.[0],
@@ -323,7 +321,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
             }
             placeholder="Max"
             type="number"
-            aria-label={`${columnHeader} max`}
+            value={(columnFilterValue as [number, number])?.[1] ?? ""}
           />
         </div>
       </div>
@@ -335,12 +333,12 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       <div className="*:not-first:mt-2">
         <Label htmlFor={`${id}-select`}>{columnHeader}</Label>
         <Select
-          value={columnFilterValue?.toString() ?? "all"}
           onValueChange={(value) => {
             column.setFilterValue(value === "all" ? undefined : value);
           }}
+          value={columnFilterValue?.toString() ?? "all"}
         >
-          <SelectTrigger id={`${id}-select`} className="w-full">
+          <SelectTrigger className="w-full" id={`${id}-select`}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -361,12 +359,12 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       <Label htmlFor={`${id}-input`}>{columnHeader}</Label>
       <div className="relative">
         <Input
-          id={`${id}-input`}
           className="peer ps-9"
-          value={(columnFilterValue ?? "") as string}
+          id={`${id}-input`}
           onChange={(e) => column.setFilterValue(e.target.value)}
           placeholder={`Search ${columnHeader.toLowerCase()}`}
           type="text"
+          value={(columnFilterValue ?? "") as string}
         />
         <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
           <SearchIcon size={16} />

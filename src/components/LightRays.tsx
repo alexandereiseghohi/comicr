@@ -1,30 +1,30 @@
-import { useRef, useEffect, useState } from "react";
-import { Renderer, Program, Triangle, Mesh } from "ogl";
+import { Mesh, Program, Renderer, Triangle } from "ogl";
+import { useEffect, useRef, useState } from "react";
 
 export type RaysOrigin =
+  | "bottom-center"
+  | "bottom-left"
+  | "bottom-right"
+  | "left"
+  | "right"
   | "top-center"
   | "top-left"
-  | "top-right"
-  | "right"
-  | "left"
-  | "bottom-center"
-  | "bottom-right"
-  | "bottom-left";
+  | "top-right";
 
 interface LightRaysProps {
-  raysOrigin?: RaysOrigin;
-  raysColor?: string;
-  raysSpeed?: number;
-  lightSpread?: number;
-  rayLength?: number;
-  pulsating?: boolean;
+  className?: string;
+  distortion?: number;
   fadeDistance?: number;
-  saturation?: number;
   followMouse?: boolean;
+  lightSpread?: number;
   mouseInfluence?: number;
   noiseAmount?: number;
-  distortion?: number;
-  className?: string;
+  pulsating?: boolean;
+  rayLength?: number;
+  raysColor?: string;
+  raysOrigin?: RaysOrigin;
+  raysSpeed?: number;
+  saturation?: number;
 }
 
 const DEFAULT_COLOR = "#ffffff";
@@ -64,21 +64,21 @@ type Vec2 = [number, number];
 type Vec3 = [number, number, number];
 
 interface Uniforms {
-  iTime: { value: number };
+  distortion: { value: number };
+  fadeDistance: { value: number };
   iResolution: { value: Vec2 };
-  rayPos: { value: Vec2 };
+  iTime: { value: number };
+  lightSpread: { value: number };
+  mouseInfluence: { value: number };
+  mousePos: { value: Vec2 };
+  noiseAmount: { value: number };
+  pulsating: { value: number };
   rayDir: { value: Vec2 };
+  rayLength: { value: number };
+  rayPos: { value: Vec2 };
   raysColor: { value: Vec3 };
   raysSpeed: { value: number };
-  lightSpread: { value: number };
-  rayLength: { value: number };
-  pulsating: { value: number };
-  fadeDistance: { value: number };
   saturation: { value: number };
-  mousePos: { value: Vec2 };
-  mouseInfluence: { value: number };
-  noiseAmount: { value: number };
-  distortion: { value: number };
 }
 
 const LightRays: React.FC<LightRaysProps> = ({
@@ -97,11 +97,11 @@ const LightRays: React.FC<LightRaysProps> = ({
   className = "",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const uniformsRef = useRef<Uniforms | null>(null);
-  const rendererRef = useRef<Renderer | null>(null);
+  const uniformsRef = useRef<null | Uniforms>(null);
+  const rendererRef = useRef<null | Renderer>(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
-  const animationIdRef = useRef<number | null>(null);
+  const animationIdRef = useRef<null | number>(null);
   const meshRef = useRef<Mesh | null>(null);
   const cleanupFunctionRef = useRef<(() => void) | null>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -445,8 +445,8 @@ void main() {
 
   return (
     <div
-      ref={containerRef}
       className={`w-full h-full pointer-events-none z-[3] overflow-hidden relative ${className}`.trim()}
+      ref={containerRef}
     />
   );
 };

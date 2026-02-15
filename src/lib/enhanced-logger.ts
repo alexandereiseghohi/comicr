@@ -100,8 +100,8 @@ class Logger {
   private async logAudit(entry: LogEntry) {
     try {
       // This would integrate with existing audit-logger.ts
-      // For now, just log to console until audit-logger is properly imported
-      console.log("Audit log entry:", {
+      // For now, log to winston and only fallback to console in development
+      this.winston.log(entry.level, "Audit log entry", {
         action: entry.action || entry.category,
         userId: entry.userId,
         details: {
@@ -111,8 +111,24 @@ class Logger {
           metadata: entry.metadata,
         },
       });
+      if (process.env.NODE_ENV !== "production") {
+        // eslint-disable-next-line no-console
+        console.log("Audit log entry:", {
+          action: entry.action || entry.category,
+          userId: entry.userId,
+          details: {
+            level: entry.level,
+            message: entry.message,
+            category: entry.category,
+            metadata: entry.metadata,
+          },
+        });
+      }
     } catch (error) {
-      console.error("Failed to write audit log:", error);
+      this.winston.log("error", "Failed to write audit log", { error });
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Failed to write audit log:", error);
+      }
     }
   }
 

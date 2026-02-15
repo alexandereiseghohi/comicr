@@ -1,5 +1,6 @@
 ---
 description: "Act as implementation planner for your Azure Bicep Infrastructure as Code task."
+name: "Bicep Planning"
 tools:
   [
     "edit/editFiles",

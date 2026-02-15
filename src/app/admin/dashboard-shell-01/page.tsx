@@ -22,6 +22,13 @@ import {
   UsersIcon,
 } from "lucide-react";
 
+import SalesMetricsCard from "@/components/shadcn-studio/blocks/chart-sales-metrics";
+import TransactionDatatable, { type Item } from "@/components/shadcn-studio/blocks/datatable-transaction";
+import LanguageDropdown from "@/components/shadcn-studio/blocks/dropdown-language";
+import ProfileDropdown from "@/components/shadcn-studio/blocks/dropdown-profile";
+import StatisticsCard from "@/components/shadcn-studio/blocks/statistics-card-01";
+import ProductInsightsCard from "@/components/shadcn-studio/blocks/widget-product-insights";
+import TotalEarningCard from "@/components/shadcn-studio/blocks/widget-total-earning";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Breadcrumb,
@@ -47,14 +54,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
-import LanguageDropdown from "@/components/shadcn-studio/blocks/dropdown-language";
-import ProductInsightsCard from "@/components/shadcn-studio/blocks/widget-product-insights";
-import ProfileDropdown from "@/components/shadcn-studio/blocks/dropdown-profile";
-import SalesMetricsCard from "@/components/shadcn-studio/blocks/chart-sales-metrics";
-import StatisticsCard from "@/components/shadcn-studio/blocks/statistics-card-01";
-import TotalEarningCard from "@/components/shadcn-studio/blocks/widget-total-earning";
-import TransactionDatatable, { type Item } from "@/components/shadcn-studio/blocks/datatable-transaction";
 
 // Statistics card data
 const StatisticsCardData = [
@@ -496,8 +495,8 @@ const DashboardShell = () => {
           <header className="bg-card sticky top-0 z-50 border-b">
             <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-2 sm:px-6">
               <div className="flex items-center gap-4">
-                <SidebarTrigger className="[&_svg]:!size-5" />
-                <Separator orientation="vertical" className="hidden !h-4 sm:block" />
+                <SidebarTrigger className="[&_svg]:size-5!" />
+                <Separator className="hidden h-4! sm:block" orientation="vertical" />
                 <Breadcrumb className="hidden sm:block">
                   <BreadcrumbList>
                     <BreadcrumbItem>
@@ -517,14 +516,14 @@ const DashboardShell = () => {
               <div className="flex items-center gap-1.5">
                 <LanguageDropdown
                   trigger={
-                    <Button variant="ghost" size="icon">
+                    <Button size="icon" variant="ghost">
                       <LanguagesIcon />
                     </Button>
                   }
                 />
                 <ProfileDropdown
                   trigger={
-                    <Button variant="ghost" size="icon" className="size-9.5">
+                    <Button className="size-9.5" size="icon" variant="ghost">
                       <Avatar className="size-9.5 rounded-md">
                         <AvatarImage src="https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-1.png" />
                         <AvatarFallback>JD</AvatarFallback>
@@ -541,32 +540,32 @@ const DashboardShell = () => {
               <div className="col-span-full grid gap-6 sm:grid-cols-3 md:max-lg:grid-cols-1">
                 {StatisticsCardData.map((card, index) => (
                   <StatisticsCard
-                    key={index}
+                    changePercentage={card.changePercentage}
                     icon={card.icon}
+                    key={index}
                     title={card.title}
                     value={card.value}
-                    changePercentage={card.changePercentage}
                   />
                 ))}
               </div>
 
               <div className="grid gap-6 max-xl:col-span-full lg:max-xl:grid-cols-2">
                 {/* Product Insights Card */}
-                <ProductInsightsCard className="justify-between gap-3 [&>[data-slot=card-content]]:space-y-5" />
+                <ProductInsightsCard className="justify-between gap-3 *:data-[slot=card-content]:space-y-5" />
 
                 {/* Total Earning Card */}
                 <TotalEarningCard
-                  title="Total Earning"
-                  earning={24650}
-                  trend="up"
-                  percentage={10}
+                  className="justify-between gap-5 sm:min-w-0 *:data-[slot=card-content]:space-y-7"
                   comparisonText="Compare to last year ($84,325)"
+                  earning={24650}
                   earningData={earningData}
-                  className="justify-between gap-5 sm:min-w-0 [&>[data-slot=card-content]]:space-y-7"
+                  percentage={10}
+                  title="Total Earning"
+                  trend="up"
                 />
               </div>
 
-              <SalesMetricsCard className="col-span-full xl:col-span-2 [&>[data-slot=card-content]]:space-y-6" />
+              <SalesMetricsCard className="col-span-full xl:col-span-2 *:data-[slot=card-content]:space-y-6" />
 
               <Card className="col-span-full w-full py-0">
                 <TransactionDatatable data={transactionData} />
@@ -577,7 +576,7 @@ const DashboardShell = () => {
             <div className="text-muted-foreground mx-auto flex size-full max-w-7xl items-center justify-between gap-3 px-4 py-3 max-sm:flex-col sm:gap-6 sm:px-6">
               <p className="text-sm text-balance max-sm:text-center">
                 {`©${new Date().getFullYear()}`}{" "}
-                <a href="#" className="text-primary">
+                <a className="text-primary" href="#">
                   shadcn/studio
                 </a>
                 , Made for better web design

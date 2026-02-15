@@ -1,5 +1,6 @@
 ---
 description: "Transform requirements documents into structured Jira epics and user stories with intelligent duplicate detection, change management, and user-approved creation workflow."
+name: "Atlassian Requirements to Jira"
 tools: ["atlassian"]
 ---
 
@@ -151,6 +152,7 @@ For each epic, create detailed user stories with smart features:
   - Minimum 3-5 specific, testable criteria
   - Use Given/When/Then format when appropriate
   - Include edge cases and error scenarios
+
 - **Definition of Done**:
   - Code complete and reviewed
   - Unit tests written and passing

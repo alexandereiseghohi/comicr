@@ -7,18 +7,18 @@ const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)";
 const LOCAL_STORAGE_KEY = "usehooks-ts-dark-mode";
 
 interface DarkModeOptions {
-  defaultValue?: boolean;
-  localStorageKey?: string;
-  initializeWithValue?: boolean;
   applyDarkClass?: boolean;
+  defaultValue?: boolean;
+  initializeWithValue?: boolean;
+  localStorageKey?: string;
 }
 
 interface DarkModeReturn {
-  isDarkMode: boolean;
-  toggle: () => void;
-  enable: () => void;
   disable: () => void;
+  enable: () => void;
+  isDarkMode: boolean;
   set: (value: boolean) => void;
+  toggle: () => void;
 }
 
 export function useDarkMode(options: DarkModeOptions = {}): DarkModeReturn {

@@ -1,12 +1,86 @@
+import { db as drizzleDb, type Database } from "@/database/db";
+import { glob } from "glob";
+import chunk from "lodash-es/chunk";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { z } from "zod";
+import logger from "./enhanced-logger";
 
-import { type Table } from "drizzle-orm";
-import { glob } from "glob";
-import { chunk } from "lodash-es";
-import { type z } from "zod";
+// ...existing code...
 
-import { type Database, db } from "../database/db";
+/**
+ * Batched upsert for Drizzle ORM tables.
+ * @param table Drizzle table
+ * @param items Array of items to upsert
+ * @param batchSize Number of items per batch
+ * @param conflictKeys Array of keys to use for upsert conflict
+ * @param updateFields Array of fields to update on conflict
+ * @param dryRun If true, skip actual DB writes
+ */
+export async function seedTableBatched({
+  table,
+  items,
+  batchSize = 100,
+  conflictKeys,
+  updateFields,
+  db = drizzleDb,
+  dryRun = false,
+}: {
+  batchSize?: number;
+  conflictKeys: any[];
+  db?: Database;
+  dryRun?: boolean;
+  items: Record<string, unknown>[];
+  table: any;
+  updateFields: { name: string; value: unknown }[];
+}): Promise<{ batches: number; inserted: number }> {
+  if (!items || items.length === 0) return { inserted: 0, batches: 0 };
+
+  if (dryRun) {
+    console.log(`[DRY-RUN] Would insert ${items.length} items in ${Math.ceil(items.length / batchSize)} batches`);
+    return {
+      inserted: items.length,
+      batches: Math.ceil(items.length / batchSize),
+    };
+  }
+
+  // Filter out undefined values from updateFields
+  const validUpdateFields = updateFields.filter((col) => col.value !== undefined);
+
+  let inserted = 0;
+  let batches = 0;
+
+  for (const batch of chunk(items, batchSize)) {
+    if (!batch.length) continue;
+    try {
+      if (validUpdateFields.length === 0) {
+        // No fields to update - use doNothing to skip conflicts
+        await db
+          .insert(table as any)
+          .values(batch)
+          .onConflictDoNothing({
+            target: conflictKeys,
+          });
+      } else {
+        // Update specified fields on conflict
+        await db
+          .insert(table as any)
+          .values(batch)
+          .onConflictDoUpdate({
+            target: conflictKeys,
+            set: Object.fromEntries(validUpdateFields.map((col) => [col.name, col.value])),
+          });
+      }
+      inserted += batch.length;
+      batches++;
+    } catch (error) {
+      console.error(`[SEED] Batch insert failed:`, error);
+      throw error;
+    }
+  }
+
+  return { inserted, batches };
+}
 
 /**
  * Discover JSON files matching a glob pattern
@@ -57,7 +131,7 @@ export async function loadJsonPattern<T = unknown>(
       const data = await loadJsonRaw<T>(filePath);
       results.push({ filePath, data });
     } catch (error) {
-      console.warn(`[SEED] Failed to load ${filePath}:`, error);
+      logger.warn(`[SEED] Failed to load ${filePath}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -95,7 +169,7 @@ export async function loadJsonFiles<T = unknown>(
         }
       }
     } catch (error) {
-      console.warn(`[SEED] Could not load ${file}:`, error);
+      logger.warn(`[SEED] Could not load ${file}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -107,80 +181,6 @@ export async function loadJsonFiles<T = unknown>(
  */
 export function mergeLoadedData<T>(loaded: Array<{ data: T[]; filePath: string }>): T[] {
   return loaded.flatMap((l) => l.data);
-}
-
-/**
- * Batched upsert for Drizzle ORM tables.
- * @param table Drizzle table
- * @param items Array of items to upsert
- * @param batchSize Number of items per batch
- * @param conflictKeys Array of keys to use for upsert conflict
- * @param updateFields Array of fields to update on conflict
- * @param dryRun If true, skip actual DB writes
- */
-export async function seedTableBatched({
-  table,
-  items,
-  batchSize = 100,
-  conflictKeys,
-  updateFields,
-  // db = drizzleDb, // Commented out, drizzleDb is not defined
-  dryRun = false,
-}: {
-  batchSize?: number;
-  conflictKeys: import("drizzle-orm/pg-core/indexes").IndexColumn[];
-  db?: Database;
-  dryRun?: boolean;
-  items: Record<string, unknown>[];
-  table: Table;
-  updateFields: { name: string; value: unknown }[];
-}): Promise<{ batches: number; inserted: number }> {
-  if (!items || items.length === 0) return { inserted: 0, batches: 0 };
-
-  if (dryRun) {
-    console.log(`[DRY-RUN] Would insert ${items.length} items in ${Math.ceil(items.length / batchSize)} batches`);
-    return {
-      inserted: items.length,
-      batches: Math.ceil(items.length / batchSize),
-    };
-  }
-
-  // Filter out undefined values from updateFields
-  const validUpdateFields = updateFields.filter((col) => col.value !== undefined);
-
-  let inserted = 0;
-  let batches = 0;
-
-  for (const batch of chunk(items, batchSize)) {
-    if (!batch.length) continue;
-    try {
-      if (validUpdateFields.length === 0) {
-        // No fields to update - use doNothing to skip conflicts
-        await db
-          .insert(table as Table)
-          .values(batch)
-          .onConflictDoNothing({
-            target: conflictKeys,
-          });
-      } else {
-        // Update specified fields on conflict
-        await db
-          .insert(table as Table)
-          .values(batch)
-          .onConflictDoUpdate({
-            target: conflictKeys,
-            set: Object.fromEntries(validUpdateFields.map((col) => [col.name, col.value])),
-          });
-      }
-      inserted += batch.length;
-      batches++;
-    } catch (error) {
-      console.error(`[SEED] Batch insert failed:`, error);
-      throw error;
-    }
-  }
-
-  return { inserted, batches };
 }
 
 /**

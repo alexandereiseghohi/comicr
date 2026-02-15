@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -16,24 +15,24 @@ const LoginForm = () => {
     <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
       {/* Email */}
       <div className="space-y-1">
-        <Label htmlFor="userEmail" className="leading-5">
+        <Label className="leading-5" htmlFor="userEmail">
           Email address*
         </Label>
-        <Input type="email" id="userEmail" placeholder="Enter your email address" />
+        <Input id="userEmail" placeholder="Enter your email address" type="email" />
       </div>
 
       {/* Password */}
       <div className="w-full space-y-1">
-        <Label htmlFor="password" className="leading-5">
+        <Label className="leading-5" htmlFor="password">
           Password*
         </Label>
         <div className="relative">
-          <Input id="password" type={isVisible ? "text" : "password"} placeholder="••••••••••••••••" className="pe-9" />
+          <Input className="pe-9" id="password" placeholder="••••••••••••••••" type={isVisible ? "text" : "password"} />
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsVisible((prevState) => !prevState)}
             className="text-muted-foreground focus-visible:ring-ring/50 absolute inset-y-0 end-0 rounded-s-none hover:bg-transparent"
+            onClick={() => setIsVisible((prevState) => !prevState)}
+            size="icon"
+            variant="ghost"
           >
             {isVisible ? <EyeOffIcon /> : <EyeIcon />}
             <span className="sr-only">{isVisible ? "Hide password" : "Show password"}</span>
@@ -44,14 +43,14 @@ const LoginForm = () => {
       {/* Remember Me and Forgot Password */}
       <div className="flex items-center justify-between gap-y-2">
         <div className="flex items-center gap-3">
-          <Checkbox id="rememberMe" className="size-6" />
-          <Label htmlFor="rememberMe" className="text-muted-foreground">
+          <Checkbox className="size-6" id="rememberMe" />
+          <Label className="text-muted-foreground" htmlFor="rememberMe">
             {" "}
             Remember Me
           </Label>
         </div>
 
-        <a href="#" className="hover:underline">
+        <a className="hover:underline" href="#">
           Forgot Password?
         </a>
       </div>

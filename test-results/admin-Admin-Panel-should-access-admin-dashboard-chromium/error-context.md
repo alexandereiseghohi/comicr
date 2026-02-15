@@ -1,0 +1,90 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+    - generic [ref=e2]:
+        - banner [ref=e3]:
+            - generic [ref=e4]:
+                - generic [ref=e5]:
+                    - link "Comicr" [ref=e6] [cursor=pointer]:
+                        - /url: /
+                    - navigation [ref=e7]:
+                        - link "Browse" [ref=e8] [cursor=pointer]:
+                            - /url: /comics
+                        - link "New" [ref=e9] [cursor=pointer]:
+                            - /url: /comics
+                        - link "Top" [ref=e10] [cursor=pointer]:
+                            - /url: /comics
+                        - link "About" [ref=e11] [cursor=pointer]:
+                            - /url: /about
+                        - link "Help" [ref=e12] [cursor=pointer]:
+                            - /url: /help
+                        - link "Contact" [ref=e13] [cursor=pointer]:
+                            - /url: /contact
+                - generic [ref=e14]:
+                    - button "Search comics" [ref=e15]:
+                        - img
+                        - generic [ref=e16]: Search comics...
+                        - generic [ref=e17]:
+                            - generic: ⌘K
+                    - generic [ref=e18]:
+                        - heading "Search Comics" [level=2] [ref=e19]
+                        - paragraph [ref=e20]: Search for comics by title
+                    - link "Sign in" [ref=e21] [cursor=pointer]:
+                        - /url: /sign-in
+        - main [ref=e22]:
+            - generic [ref=e24]:
+                - generic [ref=e25]:
+                    - heading "Welcome Back" [level=1] [ref=e26]
+                    - paragraph [ref=e27]: Sign in to your ComicWise account
+                - generic [ref=e28]:
+                    - generic [ref=e29]:
+                        - generic [ref=e30]:
+                            - generic [ref=e31]: Email
+                            - textbox "Email" [disabled]:
+                                - /placeholder: you@example.com
+                                - text: rhixecompany@gmail.com
+                        - generic [ref=e32]:
+                            - generic [ref=e33]:
+                                - generic [ref=e34]: Password
+                                - link "Forgot password?" [ref=e35] [cursor=pointer]:
+                                    - /url: /forgot-password
+                            - textbox "Password" [disabled]:
+                                - /placeholder: ••••••••
+                                - text: "S*k3(6w`24_Q"
+                        - button "Signing in..." [disabled]
+                    - generic [ref=e40]: Or continue with
+                    - generic [ref=e41]:
+                        - button "Google" [disabled]:
+                            - img
+                            - text: Google
+                        - button "GitHub" [disabled]:
+                            - img
+                            - text: GitHub
+                - paragraph [ref=e42]:
+                    - text: Don't have an account?
+                    - link "Sign up" [ref=e43] [cursor=pointer]:
+                        - /url: /sign-up
+        - contentinfo [ref=e44]:
+            - generic [ref=e45]:
+                - generic [ref=e46]: © 2026 Comicr
+                - generic [ref=e47]:
+                    - link "About" [ref=e48] [cursor=pointer]:
+                        - /url: /about
+                    - link "Help" [ref=e49] [cursor=pointer]:
+                        - /url: /help
+                    - link "Contact" [ref=e50] [cursor=pointer]:
+                        - /url: /contact
+                    - link "Privacy" [ref=e51] [cursor=pointer]:
+                        - /url: /privacy
+                    - link "Terms" [ref=e52] [cursor=pointer]:
+                        - /url: /terms
+    - region "Notifications alt+T"
+    - generic [ref=e53]:
+        - img [ref=e55]
+        - button "Open Tanstack query devtools" [ref=e103] [cursor=pointer]:
+            - img [ref=e104]
+    - button "Open Next.js Dev Tools" [ref=e157] [cursor=pointer]:
+        - img [ref=e158]
+    - alert [ref=e161]
+```

@@ -10,22 +10,25 @@ import {
   useDroppable,
 } from "@dnd-kit/core";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
+
 import { cn } from "@/lib/utils";
+
+import type { ReactNode } from "react";
 
 export type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 
 interface Status {
+  color: string;
   id: string;
   name: string;
-  color: string;
 }
 
 interface Feature {
+  endAt: Date;
   id: string;
   name: string;
   startAt: Date;
-  endAt: Date;
   status: Status;
 }
 
@@ -43,25 +46,25 @@ export type ListHeaderProps =
       children: ReactNode;
     }
   | {
-      name: Status["name"];
-      color: Status["color"];
       className?: string;
+      color: Status["color"];
+      name: Status["name"];
     };
 
 export const ListHeader = (props: ListHeaderProps) =>
   "children" in props ? (
     props.children
   ) : (
-    <div className={cn("flex shrink-0 items-center gap-2 bg-foreground/5 p-3", props.className)}>
+    <div className={cn("bg-foreground/5 flex shrink-0 items-center gap-2 p-3", props.className)}>
       <div className="h-2 w-2 rounded-full" style={{ backgroundColor: props.color }} />
-      <p className="m-0 font-semibold text-sm">{props.name}</p>
+      <p className="m-0 text-sm font-semibold">{props.name}</p>
     </div>
   );
 
 export interface ListGroupProps {
-  id: Status["id"];
   children: ReactNode;
   className?: string;
+  id: Status["id"];
 }
 
 export const ListGroup = ({ id, children, className }: ListGroupProps) => {
@@ -75,10 +78,10 @@ export const ListGroup = ({ id, children, className }: ListGroupProps) => {
 };
 
 export type ListItemProps = Pick<Feature, "id" | "name"> & {
-  readonly index: number;
-  readonly parent: string;
   readonly children?: ReactNode;
   readonly className?: string;
+  readonly index: number;
+  readonly parent: string;
 };
 
 export const ListItem = ({ id, name, index, parent, children, className }: ListItemProps) => {
@@ -90,7 +93,7 @@ export const ListItem = ({ id, name, index, parent, children, className }: ListI
   return (
     <div
       className={cn(
-        "flex cursor-grab items-center gap-2 rounded-md border bg-background p-2 shadow-sm",
+        "bg-background flex cursor-grab items-center gap-2 rounded-md border p-2 shadow-sm",
         isDragging && "opacity-50",
         className
       )}
@@ -101,15 +104,15 @@ export const ListItem = ({ id, name, index, parent, children, className }: ListI
       {...attributes}
       ref={setNodeRef}
     >
-      {children ?? <p className="m-0 font-medium text-sm">{name}</p>}
+      {children ?? <p className="m-0 text-sm font-medium">{name}</p>}
     </div>
   );
 };
 
 export interface ListProviderProps {
   children: ReactNode;
-  onDragEnd: (event: DragEndEvent) => void;
   className?: string;
+  onDragEnd: (event: DragEndEvent) => void;
 }
 
 export const ListProvider = ({ children, onDragEnd, className }: ListProviderProps) => (
@@ -119,7 +122,6 @@ export const ListProvider = ({ children, onDragEnd, className }: ListProviderPro
 );
 
 // Demo
-import { useEffect, useState } from "react";
 
 const initialData = {
   todo: [
@@ -208,24 +210,24 @@ export function Demo() {
   };
 
   if (!mounted) {
-    return <div className="fixed inset-0 bg-muted/50 animate-pulse" />;
+    return <div className="bg-muted/50 fixed inset-0 animate-pulse" />;
   }
 
   return (
-    <div className="fixed inset-0 p-4 overflow-auto">
+    <div className="fixed inset-0 overflow-auto p-4">
       <DndContext
         collisionDetection={rectIntersection}
         modifiers={[restrictToVerticalAxis]}
-        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
       >
-        <div className="flex size-full flex-col gap-4 max-w-md mx-auto">
+        <div className="mx-auto flex size-full max-w-md flex-col gap-4">
           {statuses.map((status) => (
-            <ListGroup key={status.id} id={status.id} className="rounded-lg overflow-hidden">
-              <ListHeader name={status.name} color={status.color} />
+            <ListGroup className="overflow-hidden rounded-lg" id={status.id} key={status.id}>
+              <ListHeader color={status.color} name={status.name} />
               <ListItems>
                 {items[status.id as keyof typeof items].map((item, index) => (
-                  <ListItem key={item.id} id={item.id} name={item.name} index={index} parent={status.id} />
+                  <ListItem id={item.id} index={index} key={item.id} name={item.name} parent={status.id} />
                 ))}
               </ListItems>
             </ListGroup>
@@ -233,8 +235,8 @@ export function Demo() {
         </div>
         <DragOverlay>
           {activeItem ? (
-            <div className="flex cursor-grabbing items-center gap-2 rounded-md border bg-background p-2 shadow-lg">
-              <p className="m-0 font-medium text-sm">{activeItem.name}</p>
+            <div className="bg-background flex cursor-grabbing items-center gap-2 rounded-md border p-2 shadow-lg">
+              <p className="m-0 text-sm font-medium">{activeItem.name}</p>
             </div>
           ) : null}
         </DragOverlay>

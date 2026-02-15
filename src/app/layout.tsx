@@ -136,7 +136,7 @@ export default function RootLayout({
         <link href="https://res.cloudinary.com" rel="dns-prefetch" />
       </head>
       <body
-        className={` ${ibmPlexSans.variable}
+        className={`${ibmPlexSans.variable}
           ${bebasNeue.variable}
           ${schibstedGrotesk.variable}
           ${martianMono.variable}

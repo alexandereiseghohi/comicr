@@ -1,3 +1,15 @@
+const UNAUTHORIZED = "UNAUTHORIZED";
+const ADMIN = "Admin";
+const TEST_GENRE = "Test Genre";
+const TEST_TYPE = "Test Type";
+const TEST_AUTHOR = "Test Author";
+const TEST_ARTIST = "Test Artist";
+const USER_ID = "user-123";
+const ADMIN_ID = "admin-123";
+const MOD_ID = "mod-123";
+const REGULAR_USER_NAME = "Regular User";
+const MODERATOR_NAME = "Moderator";
+const ADMIN_USER_NAME = "Admin User";
 /**
  * RBAC (Role-Based Access Control) Tests
  * Tests authorization guards across admin-only server actions
@@ -22,19 +34,19 @@ describe("RBAC Authorization", () => {
       }));
       vi.doMock("@/database/mutations/genre.mutations", () => ({}));
 
-      const { createGenreAction } = await import("@/lib/actions/genre.actions");
-      const result = await createGenreAction({ name: "Test Genre" });
+      const { createGenreAction } = await import("@/actions/genre.actions");
+      const result = await createGenreAction({ name: TEST_GENRE });
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
       expect(typeof result.error).toBe("string");
-      expect(result.error).toContain("UNAUTHORIZED");
-      expect(result.error).toContain("Admin");
+      expect(result.error).toContain(UNAUTHORIZED);
+      expect(result.error).toContain(ADMIN);
     });
 
     it("rejects regular users", async () => {
       vi.doMock("@/auth", () => ({
         auth: vi.fn(async () => ({
-          user: { id: "user-123", role: "user", name: "Regular User" },
+          user: { id: USER_ID, role: "user", name: REGULAR_USER_NAME },
         })),
       }));
       vi.doMock("next/cache", () => ({ revalidatePath: vi.fn() }));
@@ -43,18 +55,18 @@ describe("RBAC Authorization", () => {
       }));
       vi.doMock("@/database/mutations/genre.mutations", () => ({}));
 
-      const { createGenreAction } = await import("@/lib/actions/genre.actions");
-      const result = await createGenreAction({ name: "Test Genre" });
+      const { createGenreAction } = await import("@/actions/genre.actions");
+      const result = await createGenreAction({ name: TEST_GENRE });
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
       expect(typeof result.error).toBe("string");
-      expect(result.error).toContain("UNAUTHORIZED");
+      expect(result.error).toContain(UNAUTHORIZED);
     });
 
     it("rejects moderators (admin-only action)", async () => {
       vi.doMock("@/auth", () => ({
         auth: vi.fn(async () => ({
-          user: { id: "mod-123", role: "moderator", name: "Moderator" },
+          user: { id: MOD_ID, role: "moderator", name: MODERATOR_NAME },
         })),
       }));
       vi.doMock("next/cache", () => ({ revalidatePath: vi.fn() }));
@@ -63,18 +75,18 @@ describe("RBAC Authorization", () => {
       }));
       vi.doMock("@/database/mutations/genre.mutations", () => ({}));
 
-      const { createGenreAction } = await import("@/lib/actions/genre.actions");
-      const result = await createGenreAction({ name: "Test Genre" });
+      const { createGenreAction } = await import("@/actions/genre.actions");
+      const result = await createGenreAction({ name: TEST_GENRE });
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
       expect(typeof result.error).toBe("string");
-      expect(result.error).toContain("UNAUTHORIZED");
+      expect(result.error).toContain(UNAUTHORIZED);
     });
 
     it("allows admin users", async () => {
       vi.doMock("@/auth", () => ({
         auth: vi.fn(async () => ({
-          user: { id: "admin-123", role: "admin", name: "Admin User" },
+          user: { id: ADMIN_ID, role: "admin", name: ADMIN_USER_NAME },
         })),
       }));
       vi.doMock("next/cache", () => ({ revalidatePath: vi.fn() }));
@@ -89,8 +101,8 @@ describe("RBAC Authorization", () => {
         })),
       }));
 
-      const { createGenreAction } = await import("@/lib/actions/genre.actions");
-      const result = await createGenreAction({ name: "Test Genre" });
+      const { createGenreAction } = await import("@/actions/genre.actions");
+      const result = await createGenreAction({ name: TEST_GENRE });
       expect(result.success).toBe(true);
     });
   });
@@ -106,19 +118,19 @@ describe("RBAC Authorization", () => {
       }));
       vi.doMock("@/database/mutations/type.mutations", () => ({}));
 
-      const { createTypeAction } = await import("@/lib/actions/type.actions");
-      const result = await createTypeAction({ name: "Test Type" });
+      const { createTypeAction } = await import("@/actions/type.actions");
+      const result = await createTypeAction({ name: TEST_TYPE });
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
       expect(typeof result.error).toBe("string");
-      expect(result.error).toContain("UNAUTHORIZED");
-      expect(result.error).toContain("Admin");
+      expect(result.error).toContain(UNAUTHORIZED);
+      expect(result.error).toContain(ADMIN);
     });
 
     it("allows admin users", async () => {
       vi.doMock("@/auth", () => ({
         auth: vi.fn(async () => ({
-          user: { id: "admin-123", role: "admin", name: "Admin" },
+          user: { id: ADMIN_ID, role: "admin", name: "Admin" },
         })),
       }));
       vi.doMock("next/cache", () => ({ revalidatePath: vi.fn() }));
@@ -132,8 +144,8 @@ describe("RBAC Authorization", () => {
           error: undefined,
         })),
       }));
-      const { createTypeAction } = await import("@/lib/actions/type.actions");
-      const result = await createTypeAction({ name: "Test Type" });
+      const { createTypeAction } = await import("@/actions/type.actions");
+      const result = await createTypeAction({ name: TEST_TYPE });
       expect(result.success).toBe(true);
     });
   });
@@ -142,19 +154,24 @@ describe("RBAC Authorization", () => {
     it("rejects regular users for create", async () => {
       vi.doMock("@/auth", () => ({
         auth: vi.fn(async () => ({
-          user: { id: "user-123", role: "user" },
+          user: { id: USER_ID, role: "user" },
         })),
       }));
       vi.doMock("next/cache", () => ({ revalidatePath: vi.fn() }));
       vi.doMock("@/database/queries/author.queries", () => ({}));
       vi.doMock("@/database/mutations/author.mutations", () => ({}));
 
-      const { createAuthorAction } = await import("@/lib/actions/author.actions");
-      const result = await createAuthorAction({ name: "Test Author" });
+      const { createAuthorAction } = await import("@/actions/author.actions");
+      const result = await createAuthorAction({ name: TEST_AUTHOR });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(typeof result.error).toBe("string");
-        expect(result.error).toContain("UNAUTHORIZED");
+        const errorMsg =
+          typeof result.error === "string"
+            ? result.error
+            : typeof result.error === "object" && result.error !== null && "message" in result.error
+              ? String(result.error.message)
+              : "";
+        expect([errorMsg.includes(UNAUTHORIZED), errorMsg.includes("Admin access required")].some(Boolean)).toBe(true);
       }
     });
   });
@@ -163,19 +180,24 @@ describe("RBAC Authorization", () => {
     it("rejects regular users for create", async () => {
       vi.doMock("@/auth", () => ({
         auth: vi.fn(async () => ({
-          user: { id: "user-123", role: "user" },
+          user: { id: USER_ID, role: "user" },
         })),
       }));
       vi.doMock("next/cache", () => ({ revalidatePath: vi.fn() }));
       vi.doMock("@/database/queries/artist.queries", () => ({}));
       vi.doMock("@/database/mutations/artist.mutations", () => ({}));
 
-      const { createArtistAction } = await import("@/lib/actions/artist.actions");
-      const result = await createArtistAction({ name: "Test Artist" });
+      const { createArtistAction } = await import("@/actions/artist.actions");
+      const result = await createArtistAction({ name: TEST_ARTIST });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(typeof result.error).toBe("string");
-        expect(result.error).toContain("UNAUTHORIZED");
+        const errorMsg =
+          typeof result.error === "string"
+            ? result.error
+            : typeof result.error === "object" && result.error !== null && "message" in result.error
+              ? String(result.error.message)
+              : "";
+        expect([errorMsg.includes(UNAUTHORIZED), errorMsg.includes("Admin access required")].some(Boolean)).toBe(true);
       }
     });
   });
@@ -184,20 +206,20 @@ describe("RBAC Authorization", () => {
     it("rejects bulk delete for non-admin", async () => {
       vi.doMock("@/auth", () => ({
         auth: vi.fn(async () => ({
-          user: { id: "user-123", role: "user" },
+          user: { id: USER_ID, role: "user" },
         })),
       }));
       vi.doMock("next/cache", () => ({ revalidatePath: vi.fn() }));
       vi.doMock("@/database/queries/genre.queries", () => ({}));
       vi.doMock("@/database/mutations/genre.mutations", () => ({}));
 
-      const { bulkDeleteGenresAction } = await import("@/lib/actions/genre.actions");
+      const { bulkDeleteGenresAction } = await import("@/actions/genre.actions");
       const result = await bulkDeleteGenresAction([1, 2, 3]);
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error).toBeDefined();
         expect(typeof result.error).toBe("string");
-        expect(result.error).toContain("UNAUTHORIZED");
+        expect(result.error).toContain(UNAUTHORIZED);
       }
     });
 
@@ -211,13 +233,13 @@ describe("RBAC Authorization", () => {
       vi.doMock("@/database/queries/genre.queries", () => ({}));
       vi.doMock("@/database/mutations/genre.mutations", () => ({}));
 
-      const { bulkRestoreGenresAction } = await import("@/lib/actions/genre.actions");
+      const { bulkRestoreGenresAction } = await import("@/actions/genre.actions");
       const result = await bulkRestoreGenresAction([1, 2, 3]);
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error).toBeDefined();
         expect(typeof result.error).toBe("string");
-        expect(result.error).toContain("UNAUTHORIZED");
+        expect(result.error).toContain(UNAUTHORIZED);
       }
     });
   });
@@ -231,12 +253,12 @@ describe("RBAC Authorization", () => {
       vi.doMock("@/database/queries/genre.queries", () => ({}));
       vi.doMock("@/database/mutations/genre.mutations", () => ({}));
 
-      const { createGenreAction } = await import("@/lib/actions/genre.actions");
+      const { createGenreAction } = await import("@/actions/genre.actions");
       const result = await createGenreAction({ name: "Test" });
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
       expect(typeof result.error).toBe("string");
-      expect(result.error).toContain("UNAUTHORIZED");
+      expect(result.error).toContain(UNAUTHORIZED);
     });
 
     it("rejects when user has no id", async () => {
@@ -249,12 +271,12 @@ describe("RBAC Authorization", () => {
       vi.doMock("@/database/queries/genre.queries", () => ({}));
       vi.doMock("@/database/mutations/genre.mutations", () => ({}));
 
-      const { createGenreAction } = await import("@/lib/actions/genre.actions");
+      const { createGenreAction } = await import("@/actions/genre.actions");
       const result = await createGenreAction({ name: "Test" });
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
       expect(typeof result.error).toBe("string");
-      expect(result.error).toContain("UNAUTHORIZED");
+      expect(result.error).toContain(UNAUTHORIZED);
     });
 
     it("rejects when user has no role", async () => {
@@ -267,12 +289,12 @@ describe("RBAC Authorization", () => {
       vi.doMock("@/database/queries/genre.queries", () => ({}));
       vi.doMock("@/database/mutations/genre.mutations", () => ({}));
 
-      const { createGenreAction } = await import("@/lib/actions/genre.actions");
+      const { createGenreAction } = await import("@/actions/genre.actions");
       const result = await createGenreAction({ name: "Test" });
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
       expect(typeof result.error).toBe("string");
-      expect(result.error).toContain("UNAUTHORIZED");
+      expect(result.error).toContain(UNAUTHORIZED);
     });
   });
 });

@@ -5,7 +5,7 @@ import { type z } from "zod";
 
 import { clearDownloadCache } from "@/lib/image-helper";
 import { loadJsonData } from "@/lib/seed-helpers";
-import { UserSeedSchema } from "@/lib/validations/seed";
+import { UserSeedSchema } from "@/validations/seed";
 
 import { createLogger, SeedReportGenerator } from "./helpers";
 import { REPORT_DIR } from "./seed-config";

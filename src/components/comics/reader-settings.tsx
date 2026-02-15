@@ -2,13 +2,13 @@
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { getReaderSettingsAction, updateReaderSettingsAction } from "@/actions/reading-progress.actions";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
-import { getReaderSettingsAction, updateReaderSettingsAction } from "@/lib/actions/reading-progress.actions";
 
 interface ReaderSettingsProps {
   onOpenChange: (open: boolean) => void;
@@ -91,7 +91,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
 
   return (
     <Sheet onOpenChange={onOpenChange} open={open}>
-      <SheetContent className="w-full sm:max-w-md" side="right">
+      <SheetContent aria-label="Reader settings panel" className="w-full sm:max-w-md" role="dialog" side="right">
         <SheetHeader>
           <SheetTitle>Reader Settings</SheetTitle>
           <SheetDescription>Customize your reading experience. Settings will sync across devices.</SheetDescription>
@@ -102,7 +102,7 @@ export function ReaderSettings({ open, onOpenChange, onSettingsChange }: ReaderS
             <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
           </div>
         ) : (
-          <div className="space-y-6 py-6">
+          <div aria-label="Reader settings form" className="space-y-6 py-6" role="form">
             {/* Background Mode */}
             <div className="space-y-3">
               <Label>Background Color</Label>

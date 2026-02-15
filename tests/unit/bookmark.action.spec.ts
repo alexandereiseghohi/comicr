@@ -16,7 +16,7 @@ vi.mock("@/database/mutations/bookmark.mutations", () => ({
   })),
 }));
 
-import { addBookmarkAction, removeBookmarkAction } from "@/lib/actions/bookmark.actions";
+import { addBookmarkAction, removeBookmarkAction } from "@/actions/bookmark.actions";
 
 describe("bookmark actions", () => {
   it("rejects invalid add input", async () => {

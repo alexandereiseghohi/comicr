@@ -1,11 +1,15 @@
 "use client";
 import {
+  type Cell,
   type ColumnDef,
   type ColumnFiltersState,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type Header,
+  type HeaderGroup,
+  type Row,
   type SortingState,
   useReactTable,
   type VisibilityState,
@@ -38,7 +42,6 @@ import {
   TableProvider,
   TableRow,
 } from "@/components/ui/table";
-import type { Cell, Header, HeaderGroup, Row } from "@tanstack/react-table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -138,7 +141,7 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {({ row }: { row: Row<unknown> }) => (
-              <TableRow row={row} key={row.id}>
+              <TableRow key={row.id} row={row}>
                 {({ cell }: { cell: Cell<unknown, unknown> }) => <TableCell cell={cell} key={cell.id} />}
               </TableRow>
             )}

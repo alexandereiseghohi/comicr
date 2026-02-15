@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { deleteChapterAction } from "@/actions/admin.actions";
 import { DataTable } from "@/components/admin/data-table";
 import {
   AlertDialog,
@@ -26,7 +27,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteChapterAction } from "@/lib/actions/admin.actions";
 
 /**
  * Chapters Table Component

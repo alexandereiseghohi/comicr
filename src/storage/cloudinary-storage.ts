@@ -12,6 +12,8 @@ import {
   type UploadResponse,
 } from "./types";
 
+import type { Readable as NodeReadable } from "node:stream";
+
 let isConfigured = false;
 
 /**
@@ -39,6 +41,19 @@ function bufferToDataUri(buffer: Buffer, contentType: string): string {
 }
 
 /**
+ * Type guard to check if an object is a Node.js Readable stream
+ */
+function isNodeReadableStream(obj: any): obj is NodeReadable {
+  return (
+    obj &&
+    typeof obj === "object" &&
+    typeof obj.read === "function" &&
+    typeof obj.on === "function" &&
+    typeof obj.pipe === "function"
+  );
+}
+
+/**
  * Cloudinary Storage Provider Implementation
  */
 export class CloudinaryStorageProvider implements StorageProvider {
@@ -63,14 +78,15 @@ export class CloudinaryStorageProvider implements StorageProvider {
       } else if (typeof Blob !== "undefined" && file instanceof Blob) {
         const arrayBuffer = await file.arrayBuffer();
         buffer = Buffer.from(arrayBuffer);
-      } else if (file && typeof (file as any).pipe === "function") {
+      } else if (isNodeReadableStream(file)) {
         // Node.js Readable Stream
         buffer = await new Promise<Buffer>((resolve, reject) => {
           const chunks: Buffer[] = [];
-          (file as any).on("data", (chunk: Buffer) => chunks.push(chunk));
-          (file as any).on("end", () => resolve(Buffer.concat(chunks)));
-          (file as any).on("error", reject);
+          file.on("data", (chunk: Buffer) => chunks.push(chunk));
+          file.on("end", () => resolve(Buffer.concat(chunks)));
+          file.on("error", reject);
         });
+        // Type guard for Node.js Readable Stream
       } else {
         throw new Error("Unsupported file type for upload");
       }

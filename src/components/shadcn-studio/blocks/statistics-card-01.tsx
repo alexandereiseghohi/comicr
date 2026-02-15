@@ -1,16 +1,15 @@
-import type { ReactNode } from "react";
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-
 import { cn } from "@/lib/utils";
+
+import type { ReactNode } from "react";
 
 // Statistics card data type
 type StatisticsCardProps = {
-  icon: ReactNode;
-  value: string;
-  title: string;
   changePercentage: string;
   className?: string;
+  icon: ReactNode;
+  title: string;
+  value: string;
 };
 
 const StatisticsCard = ({ icon, value, title, changePercentage, className }: StatisticsCardProps) => {

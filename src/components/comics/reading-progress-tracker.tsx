@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
+import { getReadingProgressAction, saveReadingProgressAction } from "@/actions/reading-progress.actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { getReadingProgressAction, saveReadingProgressAction } from "@/lib/actions/reading-progress.actions";
 
 interface ReadingProgressTrackerProps {
   chapterId: number;
@@ -51,19 +51,19 @@ export function ReadingProgressTracker({
     try {
       // First try to fetch from database
       const result = await getReadingProgressAction({ comicId });
-      if (result.success && result.data) {
-        // Check if current chapter matches and has significant progress
-        if (
-          result.data.chapterId === chapterId &&
-          (result.data.currentImageIndex > 0 || result.data.scrollPercentage > 10)
-        ) {
-          setSavedProgress({
-            pageIndex: result.data.currentImageIndex,
-            percentage: result.data.scrollPercentage,
-          });
-          setShowResumeDialog(true);
-          return;
-        }
+
+      if (
+        result.success &&
+        result.data &&
+        result.data.chapterId === chapterId &&
+        (result.data.currentImageIndex > 0 || result.data.scrollPercentage > 10)
+      ) {
+        setSavedProgress({
+          pageIndex: result.data.currentImageIndex,
+          percentage: result.data.scrollPercentage,
+        });
+        setShowResumeDialog(true);
+        return;
       }
 
       // Fall back to localStorage if not authenticated or no DB progress
@@ -205,13 +205,20 @@ export function ReadingProgressTracker({
   return (
     <>
       {/* Progress bar */}
-      <div className="fixed top-0 right-0 left-0 z-50 h-1">
+      <div
+        aria-label="Reading progress"
+        aria-valuemax={100}
+        aria-valuemin={0}
+        aria-valuenow={currentProgress}
+        className="fixed top-0 right-0 left-0 z-50 h-1"
+        role="progressbar"
+      >
         <Progress className="h-full rounded-none" value={currentProgress} />
       </div>
 
       {/* Resume dialog */}
       <Dialog onOpenChange={setShowResumeDialog} open={showResumeDialog}>
-        <DialogContent>
+        <DialogContent aria-label="Resume reading dialog">
           <DialogHeader>
             <DialogTitle>Resume Reading?</DialogTitle>
             <DialogDescription>

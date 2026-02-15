@@ -1,3 +1,4 @@
+// No object injection sink risk: this config file does not assign user-controlled keys to objects.
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 

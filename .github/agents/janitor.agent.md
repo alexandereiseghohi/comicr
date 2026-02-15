@@ -1,5 +1,6 @@
 ---
 description: "Perform janitorial tasks on any codebase including cleanup, simplification, and tech debt remediation."
+name: "Universal Janitor"
 tools:
   [
     "search/changes",

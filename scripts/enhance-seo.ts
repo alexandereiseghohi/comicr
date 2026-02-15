@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+// No object injection sink risk: this script only generates static SEO files and does not assign user-controlled keys to objects.
 /**
  * enhance-seo.ts - SEO Enhancement Implementation
  * Implements comprehensive SEO optimizations including metadata,

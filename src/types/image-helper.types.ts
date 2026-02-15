@@ -1,21 +1,21 @@
 // Types for image helper logic (shared between server and client)
 
 export interface DownloadImageOptions {
-  url: string;
   destDir: string;
-  filename: string;
   fallback?: string;
+  filename: string;
   maxRetries?: number;
   skipCache?: boolean;
+  url: string;
 }
 
 export interface BatchDownloadItem extends DownloadImageOptions {}
 
 export interface DownloadResult {
-  success: boolean;
-  path: string;
   cached: boolean;
   error?: string;
+  path: string;
+  success: boolean;
 }
 
 export type ProgressCallback = (completed: number, total: number, filename: string) => void;

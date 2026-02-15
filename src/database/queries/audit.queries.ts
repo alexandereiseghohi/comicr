@@ -1,8 +1,8 @@
 import { and, desc, eq, gte, like, lte, or, sql } from "drizzle-orm";
 
+import { type AuditAction, type AuditResource } from "@/audit/audit-logger";
 import { db } from "@/database/db";
 import { auditLog, user } from "@/database/schema";
-import { type AuditAction, type AuditResource } from "@/lib/audit/audit-logger";
 
 export interface AuditLogQueryOptions {
   /** Filter by action type */

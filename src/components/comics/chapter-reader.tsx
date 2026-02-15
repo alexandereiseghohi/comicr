@@ -119,8 +119,10 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
       await containerRef.current?.requestFullscreen();
       setIsFullScreen(true);
       // Request landscape lock on mobile
-      if ("orientation" in screen && screen.orientation && typeof (screen.orientation as any).lock === "function") {
-        await (screen.orientation as any).lock("landscape").catch(() => {});
+
+      const orientation = (screen as Screen & { orientation?: any }).orientation;
+      if (orientation && typeof (orientation as any).lock === "function") {
+        await (orientation as any).lock("landscape").catch(() => {});
       }
     } else {
       await document.exitFullscreen();
@@ -276,23 +278,29 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 
   return (
     <div
+      aria-label={`Chapter reader for ${title}`}
       className={cn("relative min-h-screen transition-colors", backgroundColors[background])}
       data-testid="chapter-reader"
       onMouseMove={resetAutoHideTimer}
       onTouchEnd={handleTouchEnd}
       onTouchStart={handleTouchStart}
       ref={containerRef}
+      role="main"
     >
       {/* Header Controls */}
       <div
+        aria-label="Reader header controls"
         className={cn(
           "bg-background/95 sticky top-0 z-20 flex items-center justify-between gap-4 border-b p-4 backdrop-blur transition-transform duration-300",
           isAutoHide && "-translate-y-full"
         )}
+        role="banner"
       >
-        <h2 className="flex-1 truncate text-xl font-bold">{title}</h2>
+        <h2 aria-label={`Chapter title: ${title}`} className="flex-1 truncate text-xl font-bold" tabIndex={0}>
+          {title}
+        </h2>
 
-        <div className="flex items-center gap-2">
+        <div aria-label="Reader actions" className="flex items-center gap-2" role="group">
           {/* Mode toggle */}
           <Button
             onClick={() => setMode(mode === "vertical" ? "horizontal" : "vertical")}

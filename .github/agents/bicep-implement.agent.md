@@ -1,5 +1,6 @@
 ---
 description: "Act as an Azure Bicep Infrastructure as Code coding specialist that creates Bicep templates."
+name: "Bicep Specialist"
 tools:
   [
     "edit/editFiles",

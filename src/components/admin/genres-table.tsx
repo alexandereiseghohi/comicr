@@ -5,6 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import {
+  bulkDeleteGenresAction,
+  bulkRestoreGenresAction,
+  deleteGenreAction,
+  restoreGenreAction,
+} from "@/actions/genre.actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,12 +20,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  bulkDeleteGenresAction,
-  bulkRestoreGenresAction,
-  deleteGenreAction,
-  restoreGenreAction,
-} from "@/lib/actions/genre.actions";
 
 import { DataTable } from "./data-table";
 

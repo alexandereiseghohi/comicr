@@ -1,3 +1,4 @@
+const QUERY_FAILED = "Query failed";
 import { and, eq, sql } from "drizzle-orm";
 
 import { db } from "@/database/db";
@@ -8,7 +9,7 @@ export async function getGenres() {
     const results = await db.select().from(genre).where(eq(genre.isActive, true)).orderBy(genre.name);
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -30,7 +31,7 @@ export async function getGenresWithComicCount(limit = 8) {
       .limit(limit);
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -43,7 +44,7 @@ export async function getGenreById(id: number) {
       .limit(1);
     return { success: true, data: results[0] || null };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -65,6 +66,6 @@ export async function getGenreBySlug(slug: string) {
       .limit(1);
     return { success: true, data: results[0] || null };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }

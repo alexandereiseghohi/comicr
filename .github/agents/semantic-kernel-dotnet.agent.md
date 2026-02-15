@@ -1,5 +1,6 @@
 ---
 description: "Create, update, refactor, explain or work with code using the .NET version of Semantic Kernel."
+name: "Semantic Kernel .NET"
 tools:
   [
     "changes",

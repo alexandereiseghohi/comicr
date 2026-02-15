@@ -5,8 +5,8 @@ import * as React from "react";
 
 interface DebounceOptions {
   leading?: boolean;
-  trailing?: boolean;
   maxWait?: number;
+  trailing?: boolean;
 }
 
 interface ControlFunctions {
@@ -25,7 +25,7 @@ type UseDebounceValueOptions<T> = DebounceOptions & {
 };
 
 export function useDebounceValue<T>(
-  initialValue: T | (() => T),
+  initialValue: (() => T) | T,
   delay: number,
   options?: UseDebounceValueOptions<T>
 ): [T, DebouncedState<(value: T) => void>] {
@@ -71,14 +71,17 @@ export function useDebounceValue<T>(
   }, [delay, options]);
 
   // Update the debounced value if the initial value changes
-  if (!eq(previousValueRef.current as T, unwrappedInitialValue)) {
-    updateDebouncedValue(unwrappedInitialValue);
-    previousValueRef.current = unwrappedInitialValue;
-  }
+  React.useEffect(() => {
+    if (!eq(previousValueRef.current as T, unwrappedInitialValue)) {
+      updateDebouncedValue(unwrappedInitialValue);
+      previousValueRef.current = unwrappedInitialValue;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unwrappedInitialValue]);
 
   return [debouncedValue, updateDebouncedValue];
 }
 
-export type { UseDebounceValueOptions, DebouncedState };
+export type { DebouncedState, UseDebounceValueOptions };
 
 // ============================================================================

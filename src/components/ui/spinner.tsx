@@ -1,6 +1,7 @@
 "use client";
 
 import { LoaderCircleIcon, LoaderIcon, LoaderPinwheelIcon, type LucideProps } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 type SpinnerVariantProps = Omit<SpinnerProps, "variant">;
@@ -195,7 +196,7 @@ const Infinite = ({ size = 24, ...props }: SpinnerVariantProps) => (
 );
 
 export type SpinnerProps = LucideProps & {
-  variant?: "default" | "circle" | "pinwheel" | "circle-filled" | "ellipsis" | "ring" | "bars" | "infinite";
+  variant?: "bars" | "circle-filled" | "circle" | "default" | "ellipsis" | "infinite" | "pinwheel" | "ring";
 };
 
 export const Spinner = ({ variant, ...props }: SpinnerProps) => {
@@ -235,9 +236,9 @@ export function Demo() {
   return (
     <div className="grid grid-cols-4 gap-8 p-8">
       {variants.map((variant) => (
-        <div key={variant} className="flex flex-col items-center gap-2">
-          <Spinner variant={variant} size={32} />
-          <span className="text-xs text-muted-foreground">{variant}</span>
+        <div className="flex flex-col items-center gap-2" key={variant}>
+          <Spinner size={32} variant={variant} />
+          <span className="text-muted-foreground text-xs">{variant}</span>
         </div>
       ))}
     </div>

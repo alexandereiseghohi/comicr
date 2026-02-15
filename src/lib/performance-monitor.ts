@@ -137,7 +137,7 @@ export function trackWebVitals() {
         }
       });
       longTaskObserver.observe({ entryTypes: ["longtask"] });
-    } catch (_) {
+    } catch {
       // Ignore if not supported
     }
 
@@ -149,16 +149,24 @@ export function trackWebVitals() {
             metadata: {
               startTime: entry.startTime,
               element:
-                typeof entry === "object" && entry && "target" in entry && (entry as any).target
-                  ? (entry as any).target.tagName
+                typeof entry === "object" &&
+                entry &&
+                "target" in entry &&
+                isElement((entry as unknown as { target?: unknown }).target)
+                  ? (entry as { target: Element }).target.tagName
                   : undefined,
             },
           });
         }
       });
       lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
-    } catch (_) {
+    } catch {
       // Ignore if not supported
+    }
+
+    // Type guard for DOM Element
+    function isElement(obj: unknown): obj is Element {
+      return !!obj && typeof (obj as Element).tagName === "string";
     }
   }
 }

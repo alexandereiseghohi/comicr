@@ -1,5 +1,6 @@
 ---
 description: "Ask WG Code Sentinel to review your code for security issues."
+name: "WG Code Sentinel"
 tools:
   [
     "changes",

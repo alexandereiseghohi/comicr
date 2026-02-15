@@ -19,9 +19,8 @@ import {
   UsersIcon,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Card, CardContent } from "@/components/ui/card";
+import LanguageDropdown from "@/components/shadcn-studio/blocks/dropdown-language";
+import ProfileDropdown from "@/components/shadcn-studio/blocks/dropdown-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Breadcrumb,
@@ -31,6 +30,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -44,9 +46,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
-import LanguageDropdown from "@/components/shadcn-studio/blocks/dropdown-language";
-import ProfileDropdown from "@/components/shadcn-studio/blocks/dropdown-profile";
 
 const ApplicationShell = () => {
   return (
@@ -195,7 +194,7 @@ const ApplicationShell = () => {
             <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-2 sm:px-6">
               <div className="flex items-center gap-4">
                 <SidebarTrigger className="[&_svg]:!size-5" />
-                <Separator orientation="vertical" className="hidden !h-4 sm:block" />
+                <Separator className="hidden !h-4 sm:block" orientation="vertical" />
                 <Breadcrumb className="hidden sm:block">
                   <BreadcrumbList>
                     <BreadcrumbItem>
@@ -215,14 +214,14 @@ const ApplicationShell = () => {
               <div className="flex items-center gap-1.5">
                 <LanguageDropdown
                   trigger={
-                    <Button variant="ghost" size="icon">
+                    <Button size="icon" variant="ghost">
                       <LanguagesIcon />
                     </Button>
                   }
                 />
                 <ProfileDropdown
                   trigger={
-                    <Button variant="ghost" size="icon" className="size-9.5">
+                    <Button className="size-9.5" size="icon" variant="ghost">
                       <Avatar className="size-9.5 rounded-md">
                         <AvatarImage src="https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-1.png" />
                         <AvatarFallback>JD</AvatarFallback>
@@ -244,7 +243,7 @@ const ApplicationShell = () => {
             <div className="text-muted-foreground mx-auto flex size-full max-w-7xl items-center justify-between gap-3 px-4 py-3 max-sm:flex-col sm:gap-6 sm:px-6">
               <p className="text-sm text-balance max-sm:text-center">
                 {`©${new Date().getFullYear()}`}{" "}
-                <a href="#" className="text-primary">
+                <a className="text-primary" href="#">
                   shadcn/studio
                 </a>
                 , Made for better web design

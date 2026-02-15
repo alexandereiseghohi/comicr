@@ -1,6 +1,6 @@
 import { downloadAndSaveImage } from "@/lib/image-helper.server";
 import { seedTableBatched } from "@/lib/seed-helpers";
-import { type AuthorSeed, AuthorSeedSchema } from "@/lib/validations/seed";
+import { type AuthorSeed, AuthorSeedSchema } from "@/validations/seed";
 
 import { db } from "../../db";
 import { author } from "../../schema";

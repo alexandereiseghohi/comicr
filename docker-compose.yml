@@ -1,0 +1,119 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+    container_name: comicwise-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Application
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: 1
+      
+      # Database
+      DATABASE_URL: postgresql://comicwise:comicwise_pass@postgres:5432/comicwise
+      
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: redis_secure_password
+      REDIS_DB: 0
+      ENABLE_REDIS_CACHE: "true"
+      
+      # Application URLs
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_API_URL: http://localhost:3000/api
+      NEXTAUTH_URL: http://localhost:3000
+      
+      # Feature flags (set to true to enable)
+      ENABLE_EXPERIMENTAL_FEATURES: "false"
+      ENABLE_ADMIN_PANEL: "true"
+      ENABLE_SEEDING_UI: "false"
+      
+      # Performance
+      CACHE_TTL_SECONDS: 3600
+      IMAGE_CACHE_MAX_AGE: 31536000
+      
+      # Security
+      RATE_LIMIT_MAX_REQUESTS: 100
+      RATE_LIMIT_WINDOW_MS: 900000
+      BCRYPT_ROUNDS: 12
+      
+      # Load optional env file for secrets
+      # Copy .env.local to .env.production and mount it
+    env_file:
+      - .env.production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - comicwise-network
+    volumes:
+      - app-logs:/app/logs
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: comicwise-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: comicwise
+      POSTGRES_PASSWORD: comicwise_pass
+      POSTGRES_DB: comicwise
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.UTF-8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - comicwise-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U comicwise -d comicwise"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    container_name: comicwise-redis
+    restart: unless-stopped
+    command: redis-server --requirepass redis_secure_password --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - comicwise-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  app-logs:
+    driver: local
+
+networks:
+  comicwise-network:
+    driver: bridge

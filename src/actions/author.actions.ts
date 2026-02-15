@@ -1,4 +1,7 @@
 "use server";
+// Deduplicated string literals
+const UNAUTHORIZED = { code: "UNAUTHORIZED", message: "Admin access required" };
+const REVALIDATE_PATH = "/admin/authors";
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
@@ -22,7 +25,7 @@ export async function createAuthorAction(formData: unknown): Promise<ActionResul
   if (!admin) {
     return {
       success: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: UNAUTHORIZED,
     };
   }
 
@@ -54,7 +57,7 @@ export async function createAuthorAction(formData: unknown): Promise<ActionResul
     };
   }
 
-  revalidatePath("/admin/authors");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: result.data };
 }
 
@@ -63,7 +66,7 @@ export async function updateAuthorAction(id: number, formData: unknown): Promise
   if (!admin) {
     return {
       success: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: UNAUTHORIZED,
     };
   }
 
@@ -97,7 +100,7 @@ export async function updateAuthorAction(id: number, formData: unknown): Promise
     };
   }
 
-  revalidatePath("/admin/authors");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: result.data };
 }
 
@@ -106,7 +109,7 @@ export async function deleteAuthorAction(id: number): Promise<ActionResult> {
   if (!admin) {
     return {
       success: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: UNAUTHORIZED,
     };
   }
 
@@ -119,7 +122,7 @@ export async function deleteAuthorAction(id: number): Promise<ActionResult> {
     };
   }
 
-  revalidatePath("/admin/authors");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { id } };
 }
 
@@ -128,7 +131,7 @@ export async function restoreAuthorAction(id: number): Promise<ActionResult> {
   if (!admin) {
     return {
       success: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: UNAUTHORIZED,
     };
   }
 
@@ -140,7 +143,7 @@ export async function restoreAuthorAction(id: number): Promise<ActionResult> {
     };
   }
 
-  revalidatePath("/admin/authors");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { id } };
 }
 
@@ -149,7 +152,7 @@ export async function bulkDeleteAuthorsAction(ids: number[]): Promise<ActionResu
   if (!admin) {
     return {
       success: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: UNAUTHORIZED,
     };
   }
 
@@ -165,7 +168,7 @@ export async function bulkDeleteAuthorsAction(ids: number[]): Promise<ActionResu
     };
   }
 
-  revalidatePath("/admin/authors");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { count: ids.length } };
 }
 

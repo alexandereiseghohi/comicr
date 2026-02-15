@@ -1,5 +1,6 @@
 ---
 description: "Provide principal-level software engineering guidance with focus on engineering excellence, technical leadership, and pragmatic implementation."
+name: "Principal software engineer"
 tools:
   [
     "changes",

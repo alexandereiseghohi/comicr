@@ -3,11 +3,11 @@ import * as React from "react";
 // ============================================================================
 
 interface UseBooleanReturn {
-  value: boolean;
-  setValue: React.Dispatch<React.SetStateAction<boolean>>;
-  setTrue: () => void;
   setFalse: () => void;
+  setTrue: () => void;
+  setValue: React.Dispatch<React.SetStateAction<boolean>>;
   toggle: () => void;
+  value: boolean;
 }
 
 export function useBoolean(defaultValue = false): UseBooleanReturn {

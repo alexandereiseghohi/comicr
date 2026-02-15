@@ -1,20 +1,21 @@
 "use client";
 
 import { type ComponentProps, type ReactNode, useTransition } from "react";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { LoadingSwap } from "@/components/ui/loading-swap";
+
 import {
   AlertDialog,
-  AlertDialogDescription,
-  AlertDialogTitle,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { LoadingSwap } from "@/components/ui/loading-swap";
 
 export function ActionButton({
   action,
@@ -23,8 +24,8 @@ export function ActionButton({
   ...props
 }: ComponentProps<typeof Button> & {
   action: () => Promise<{ error: boolean; message?: string }>;
-  requireAreYouSure?: boolean;
   areYouSureDescription?: ReactNode;
+  requireAreYouSure?: boolean;
 }) {
   const [isLoading, startTransition] = useTransition();
 
@@ -66,7 +67,7 @@ export function ActionButton({
         props.onClick?.(e);
       }}
     >
-      <LoadingSwap isLoading={isLoading} className="inline-flex items-center gap-2">
+      <LoadingSwap className="inline-flex items-center gap-2" isLoading={isLoading}>
         {props.children}
       </LoadingSwap>
     </Button>

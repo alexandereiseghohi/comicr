@@ -4,16 +4,16 @@ import * as React from "react";
 // ============================================================================
 
 interface UseLocalStorageOptions<T> {
-  serializer?: (value: T) => string;
   deserializer?: (value: string) => T;
   initializeWithValue?: boolean;
+  serializer?: (value: T) => string;
 }
 
 const IS_SERVER = typeof window === "undefined";
 
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T | (() => T),
+  initialValue: (() => T) | T,
   options: UseLocalStorageOptions<T> = {}
 ): [T, React.Dispatch<React.SetStateAction<T>>, () => void] {
   const { initializeWithValue = true } = options;
@@ -111,11 +111,11 @@ export function useLocalStorage<T>(
     };
 
     window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("local-storage" as any, handleStorageChange);
+    window.addEventListener("local-storage", handleStorageChange as EventListener);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("local-storage" as any, handleStorageChange);
+      window.removeEventListener("local-storage", handleStorageChange as EventListener);
     };
   }, [key, readValue]);
 

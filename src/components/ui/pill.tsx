@@ -1,11 +1,13 @@
 "use client";
 
 import { ChevronDownIcon, ChevronUpIcon, MinusIcon } from "lucide-react";
-import type { ComponentProps, ReactNode } from "react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+import type { ComponentProps, ReactNode } from "react";
 
 export type PillProps = ComponentProps<typeof Badge> & {
   themed?: boolean;
@@ -34,7 +36,7 @@ export type PillButtonProps = ComponentProps<typeof Button>;
 
 export const PillButton = ({ className, ...props }: PillButtonProps) => (
   <Button
-    className={cn("-my-2 -me-2 size-6 rounded-full p-0.5 hover:bg-foreground/5", className)}
+    className={cn("hover:bg-foreground/5 -my-2 -me-2 size-6 rounded-full p-0.5", className)}
     size="icon"
     variant="ghost"
     {...(props as any)}
@@ -53,8 +55,8 @@ export const PillStatus = ({ children, className, ...props }: PillStatusProps) =
 );
 
 export interface PillIndicatorProps {
-  variant?: "success" | "error" | "warning" | "info";
   pulse?: boolean;
+  variant?: "error" | "info" | "success" | "warning";
 }
 
 export const PillIndicator = ({ variant = "success", pulse = false }: PillIndicatorProps) => (
@@ -89,7 +91,7 @@ export interface PillDeltaProps {
 
 export const PillDelta = ({ className, delta }: PillDeltaProps) => {
   if (!delta) {
-    return <MinusIcon className={cn("size-3 text-muted-foreground", className)} />;
+    return <MinusIcon className={cn("text-muted-foreground size-3", className)} />;
   }
 
   if (delta > 0) {
@@ -100,12 +102,12 @@ export const PillDelta = ({ className, delta }: PillDeltaProps) => {
 };
 
 export interface PillIconProps {
-  icon: typeof ChevronUpIcon;
   className?: string;
+  icon: typeof ChevronUpIcon;
 }
 
 export const PillIcon = ({ icon: Icon, className, ...props }: PillIconProps) => (
-  <Icon className={cn("size-3 text-muted-foreground", className)} size={12} {...(props as any)} />
+  <Icon className={cn("text-muted-foreground size-3", className)} size={12} {...(props as any)} />
 );
 
 export interface PillAvatarGroupProps {
@@ -116,7 +118,7 @@ export interface PillAvatarGroupProps {
 export const PillAvatarGroup = ({ children, className, ...props }: PillAvatarGroupProps) => (
   <div
     className={cn(
-      "-space-x-1 flex items-center",
+      "flex items-center -space-x-1",
       "[&>*:not(:first-of-type)]:[mask-image:radial-gradient(circle_9px_at_-4px_50%,transparent_99%,white_100%)]",
       className
     )}
@@ -131,7 +133,7 @@ export function Demo() {
   return (
     <div className="fixed inset-0 flex items-center justify-center">
       <Pill>
-        <PillIndicator variant="success" pulse />
+        <PillIndicator pulse variant="success" />
         <PillStatus>Active</PillStatus>
         <span>3 users online</span>
       </Pill>

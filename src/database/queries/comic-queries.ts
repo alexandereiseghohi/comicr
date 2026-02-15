@@ -1,3 +1,4 @@
+const QUERY_FAILED = "Query failed";
 import { asc, count, desc, eq, ilike, inArray } from "drizzle-orm";
 
 import { db } from "@/database/db";
@@ -34,7 +35,7 @@ export async function getAllComics({
 
     return { success: true, data: comics, total: totalCount };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -57,7 +58,7 @@ export async function getComicById(id: number) {
 
     return { success: true, data: result[0] || null };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -77,7 +78,7 @@ export async function getComicBySlug(slug: string) {
     // Return a composed object: { comic, author?, artist? } or null
     return { success: true, data: result[0] || null };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -108,7 +109,7 @@ export async function searchComics(
 
     return { success: true, data: results, total: totalCount };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -139,7 +140,7 @@ export async function getComicsByStatus(
 
     return { success: true, data: results, total: totalCount };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 
@@ -152,7 +153,7 @@ export async function getComicsByAuthor(authorId: number) {
 
     return { success: true, data: results };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : "Query failed" };
+    return { success: false, error: error instanceof Error ? error.message : QUERY_FAILED };
   }
 }
 

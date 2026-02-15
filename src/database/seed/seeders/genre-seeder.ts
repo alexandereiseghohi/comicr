@@ -1,5 +1,5 @@
 import { seedTableBatched } from "@/lib/seed-helpers";
-import { type GenreSeed, GenreSeedSchema } from "@/lib/validations/seed";
+import { type GenreSeed, GenreSeedSchema } from "@/validations/seed";
 
 import { db } from "../../db";
 import { genre } from "../../schema";

@@ -1,6 +1,6 @@
 import { downloadAndSaveImage } from "@/lib/image-helper.server";
 import { seedTableBatched } from "@/lib/seed-helpers";
-import { normalizeDateString, RawChapterSchema } from "@/lib/validations/seed";
+import { normalizeDateString, RawChapterSchema } from "@/validations/seed";
 
 import { db } from "../../db";
 import { chapter, chapterImage } from "../../schema";

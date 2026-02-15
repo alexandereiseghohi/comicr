@@ -1,14 +1,14 @@
 import { ArrowRightIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardTitle, CardDescription, CardHeader, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 type BlogCard = {
-  img: string;
   alt: string;
-  title: string;
-  description: string;
   blogLink: string;
+  description: string;
+  img: string;
+  title: string;
 }[];
 
 const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
@@ -28,7 +28,7 @@ const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
           {blogCards.map((item, index) => (
             <Card className="pt-0 shadow-none max-lg:last:col-span-full" key={index}>
               <CardContent className="px-0">
-                <img src={item.img} alt={item.alt} className="aspect-video h-60 w-full rounded-t-xl object-cover" />
+                <img alt={item.alt} className="aspect-video h-60 w-full rounded-t-xl object-cover" src={item.img} />
               </CardContent>
               <CardHeader className="mb-2 gap-3">
                 <CardTitle className="text-xl">
@@ -37,7 +37,7 @@ const Blog = ({ blogCards }: { blogCards: BlogCard }) => {
                 <CardDescription className="text-base">{item.description}</CardDescription>
               </CardHeader>
               <CardFooter>
-                <Button className="group rounded-lg text-base has-[>svg]:px-6" size="lg" asChild>
+                <Button asChild className="group rounded-lg text-base has-[>svg]:px-6" size="lg">
                   <a href={item.blogLink}>
                     Read More
                     <ArrowRightIcon className="transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />

@@ -1,4 +1,7 @@
 "use server";
+// Deduplicated string literals
+const UNAUTHORIZED = { code: "UNAUTHORIZED", message: "Admin access required" };
+const REVALIDATE_PATH = "/admin/artists";
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
@@ -20,7 +23,7 @@ async function verifyAdmin(): Promise<{ userId: string } | null> {
 export async function createArtistAction(formData: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return { success: false, error: UNAUTHORIZED };
   }
 
   const validation = createArtistSchema.safeParse(formData);
@@ -45,14 +48,14 @@ export async function createArtistAction(formData: unknown): Promise<ActionResul
     return { success: false, error: { code: "DB_ERROR", message: result.error ?? "Creation failed" } };
   }
 
-  revalidatePath("/admin/artists");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: result.data };
 }
 
 export async function updateArtistAction(id: number, formData: unknown): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return { success: false, error: UNAUTHORIZED };
   }
 
   const validation = createArtistSchema.partial().safeParse(formData);
@@ -79,14 +82,14 @@ export async function updateArtistAction(id: number, formData: unknown): Promise
     return { success: false, error: { code: "DB_ERROR", message: result.error ?? "Update failed" } };
   }
 
-  revalidatePath("/admin/artists");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: result.data };
 }
 
 export async function deleteArtistAction(id: number): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return { success: false, error: UNAUTHORIZED };
   }
 
   // Soft delete: set isActive = false
@@ -95,14 +98,14 @@ export async function deleteArtistAction(id: number): Promise<ActionResult> {
     return { success: false, error: { code: "DB_ERROR", message: result.error ?? "Delete failed" } };
   }
 
-  revalidatePath("/admin/artists");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { id } };
 }
 
 export async function restoreArtistAction(id: number): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return { success: false, error: UNAUTHORIZED };
   }
 
   const result = await artistMutations.updateArtist(id, { isActive: true });
@@ -110,14 +113,14 @@ export async function restoreArtistAction(id: number): Promise<ActionResult> {
     return { success: false, error: { code: "DB_ERROR", message: result.error ?? "Restore failed" } };
   }
 
-  revalidatePath("/admin/artists");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { id } };
 }
 
 export async function bulkDeleteArtistsAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return { success: false, error: UNAUTHORIZED };
   }
 
   const results = await Promise.all(ids.map((id) => artistMutations.updateArtist(id, { isActive: false })));
@@ -129,14 +132,14 @@ export async function bulkDeleteArtistsAction(ids: number[]): Promise<ActionResu
     };
   }
 
-  revalidatePath("/admin/artists");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { count: ids.length } };
 }
 
 export async function bulkRestoreArtistsAction(ids: number[]): Promise<ActionResult> {
   const admin = await verifyAdmin();
   if (!admin) {
-    return { success: false, error: { code: "UNAUTHORIZED", message: "Admin access required" } };
+    return { success: false, error: UNAUTHORIZED };
   }
 
   const results = await Promise.all(ids.map((id) => artistMutations.updateArtist(id, { isActive: true })));
@@ -148,6 +151,6 @@ export async function bulkRestoreArtistsAction(ids: number[]): Promise<ActionRes
     };
   }
 
-  revalidatePath("/admin/artists");
+  revalidatePath(REVALIDATE_PATH);
   return { success: true, data: { count: ids.length } };
 }

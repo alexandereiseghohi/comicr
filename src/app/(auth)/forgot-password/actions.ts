@@ -1,7 +1,7 @@
 "use server";
 import { z } from "zod";
 
-import { requestPasswordResetAction } from "@/lib/actions/auth.actions";
+import { requestPasswordResetAction } from "@/actions/auth.actions";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email(),

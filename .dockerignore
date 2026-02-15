@@ -1,15 +1,107 @@
-# .dockerignore for ComicWise
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Node modules (installed during build)
 node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Next.js
 .next
 out
-build
+dist
+
+# Build artifacts
 coverage
-.DS_Store
-.env*
+.turbo
+.venv
+build
+
+# Testing
+tests
+test-results
+playwright-report
+.playwright
+vitest.config.ts
+playwright.config.ts
+
+# Documentation
+docs
+README.md
+*.md
+CHANGELOG.md
+
+# IDE
 .vscode
 .idea
-*.tsbuildinfo
-*.log
-*.pem
-*.sentryclirc
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment files (use .env.production explicitly)
+.env.local
+.env.*.local
+.env.test
+.env.development
+
+# CI/CD
+.github
+.gitignore
+.husky
+
+# Development
+dev.txt
+tasks.md
+tasks_to_prompt.md
+instructions
+
+# Analytics & Reports
+*.csv
+*.json.report
+*-report.md
+reconciliation-log.md
+plan-completion-report.md
+seed-test-output.txt
+
+# Memory & AI
+memory-bank
+agents
+prompts
+skills
+cookbook
+
+# Cache
+.cache
+.eslintcache
+
+# Lock files (not needed in production, pnpm-lock.yaml is copied explicitly)
+package-lock.json
+yarn.lock
+
+# Misc
+.editorconfig
+.prettierrc.ts
 .prettierignore
+.all-contributorsrc
+.codespellrc
+eslintPlugins.md
+AGENTS.md
+COMICWISE-COMPREHENSIVE-PLAN.md
+DATABASE_LAYER_STATUS.md
+GEMINI.md
+design.md
+opencode.json
+requirements.md
+shacn.md
+
+# Directories
+__mocks__
+collections
+plugins
+scripts
+public/videos
+public/assets/unused

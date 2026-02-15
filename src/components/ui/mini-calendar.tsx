@@ -15,16 +15,17 @@ import {
   useEffect,
   useState,
 } from "react";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 // Context for sharing state between components
 interface MiniCalendarContextType {
-  selectedDate: Date | null | undefined;
-  onDateSelect: (date: Date) => void;
-  startDate: Date;
-  onNavigate: (direction: "prev" | "next") => void;
   days: number;
+  onDateSelect: (date: Date) => void;
+  onNavigate: (direction: "next" | "prev") => void;
+  selectedDate: Date | null | undefined;
+  startDate: Date;
 }
 
 const MiniCalendarContext = createContext<MiniCalendarContextType | null>(null);
@@ -57,13 +58,13 @@ const formatDate = (date: Date) => {
 };
 
 export type MiniCalendarProps = HTMLAttributes<HTMLDivElement> & {
-  value?: Date;
+  days?: number;
+  defaultStartDate?: Date;
   defaultValue?: Date;
+  onStartDateChange?: (date: Date | undefined) => void;
   onValueChange?: (date: Date | undefined) => void;
   startDate?: Date;
-  defaultStartDate?: Date;
-  onStartDateChange?: (date: Date | undefined) => void;
-  days?: number;
+  value?: Date;
 };
 
 export const MiniCalendar = ({
@@ -94,7 +95,7 @@ export const MiniCalendar = ({
     setSelectedDate(date);
   };
 
-  const handleNavigate = (direction: "prev" | "next") => {
+  const handleNavigate = (direction: "next" | "prev") => {
     const newStartDate = addDays(currentStartDate || new Date(), direction === "next" ? days : -days);
     setCurrentStartDate(newStartDate);
   };
@@ -109,7 +110,7 @@ export const MiniCalendar = ({
 
   return (
     <MiniCalendarContext.Provider value={contextValue}>
-      <div className={cn("flex items-center gap-2 rounded-lg border bg-background p-2", className)} {...(props as any)}>
+      <div className={cn("bg-background flex items-center gap-2 rounded-lg border p-2", className)} {...(props as any)}>
         {children}
       </div>
     </MiniCalendarContext.Provider>
@@ -117,8 +118,8 @@ export const MiniCalendar = ({
 };
 
 export type MiniCalendarNavigationProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  direction: "prev" | "next";
   asChild?: boolean;
+  direction: "next" | "prev";
 };
 
 export const MiniCalendarNavigation = ({
@@ -184,21 +185,17 @@ export const MiniCalendarDay = ({ date, className, ...props }: MiniCalendarDayPr
 
   return (
     <Button
-      className={cn(
-        "h-auto min-w-[3rem] flex-col gap-0 p-2 text-xs",
-        isTodayDate && !isSelected && "bg-accent",
-        className
-      )}
+      className={cn("h-auto min-w-12 flex-col gap-0 p-2 text-xs", isTodayDate && !isSelected && "bg-accent", className)}
       onClick={() => onDateSelect(date)}
       size="sm"
       type="button"
       variant={isSelected ? "default" : "ghost"}
       {...(props as any)}
     >
-      <span className={cn("font-medium text-[10px] text-muted-foreground", isSelected && "text-primary-foreground/70")}>
+      <span className={cn("text-muted-foreground text-[10px] font-medium", isSelected && "text-primary-foreground/70")}>
         {month}
       </span>
-      <span className="font-semibold text-sm">{day}</span>
+      <span className="text-sm font-semibold">{day}</span>
     </Button>
   );
 };
@@ -210,18 +207,23 @@ export function MiniCalendarDemo() {
 
   useEffect(() => {
     setMounted(true);
-    setSelectedDate(new Date());
   }, []);
 
+  useEffect(() => {
+    if (mounted && !selectedDate) {
+      setSelectedDate(new Date());
+    }
+  }, [mounted, selectedDate]);
+
   if (!mounted) {
-    return <div className="h-16 w-96 bg-muted/50 animate-pulse rounded-lg" />;
+    return <div className="bg-muted/50 h-16 w-96 animate-pulse rounded-lg" />;
   }
 
   return (
-    <div className="flex items-center justify-center h-screen w-screen">
-      <MiniCalendar value={selectedDate} onValueChange={setSelectedDate} days={7}>
+    <div className="flex h-screen w-screen items-center justify-center">
+      <MiniCalendar days={7} onValueChange={setSelectedDate} value={selectedDate}>
         <MiniCalendarNavigation direction="prev" />
-        <MiniCalendarDays>{(date) => <MiniCalendarDay key={date.toISOString()} date={date} />}</MiniCalendarDays>
+        <MiniCalendarDays>{(date) => <MiniCalendarDay date={date} key={date.toISOString()} />}</MiniCalendarDays>
         <MiniCalendarNavigation direction="next" />
       </MiniCalendar>
     </div>

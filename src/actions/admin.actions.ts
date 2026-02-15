@@ -1,4 +1,6 @@
 "use server";
+// Deduplicated string literals
+const ADMIN_UNAUTHORIZED = { code: "UNAUTHORIZED", message: "Admin access required" };
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -45,7 +47,7 @@ export async function updateComicAction(id: number, input: unknown): Promise<Act
   if (!admin) {
     return {
       ok: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: ADMIN_UNAUTHORIZED,
     };
   }
 
@@ -94,7 +96,7 @@ export async function deleteComicAction(id: number): Promise<ActionResult<null>>
   if (!admin) {
     return {
       ok: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: ADMIN_UNAUTHORIZED,
     };
   }
 
@@ -131,7 +133,7 @@ export async function bulkDeleteComicsAction(ids: number[]): Promise<ActionResul
   if (!admin) {
     return {
       ok: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: ADMIN_UNAUTHORIZED,
     };
   }
 
@@ -175,7 +177,7 @@ export async function updateChapterAction(id: number, input: unknown): Promise<A
   if (!admin) {
     return {
       ok: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: ADMIN_UNAUTHORIZED,
     };
   }
 
@@ -218,7 +220,7 @@ export async function deleteChapterAction(id: number): Promise<ActionResult<null
   if (!admin) {
     return {
       ok: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: ADMIN_UNAUTHORIZED,
     };
   }
 
@@ -251,7 +253,7 @@ export async function bulkDeleteChaptersAction(ids: number[]): Promise<ActionRes
   if (!admin) {
     return {
       ok: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: ADMIN_UNAUTHORIZED,
     };
   }
 
@@ -296,7 +298,7 @@ export async function updateUserRoleAction(
   if (!admin) {
     return {
       ok: false,
-      error: { code: "UNAUTHORIZED", message: "Admin access required" },
+      error: ADMIN_UNAUTHORIZED,
     };
   }
 

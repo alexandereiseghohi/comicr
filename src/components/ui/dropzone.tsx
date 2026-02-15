@@ -1,19 +1,21 @@
 "use client";
 
 import { UploadIcon } from "lucide-react";
-import type { ReactNode } from "react";
-import { createContext, useContext } from "react";
-import type { DropEvent, DropzoneOptions, FileRejection } from "react-dropzone";
+import { createContext, useContext, useState } from "react";
 import { useDropzone } from "react-dropzone";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+import type { ReactNode } from "react";
+import type { DropEvent, DropzoneOptions, FileRejection } from "react-dropzone";
+
 interface DropzoneContextType {
-  src?: File[];
   accept?: DropzoneOptions["accept"];
+  maxFiles?: DropzoneOptions["maxFiles"];
   maxSize?: DropzoneOptions["maxSize"];
   minSize?: DropzoneOptions["minSize"];
-  maxFiles?: DropzoneOptions["maxFiles"];
+  src?: File[];
 }
 
 const renderBytes = (bytes: number) => {
@@ -32,10 +34,10 @@ const renderBytes = (bytes: number) => {
 const DropzoneContext = createContext<DropzoneContextType | undefined>(undefined);
 
 export type DropzoneProps = Omit<DropzoneOptions, "onDrop"> & {
-  src?: File[];
+  children?: ReactNode;
   className?: string;
   onDrop?: (acceptedFiles: File[], fileRejections: FileRejection[], event: DropEvent) => void;
-  children?: ReactNode;
+  src?: File[];
 };
 
 export const Dropzone = ({
@@ -75,7 +77,7 @@ export const Dropzone = ({
       <Button
         className={cn(
           "relative h-auto w-full flex-col overflow-hidden p-8",
-          isDragActive && "outline-none ring-1 ring-ring",
+          isDragActive && "ring-ring ring-1 outline-none",
           className
         )}
         disabled={disabled}
@@ -120,17 +122,17 @@ export const DropzoneContent = ({ children, className }: DropzoneContentProps) =
 
   return (
     <div className={cn("flex flex-col items-center justify-center", className)}>
-      <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">
+      <div className="bg-muted text-muted-foreground flex size-8 items-center justify-center rounded-md">
         <UploadIcon size={16} />
       </div>
-      <p className="my-2 w-full truncate font-medium text-sm">
+      <p className="my-2 w-full truncate text-sm font-medium">
         {src.length > maxLabelItems
           ? `${new Intl.ListFormat("en").format(
               src.slice(0, maxLabelItems).map((file) => file.name)
             )} and ${src.length - maxLabelItems} more`
           : new Intl.ListFormat("en").format(src.map((file) => file.name))}
       </p>
-      <p className="w-full text-wrap text-muted-foreground text-xs">Drag and drop or click to replace</p>
+      <p className="text-muted-foreground w-full text-xs text-wrap">Drag and drop or click to replace</p>
     </div>
   );
 };
@@ -168,18 +170,17 @@ export const DropzoneEmptyState = ({ children, className }: DropzoneEmptyStatePr
 
   return (
     <div className={cn("flex flex-col items-center justify-center", className)}>
-      <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">
+      <div className="bg-muted text-muted-foreground flex size-8 items-center justify-center rounded-md">
         <UploadIcon size={16} />
       </div>
-      <p className="my-2 w-full truncate text-wrap font-medium text-sm">Upload {maxFiles === 1 ? "a file" : "files"}</p>
-      <p className="w-full truncate text-wrap text-muted-foreground text-xs">Drag and drop or click to upload</p>
-      {caption && <p className="text-wrap text-muted-foreground text-xs">{caption}.</p>}
+      <p className="my-2 w-full truncate text-sm font-medium text-wrap">Upload {maxFiles === 1 ? "a file" : "files"}</p>
+      <p className="text-muted-foreground w-full truncate text-xs text-wrap">Drag and drop or click to upload</p>
+      {caption && <p className="text-muted-foreground text-xs text-wrap">{caption}.</p>}
     </div>
   );
 };
 
 // Demo
-import { useState } from "react";
 
 export function Demo() {
   const [files, setFiles] = useState<File[]>();
@@ -187,11 +188,11 @@ export function Demo() {
   return (
     <div className="fixed inset-0 flex items-center justify-center p-8">
       <Dropzone
-        src={files}
-        onDrop={(acceptedFiles) => setFiles(acceptedFiles)}
         accept={{ "image/*": [".png", ".jpg", ".jpeg", ".gif"] }}
-        maxSize={5 * 1024 * 1024}
         className="w-full max-w-md"
+        maxSize={5 * 1024 * 1024}
+        onDrop={(acceptedFiles) => setFiles(acceptedFiles)}
+        src={files}
       >
         <DropzoneContent />
         <DropzoneEmptyState />

@@ -1,0 +1,31 @@
+# Development Dockerfile with hot reload support
+# Use with docker-compose.dev.yml for development
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache python3 make g++
+
+# Install pnpm
+RUN npm install -g pnpm@latest
+
+# Copy dependency files
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+
+# Install all dependencies (including devDependencies)
+RUN pnpm install --frozen-lockfile
+
+# Copy application code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Environment
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Start dev server with hot reload
+CMD ["pnpm", "dev"]
