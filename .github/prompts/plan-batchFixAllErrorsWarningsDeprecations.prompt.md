@@ -11,7 +11,7 @@ Systematically fix all errors, warnings, and deprecations surfaced by and `pnpm 
 
 1. Run all validation/build/test scripts and wait for the scripts to complete:
 
-- `pnpm type-check`
+- `pnpm validate`
 - `pnpm build`
 
 2. Collect all errors, warnings, and deprecations from the output.
@@ -35,15 +35,12 @@ Systematically fix all errors, warnings, and deprecations surfaced by and `pnpm 
 
 #### Phase 4: Auto-format & Standards Enforcement
 
-5. Run `pnpm format && pnpm lint:fix` to auto-format the codebase and fix any remaining style issues.
+5. Run `pnpm lint:fix` to auto-format the codebase and fix any remaining style issues.
 
 #### Phase 5: Verification & Iteration
 
 6. Rerun all scripts:
-   - `pnpm format`
-   - `pnpm lint`
-   - `pnpm type-check`
-   - `pnpm test`
+   - `pnpm validate`
    - `pnpm build`
 7. If any errors/warnings remain, repeat Phases 2–5 until all scripts pass cleanly.
 
@@ -71,7 +68,7 @@ Systematically fix all errors, warnings, and deprecations surfaced by and `pnpm 
 
 ### **Verification**
 
-- All scripts (`pnpm format`, `pnpm lint`, `pnpm type-check`, `pnpm test`, `pnpm build`) complete with zero errors and zero warnings.
+- All scripts (`pnpm validate`, `pnpm lint:fix`, `pnpm build`) complete with zero errors and zero warnings.
 - All fixes are documented and traceable.
 - Codebase remains consistent with project standards and conventions.
 
