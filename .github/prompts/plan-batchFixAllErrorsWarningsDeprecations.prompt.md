@@ -1,7 +1,12 @@
+---
+description: "Batch Fix All Errors, Warnings, and Deprecations."
+agent: "agent"
+---
+
 ## Plan: Batch Fix All Errors, Warnings, and Deprecations
 
 **TL;DR:**
-Systematically fix all errors, warnings, and deprecations surfaced by and `pnpm build`. Auto-format, document, and verify all changes, ensuring zero issues remain and all fixes are traceable and standards-compliant.
+Systematically fix all errors, warnings, and deprecations surfaced by `pnpm validate` and `pnpm build`. Auto-format, document, and verify all changes, ensuring zero issues remain and all fixes are traceable and standards-compliant.
 
 ---
 
